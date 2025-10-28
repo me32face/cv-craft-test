@@ -34,11 +34,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts",
-    ".next\\dev/types/**/*.ts",
-    ".next\\dev/types/**/*.ts"
-, "components/ImageUploader.jsx", "components/templates/Template01.jsx"  ],
-  "exclude": [
-    "node_modules"
-  ]
+    "**/*.mts"
+  ],
+  "exclude": ["node_modules"]
 }
