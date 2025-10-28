@@ -1,10 +1,10 @@
 import React from 'react'
 
-const pages = () => {
+const page = () => {
   return (
-    <div>pagessss</div>
-    
+    <div>Mainpage</div>
+
   )
 }
 
-export default pages
+export default page
