@@ -1,4 +1,3 @@
-'use client'
 import React from 'react'
 import PrintToPdf from '@/components/PrintToPdf'
 import ImageUploader from '@/components/ImageUploader'
@@ -8,7 +7,7 @@ export default function Template03() {
     <div className='min-h-screen p-6 bg-gray-50 flex items-start justify-center'>
       <div className='w-full max-w-4xl'>
 <div id="resume-root" className="bg-white rounded shadow overflow-hidden">
-  <div className="h-36 bg-gradient-to-r from-rose-600 to-white flex items-center p-6">
+  <div className="h-36 bg-red-600 to-white flex items-center p-6">
     <div className="flex items-center gap-4">
       <div className="w-28 h-28 rounded-full overflow-hidden border"><div className="w-full h-full"><ImageUploader keyName="photo3" initial="/profile-placeholder.png" className="w-full h-full" /></div></div>
       <div className="font-sans text-white">

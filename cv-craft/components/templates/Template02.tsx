@@ -1,4 +1,3 @@
-'use client'
 import React from 'react'
 import PrintToPdf from '@/components/PrintToPdf'
 import ImageUploader from '@/components/ImageUploader'
