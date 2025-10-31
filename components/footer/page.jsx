@@ -50,24 +50,23 @@ export default function Footer() {
 
     return (
         <footer className="bg-white border-t border-gray-200">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 {/* Main Footer Content */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
                     {/* Brand Section */}
                     <div className="lg:col-span-1">
                         <div className="flex items-center gap-2 mb-4">
-                           
                             <div>
                                 <Image
                                     src="/footerlogo.png"
                                     alt="CV Craft Logo"
-                                    width={100}
-                                    height={30}
-                                    className="object-contain sm:w-[75px] sm:h-[37px] lg:w-[90px] lg:h-[45px]"
+                                    width={160}
+                                    height={40}
+                                    className="relative object-contain sm:w-[80px] sm:h-[35px] lg:w-[160px] lg:h-[45px] transition-transform duration-500 group-hover:scale-105"
                                 />
                             </div>
                         </div>
-                        <p className="text-sm text-gray-600 mb-6">
+                        <p className="text-md font-semibold text-[#929292] mb-6">
                             Create professional resumes in minutes with the power of AI.
                         </p>
 
@@ -89,7 +88,7 @@ export default function Footer() {
                     {/* Footer Links */}
                     {footerSections.map((section) => (
                         <div key={section.title}>
-                            <h4 className="text-sm font-semibold text-gray-900 mb-4">
+                            <h4 className="text-lg font-bold text-[#342D4C] mb-4">
                                 {section.title}
                             </h4>
                             <ul className="space-y-3">
@@ -97,7 +96,7 @@ export default function Footer() {
                                     <li key={link.name}>
                                         <a
                                             href={link.href}
-                                            className="text-sm text-gray-600 hover:text-purple-600 transition-colors duration-200"
+                                            className="text-md text-[#7d7d7d]  hover:text-[#524e5f] transition-colors duration-200"
                                         >
                                             {link.name}
                                         </a>
@@ -111,12 +110,13 @@ export default function Footer() {
                 {/* Bottom Bar */}
                 <div className="mt-12 pt-8 border-t border-gray-200">
                     <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-                        <p className="text-sm text-gray-500 text-center sm:text-left">
+                        <p className="text-base text-gray-500 text-center sm:text-left">
+                        
                             © 2025 ESTA AI Resume Builder. All rights reserved.
                         </p>
-                        <div className="flex items-center gap-1 text-sm text-gray-600">
+                        <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-2 text-sm sm:text-base md:text-base text-gray-600 text-center">
                             <span>Built with</span>
-                            <Heart className="w-4 h-4 fill-red-500 text-red-500" />
+                            <Heart className="w-4 h-4 sm:w-5 sm:h-5 fill-red-600 text-red-600 animate-pulse" />
                             <span>for job seekers worldwide</span>
                         </div>
                     </div>

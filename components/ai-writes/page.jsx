@@ -13,7 +13,7 @@ export default function AIContent() {
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#6D6D6D] mb-4">
             AI That Writes for You
           </h1>
-          <p className="text-lg sm:text-xl text-[#757575] max-w-2xl mx-auto ">
+          <p className="text-lg sm:text-xl text-[#757575] max-w-3xl mx-auto ">
             Our AI assistant helps you craft compelling content that gets noticed
           </p>
         </div>
@@ -73,7 +73,7 @@ export default function AIContent() {
                 <button className="bg-gradient-to-r from-[#4B74F4] to-[#7642EE] text-white w-72 px-4 py-2 rounded-3xl hover:from-blue-600 hover:to-purple-600 transition cursor-pointer">
                   Apply This
                 </button>
-                <button className="bg-white text-black border border-gray-300 w-72 px-4 py-2 rounded-4xl hover:bg-gray-100 transition cursor-pointer">
+                <button className="bg-white text-black border border-gray-300 w-72 px-4 py-2 rounded-3xl hover:bg-gray-100 transition cursor-pointer">
                   Genetrate More
                 </button>
               </div>

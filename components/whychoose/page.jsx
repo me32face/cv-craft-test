@@ -54,7 +54,7 @@ export default function WhyChooseUs() {
               >
                 {/* Icon */}
                 <div className={`${feature.bgColor} w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center mb-5 sm:mb-6`}>
-                  <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-[#4B74F4]" strokeWidth={2} />
+                  <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-[#4B74F4] animate-pulse" strokeWidth={2} />
                 </div>
 
                 {/* Title */}

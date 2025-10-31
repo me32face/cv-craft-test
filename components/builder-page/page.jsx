@@ -61,7 +61,7 @@ const BuildSection = () => {
                 <span 
                   className="animate-gradient"
                   style={{
-                    background: 'linear-gradient(to top, #516DF3, #7741EE)',
+                    background: 'linear-gradient(to top, #7741EE, #516DF3)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text'

@@ -47,7 +47,7 @@ export default function HowItWorks() {
             >
               {/* Icon Container */}
               <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-[#4C73F4] to-[#7743EE] rounded-2xl shadow-lg flex items-center justify-center mb-5 sm:mb-6 transform transition-all duration-300 hover:shadow-xl">
-                <step.icon className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={2} />
+                <step.icon className="w-6 h-6 sm:w-7 text-white sm:h-7" strokeWidth={2} />
               </div>
 
               {/* Step Number */}

@@ -8,7 +8,7 @@ export default function DreamJob() {
         {/* Badge */}
         <div className="flex justify-center animate-fadeIn">
           <div className="inline-flex items-center gap-2 bg-[#5D5FF1] border border-white/30 rounded-full px-6 py-3 text-white shadow-lg hover:bg-white/10 transition-all duration-300">
-            <Star className="w-5 h-5 fill-white" />
+            <Star className="w-5 h-5 fill-yellow-300 text-yellow-300   animate-pulse" />
             <span className="text-sm font-medium">Join 1M+ successful job seekers</span>
           </div>
         </div>
@@ -48,7 +48,7 @@ export default function DreamJob() {
           <div className="hidden sm:block text-white/40">━━━</div>
           
           <div className="flex items-center gap-2  rounded-full px-6 py-2">
-            <Zap className="w-5 h-5 fill-yellow-300 text-yellow-300" />
+            <Zap className="w-5 h-5 fill-yellow-300 text-yellow-300 animate-pulse" />
             <span className="font-medium">Average time: 12 minutes</span>
           </div>
         </div>

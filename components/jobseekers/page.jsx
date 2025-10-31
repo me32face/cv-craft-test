@@ -82,7 +82,7 @@ export default function JobSeekers() {
                                 {[...Array(5)].map((_, i) => (
                                     <svg
                                         key={i}
-                                        className="w-5 h-5 text-[#39E479]"
+                                        className="w-5 h-5 text-[#10cb54] animate-pulse"
                                         fill="currentColor"
                                         viewBox="0 0 20 20"
                                     >
