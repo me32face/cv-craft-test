@@ -4,6 +4,15 @@ import Link from 'next/link';
 import Image from 'next/image';
 import TemplatePreview from '@/components/TemplatePreview';
 import { useEffect, useRef, useState } from 'react';
+import Navbar from '../components/navbar/page'
+import BuildSection from '../components/builder-page/page'
+import HowItWorks from '../components/how-works/page'
+import AIContent from '../components/ai-writes/page'
+import JobSeekers from '../components/jobseekers/page'
+import WhyChooseUs from '../components/whychoose/page'
+import FAQ from '../components/faquestions/page'
+import Footer from '../components/footer/page'
+import DreamJob from '../components/dreamjob/page'
 
 export default function Home() {
   const scrollRef = useRef(null);
@@ -64,6 +73,10 @@ export default function Home() {
   }, [templates.length]);
 
   return (
+     <>
+    <Navbar />
+     <BuildSection />
+     <HowItWorks /> 
     <main className="min-h-screen   from-gray-50 to-white">
       <div className="max-w-8xl mx-auto">
         <h1 className="text-5xl font-bold mb-5 text-center text-gray-500">
@@ -166,5 +179,12 @@ export default function Home() {
         </div>
       </div>
     </main>
+     <AIContent />
+     <JobSeekers />
+     <WhyChooseUs />
+     <FAQ />
+     <DreamJob />
+     <Footer />
+    </>
   );
 }
