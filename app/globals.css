@@ -18,3 +18,12 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* Draggable elements z-index fix */
+.react-draggable-dragging {
+  z-index: 9999 !important;
+}
+
+.react-draggable {
+  z-index: 1;
+}

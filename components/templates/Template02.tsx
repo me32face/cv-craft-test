@@ -70,34 +70,44 @@ export default function Template02() {
               {/* Skills */}
               <div>
                 <h2 className="text-xs font-bold text-gray-800 mb-3 uppercase tracking-wider">Skills</h2>
-                <ul className="space-y-1">
+                <ul 
+                  className="space-y-1"
+                  contentEditable
+                  suppressContentEditableWarning
+                  onInput={(e) => {
+                    const lis = e.currentTarget.querySelectorAll("li");
+                    lis.forEach(li => {
+                      if (!li.textContent.trim()) li.remove();
+                    });
+                  }}
+                >
                   <li className="flex items-start gap-2">
                     <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
-                    <span className="text-xs text-gray-700" contentEditable suppressContentEditableWarning>Project Management</span>
+                    <span className="text-xs text-gray-700">Project Management</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
-                    <span className="text-xs text-gray-700" contentEditable suppressContentEditableWarning>Public Relations</span>
+                    <span className="text-xs text-gray-700">Public Relations</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
-                    <span className="text-xs text-gray-700" contentEditable suppressContentEditableWarning>Teamwork</span>
+                    <span className="text-xs text-gray-700">Teamwork</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
-                    <span className="text-xs text-gray-700" contentEditable suppressContentEditableWarning>Time Management</span>
+                    <span className="text-xs text-gray-700">Time Management</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
-                    <span className="text-xs text-gray-700" contentEditable suppressContentEditableWarning>Leadership</span>
+                    <span className="text-xs text-gray-700">Leadership</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
-                    <span className="text-xs text-gray-700" contentEditable suppressContentEditableWarning>Effective Communication</span>
+                    <span className="text-xs text-gray-700">Effective Communication</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
-                    <span className="text-xs text-gray-700" contentEditable suppressContentEditableWarning>Critical Thinking</span>
+                    <span className="text-xs text-gray-700">Critical Thinking</span>
                   </li>
                 </ul>
               </div>
@@ -105,22 +115,32 @@ export default function Template02() {
               {/* Languages */}
               <div>
                 <h2 className="text-xs font-bold text-gray-800 mb-3 uppercase tracking-wider">Languages</h2>
-                <ul className="space-y-1">
+                <ul 
+                  className="space-y-1"
+                  contentEditable
+                  suppressContentEditableWarning
+                  onInput={(e) => {
+                    const lis = e.currentTarget.querySelectorAll("li");
+                    lis.forEach(li => {
+                      if (!li.textContent.trim()) li.remove();
+                    });
+                  }}
+                >
                   <li className="flex items-start gap-2">
                     <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
-                    <span className="text-xs text-gray-700" contentEditable suppressContentEditableWarning>English: Fluent</span>
+                    <span className="text-xs text-gray-700">English: Fluent</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
-                    <span className="text-xs text-gray-700" contentEditable suppressContentEditableWarning>French: Fluent</span>
+                    <span className="text-xs text-gray-700">French: Fluent</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
-                    <span className="text-xs text-gray-700" contentEditable suppressContentEditableWarning>German: Basics</span>
+                    <span className="text-xs text-gray-700">German: Basics</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
-                    <span className="text-xs text-gray-700" contentEditable suppressContentEditableWarning>Spanish: Intermediate</span>
+                    <span className="text-xs text-gray-700">Spanish: Intermediate</span>
                   </li>
                 </ul>
               </div>
@@ -150,9 +170,19 @@ export default function Template02() {
                       </div>
                       <span className="text-xs text-gray-600 whitespace-nowrap" contentEditable suppressContentEditableWarning>2030 - PRESENT</span>
                     </div>
-                    <ul className="list-disc list-outside ml-4 text-xs text-gray-700 space-y-0.5 mt-1">
-                      <li contentEditable suppressContentEditableWarning>Led the development and implementation of comprehensive marketing strategies that resulted in a 20% increase in brand visibility and a 15% growth in sales within the first year.</li>
-                      <li contentEditable suppressContentEditableWarning>Successfully launched and managed multiple cross-channel campaigns, utilizing digital marketing, social media, and traditional advertising, resulting in improved customer acquisition and retention rates.</li>
+                    <ul 
+                      className="list-disc list-outside ml-4 text-xs text-gray-700 space-y-0.5 mt-1"
+                      contentEditable
+                      suppressContentEditableWarning
+                      onInput={(e) => {
+                        const lis = e.currentTarget.querySelectorAll("li");
+                        lis.forEach(li => {
+                          if (!li.textContent.trim()) li.remove();
+                        });
+                      }}
+                    >
+                      <li>Led the development and implementation of comprehensive marketing strategies that resulted in a 20% increase in brand visibility and a 15% growth in sales within the first year.</li>
+                      <li>Successfully launched and managed multiple cross-channel campaigns, utilizing digital marketing, social media, and traditional advertising, resulting in improved customer acquisition and retention rates.</li>
                     </ul>
                   </div>
 
@@ -165,9 +195,19 @@ export default function Template02() {
                       </div>
                       <span className="text-xs text-gray-600 whitespace-nowrap" contentEditable suppressContentEditableWarning>2025 - 2029</span>
                     </div>
-                    <ul className="list-disc list-outside ml-4 text-xs text-gray-700 space-y-0.5 mt-1">
-                      <li contentEditable suppressContentEditableWarning>Conducted market research to identify emerging trends and consumer preferences, providing valuable insights for product development and positioning.</li>
-                      <li contentEditable suppressContentEditableWarning>Oversaw the creation of engaging content for various platforms, collaborating with internal and external agencies to ensure brand consistency and relevance.</li>
+                    <ul 
+                      className="list-disc list-outside ml-4 text-xs text-gray-700 space-y-0.5 mt-1"
+                      contentEditable
+                      suppressContentEditableWarning
+                      onInput={(e) => {
+                        const lis = e.currentTarget.querySelectorAll("li");
+                        lis.forEach(li => {
+                          if (!li.textContent.trim()) li.remove();
+                        });
+                      }}
+                    >
+                      <li>Conducted market research to identify emerging trends and consumer preferences, providing valuable insights for product development and positioning.</li>
+                      <li>Oversaw the creation of engaging content for various platforms, collaborating with internal and external agencies to ensure brand consistency and relevance.</li>
                     </ul>
                   </div>
 
@@ -180,10 +220,20 @@ export default function Template02() {
                       </div>
                       <span className="text-xs text-gray-600 whitespace-nowrap" contentEditable suppressContentEditableWarning>2024 - 2025</span>
                     </div>
-                    <ul className="list-disc list-outside ml-4 text-xs text-gray-700 space-y-0.5 mt-1">
-                      <li contentEditable suppressContentEditableWarning>Developed and executed targeted marketing campaigns, resulting in a 25% increase in lead generation.</li>
-                      <li contentEditable suppressContentEditableWarning>Implemented SEO strategies to improve website traffic by 30%, enhancing online visibility and positioning the company.</li>
-                      <li contentEditable suppressContentEditableWarning>Collaborated with sales teams to create effective sales collateral, presentations, and promotional materials.</li>
+                    <ul 
+                      className="list-disc list-outside ml-4 text-xs text-gray-700 space-y-0.5 mt-1"
+                      contentEditable
+                      suppressContentEditableWarning
+                      onInput={(e) => {
+                        const lis = e.currentTarget.querySelectorAll("li");
+                        lis.forEach(li => {
+                          if (!li.textContent.trim()) li.remove();
+                        });
+                      }}
+                    >
+                      <li>Developed and executed targeted marketing campaigns, resulting in a 25% increase in lead generation.</li>
+                      <li>Implemented SEO strategies to improve website traffic by 30%, enhancing online visibility and positioning the company.</li>
+                      <li>Collaborated with sales teams to create effective sales collateral, presentations, and promotional materials.</li>
                     </ul>
                   </div>
                 </div>

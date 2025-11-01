@@ -3,6 +3,8 @@
 import { Suspense, use } from 'react';
 import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
+import { PDFProvider } from '@/contexts/PDFContext';
+import Header from '@/components/TemplateHeader/Header';
 
 const templateComponents = {
   Template01: dynamic(() => import('@/components/templates/Template01'), { 
@@ -44,8 +46,11 @@ export default function TemplatePage({ params }) {
   }
 
   return (
-    <Suspense fallback={<TemplateLoader />}>
-      <TemplateComponent />
-    </Suspense>
+    <PDFProvider>
+      <Header />
+      <Suspense fallback={<TemplateLoader />}>
+        <TemplateComponent />
+      </Suspense>
+    </PDFProvider>
   );
 }
