@@ -107,7 +107,7 @@ const BuildSection = () => {
 
               {/* Stats */}
               <div className="flex flex-row items-center justify-center lg:justify-start gap-8 sm:gap-10 pt-4">
-                <div className="text-center lg:text-left transform hover:scale-110 transition-transform duration-300">
+                <div className="text-center lg:text-left ">
                   <h3 className="text-2xl sm:text-3xl font-extrabold text-[#342D4C]">
                     1M+
                   </h3>
@@ -115,7 +115,7 @@ const BuildSection = () => {
                     Resumes Created
                   </p>
                 </div>
-                <div className="text-center lg:text-left transform hover:scale-110 transition-transform duration-300">
+                <div className="text-center lg:text-left">
                   <h3 className="text-2xl sm:text-3xl font-extrabold text-[#342D4C]">
                     15M+
                   </h3>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import Signup from "../../app/signup/page"
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -15,13 +16,13 @@ const Navbar = () => {
         <div className="flex items-center gap-4 sm:gap-6 lg:gap-10">
           {/* Logo */}
           <div className="flex items-center space-x-1 sm:space-x-2">
-            <Image
-              src="/logo.png"
-              alt="CV Craft Logo"
-              width={100}
-              height={30}
-              className="object-contain sm:w-[75px] sm:h-[37px] lg:w-[90px] lg:h-[45px]"
-            />
+              <Image
+                src="/logo.png"
+                alt="CV Craft Logo"
+                width={100}
+                height={30}
+                className="object-contain sm:w-[75px] sm:h-[37px] lg:w-[90px] lg:h-[45px]"
+              />
             <span className="text-lg sm:text-xl lg:text-2xl font-extrabold text-blue-800">
               CRAFT
             </span>
@@ -119,7 +120,7 @@ const Navbar = () => {
 
           <div className="flex flex-col space-y-3 pt-3 border-t border-gray-200">
             <Link
-              href="/signup"
+              href="/Signup"
               onClick={() => setMenuOpen(false)}
               className="bg-linear-to-r from-blue-500 to-purple-500 text-white text-center px-4 py-2 rounded-full hover:opacity-90 transition whitespace-nowrap cursor-pointer"
             >

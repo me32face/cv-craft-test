@@ -13,6 +13,8 @@ import WhyChooseUs from '../components/whychoose/page'
 import FAQ from '../components/faquestions/page'
 import Footer from '../components/footer/page'
 import DreamJob from '../components/dreamjob/page'
+import Signup from './signup/page'
+import Login from './login/page'
 
 export default function Home() {
   const scrollRef = useRef(null);
@@ -190,6 +192,8 @@ export default function Home() {
       <FAQ />
       <DreamJob />
       <Footer />
+      <Signup />
+      <Login />
     </>
   );
 }
