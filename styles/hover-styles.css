@@ -1,0 +1,6 @@
+[contenteditable]:hover {
+  border: 1px solid #60a5fa !important;
+  /* background-color: #eff6ff !important; */
+  border-radius: 4px !important;
+  padding: 2px 4px !important;
+}

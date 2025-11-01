@@ -4,6 +4,7 @@ import { Suspense, use } from 'react';
 import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
 import { PDFProvider } from '@/contexts/PDFContext';
+import { UndoRedoProvider } from '@/contexts/UndoRedoContext';
 import Header from '@/components/TemplateHeader/Header';
 
 const templateComponents = {
@@ -47,10 +48,12 @@ export default function TemplatePage({ params }) {
 
   return (
     <PDFProvider>
-      <Header />
-      <Suspense fallback={<TemplateLoader />}>
-        <TemplateComponent />
-      </Suspense>
+      <UndoRedoProvider>
+        <Header />
+        <Suspense fallback={<TemplateLoader />}>
+          <TemplateComponent />
+        </Suspense>
+      </UndoRedoProvider>
     </PDFProvider>
   );
 }

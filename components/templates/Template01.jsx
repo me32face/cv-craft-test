@@ -4,11 +4,14 @@ import Draggable from "react-draggable";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { usePDF } from '../../contexts/PDFContext';
+import { useUndoRedo } from '../../contexts/UndoRedoContext';
 
 export default function Template01() {
   const [profileImage, setProfileImage] = useState(null);
   const [pages, setPages] = useState([1]); // Track number of pages
+  const [contentState, setContentState] = useState({});
   const { registerPDFFunction } = usePDF();
+  const { saveState, undo, redo } = useUndoRedo();
 
   // Use an array to hold a ref for EACH page
   const cvRefs = useRef([]);
@@ -20,21 +23,57 @@ export default function Template01() {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
+        saveState({ profileImage, pages, contentState });
         setProfileImage(e.target.result);
       };
       reader.readAsDataURL(file);
     }
   };
 
+  const handleContentChange = useCallback((elementId, content) => {
+    setContentState(prev => ({ ...prev, [elementId]: content }));
+  }, []);
+
   const addPage = () => {
+    saveState({ profileImage, pages, contentState });
     setPages([...pages, pages.length + 1]);
   };
 
   const deletePage = (pageIndex) => {
     if (pages.length > 1) {
+      saveState({ profileImage, pages, contentState });
       setPages(pages.filter((_, index) => index !== pageIndex));
     }
   };
+
+  // Save state with debounce for content changes
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      saveState({ profileImage, pages, contentState });
+    }, 1000); // Save after 1 second of inactivity
+
+    return () => clearTimeout(timeoutId);
+  }, [contentState, saveState]);
+
+  // Handle undo/redo events from Header
+  useEffect(() => {
+    const handleUndoRedo = (event) => {
+      const { state } = event.detail;
+      if (state) {
+        setProfileImage(state.profileImage || null);
+        setPages(state.pages || [1]);
+        setContentState(state.contentState || {});
+      }
+    };
+
+    window.addEventListener('undoRedo', handleUndoRedo);
+    return () => window.removeEventListener('undoRedo', handleUndoRedo);
+  }, []);
+
+  // Save initial state only once
+  useEffect(() => {
+    saveState({ profileImage: null, pages: [1], contentState: {} });
+  }, []);
 
   const downloadPDF = useCallback(async () => {
     const pageElements = cvRefs.current.filter(el => el);
@@ -176,19 +215,39 @@ export default function Template01() {
                   >
                     <div className="flex items-start gap-2">
                       <Phone className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" />
-                      <span className="text-xs text-gray-700" contentEditable suppressContentEditableWarning>+123-456-7890</span>
+                      <span 
+                        className="text-xs text-gray-700" 
+                        contentEditable 
+                        suppressContentEditableWarning
+                        onInput={(e) => handleContentChange('phone', e.target.textContent)}
+                      >+123-456-7890</span>
                     </div>
                     <div className="flex items-start gap-2">
                       <Mail className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" />
-                      <span className="text-xs text-gray-700 break-all" contentEditable suppressContentEditableWarning>hello@reallygreatsite.com</span>
+                      <span 
+                        className="text-xs text-gray-700 break-all" 
+                        contentEditable 
+                        suppressContentEditableWarning
+                        onInput={(e) => handleContentChange('email', e.target.textContent)}
+                      >hello@reallygreatsite.com</span>
                     </div>
                     <div className="flex items-start gap-2">
                       <MapPin className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" />
-                      <span className="text-xs text-gray-700" contentEditable suppressContentEditableWarning>123 Anywhere St., Any City</span>
+                      <span 
+                        className="text-xs text-gray-700" 
+                        contentEditable 
+                        suppressContentEditableWarning
+                        onInput={(e) => handleContentChange('address', e.target.textContent)}
+                      >123 Anywhere St., Any City</span>
                     </div>
                     <div className="flex items-start gap-2">
                       <Globe className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" />
-                      <span className="text-xs text-gray-700 break-all" contentEditable suppressContentEditableWarning>www.reallygreatsite.com</span>
+                      <span 
+                        className="text-xs text-gray-700 break-all" 
+                        contentEditable 
+                        suppressContentEditableWarning
+                        onInput={(e) => handleContentChange('website', e.target.textContent)}
+                      >www.reallygreatsite.com</span>
                     </div>
                   </div>
                 </Draggable>
@@ -309,8 +368,18 @@ export default function Template01() {
           {/* Header with dark background - Only show on first page */}
           {isFirst && (
             <div className="bg-slate-700 text-white px-6 py-6">
-              <h1 className="text-3xl font-bold mb-1" contentEditable suppressContentEditableWarning>RICHARD SANCHEZ</h1>
-              <p className="text-sm uppercase tracking-widest" contentEditable suppressContentEditableWarning>Marketing Manager</p>
+              <h1 
+                className="text-3xl font-bold mb-1" 
+                contentEditable 
+                suppressContentEditableWarning
+                onInput={(e) => handleContentChange('name', e.target.textContent)}
+              >RICHARD SANCHEZ</h1>
+              <p 
+                className="text-sm uppercase tracking-widest" 
+                contentEditable 
+                suppressContentEditableWarning
+                onInput={(e) => handleContentChange('title', e.target.textContent)}
+              >Marketing Manager</p>
             </div>
           )}
 
