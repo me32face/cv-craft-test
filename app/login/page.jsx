@@ -191,7 +191,7 @@ Sign in your account
                 </div>
                 <button
                   onClick={handleSubmit}
-                  className="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-6  rounded-lg transition mt-8"
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:opacity-90 transition-all duration-300 whitespace-nowrap text-white font-semibold py-3 px-6  rounded-lg  mt-8"
                 >
                   LOGIN  ACCOUNT
                 </button>
