@@ -59,12 +59,12 @@ export default function Home() {
     const scroll = () => {
       const cardWidth = 344;
       const nextIndex = (currentIndex + 1) % templates.length;
-      
+
       scrollContainer.scrollTo({
         left: nextIndex * cardWidth,
         behavior: 'smooth'
       });
-      
+
       setCurrentIndex(nextIndex);
     };
 
@@ -126,13 +126,13 @@ export default function Home() {
               </svg>
             </button>
             <div ref={scrollRef} className="overflow-x-auto pb-4 scrollbar-hide scroll-smooth">
-              <div className="flex gap-6 min-w-max mt-2" style={{scrollSnapType: 'x mandatory'}}>
+              <div className="flex gap-6 min-w-max mt-2" style={{ scrollSnapType: 'x mandatory' }}>
                 {duplicatedTemplates.map((template, index) => (
                   <Link
                     key={`${template.id}-${index}`}
                     href={`/templates/${template.id}`}
                     className="group relative bg-gradient-to-b from-[#f6f9fc] to-[#e8edf5] rounded-2xl shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden block flex-shrink-0 w-80 hover:bg-gradient-to-r hover:from-blue-100 hover:to-purple-100"
-                    style={{scrollSnapAlign: 'start'}}
+                    style={{ scrollSnapAlign: 'start' }}
                   >
                     <div className="p-4">
                       {template.image ? (
@@ -147,20 +147,20 @@ export default function Home() {
                         <TemplatePreview templateId={template.id} />
                       )}
                     </div>
-                   <div className="absolute bottom-0 left-0 w-full p-6 pt-3 opacity-0 group-hover:opacity-100 transition-all duration-500 backdrop-blur-md bg-white/30 rounded-b-2xl">
-  <h3 className="text-gray-700 group-hover:text-gray-600 transition-colors">
-    {template.name.split(' ')[0]}
-  </h3>
-  <h3 className="font-bold text-xl text-gray-700 group-hover:text-gray-600 transition-colors">
-    {template.name}
-  </h3>
+                    <div className="absolute bottom-0 left-0 w-full p-6 pt-3 opacity-0 group-hover:opacity-100 transition-all duration-500 backdrop-blur-md bg-white/30 rounded-b-2xl">
+                      <h3 className="text-gray-700 group-hover:text-gray-600 transition-colors">
+                        {template.name.split(' ')[0]}
+                      </h3>
+                      <h3 className="font-bold text-xl text-gray-700 group-hover:text-gray-600 transition-colors">
+                        {template.name}
+                      </h3>
 
-  <div className="flex items-center justify-center mt-3">
-    <p className="text-sm text-gray-700 border border-gray-500 px-4 py-2 rounded-full w-full text-center backdrop-blur-lg bg-white/40 hover:bg-white/60 transition">
-      Use Template
-    </p>
-  </div>
-</div>
+                      <div className="flex items-center justify-center mt-3">
+                        <p className="text-sm text-gray-700 border border-gray-500 px-4 py-2 rounded-full w-full text-center backdrop-blur-lg bg-white/40 hover:bg-white/60 transition">
+                          Use Template
+                        </p>
+                      </div>
+                    </div>
 
 
                   </Link>

@@ -264,6 +264,17 @@ export default function Template01() {
                     className="space-y-1.5"
                     contentEditable
                     suppressContentEditableWarning
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const newLi = document.createElement('li');
+                        newLi.className = 'flex items-start gap-2';
+                        newLi.innerHTML = '<span class="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span><span class="text-xs text-gray-700"></span>';
+                        e.currentTarget.appendChild(newLi);
+                        const textSpan = newLi.querySelector('.text-xs');
+                        textSpan.focus();
+                      }
+                    }}
                     onInput={(e) => {
                       const lis = e.currentTarget.querySelectorAll("li");
                       lis.forEach(li => {
@@ -318,6 +329,17 @@ export default function Template01() {
                     className="space-y-1.5"
                     contentEditable
                     suppressContentEditableWarning
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const newLi = document.createElement('li');
+                        newLi.className = 'flex items-start gap-2';
+                        newLi.innerHTML = '<span class="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span><span class="text-xs text-gray-700"></span>';
+                        e.currentTarget.appendChild(newLi);
+                        const textSpan = newLi.querySelector('.text-xs');
+                        textSpan.focus();
+                      }
+                    }}
                     onInput={(e) => {
                       const lis = e.currentTarget.querySelectorAll("li");
                       lis.forEach(li => {
@@ -434,6 +456,15 @@ export default function Template01() {
                         className="list-disc list-outside ml-4 text-xs text-gray-700 space-y-0.5 mt-1"
                         contentEditable
                         suppressContentEditableWarning
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            const newLi = document.createElement('li');
+                            newLi.textContent = '';
+                            e.currentTarget.appendChild(newLi);
+                            newLi.focus();
+                          }
+                        }}
                         onInput={(e) => {
                           const lis = e.currentTarget.querySelectorAll("li");
                           lis.forEach(li => {
@@ -462,6 +493,15 @@ export default function Template01() {
                         className="list-disc list-outside ml-4 text-xs text-gray-700 space-y-0.5 mt-1"
                         contentEditable
                         suppressContentEditableWarning
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            const newLi = document.createElement('li');
+                            newLi.textContent = '';
+                            e.currentTarget.appendChild(newLi);
+                            newLi.focus();
+                          }
+                        }}
                         onInput={(e) => {
                           const lis = e.currentTarget.querySelectorAll("li");
                           lis.forEach(li => {
@@ -489,6 +529,15 @@ export default function Template01() {
                         className="list-disc list-outside ml-4 text-xs text-gray-700 space-y-0.5 mt-1"
                         contentEditable
                         suppressContentEditableWarning
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            const newLi = document.createElement('li');
+                            newLi.textContent = '';
+                            e.currentTarget.appendChild(newLi);
+                            newLi.focus();
+                          }
+                        }}
                         onInput={(e) => {
                           const lis = e.currentTarget.querySelectorAll("li");
                           lis.forEach(li => {
