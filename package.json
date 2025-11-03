@@ -17,7 +17,9 @@
     "openai": "^6.7.0",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "react-draggable": "^4.5.0"
+    "react-draggable": "^4.5.0",
+    "react-slick": "^0.31.0",
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "@types/node": "^20",

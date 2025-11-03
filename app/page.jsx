@@ -19,6 +19,7 @@ import Login from './login/page'
 export default function Home() {
   const scrollRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [activeFilter, setActiveFilter] = useState('All');
   const templates = [
     { id: 'Template01', name: 'Professional Classic', image: '/template/template01.png' },
@@ -32,11 +33,11 @@ export default function Home() {
   const duplicatedTemplates = [...templates, ...templates];
 
   const scrollPrev = () => {
-    scrollRef.current?.scrollBy({ left: -640, behavior: 'smooth' });
+    scrollRef.current?.scrollBy({ left: -344, behavior: 'smooth' });
   };
 
   const scrollNext = () => {
-    scrollRef.current?.scrollBy({ left: 640, behavior: 'smooth' });
+    scrollRef.current?.scrollBy({ left: 344, behavior: 'smooth' });
   };
 
   const updateActiveIndex = () => {
@@ -44,7 +45,7 @@ export default function Home() {
     if (!scrollContainer) return;
 
     const scrollLeft = scrollContainer.scrollLeft;
-    const cardWidth = 320;
+    const cardWidth = 344; // 320px width + 24px gap
     const index = Math.round(scrollLeft / cardWidth) % templates.length;
     setActiveIndex(index);
   };
@@ -55,24 +56,24 @@ export default function Home() {
 
     scrollContainer.addEventListener('scroll', updateActiveIndex);
 
-    // const scroll = () => {
-    //   const cardWidth = 320;
-    //   const { scrollLeft } = scrollContainer;
-    //   const maxScroll = templates.length * cardWidth;
+    const scroll = () => {
+      const cardWidth = 344;
+      const nextIndex = (currentIndex + 1) % templates.length;
+      
+      scrollContainer.scrollTo({
+        left: nextIndex * cardWidth,
+        behavior: 'smooth'
+      });
+      
+      setCurrentIndex(nextIndex);
+    };
 
-    //   if (scrollLeft >= maxScroll) {
-    //     scrollContainer.scrollLeft = 0;
-    //   }
-
-    //   scrollContainer.scrollBy({ left: cardWidth, behavior: 'smooth' });
-    // };
-
-    // const interval = setInterval(scroll, 3000);
-    // return () => {
-    //   clearInterval(interval);
-    //   scrollContainer.removeEventListener('scroll', updateActiveIndex);
-    // };
-  }, [templates.length]);
+    const interval = setInterval(scroll, 3000);
+    return () => {
+      clearInterval(interval);
+      scrollContainer.removeEventListener('scroll', updateActiveIndex);
+    };
+  }, [currentIndex, templates.length]);
 
   return (
     <>
@@ -124,13 +125,14 @@ export default function Home() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
-            <div ref={scrollRef} className="overflow-x-auto pb-4 scrollbar-hide">
-              <div className="flex gap-6 min-w-max mt-2">
+            <div ref={scrollRef} className="overflow-x-auto pb-4 scrollbar-hide scroll-smooth">
+              <div className="flex gap-6 min-w-max mt-2" style={{scrollSnapType: 'x mandatory'}}>
                 {duplicatedTemplates.map((template, index) => (
                   <Link
                     key={`${template.id}-${index}`}
                     href={`/templates/${template.id}`}
-                    className="group relative bg-gradient-to-b from-[#f6f9fc] to-[#e8edf5] rounded-2xl shadow-lg  transition-all duration-300 transform hover:-translate-y-1 overflow-hidden block flex-shrink-0 w-80 hover:bg-gradient-to-r hover:from-blue-100 hover:to-purple-100"
+                    className="group relative bg-gradient-to-b from-[#f6f9fc] to-[#e8edf5] rounded-2xl shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden block flex-shrink-0 w-80 hover:bg-gradient-to-r hover:from-blue-100 hover:to-purple-100"
+                    style={{scrollSnapAlign: 'start'}}
                   >
                     <div className="p-4">
                       {template.image ? (
@@ -174,7 +176,7 @@ export default function Home() {
                     : 'bg-gray-300 hover:bg-gray-400'
                     }`}
                   onClick={() => {
-                    const cardWidth = 320;
+                    const cardWidth = 344; // 320px width + 24px gap
                     scrollRef.current?.scrollTo({
                       left: index * cardWidth,
                       behavior: 'smooth'
