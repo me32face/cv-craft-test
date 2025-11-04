@@ -1,3 +1,4 @@
+"use client";
 import React from 'react';
 import { Star, ArrowRight, Zap } from 'lucide-react';
 
@@ -20,8 +21,8 @@ export default function DreamJob() {
             <br />
             <span className="text-white">a Great Resume</span>
           </h1>
-          
-          <p className="text-lg md:text-lg text-white/90 max-w-2xl mx-auto px-1">
+
+          <p className="text-lg md:text-lg text-white/90 max-w-3xl mx-auto px-1">
             Build your professional CV now with AI in minutes. No credit card required to start.
           </p>
         </div>
@@ -44,9 +45,9 @@ export default function DreamJob() {
             </div>
             <span className="font-medium">10,000+ this week</span>
           </div>
-          
+
           <div className="hidden sm:block text-white/40">━━━</div>
-          
+
           <div className="flex items-center gap-2  rounded-full px-6 py-2">
             <Zap className="w-5 h-5 fill-yellow-300 text-yellow-300 animate-pulse" />
             <span className="font-medium">Average time: 12 minutes</span>

@@ -58,7 +58,7 @@ export default function JobSeekers() {
                         >
                             {/* Quote Icon */}
                             <div className="text-gray-300 mb-4">
-                               
+
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 24 24"

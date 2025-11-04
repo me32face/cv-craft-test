@@ -40,11 +40,11 @@ const BuildSection = () => {
           animation: gradientMove 3s ease infinite;
         }
       `}</style>
-      
+
       <section className="w-full bg-[#EDF2FD] py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 mt-15 ">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
-            
+
             {/* Left Content */}
             <div className="w-full lg:w-[800px] text-center lg:text-left space-y-6 animate-fade-in-up px-4 lg:px-6">
               {/* Rating Badge */}
@@ -58,7 +58,7 @@ const BuildSection = () => {
               {/* Headline */}
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#342D4C] leading-tight mb-4">
                 Build Your Resume{" "}
-                <span 
+                <span
                   className="animate-gradient"
                   style={{
                     background: 'linear-gradient(to top, #7741EE, #516DF3)',
@@ -80,26 +80,26 @@ const BuildSection = () => {
 
               {/* Buttons */}
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 mb-8 sm:mb-10">
-                <button 
+                <button
                   className="w-full sm:w-auto group relative text-white px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 overflow-hidden cursor-pointer"
                   style={{
                     background: 'linear-gradient(to right, #4D72F4, #7444EE)'
                   }}
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
-                    Start Building 
+                    Start Building
                     <svg className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
                   </span>
-                  <div 
+                  <div
                     className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     style={{
                       background: 'linear-gradient(to right, #7444EE, #4D72F4)'
                     }}
                   ></div>
                 </button>
-                
+
                 <button className="w-full sm:w-auto border-2 border-purple-400 text-purple-600 bg-white px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-bold hover:bg-purple-50 hover:border-purple-600 hover:scale-105 transition-all duration-300 shadow-md hover:shadow-xl cursor-pointer">
                   Try Demo
                 </button>
@@ -129,7 +129,7 @@ const BuildSection = () => {
             {/* Right Image */}
             <div className="w-full lg:w-auto flex justify-center lg:justify-end animate-fade-in-right mt-8 lg:mt-0">
               <div className="relative w-full max-w-[400px] sm:max-w-[500px] lg:max-w-[800px]">
-                
+
                 {/* Image container */}
                 <div className="relative z-10 transform hover:scale-105 transition-transform duration-500">
                   <img

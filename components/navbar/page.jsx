@@ -16,13 +16,13 @@ const Navbar = () => {
         <div className="flex items-center gap-4 sm:gap-6 lg:gap-10">
           {/* Logo */}
           <div className="flex items-center space-x-1 sm:space-x-2">
-              <Image
-                src="/logo.png"
-                alt="CV Craft Logo"
-                width={100}
-                height={30}
-                className="object-contain sm:w-[75px] sm:h-[37px] lg:w-[90px] lg:h-[45px]"
-              />
+            <Image
+              src="/logo.png"
+              alt="CV Craft Logo"
+              width={100}
+              height={30}
+              className="object-contain sm:w-[75px] sm:h-[37px] lg:w-[90px] lg:h-[45px]"
+            />
             <span className="text-lg sm:text-xl lg:text-2xl font-extrabold text-blue-800">
               CRAFT
             </span>

@@ -1,3 +1,4 @@
+"use client";
 import React from 'react';
 import { Facebook, Twitter, Linkedin, Instagram, Heart } from 'lucide-react';
 import Image from "next/image";
@@ -111,7 +112,7 @@ export default function Footer() {
                 <div className="mt-12 pt-8 border-t border-gray-200">
                     <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                         <p className="text-base text-gray-500 text-center sm:text-left">
-                        
+
                             © 2025 ESTA AI Resume Builder. All rights reserved.
                         </p>
                         <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-2 text-sm sm:text-base md:text-base text-gray-600 text-center">

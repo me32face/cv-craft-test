@@ -1,3 +1,4 @@
+"use client";
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
@@ -69,17 +70,15 @@ export default function FAQ() {
                   {faq.question}
                 </span>
                 <ChevronDown
-                  className={`w-5 h-5 text-gray-400 flex-shrink-0 transition-transform duration-300 ${
-                    openIndex === index ? 'rotate-180' : ''
-                  }`}
+                  className={`w-5 h-5 text-gray-400 flex-shrink-0 transition-transform duration-300 ${openIndex === index ? 'rotate-180' : ''
+                    }`}
                 />
               </button>
 
               {/* Answer Content */}
               <div
-                className={`overflow-hidden transition-all duration-300 ${
-                  openIndex === index ? 'max-h-96' : 'max-h-0'
-                }`}
+                className={`overflow-hidden transition-all duration-300 ${openIndex === index ? 'max-h-96' : 'max-h-0'
+                  }`}
               >
                 <div className="px-5 sm:px-6 pb-5 sm:pb-6">
                   <p className="text-sm sm:text-base text-gray-600 leading-relaxed">

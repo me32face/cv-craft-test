@@ -25,7 +25,7 @@ export default function AIContent() {
             <h2 className="text-xl font-semibold text-[#6D6D6D] mb-6">
               Your input
             </h2>
-            
+
             <div className="space-y-6 pb-8 lg:pb-32">
               {/* Position Input */}
               <div>
