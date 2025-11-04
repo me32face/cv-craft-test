@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Phone, Mail, MapPin, Globe, Briefcase, GraduationCap } from 'lucide-react';
+import { Phone, Mail, MapPin, Globe, Briefcase, GraduationCap, Copy, Trash2 } from 'lucide-react';
 import Draggable from "react-draggable";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -68,6 +68,23 @@ export default function Template01() {
     lis.forEach(li => {
       if (!li.textContent.trim()) li.remove();
     });
+  };
+
+  const duplicateSection = (e, ref) => {
+    e.stopPropagation();
+    const element = ref.current;
+    if (element) {
+      const clone = element.cloneNode(true);
+      element.parentNode.insertBefore(clone, element.nextSibling);
+    }
+  };
+
+  const deleteSection = (e, ref) => {
+    e.stopPropagation();
+    const element = ref.current;
+    if (element && window.confirm('Are you sure you want to delete this section?')) {
+      element.remove();
+    }
   };
 
   const handleAIGenerate = async (section, keywords) => {
@@ -269,7 +286,7 @@ export default function Template01() {
       <div className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-visible flex">
 
         {/* Left Sidebar */}
-        <div className="w-[35%] bg-gray-100 p-6">
+        <div className="w-[35%] bg-gray-100 p-6 pl-8">
           {/* Profile Image */}
           <div className="mb-6">
             <div
@@ -452,12 +469,27 @@ export default function Template01() {
               </div>
             </Draggable>
           </div>
+
+          {/* Certificate Section */}
+          <div className='mt-5'>
+            <Draggable nodeRef={referenceRef} >
+              <h3 ref={referenceRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Certificate</h3>
+            </Draggable>
+            <Draggable nodeRef={referenceContentRef} >
+              <div ref={referenceContentRef} className="text-xs text-gray-700">
+                <p className="font-semibold mb-1" contentEditable suppressContentEditableWarning>Project mananagement</p>
+                <p className="text-gray-600 mb-1" contentEditable suppressContentEditableWarning>Project mananagement Institute</p>
+                <p className="font-semibold" contentEditable suppressContentEditableWarning>Risk Management and Mitigation | 2028</p>
+                <p className="text-gray-600 break-all" contentEditable suppressContentEditableWarning>Internal Auditors Team</p>
+              </div>
+            </Draggable>
+          </div>
         </div>
 
         {/* Right Content */}
-        <div className="w-[65%] bg-white">
+        <div className="w-[65%]  bg-white">
           {/* Header with dark background */}
-          <div className="bg-slate-700 text-white px-6 py-6">
+          <div className="bg-slate-700 text-white px-6 py-8">
             <h1
               className="text-3xl font-bold mb-1"
               contentEditable
@@ -504,7 +536,21 @@ export default function Template01() {
               <div className="pl-8 border-l-2 border-gray-300 ml-3 space-y-4">
                 {/* Job 1 */}
                 <Draggable nodeRef={job1Ref} >
-                  <div ref={job1Ref} className="">
+                  <div ref={job1Ref} className="relative group">
+                    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                      <button
+                        onClick={(e) => duplicateSection(e, job1Ref)}
+                        className="bg-blue-500 text-white rounded p-1.5 shadow-md hover:bg-blue-600"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={(e) => deleteSection(e, job1Ref)}
+                        className="bg-red-500 text-white rounded p-1.5 shadow-md hover:bg-red-600"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                     <div className="flex justify-between items-start mt-4">
                       <div>
                         <h3 className="text-sm font-bold text-gray-800" contentEditable suppressContentEditableWarning>Borcelle Studio</h3>
@@ -528,7 +574,21 @@ export default function Template01() {
 
                 {/* Job 2 */}
                 <Draggable nodeRef={job2Ref} bounds={false}>
-                  <div ref={job2Ref} className="">
+                  <div ref={job2Ref} className="relative group">
+                    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                      <button
+                        onClick={(e) => duplicateSection(e, job2Ref)}
+                        className="bg-blue-500 text-white rounded p-1.5 shadow-md hover:bg-blue-600"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={(e) => deleteSection(e, job2Ref)}
+                        className="bg-red-500 text-white rounded p-1.5 shadow-md hover:bg-red-600"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                     <div className="flex justify-between items-start mb-1">
                       <div>
                         <h3 className="text-sm font-bold text-gray-800" contentEditable suppressContentEditableWarning>Fauget Studio</h3>
@@ -551,7 +611,21 @@ export default function Template01() {
 
                 {/* Job 3 */}
                 <Draggable nodeRef={job3Ref} bounds={false}>
-                  <div ref={job3Ref} className="">
+                  <div ref={job3Ref} className="relative group">
+                    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                      <button
+                        onClick={(e) => duplicateSection(e, job3Ref)}
+                        className="bg-blue-500 text-white rounded p-1.5 shadow-md hover:bg-blue-600"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={(e) => deleteSection(e, job3Ref)}
+                        className="bg-red-500 text-white rounded p-1.5 shadow-md hover:bg-red-600"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                     <div className="flex justify-between items-start mb-1">
                       <div>
                         <h3 className="text-sm font-bold text-gray-800" contentEditable suppressContentEditableWarning>Studio Shodwe</h3>
@@ -586,7 +660,32 @@ export default function Template01() {
 
                 <div className="pl-8 border-l-2 border-gray-300 ml-3 space-y-3">
                   {/* Degree 1 */}
-                  <div>
+                  <div className="relative group">
+                    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const element = e.currentTarget.parentElement.parentElement;
+                          const clone = element.cloneNode(true);
+                          element.parentNode.insertBefore(clone, element.nextSibling);
+                        }}
+                        className="bg-blue-500 text-white rounded p-1.5 shadow-md hover:bg-blue-600"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const element = e.currentTarget.parentElement.parentElement;
+                          if (window.confirm('Are you sure you want to delete this section?')) {
+                            element.remove();
+                          }
+                        }}
+                        className="bg-red-500 text-white rounded p-1.5 shadow-md hover:bg-red-600"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                     <div className="flex justify-between items-start mb-0.5">
                       <div>
                         <h3 className="text-sm font-bold text-gray-800" contentEditable suppressContentEditableWarning>Master of Business Management</h3>
@@ -598,7 +697,32 @@ export default function Template01() {
                   </div>
 
                   {/* Degree 2 */}
-                  <div>
+                  <div className="relative group">
+                    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const element = e.currentTarget.parentElement.parentElement;
+                          const clone = element.cloneNode(true);
+                          element.parentNode.insertBefore(clone, element.nextSibling);
+                        }}
+                        className="bg-blue-500 text-white rounded p-1.5 shadow-md hover:bg-blue-600"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const element = e.currentTarget.parentElement.parentElement;
+                          if (window.confirm('Are you sure you want to delete this section?')) {
+                            element.remove();
+                          }
+                        }}
+                        className="bg-red-500 text-white rounded p-1.5 shadow-md hover:bg-red-600"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                     <div className="flex justify-between items-start mb-0.5">
                       <div>
                         <h3 className="text-sm font-bold text-gray-800" contentEditable suppressContentEditableWarning>Bachelor of Business Management</h3>
