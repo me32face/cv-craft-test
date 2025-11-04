@@ -5,11 +5,15 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { usePDF } from '../../contexts/PDFContext';
 import { useUndoRedo } from '../../contexts/UndoRedoContext';
+import AISparkle from '../AISparkle';
+import { geminiService } from '../../lib/gemini';
+import '../../styles/ai-sparkle.css';
 
 export default function Template01() {
   const [profileImage, setProfileImage] = useState(null);
   const [pages, setPages] = useState([1]); // Track number of pages
   const [contentState, setContentState] = useState({});
+  const [geminiApiKey, setGeminiApiKey] = useState('');
   const { registerPDFFunction } = usePDF();
   const { saveState, undo, redo } = useUndoRedo();
 
@@ -33,6 +37,98 @@ export default function Template01() {
   const handleContentChange = useCallback((elementId, content) => {
     setContentState(prev => ({ ...prev, [elementId]: content }));
   }, []);
+
+  const handleAIGenerate = async (section, keywords) => {
+    if (!geminiService.genAI) {
+      const apiKey = prompt('Please enter your Gemini API key:');
+      if (!apiKey) return;
+      geminiService.initialize(apiKey);
+    }
+
+    try {
+      const generatedContent = await geminiService.generateContent(section, keywords);
+      
+      // Update the appropriate section based on the section type
+      switch (section.toLowerCase()) {
+       case 'profile':
+case 'summary':
+  const profileElement = document.getElementById('profile-text');
+  if (profileElement) {
+    // Clean the generated content
+    let cleanedContent = generatedContent
+      // Remove markdown headers (###, ##, #)
+      .replace(/^#{1,6}\s+.+$/gm, '')
+      // Remove markdown bold (**text**)
+      .replace(/\*\*(.+?)\*\*/g, '$1')
+      // Remove markdown italic (*text*)
+      .replace(/\*(.+?)\*/g, '$1')
+      .trim();
+    
+    // Split into paragraphs
+    const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
+    
+    // Skip introductory paragraphs (like "Of course. Here are...")
+    // Find the first paragraph that doesn't contain phrases like "here are", "options", "choose"
+    const actualSummary = paragraphs.find(p => 
+      !p.toLowerCase().includes('here are') &&
+      !p.toLowerCase().includes('of course') &&
+      !p.toLowerCase().includes('choose the option') &&
+      !p.toLowerCase().includes('pro-tip') &&
+      p.length > 100 // Ensure it's substantial
+    );
+    
+    const finalContent = actualSummary?.trim() || paragraphs[0]?.trim() || cleanedContent;
+    
+    profileElement.textContent = finalContent;
+  } else {
+    console.error('Profile element not found');
+  }
+  break;
+        case 'skills':
+          const skillsElement = document.querySelector('[data-section="skills"] ul');
+          if (skillsElement) {
+            const skills = generatedContent.split('\n').filter(skill => skill.trim());
+            skillsElement.innerHTML = skills.map(skill => 
+              `<li class="flex items-start gap-2">
+                <span class="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
+                <span class="text-xs text-gray-700">${skill.trim()}</span>
+              </li>`
+            ).join('');
+          }
+          break;
+        case 'work experience':
+          const workExpElement = document.querySelector('[data-section="work-experience"] .space-y-4');
+          if (workExpElement) {
+            const experiences = generatedContent.split('---').filter(exp => exp.trim());
+            workExpElement.innerHTML = experiences.map(exp => {
+              const lines = exp.trim().split('\n').filter(line => line.trim());
+              const company = lines[0] || 'Company Name';
+              const position = lines[1] || 'Position';
+              const period = lines[2] || '2020 - Present';
+              const duties = lines.slice(3).filter(duty => duty.trim());
+              
+              return `<div>
+                <div class="flex justify-between items-start mt-4">
+                  <div>
+                    <h3 class="text-sm font-bold text-gray-800">${company}</h3>
+                    <p class="text-xs text-gray-600">${position}</p>
+                  </div>
+                  <span class="text-xs text-gray-500 whitespace-nowrap">${period}</span>
+                </div>
+                <ul class="list-disc list-outside ml-4 text-xs text-gray-700 space-y-0.5 mt-1">
+                  ${duties.map(duty => `<li>${duty.trim()}</li>`).join('')}
+                </ul>
+              </div>`;
+            }).join('');
+          }
+          break;
+        default:
+          console.log('Generated content:', generatedContent);
+      }
+    } catch (error) {
+      alert('Failed to generate content. Please check your API key and try again.');
+    }
+  };
 
   const addPage = () => {
     saveState({ profileImage, pages, contentState });
@@ -159,8 +255,6 @@ export default function Template01() {
     const skillsContentRef = useRef(null);
     const languagesContentRef = useRef(null);
     const referenceContentRef = useRef(null);
-
-
     return (
 
       <div className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-visible flex">
@@ -219,7 +313,6 @@ export default function Template01() {
                         className="text-xs text-gray-700" 
                         contentEditable 
                         suppressContentEditableWarning
-                        onInput={(e) => handleContentChange('phone', e.target.textContent)}
                       >+123-456-7890</span>
                     </div>
                     <div className="flex items-start gap-2">
@@ -228,7 +321,7 @@ export default function Template01() {
                         className="text-xs text-gray-700 break-all" 
                         contentEditable 
                         suppressContentEditableWarning
-                        onInput={(e) => handleContentChange('email', e.target.textContent)}
+                        
                       >hello@reallygreatsite.com</span>
                     </div>
                     <div className="flex items-start gap-2">
@@ -237,7 +330,6 @@ export default function Template01() {
                         className="text-xs text-gray-700" 
                         contentEditable 
                         suppressContentEditableWarning
-                        onInput={(e) => handleContentChange('address', e.target.textContent)}
                       >123 Anywhere St., Any City</span>
                     </div>
                     <div className="flex items-start gap-2">
@@ -246,7 +338,6 @@ export default function Template01() {
                         className="text-xs text-gray-700 break-all" 
                         contentEditable 
                         suppressContentEditableWarning
-                        onInput={(e) => handleContentChange('website', e.target.textContent)}
                       >www.reallygreatsite.com</span>
                     </div>
                   </div>
@@ -254,9 +345,12 @@ export default function Template01() {
               </div>
 
               {/* Skills Section */}
-              <div className="mb-6">
+              <div className="mb-6 section-container" data-section="skills">
                 <Draggable nodeRef={skillsRef} >
-                  <h3 ref={skillsRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Skills</h3>
+                  <div className="relative">
+                    <h3 ref={skillsRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Skills</h3>
+                    <AISparkle section="Skills" onGenerate={handleAIGenerate} />
+                  </div>
                 </Draggable>
                 <Draggable nodeRef={skillsContentRef} >
                   <ul
@@ -394,13 +488,11 @@ export default function Template01() {
                 className="text-3xl font-bold mb-1" 
                 contentEditable 
                 suppressContentEditableWarning
-                onInput={(e) => handleContentChange('name', e.target.textContent)}
               >RICHARD SANCHEZ</h1>
               <p 
                 className="text-sm uppercase tracking-widest" 
                 contentEditable 
                 suppressContentEditableWarning
-                onInput={(e) => handleContentChange('title', e.target.textContent)}
               >Marketing Manager</p>
             </div>
           )}
@@ -408,37 +500,33 @@ export default function Template01() {
           {isFirst && (
             <div className="px-6 py-5 pt-8">
               {/* Profile Section */}
-              <div className="mb-5">
-                <Draggable nodeRef={nodeRef}>
-                  <div ref={nodeRef} className="flex items-center gap-2 mb-2">
-                    <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-white text-xs font-bold">P</span>
-                    </div>
-                    <h2 contentEditable suppressContentEditableWarning className="text-sm font-bold text-gray-800 uppercase tracking-wide">Profile</h2>
+              <div className="mb-5 section-container" data-section="profile">
+                <div className="flex items-center gap-2 mb-2 relative">
+                  <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-white text-xs font-bold">P</span>
                   </div>
-                </Draggable>
+                  <h2 contentEditable suppressContentEditableWarning className="text-sm font-bold text-gray-800 uppercase tracking-wide">Profile</h2>
+                  <AISparkle section="Profile" onGenerate={handleAIGenerate} />
+                </div>
                 <div className="relative">
-                  <Draggable nodeRef={nodeRef}>
-                    <div ref={nodeRef} className="absolute left-3 top-0 w-0.5 h-full bg-gray-300"></div>
-                  </Draggable>
-                  <Draggable nodeRef={nodeRef}>
-                    <div className="pl-8 ml-3">
-                      <p className="text-xs text-gray-700 leading-relaxed" contentEditable suppressContentEditableWarning>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam laboris.
-                      </p>
-                    </div>
-                  </Draggable>
+                  <div className="absolute left-3 top-0 w-0.5 h-full bg-gray-300"></div>
+                  <div className="pl-8 ml-3">
+                    <p id="profile-text" className="text-xs text-gray-700 leading-relaxed" contentEditable suppressContentEditableWarning>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam laboris.
+                    </p>
+                  </div>
                 </div>
               </div>
 
               {/* Work Experience Section */}
-              <div className="pt-4">
+              <div className="pt-4 section-container" data-section="work-experience">
                 <Draggable nodeRef={workExpRef} >
-                  <div ref={workExpRef} className="flex items-center gap-2 mb-2">
+                  <div ref={workExpRef} className="flex items-center gap-2 mb-2 relative">
                     <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center flex-shrink-0">
                       <Briefcase className="w-3 h-3 text-white" />
                     </div>
                     <h2 contentEditable suppressContentEditableWarning className="text-sm font-bold text-gray-800 uppercase tracking-wide">Work Experience</h2>
+                    {/* <AISparkle section="Work Experience" onGenerate={handleAIGenerate} /> */}
                   </div>
                 </Draggable>
                 <div className="pl-8 border-l-2 border-gray-300 ml-3 space-y-4">

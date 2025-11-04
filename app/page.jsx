@@ -50,30 +50,30 @@ export default function Home() {
     setActiveIndex(index);
   };
 
-  useEffect(() => {
-    const scrollContainer = scrollRef.current;
-    if (!scrollContainer) return;
+  // useEffect(() => {
+  //   const scrollContainer = scrollRef.current;
+  //   if (!scrollContainer) return;
 
-    scrollContainer.addEventListener('scroll', updateActiveIndex);
+  //   scrollContainer.addEventListener('scroll', updateActiveIndex);
 
-    const scroll = () => {
-      const cardWidth = 344;
-      const nextIndex = (currentIndex + 1) % templates.length;
+  //   const scroll = () => {
+  //     const cardWidth = 344;
+  //     const nextIndex = (currentIndex + 1) % templates.length;
 
-      scrollContainer.scrollTo({
-        left: nextIndex * cardWidth,
-        behavior: 'smooth'
-      });
+  //     scrollContainer.scrollTo({
+  //       left: nextIndex * cardWidth,
+  //       behavior: 'smooth'
+  //     });
 
-      setCurrentIndex(nextIndex);
-    };
+  //     setCurrentIndex(nextIndex);
+  //   };
 
-    const interval = setInterval(scroll, 3000);
-    return () => {
-      clearInterval(interval);
-      scrollContainer.removeEventListener('scroll', updateActiveIndex);
-    };
-  }, [currentIndex, templates.length]);
+  //   const interval = setInterval(scroll, 3000);
+  //   return () => {
+  //     clearInterval(interval);
+  //     scrollContainer.removeEventListener('scroll', updateActiveIndex);
+  //   };
+  // }, [currentIndex, templates.length]);
 
   return (
     <>
