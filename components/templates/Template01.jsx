@@ -7,7 +7,7 @@ import { usePDF } from '../../contexts/PDFContext';
 import { useUndoRedo } from '../../contexts/UndoRedoContext';
 import AISparkle from '../AISparkle';
 import { geminiService } from '../../lib/gemini';
-import '../../styles/ai-sparkle.css';
+// import '../../styles/ai-sparkle.css';
 
 export default function Template01() {
   const [profileImage, setProfileImage] = useState(null);
@@ -37,12 +37,26 @@ export default function Template01() {
   const handleBulletListEnter = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      const newLi = document.createElement('li');
-      newLi.className = 'flex items-start gap-2';
-      newLi.innerHTML = '<span class="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span><span class="text-xs text-gray-700"></span>';
-      e.currentTarget.appendChild(newLi);
-      const textSpan = newLi.querySelector('.text-xs');
-      textSpan?.focus();
+      const selection = window.getSelection();
+      let currentLi = selection.anchorNode;
+      
+      while (currentLi && currentLi.tagName !== 'LI') {
+        currentLi = currentLi.parentElement;
+      }
+      
+      if (currentLi) {
+        const newLi = document.createElement('li');
+        newLi.className = 'flex items-start gap-2';
+        newLi.innerHTML = '<span class="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span><span class="text-xs text-gray-700">\u200B</span>';
+        currentLi.parentNode.insertBefore(newLi, currentLi.nextSibling);
+        
+        const textSpan = newLi.querySelector('.text-xs');
+        const range = document.createRange();
+        range.setStart(textSpan.firstChild, 1);
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
     }
   };
 
@@ -56,10 +70,24 @@ export default function Template01() {
   const handleSimpleListEnter = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      const newLi = document.createElement('li');
-      newLi.textContent = '';
-      e.currentTarget.appendChild(newLi);
-      newLi.focus();
+      const selection = window.getSelection();
+      let currentLi = selection.anchorNode;
+      
+      while (currentLi && currentLi.tagName !== 'LI') {
+        currentLi = currentLi.parentElement;
+      }
+      
+      if (currentLi) {
+        const newLi = document.createElement('li');
+        newLi.textContent = '\u200B';
+        currentLi.parentNode.insertBefore(newLi, currentLi.nextSibling);
+        
+        const range = document.createRange();
+        range.setStart(newLi.firstChild, 1);
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
     }
   };
 
@@ -82,9 +110,7 @@ export default function Template01() {
   const deleteSection = (e, ref) => {
     e.stopPropagation();
     const element = ref.current;
-    if (element && window.confirm('Are you sure you want to delete this section?')) {
       element.remove();
-    }
   };
 
   const handleAIGenerate = async (section, keywords) => {
@@ -318,7 +344,7 @@ export default function Template01() {
             <Draggable nodeRef={contactContentRef} >
               <div
                 ref={contactContentRef}
-                className="space-y-2"
+                className="space-y-2 relative group"
                 onKeyDown={(e) => {
                   if (e.key === 'Backspace') {
                     const contactItems = e.currentTarget.querySelectorAll('div');
@@ -364,6 +390,20 @@ export default function Template01() {
                     suppressContentEditableWarning
                   >www.reallygreatsite.com</span>
                 </div>
+                <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                  <button
+                    onClick={(e) => duplicateSection(e, contactContentRef)}
+                    className="text-gray-600 rounded p-1.5 shadow-md"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={(e) => deleteSection(e, contactContentRef)}
+                    className="text-gray-600 rounded p-1.5 shadow-md"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             </Draggable>
           </div>
@@ -371,15 +411,15 @@ export default function Template01() {
           {/* Skills Section */}
           <div className="mb-6 section-container" data-section="skills">
             <Draggable nodeRef={skillsRef} >
-              <div className="relative">
+              <div className="relative flex  gap-2">
                 <h3 ref={skillsRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Skills</h3>
-                <AISparkle section="Skills" onGenerate={handleAIGenerate} />
+                <AISparkle className='mt-1' section="Skills" onGenerate={handleAIGenerate} />
               </div>
             </Draggable>
             <Draggable nodeRef={skillsContentRef} >
               <ul
                 ref={skillsContentRef}
-                className="space-y-1.5"
+                className="space-y-1.5 relative group"
                 contentEditable
                 suppressContentEditableWarning
                 onKeyDown={handleBulletListEnter}
@@ -417,6 +457,20 @@ export default function Template01() {
                   <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
                   <span className="text-xs text-gray-700">Digital Marketing</span>
                 </li>
+                <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                  <button
+                    onClick={(e) => duplicateSection(e, skillsContentRef)}
+                    className="text-gray-600 rounded p-1.5 shadow-md"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={(e) => deleteSection(e, skillsContentRef)}
+                    className="text-gray-600 rounded p-1.5 shadow-md"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </ul>
             </Draggable>
           </div>
@@ -429,7 +483,7 @@ export default function Template01() {
             <Draggable nodeRef={languagesContentRef} >
               <ul
                 ref={languagesContentRef}
-                className="space-y-1.5"
+                className="space-y-1.5 relative group"
                 contentEditable
                 suppressContentEditableWarning
                 onKeyDown={handleBulletListEnter}
@@ -451,6 +505,20 @@ export default function Template01() {
                   <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
                   <span className="text-xs text-gray-700">Spanish (Intermediate)</span>
                 </li>
+                <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                  <button
+                    onClick={(e) => duplicateSection(e, languagesContentRef)}
+                    className="text-gray-600 rounded p-1.5 shadow-md"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={(e) => deleteSection(e, languagesContentRef)}
+                    className="text-gray-600 rounded p-1.5 shadow-md"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </ul>
             </Draggable>
           </div>
@@ -461,11 +529,25 @@ export default function Template01() {
               <h3 ref={referenceRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Reference</h3>
             </Draggable>
             <Draggable nodeRef={referenceContentRef} >
-              <div ref={referenceContentRef} className="text-xs text-gray-700">
+              <div ref={referenceContentRef} className="text-xs text-gray-700 relative group">
                 <p className="font-semibold mb-1" contentEditable suppressContentEditableWarning>Estelle Darcy</p>
                 <p className="text-gray-600 mb-1" contentEditable suppressContentEditableWarning>Wardiere Inc. / CTO</p>
                 <p className="text-gray-600" contentEditable suppressContentEditableWarning>Phone: 123-456-7890</p>
                 <p className="text-gray-600 break-all" contentEditable suppressContentEditableWarning>Email: hello@reallygreatsite.com</p>
+                <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                  <button
+                    onClick={(e) => duplicateSection(e, referenceContentRef)}
+                    className="text-gray-600 rounded p-1.5 shadow-md"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={(e) => deleteSection(e, referenceContentRef)}
+                    className="text-gray-600 rounded p-1.5 shadow-md"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             </Draggable>
           </div>
@@ -476,11 +558,25 @@ export default function Template01() {
               <h3 ref={referenceRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Certificate</h3>
             </Draggable>
             <Draggable nodeRef={referenceContentRef} >
-              <div ref={referenceContentRef} className="text-xs text-gray-700">
+              <div ref={referenceContentRef} className="text-xs text-gray-700 relative group">
                 <p className="font-semibold mb-1" contentEditable suppressContentEditableWarning>Project mananagement</p>
                 <p className="text-gray-600 mb-1" contentEditable suppressContentEditableWarning>Project mananagement Institute</p>
                 <p className="font-semibold" contentEditable suppressContentEditableWarning>Risk Management and Mitigation | 2028</p>
                 <p className="text-gray-600 break-all" contentEditable suppressContentEditableWarning>Internal Auditors Team</p>
+                <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                  <button
+                    onClick={(e) => duplicateSection(e, referenceContentRef)}
+                    className="text-gray-600 rounded p-1.5 shadow-md"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={(e) => deleteSection(e, referenceContentRef)}
+                    className="text-gray-600 rounded p-1.5 shadow-md"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             </Draggable>
           </div>
@@ -537,16 +633,16 @@ export default function Template01() {
                 {/* Job 1 */}
                 <Draggable nodeRef={job1Ref} >
                   <div ref={job1Ref} className="relative group">
-                    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                       <button
                         onClick={(e) => duplicateSection(e, job1Ref)}
-                        className="bg-blue-500 text-white rounded p-1.5 shadow-md hover:bg-blue-600"
+                        className="text-gray-600 rounded p-1.5 shadow-md text-gray-600"
                       >
                         <Copy className="w-4 h-4" />
                       </button>
                       <button
                         onClick={(e) => deleteSection(e, job1Ref)}
-                        className="bg-red-500 text-white rounded p-1.5 shadow-md hover:bg-red-600"
+                        className="text-gray-600 rounded p-1.5 shadow-md "
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -575,16 +671,16 @@ export default function Template01() {
                 {/* Job 2 */}
                 <Draggable nodeRef={job2Ref} bounds={false}>
                   <div ref={job2Ref} className="relative group">
-                    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                       <button
                         onClick={(e) => duplicateSection(e, job2Ref)}
-                        className="bg-blue-500 text-white rounded p-1.5 shadow-md hover:bg-blue-600"
+                        className="text-gray-600 rounded p-1.5 shadow-md "
                       >
                         <Copy className="w-4 h-4" />
                       </button>
                       <button
                         onClick={(e) => deleteSection(e, job2Ref)}
-                        className="bg-red-500 text-white rounded p-1.5 shadow-md hover:bg-red-600"
+                        className="text-gray-600  rounded p-1.5 shadow-md text-gray-600"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -612,16 +708,16 @@ export default function Template01() {
                 {/* Job 3 */}
                 <Draggable nodeRef={job3Ref} bounds={false}>
                   <div ref={job3Ref} className="relative group">
-                    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                       <button
                         onClick={(e) => duplicateSection(e, job3Ref)}
-                        className="bg-blue-500 text-white rounded p-1.5 shadow-md hover:bg-blue-600"
+                        className=" text-gray-600 rounded p-1.5 shadow-md "
                       >
                         <Copy className="w-4 h-4" />
                       </button>
                       <button
                         onClick={(e) => deleteSection(e, job3Ref)}
-                        className="bg-red-500 text-white rounded p-1.5 shadow-md hover:bg-red-600"
+                        className="text-gray-600 rounded p-1.5 shadow-md "
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -661,7 +757,7 @@ export default function Template01() {
                 <div className="pl-8 border-l-2 border-gray-300 ml-3 space-y-3">
                   {/* Degree 1 */}
                   <div className="relative group">
-                    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -669,7 +765,7 @@ export default function Template01() {
                           const clone = element.cloneNode(true);
                           element.parentNode.insertBefore(clone, element.nextSibling);
                         }}
-                        className="bg-blue-500 text-white rounded p-1.5 shadow-md hover:bg-blue-600"
+                        className="text-gray-600 rounded p-1.5 shadow-md"
                       >
                         <Copy className="w-4 h-4" />
                       </button>
@@ -681,7 +777,7 @@ export default function Template01() {
                             element.remove();
                           }
                         }}
-                        className="bg-red-500 text-white rounded p-1.5 shadow-md hover:bg-red-600"
+                        className="text-gray-600 rounded p-1.5 shadow-md "
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -698,7 +794,7 @@ export default function Template01() {
 
                   {/* Degree 2 */}
                   <div className="relative group">
-                    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -706,7 +802,7 @@ export default function Template01() {
                           const clone = element.cloneNode(true);
                           element.parentNode.insertBefore(clone, element.nextSibling);
                         }}
-                        className="bg-blue-500 text-white rounded p-1.5 shadow-md hover:bg-blue-600"
+                        className="text-gray-600 rounded p-1.5 shadow-md "
                       >
                         <Copy className="w-4 h-4" />
                       </button>
@@ -718,7 +814,7 @@ export default function Template01() {
                             element.remove();
                           }
                         }}
-                        className="bg-red-500 text-white rounded p-1.5 shadow-md hover:bg-red-600"
+                        className="text-gray-600  rounded p-1.5 shadow-md "
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
