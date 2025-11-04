@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Phone, Mail, MapPin, Globe, Briefcase, GraduationCap, Copy, Trash2 } from 'lucide-react';
+import { Phone, Mail, MapPin, Globe, Briefcase, GraduationCap, Copy, CopyPlus, Trash2 } from 'lucide-react';
 import Draggable from "react-draggable";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -110,8 +110,27 @@ export default function Template01() {
   const deleteSection = (e, ref) => {
     e.stopPropagation();
     const element = ref.current;
+    if (element) {
       element.remove();
+    }
   };
+
+  const handleButtonClick = useCallback((e) => {
+    const button = e.target.closest('button');
+    if (!button) return;
+
+    const action = button.getAttribute('data-action');
+    const section = button.closest('.relative.group');
+    
+    if (!section) return;
+
+    if (action === 'duplicate') {
+      const clone = section.cloneNode(true);
+      section.parentNode.insertBefore(clone, section.nextSibling);
+    } else if (action === 'delete') {
+      section.remove();
+    }
+  }, []);
 
   const handleAIGenerate = async (section, keywords) => {
     if (!geminiService.genAI) {
@@ -309,7 +328,7 @@ export default function Template01() {
     const referenceContentRef = useRef(null);
     return (
 
-      <div className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-visible flex">
+      <div className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-visible flex" onClick={handleButtonClick}>
 
         {/* Left Sidebar */}
         <div className="w-[35%] bg-gray-100 p-6 pl-8">
@@ -391,16 +410,10 @@ export default function Template01() {
                   >www.reallygreatsite.com</span>
                 </div>
                 <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                  <button
-                    onClick={(e) => duplicateSection(e, contactContentRef)}
-                    className="text-gray-600 rounded p-1.5 shadow-md"
-                  >
-                    <Copy className="w-4 h-4" />
+                  <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                    <CopyPlus className="w-4 h-4" />
                   </button>
-                  <button
-                    onClick={(e) => deleteSection(e, contactContentRef)}
-                    className="text-gray-600 rounded p-1.5 shadow-md"
-                  >
+                  <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
@@ -458,16 +471,10 @@ export default function Template01() {
                   <span className="text-xs text-gray-700">Digital Marketing</span>
                 </li>
                 <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                  <button
-                    onClick={(e) => duplicateSection(e, skillsContentRef)}
-                    className="text-gray-600 rounded p-1.5 shadow-md"
-                  >
-                    <Copy className="w-4 h-4" />
+                  <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                    <CopyPlus className="w-4 h-4" />
                   </button>
-                  <button
-                    onClick={(e) => deleteSection(e, skillsContentRef)}
-                    className="text-gray-600 rounded p-1.5 shadow-md"
-                  >
+                  <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
@@ -506,16 +513,10 @@ export default function Template01() {
                   <span className="text-xs text-gray-700">Spanish (Intermediate)</span>
                 </li>
                 <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                  <button
-                    onClick={(e) => duplicateSection(e, languagesContentRef)}
-                    className="text-gray-600 rounded p-1.5 shadow-md"
-                  >
-                    <Copy className="w-4 h-4" />
+                  <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                    <CopyPlus className="w-4 h-4" />
                   </button>
-                  <button
-                    onClick={(e) => deleteSection(e, languagesContentRef)}
-                    className="text-gray-600 rounded p-1.5 shadow-md"
-                  >
+                  <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
@@ -535,16 +536,10 @@ export default function Template01() {
                 <p className="text-gray-600" contentEditable suppressContentEditableWarning>Phone: 123-456-7890</p>
                 <p className="text-gray-600 break-all" contentEditable suppressContentEditableWarning>Email: hello@reallygreatsite.com</p>
                 <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                  <button
-                    onClick={(e) => duplicateSection(e, referenceContentRef)}
-                    className="text-gray-600 rounded p-1.5 shadow-md"
-                  >
-                    <Copy className="w-4 h-4" />
+                  <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                    <CopyPlus className="w-4 h-4" />
                   </button>
-                  <button
-                    onClick={(e) => deleteSection(e, referenceContentRef)}
-                    className="text-gray-600 rounded p-1.5 shadow-md"
-                  >
+                  <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
@@ -564,16 +559,10 @@ export default function Template01() {
                 <p className="font-semibold" contentEditable suppressContentEditableWarning>Risk Management and Mitigation | 2028</p>
                 <p className="text-gray-600 break-all" contentEditable suppressContentEditableWarning>Internal Auditors Team</p>
                 <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                  <button
-                    onClick={(e) => duplicateSection(e, referenceContentRef)}
-                    className="text-gray-600 rounded p-1.5 shadow-md"
-                  >
-                    <Copy className="w-4 h-4" />
+                  <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                    <CopyPlus className="w-4 h-4" />
                   </button>
-                  <button
-                    onClick={(e) => deleteSection(e, referenceContentRef)}
-                    className="text-gray-600 rounded p-1.5 shadow-md"
-                  >
+                  <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
@@ -634,16 +623,10 @@ export default function Template01() {
                 <Draggable nodeRef={job1Ref} >
                   <div ref={job1Ref} className="relative group">
                     <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button
-                        onClick={(e) => duplicateSection(e, job1Ref)}
-                        className="text-gray-600 rounded p-1.5 shadow-md text-gray-600"
-                      >
-                        <Copy className="w-4 h-4" />
+                      <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                        <CopyPlus className="w-4 h-4" />
                       </button>
-                      <button
-                        onClick={(e) => deleteSection(e, job1Ref)}
-                        className="text-gray-600 rounded p-1.5 shadow-md "
-                      >
+                      <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -672,16 +655,10 @@ export default function Template01() {
                 <Draggable nodeRef={job2Ref} bounds={false}>
                   <div ref={job2Ref} className="relative group">
                     <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button
-                        onClick={(e) => duplicateSection(e, job2Ref)}
-                        className="text-gray-600 rounded p-1.5 shadow-md "
-                      >
-                        <Copy className="w-4 h-4" />
+                      <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                        <CopyPlus className="w-4 h-4" />
                       </button>
-                      <button
-                        onClick={(e) => deleteSection(e, job2Ref)}
-                        className="text-gray-600  rounded p-1.5 shadow-md text-gray-600"
-                      >
+                      <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -709,16 +686,10 @@ export default function Template01() {
                 <Draggable nodeRef={job3Ref} bounds={false}>
                   <div ref={job3Ref} className="relative group">
                     <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button
-                        onClick={(e) => duplicateSection(e, job3Ref)}
-                        className=" text-gray-600 rounded p-1.5 shadow-md "
-                      >
-                        <Copy className="w-4 h-4" />
+                      <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                        <CopyPlus className="w-4 h-4" />
                       </button>
-                      <button
-                        onClick={(e) => deleteSection(e, job3Ref)}
-                        className="text-gray-600 rounded p-1.5 shadow-md "
-                      >
+                      <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -767,15 +738,15 @@ export default function Template01() {
                         }}
                         className="text-gray-600 rounded p-1.5 shadow-md"
                       >
-                        <Copy className="w-4 h-4" />
+                        <CopyPlus className="w-4 h-4" />
                       </button>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           const element = e.currentTarget.parentElement.parentElement;
-                          if (window.confirm('Are you sure you want to delete this section?')) {
+                          // if (window.confirm('Are you sure you want to delete this section?')) {
                             element.remove();
-                          }
+                          // }
                         }}
                         className="text-gray-600 rounded p-1.5 shadow-md "
                       >
@@ -804,15 +775,15 @@ export default function Template01() {
                         }}
                         className="text-gray-600 rounded p-1.5 shadow-md "
                       >
-                        <Copy className="w-4 h-4" />
+                        <CopyPlus className="w-4 h-4" />
                       </button>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           const element = e.currentTarget.parentElement.parentElement;
-                          if (window.confirm('Are you sure you want to delete this section?')) {
+                          // if (window.confirm('Are you sure you want to delete this section?')) {
                             element.remove();
-                          }
+                          // }
                         }}
                         className="text-gray-600  rounded p-1.5 shadow-md "
                       >
