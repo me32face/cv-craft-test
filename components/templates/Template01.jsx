@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Phone, Mail, MapPin, Globe, Briefcase, GraduationCap, Copy, CopyPlus, Trash2 } from 'lucide-react';
+import { Phone, Mail, MapPin, Globe, Briefcase, GraduationCap, CopyPlus, Trash2 } from 'lucide-react';
 import Draggable from "react-draggable";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -30,9 +30,7 @@ export default function Template01() {
     }
   };
 
-  const handleContentChange = useCallback((elementId, content) => {
-    setContentState(prev => ({ ...prev, [elementId]: content }));
-  }, []);
+
 
   const handleBulletListEnter = (e) => {
     if (e.key === 'Enter') {
@@ -98,22 +96,7 @@ export default function Template01() {
     });
   };
 
-  const duplicateSection = (e, ref) => {
-    e.stopPropagation();
-    const element = ref.current;
-    if (element) {
-      const clone = element.cloneNode(true);
-      element.parentNode.insertBefore(clone, element.nextSibling);
-    }
-  };
 
-  const deleteSection = (e, ref) => {
-    e.stopPropagation();
-    const element = ref.current;
-    if (element) {
-      element.remove();
-    }
-  };
 
   const handleButtonClick = useCallback((e) => {
     const button = e.target.closest('button');
@@ -125,10 +108,22 @@ export default function Template01() {
     if (!section) return;
 
     if (action === 'duplicate') {
-      const clone = section.cloneNode(true);
-      section.parentNode.insertBefore(clone, section.nextSibling);
+      const draggableParent = section.parentElement;
+      if (draggableParent && draggableParent.classList.contains('react-draggable')) {
+        const outerDraggable = draggableParent.parentElement;
+        const clone = outerDraggable.cloneNode(true);
+        outerDraggable.parentNode.insertBefore(clone, outerDraggable.nextSibling);
+      } else {
+        const clone = section.cloneNode(true);
+        section.parentNode.insertBefore(clone, section.nextSibling);
+      }
     } else if (action === 'delete') {
-      section.remove();
+      const draggableParent = section.parentElement;
+      if (draggableParent && draggableParent.classList.contains('react-draggable')) {
+        draggableParent.parentElement.remove();
+      } else {
+        section.remove();
+      }
     }
   }, []);
 
@@ -229,10 +224,10 @@ export default function Template01() {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       saveState({ profileImage, contentState });
-    }, 1000); // Save after 1 second of inactivity
+    }, 1000);
 
     return () => clearTimeout(timeoutId);
-  }, [contentState, saveState]);
+  }, [contentState, profileImage, saveState]);
 
   // Handle undo/redo events from Header
   useEffect(() => {
@@ -317,6 +312,7 @@ export default function Template01() {
     const skillsRef = useRef(null);
     const languagesRef = useRef(null);
     const referenceRef = useRef(null);
+    const certificateRef = useRef(null);
     const workExpRef = useRef(null);
     const educationRef = useRef(null);
     const job1Ref = useRef(null);
@@ -326,6 +322,7 @@ export default function Template01() {
     const skillsContentRef = useRef(null);
     const languagesContentRef = useRef(null);
     const referenceContentRef = useRef(null);
+    const certificateContentRef = useRef(null);
     return (
 
       <div className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-visible flex" onClick={handleButtonClick}>
@@ -432,7 +429,7 @@ export default function Template01() {
             <Draggable nodeRef={skillsContentRef} >
               <ul
                 ref={skillsContentRef}
-                className="space-y-1.5 relative group"
+                className="space-y-1.5 relative group "
                 contentEditable
                 suppressContentEditableWarning
                 onKeyDown={handleBulletListEnter}
@@ -549,11 +546,11 @@ export default function Template01() {
 
           {/* Certificate Section */}
           <div className='mt-5'>
-            <Draggable nodeRef={referenceRef} >
-              <h3 ref={referenceRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Certificate</h3>
+            <Draggable nodeRef={certificateRef} >
+              <h3 ref={certificateRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Certificate</h3>
             </Draggable>
-            <Draggable nodeRef={referenceContentRef} >
-              <div ref={referenceContentRef} className="text-xs text-gray-700 relative group">
+            <Draggable nodeRef={certificateContentRef} >
+              <div ref={certificateContentRef} className="text-xs text-gray-700 relative group">
                 <p className="font-semibold mb-1" contentEditable suppressContentEditableWarning>Project mananagement</p>
                 <p className="text-gray-600 mb-1" contentEditable suppressContentEditableWarning>Project mananagement Institute</p>
                 <p className="font-semibold" contentEditable suppressContentEditableWarning>Risk Management and Mitigation | 2028</p>
@@ -729,27 +726,10 @@ export default function Template01() {
                   {/* Degree 1 */}
                   <div className="relative group">
                     <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          const element = e.currentTarget.parentElement.parentElement;
-                          const clone = element.cloneNode(true);
-                          element.parentNode.insertBefore(clone, element.nextSibling);
-                        }}
-                        className="text-gray-600 rounded p-1.5 shadow-md"
-                      >
+                      <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
                         <CopyPlus className="w-4 h-4" />
                       </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          const element = e.currentTarget.parentElement.parentElement;
-                          // if (window.confirm('Are you sure you want to delete this section?')) {
-                            element.remove();
-                          // }
-                        }}
-                        className="text-gray-600 rounded p-1.5 shadow-md "
-                      >
+                      <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -766,27 +746,10 @@ export default function Template01() {
                   {/* Degree 2 */}
                   <div className="relative group">
                     <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          const element = e.currentTarget.parentElement.parentElement;
-                          const clone = element.cloneNode(true);
-                          element.parentNode.insertBefore(clone, element.nextSibling);
-                        }}
-                        className="text-gray-600 rounded p-1.5 shadow-md "
-                      >
+                      <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
                         <CopyPlus className="w-4 h-4" />
                       </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          const element = e.currentTarget.parentElement.parentElement;
-                          // if (window.confirm('Are you sure you want to delete this section?')) {
-                            element.remove();
-                          // }
-                        }}
-                        className="text-gray-600  rounded p-1.5 shadow-md "
-                      >
+                      <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
