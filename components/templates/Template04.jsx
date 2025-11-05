@@ -11,6 +11,7 @@ import { geminiService } from '../../lib/gemini';
 export default function Template04() {
   const [profileImage, setProfileImage] = useState(null);
   const [contentState, setContentState] = useState({});
+  const [renderKey, setRenderKey] = useState(0);
   const { registerPDFFunction } = usePDF();
   const { saveState } = useUndoRedo();
 
@@ -88,13 +89,23 @@ export default function Template04() {
         case 'skills':
           const expertiseElement = document.querySelector('[data-section="expertise"] ul');
           if (expertiseElement) {
-            const skills = generatedContent.split('\n').filter(skill => skill.trim());
-            expertiseElement.innerHTML = skills.map(skill =>
-              `<li class="flex items-center gap-2">
+            let cleanedContent = generatedContent
+              .replace(/^#{1,6}\s+.+$/gm, '')
+              .replace(/\*\*(.+?)\*\*/g, '$1')
+              .replace(/\*(.+?)\*/g, '$1')
+              .replace(/^[-•*]\s*/gm, '')
+              .replace(/^\d+\.\s*/gm, '')
+              .trim();
+            const skills = cleanedContent.split('\n')
+              .map(s => s.trim())
+              .filter(s => s && !s.toLowerCase().includes('here') && !s.toLowerCase().includes('of course') && s.length < 100);
+            expertiseElement.innerHTML = skills.map(skill => {
+              const cleanSkill = skill.replace(/["'`]/g, '');
+              return `<li class="flex items-center gap-2">
                 <svg class="w-2 h-2 fill-white" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
-                <span>${skill.trim()}</span>
-              </li>`
-            ).join('');
+                <span contentEditable suppressContentEditableWarning>${cleanSkill}</span>
+              </li>`;
+            }).join('');
           }
           break;
       }
@@ -116,18 +127,35 @@ export default function Template04() {
   };
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      saveState({ profileImage, contentState });
-    }, 1000);
-    return () => clearTimeout(timeoutId);
-  }, [contentState, saveState]);
+    const cvElement = cvRef.current;
+    if (!cvElement) return;
+
+    let timeoutId;
+    const handleInput = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        saveState({ profileImage, html: cvElement.innerHTML });
+      }, 1000);
+    };
+
+    cvElement.addEventListener('input', handleInput);
+    return () => {
+      cvElement.removeEventListener('input', handleInput);
+      clearTimeout(timeoutId);
+    };
+  }, [profileImage, saveState]);
 
   useEffect(() => {
     const handleUndoRedo = (event) => {
       const { state } = event.detail;
       if (state) {
-        setProfileImage(state.profileImage || null);
-        setContentState(state.contentState || {});
+        if (state.profileImage !== undefined) {
+          setProfileImage(state.profileImage);
+        }
+        if (state.html && cvRef.current) {
+          cvRef.current.innerHTML = state.html;
+          setRenderKey(prev => prev + 1);
+        }
       }
     };
     window.addEventListener('undoRedo', handleUndoRedo);
@@ -135,8 +163,10 @@ export default function Template04() {
   }, []);
 
   useEffect(() => {
-    saveState({ profileImage: null, contentState: {} });
-  }, []);
+    if (cvRef.current) {
+      saveState({ profileImage: null, html: cvRef.current.innerHTML });
+    }
+  }, [saveState]);
 
   const downloadPDF = useCallback(async () => {
     const cvElement = cvRef.current;
@@ -195,7 +225,7 @@ export default function Template04() {
         ref={editorContainerRef}
         className="flex flex-col items-center scale-[0.5] origin-top transition-transform duration-500 pt-24"
       >
-        <div ref={cvRef} className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-hidden flex" onClick={handleButtonClick}>
+        <div key={renderKey} ref={cvRef} className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-hidden flex" onClick={handleButtonClick}>
           {/* Left Sidebar - Dark Blue/Gray */}
           <div className="w-[33%] bg-slate-700 text-white p-8">
             {/* Profile Image */}
@@ -288,7 +318,31 @@ export default function Template04() {
                 </div>
               </div>
               <Draggable nodeRef={expertiseRef}>
-                <ul ref={expertiseRef} data-section-item className="space-y-2 text-xs relative group">
+                <ul 
+                  ref={expertiseRef} 
+                  data-section-item 
+                  className="space-y-2 text-xs relative group"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      const newLi = document.createElement('li');
+                      newLi.className = 'flex items-center gap-2';
+                      newLi.innerHTML = `<svg class="w-2 h-2 fill-white" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg><span contentEditable suppressContentEditableWarning></span>`;
+                      const target = e.target.closest('li');
+                      if (target) {
+                        target.parentNode.insertBefore(newLi, target.nextSibling);
+                        newLi.querySelector('span').focus();
+                      }
+                    } else if (e.key === 'Backspace') {
+                      const target = e.target;
+                      if (target.tagName === 'SPAN' && !target.textContent.trim()) {
+                        e.preventDefault();
+                        const li = target.closest('li');
+                        if (li) li.remove();
+                      }
+                    }
+                  }}
+                >
                   <li className="flex items-center gap-2">
                     <Circle className="w-2 h-2 fill-white" />
                     <span contentEditable suppressContentEditableWarning>UI/UX</span>
