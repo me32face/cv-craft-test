@@ -29,6 +29,8 @@ export default function Home() {
     { id: 'Template03', name: 'Creative Bold', image: '/template/template03.png' },
     { id: 'Template05', name: 'Clean Layout', image: '/template/template05.png' },
     { id: 'Template15', name: 'Sample Layout', image: '/template/template15.png' },
+    { id: 'Template16', name: 'Classic Layout', image: '/template/template16.png' },
+    { id: 'Template17', name: 'Elegant Layout', image: '/template/template17.png' },
   ];
 
   const duplicatedTemplates = [...templates, ...templates];
