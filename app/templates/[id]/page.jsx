@@ -28,6 +28,10 @@ const templateComponents = {
     ssr: false,
     loading: () => <TemplateLoader />
   }),
+  Template15: dynamic(() => import('@/components/templates/Template15'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />
+  }),
 };
 
 function TemplateLoader() {
