@@ -7,6 +7,7 @@ import { usePDF } from '../../contexts/PDFContext';
 import { useUndoRedo } from '../../contexts/UndoRedoContext';
 import AISparkle from '../AISparkle';
 import { geminiService } from '../../lib/gemini';
+import Image from 'next/image';
 // import '../../styles/ai-sparkle.css';
 
 export default function Template01() {
@@ -332,16 +333,10 @@ export default function Template01() {
           {/* Profile Image */}
           <div className="mb-6">
             <div
-              className="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg mx-auto cursor-pointer hover:opacity-80 transition-opacity"
+              className="w-36 h-36 rounded-full overflow-hidden border-4 border-white shadow-lg mx-auto cursor-pointer hover:opacity-80 transition-opacity"
               onClick={() => document.getElementById('profileImageInput').click()}
             >
-              {profileImage ? (
-                <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center text-white text-3xl font-bold">
-                  RS
-                </div>
-              )}
+              <img src={profileImage || '/templateprofile/template01profile.jpg'} alt="Profile" className="w-full h-full object-cover" />
             </div>
             <input
               id="profileImageInput"
@@ -419,12 +414,14 @@ export default function Template01() {
           </div>
 
           {/* Skills Section */}
-          <div className="mb-6 section-container" data-section="skills">
+          <div className="mb-6 section-container group" data-section="skills">
             <div className="relative flex gap-2">
               <Draggable nodeRef={skillsRef}>
                 <h3 ref={skillsRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Skills</h3>
               </Draggable>
-              <AISparkle className='mt-1' section="Skills" onGenerate={handleAIGenerate} />
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                <AISparkle className='mt-1' section="Skills" onGenerate={handleAIGenerate} />
+              </div>
             </div>
             <Draggable nodeRef={skillsContentRef} >
               <ul
@@ -586,13 +583,15 @@ export default function Template01() {
 
           <div className="px-6 py-5 pt-8">
             {/* Profile Section */}
-            <div className="mb-5 section-container" data-section="profile">
+            <div className="mb-5 section-container group" data-section="profile">
               <div className="flex items-center gap-2 mb-2 relative">
                 <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center flex-shrink-0">
                   <span className="text-white text-xs font-bold">P</span>
                 </div>
                 <h2 contentEditable suppressContentEditableWarning className="text-sm font-bold text-gray-800 uppercase tracking-wide">Profile</h2>
-                <AISparkle section="Profile" onGenerate={handleAIGenerate} />
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  <AISparkle section="Profile" onGenerate={handleAIGenerate} />
+                </div>
               </div>
               <div className="relative">
                 <div className="absolute left-3 top-0 w-0.5 h-full bg-gray-300"></div>
@@ -735,6 +734,25 @@ export default function Template01() {
                     </div>
                     <div className="flex justify-between items-start mb-0.5">
                       <div>
+                        <h3 className="text-sm font-bold text-gray-800" contentEditable suppressContentEditableWarning>Executive MBA (EMBA)</h3>
+                        <p className="text-xs text-gray-600" contentEditable suppressContentEditableWarning>senior-level business | Wardiere University</p>
+                        <p className="text-xs text-gray-500" contentEditable suppressContentEditableWarning>GPA: 3.8 / 4.0</p>
+                      </div>
+                      <span className="text-xs text-gray-500 whitespace-nowrap" contentEditable suppressContentEditableWarning>2029 - 2031</span>
+                    </div>
+                  </div>
+                 {/* Degree 1 */}
+                  <div className="relative group">
+                    <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                      <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                        <CopyPlus className="w-4 h-4" />
+                      </button>
+                      <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <div className="flex justify-between items-start mb-0.5">
+                      <div>
                         <h3 className="text-sm font-bold text-gray-800" contentEditable suppressContentEditableWarning>Master of Business Management</h3>
                         <p className="text-xs text-gray-600" contentEditable suppressContentEditableWarning>School of business | Wardiere University</p>
                         <p className="text-xs text-gray-500" contentEditable suppressContentEditableWarning>GPA: 3.8 / 4.0</p>
@@ -742,7 +760,6 @@ export default function Template01() {
                       <span className="text-xs text-gray-500 whitespace-nowrap" contentEditable suppressContentEditableWarning>2029 - 2031</span>
                     </div>
                   </div>
-
                   {/* Degree 2 */}
                   <div className="relative group">
                     <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">

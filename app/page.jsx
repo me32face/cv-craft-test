@@ -22,10 +22,10 @@ export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeFilter, setActiveFilter] = useState('All');
   const templates = [
-    { id: 'Template01', name: 'Professional Classic', image: '/template/template01.png' },
+    { id: 'Template01', name: 'Professional Classic', image: '/template/template01n.png' },
+    { id: 'Template04', name: 'Executive Style', image: '/template/template04n.png' },
     { id: 'Template02', name: 'Modern Minimal', image: '/template/template02.png' },
     { id: 'Template03', name: 'Creative Bold', image: '/template/template03.png' },
-    { id: 'Template04', name: 'Executive Style', image: '/template/template04.png' },
     { id: 'Template05', name: 'Clean Layout', image: '/template/template05.png' },
     { id: 'Template06', name: 'Sample Layout', image: '/template/template06.png' },
     { id: 'Template15', name: 'Sample Layout', image: '/template/template15.png' },
