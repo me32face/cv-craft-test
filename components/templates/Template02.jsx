@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Phone, Mail, MapPin, Globe, Briefcase, Copy, Trash2, GraduationCap } from 'lucide-react';
+import { Phone, Mail, MapPin, Globe, Briefcase, CopyPlus, Trash2, GraduationCap } from 'lucide-react';
 import AISparkle from '../AISparkle';
 import { geminiService } from '../../lib/gemini';
 import Draggable from "react-draggable";
-
+import jsPDF from 'jspdf';
+import { usePDF } from '../../contexts/PDFContext';
+import html2canvas from 'html2canvas';
 
 export default function Template02() {
 
   const cvRef = useRef(null);
   const editorContainerRef = useRef(null);
+  const { registerPDFFunction } = usePDF();
 
   const handleBulletListEnter = (e) => {
     if (e.key === 'Enter') {
@@ -46,22 +49,34 @@ export default function Template02() {
     });
   };
 
-  const duplicateSection = (e, ref) => {
-    e.stopPropagation();
-    const element = ref.current;
-    if (element) {
-      const clone = element.cloneNode(true);
-      element.parentNode.insertBefore(clone, element.nextSibling);
-    }
-  };
+  const handleButtonClick = useCallback((e) => {
+    const button = e.target.closest('button');
+    if (!button) return;
 
-  const deleteSection = (e, ref) => {
-    e.stopPropagation();
-    const element = ref.current;
-    if (element) {
-      element.remove();
+    const action = button.getAttribute('data-action');
+    const section = button.closest('.relative.group');
+
+    if (!section) return;
+
+    if (action === 'duplicate') {
+      const draggableParent = section.parentElement;
+      if (draggableParent && draggableParent.classList.contains('react-draggable')) {
+        const outerDraggable = draggableParent.parentElement;
+        const clone = outerDraggable.cloneNode(true);
+        outerDraggable.parentNode.insertBefore(clone, outerDraggable.nextSibling);
+      } else {
+        const clone = section.cloneNode(true);
+        section.parentNode.insertBefore(clone, section.nextSibling);
+      }
+    } else if (action === 'delete') {
+      const draggableParent = section.parentElement;
+      if (draggableParent && draggableParent.classList.contains('react-draggable')) {
+        draggableParent.parentElement.remove();
+      } else {
+        section.remove();
+      }
     }
-  };
+  }, []);
   const handleAIGenerate = async (section, keywords) => {
     if (!geminiService.genAI) {
       const apiKey = prompt('Please enter your Gemini API key:');
@@ -155,6 +170,64 @@ export default function Template02() {
     }
   };
 
+   const downloadPDF = useCallback(async () => {
+    const cvElement = cvRef.current;
+
+    if (!cvElement) {
+      console.error("No CV page found to download.");
+      return;
+    }
+
+    const parentContainer = editorContainerRef.current;
+    if (!parentContainer) {
+      console.error("Could not find parent scaling container.");
+      return;
+    }
+
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+
+    let oldTransform, oldTransition;
+
+    try {
+      // Save old scale and set to normal
+      oldTransform = parentContainer.style.transform;
+      oldTransition = parentContainer.style.transition;
+      parentContainer.style.transform = "scale(1)";
+      parentContainer.style.transition = "none";
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      const canvas = await html2canvas(cvElement, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: "#ffffff",
+        logging: false,
+        ignoreElements: (el) => el.tagName === "BUTTON"
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+      const imgX = (pdfWidth - imgWidth * ratio) / 2;
+      const imgY = 0;
+
+      pdf.addImage(imgData, "PNG", imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+
+      pdf.save("RICHARD_SANCHEZ_CV.pdf");
+
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      alert("Error generating PDF. Please try again.");
+    } finally {
+      // Restore original scale
+      parentContainer.style.transform = oldTransform;
+      parentContainer.style.transition = oldTransition;
+    }
+  }, []);
+
   const CVPage = () => {
     const skillsRef = useRef(null);
     const skillsContentRef = useRef(null);
@@ -173,7 +246,7 @@ export default function Template02() {
 
 
     return (
-      <div className="min-h-screen bg-gray-50 p-4 md:p-8 flex justify-center items-start">
+      <div className="min-h-screen bg-gray-50   flex justify-center items-start" onClick={handleButtonClick}>
         <div className="w-[210mm] min-h-[297mm] bg-white shadow-2xl overflow-hidden">
           <div className="p-8 flex flex-col">
             {/* Header */}
@@ -198,80 +271,69 @@ export default function Template02() {
               <div className="w-[38%] space-y-6">
                 {/* Contact */}
                 <div className="mb-6">
-            <Draggable nodeRef={contactRef} >
-              <h3 ref={contactRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Contact</h3>
-            </Draggable>
-            <Draggable nodeRef={contactContentRef} >
-              <div
-                ref={contactContentRef}
-                className="space-y-2 relative group"
-                onKeyDown={(e) => {
-                  if (e.key === 'Backspace') {
-                    const contactItems = e.currentTarget.querySelectorAll('div');
-                    contactItems.forEach(item => {
-                      const span = item.querySelector('span');
-                      if (span && !span.textContent.trim()) {
-                        item.remove();
-                      }
-                    });
-                  }
-                }}
-              >
-                <div className="flex items-start gap-2">
-                  <Phone className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" />
-                  <span
-                    className="text-xs text-gray-700"
-                    contentEditable
-                    suppressContentEditableWarning
-                  >+123-456-7890</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <Mail className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" />
-                  <span
-                    className="text-xs text-gray-700 break-all"
-                    contentEditable
-                    suppressContentEditableWarning
+                  <Draggable nodeRef={contactRef} >
+                    <h3 ref={contactRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Contact</h3>
+                  </Draggable>
+                  <Draggable nodeRef={contactContentRef} >
+                    <div
+                      ref={contactContentRef}
+                      className="space-y-2 relative group"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Backspace') {
+                          const contactItems = e.currentTarget.querySelectorAll('div');
+                          contactItems.forEach(item => {
+                            const span = item.querySelector('span');
+                            if (span && !span.textContent.trim()) {
+                              item.remove();
+                            }
+                          });
+                        }
+                      }}
+                    >
+                      <div className="flex items-start gap-2">
+                        <Phone className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" />
+                        <span
+                          className="text-xs text-gray-700"
+                          contentEditable
+                          suppressContentEditableWarning
+                        >+123-456-7890</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <Mail className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" />
+                        <span
+                          className="text-xs text-gray-700 break-all"
+                          contentEditable
+                          suppressContentEditableWarning
 
-                  >hello@reallygreatsite.com</span>
+                        >hello@reallygreatsite.com</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <MapPin className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" />
+                        <span
+                          className="text-xs text-gray-700"
+                          contentEditable
+                          suppressContentEditableWarning
+                        >123 Anywhere St., Any City</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <Globe className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" />
+                        <span
+                          className="text-xs text-gray-700 break-all"
+                          contentEditable
+                          suppressContentEditableWarning
+                        >www.reallygreatsite.com</span>
+                      </div>
+                      <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                        <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                          <CopyPlus className="w-4 h-4" />
+                        </button>
+                        <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </Draggable>
                 </div>
-                <div className="flex items-start gap-2">
-                  <MapPin className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" />
-                  <span
-                    className="text-xs text-gray-700"
-                    contentEditable
-                    suppressContentEditableWarning
-                  >123 Anywhere St., Any City</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <Globe className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" />
-                  <span
-                    className="text-xs text-gray-700 break-all"
-                    contentEditable
-                    suppressContentEditableWarning
-                  >www.reallygreatsite.com</span>
-                </div>
-                <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                  <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              const element = e.currentTarget.parentElement.parentElement;
-                              const clone = element.cloneNode(true);
-                              element.parentNode.insertBefore(clone, element.nextSibling);
-                            }}
-                            className="text-gray-600 rounded p-1.5 shadow-md"
-                          >
-                    <Copy className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={(e) => deleteSection(e, contactContentRef)}
-                    className="text-gray-600 rounded p-1.5 shadow-md"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            </Draggable>
-          </div>
 
                 {/* Education Section */}
                 <Draggable nodeRef={educationsRef} bounds={false}>
@@ -284,27 +346,10 @@ export default function Template02() {
                       {/* Degree 1 */}
                       <div className="relative group">
                         <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              const element = e.currentTarget.parentElement.parentElement;
-                              const clone = element.cloneNode(true);
-                              element.parentNode.insertBefore(clone, element.nextSibling);
-                            }}
-                            className="text-gray-600 rounded p-1.5 shadow-md"
-                          >
-                            <Copy className="w-4 h-4" />
+                          <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                            <CopyPlus className="w-4 h-4" />
                           </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              const element = e.currentTarget.parentElement.parentElement;
-                              if (window.confirm('Are you sure you want to delete this section?')) {
-                                element.remove();
-                              }
-                            }}
-                            className="text-gray-600 rounded p-1.5 shadow-md "
-                          >
+                          <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
@@ -371,21 +416,10 @@ export default function Template02() {
                         <span className="text-xs text-gray-700">Digital Marketing</span>
                       </li>
                       <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              const element = e.currentTarget.parentElement.parentElement;
-                              const clone = element.cloneNode(true);
-                              element.parentNode.insertBefore(clone, element.nextSibling);
-                            }}
-                            className="text-gray-600 rounded p-1.5 shadow-md"
-                          >
-                          <Copy className="w-4 h-4" />
+                        <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                          <CopyPlus className="w-4 h-4" />
                         </button>
-                        <button
-                          onClick={(e) => deleteSection(e, skillsContentRef)}
-                          className="text-gray-600 rounded p-1.5 shadow-md"
-                        >
+                        <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -424,16 +458,10 @@ export default function Template02() {
                         <span className="text-xs text-gray-700">Spanish (Intermediate)</span>
                       </li>
                       <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button
-                          onClick={(e) => duplicateSection(e, languagesContentRef)}
-                          className="text-gray-600 rounded p-1.5 shadow-md"
-                        >
-                          <Copy className="w-4 h-4" />
+                        <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                          <CopyPlus className="w-4 h-4" />
                         </button>
-                        <button
-                          onClick={(e) => deleteSection(e, languagesContentRef)}
-                          className="text-gray-600 rounded p-1.5 shadow-md"
-                        >
+                        <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -458,21 +486,10 @@ export default function Template02() {
                     <div ref={profileContentRef} className="relative group">
                       <div>
                         <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              const element = e.currentTarget.parentElement.parentElement;
-                              const clone = element.cloneNode(true);
-                              element.parentNode.insertBefore(clone, element.nextSibling);
-                            }}
-                            className="text-gray-600 rounded p-1.5 shadow-md"
-                          >
-                            <Copy className="w-4 h-4" />
+                          <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                            <CopyPlus className="w-4 h-4" />
                           </button>
-                          <button
-                            onClick={(e) => deleteSection(e, profileContentRef)}
-                            className="text-gray-600 rounded p-1.5 shadow-md"
-                          >
+                          <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
@@ -537,21 +554,10 @@ export default function Template02() {
                           <li>Successfully launched and managed multiple cross-channel campaigns, utilizing digital marketing, social media, and traditional advertising, resulting in improved customer acquisition and retention rates.</li>
                         </ul>
                         <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              const element = e.currentTarget.parentElement.parentElement;
-                              const clone = element.cloneNode(true);
-                              element.parentNode.insertBefore(clone, element.nextSibling);
-                            }}
-                            className="text-gray-600 rounded p-1.5 shadow-md"
-                          >
-                            <Copy className="w-4 h-4" />
+                          <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                            <CopyPlus className="w-4 h-4" />
                           </button>
-                          <button
-                            onClick={(e) => deleteSection(e, workExpRef)}
-                            className="text-gray-600 rounded p-1.5 shadow-md"
-                          >
+                          <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
@@ -576,21 +582,10 @@ export default function Template02() {
                     <Draggable nodeRef={job2Ref} bounds={false}>
                       <div ref={job2Ref} className="relative group">
                         <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              const element = e.currentTarget.parentElement.parentElement;
-                              const clone = element.cloneNode(true);
-                              element.parentNode.insertBefore(clone, element.nextSibling);
-                            }}
-                            className="text-gray-600 rounded p-1.5 shadow-md"
-                          >
-                            <Copy className="w-4 h-4" />
+                          <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                            <CopyPlus className="w-4 h-4" />
                           </button>
-                          <button
-                            onClick={(e) => deleteSection(e, languagesContentRef)}
-                            className="text-gray-600 rounded p-1.5 shadow-md"
-                          >
+                          <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
@@ -628,21 +623,10 @@ export default function Template02() {
                     <Draggable nodeRef={job3Ref} bounds={false}>
                       <div ref={job3Ref} className="relative group">
                         <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              const element = e.currentTarget.parentElement.parentElement;
-                              const clone = element.cloneNode(true);
-                              element.parentNode.insertBefore(clone, element.nextSibling);
-                            }}
-                            className="text-gray-600 rounded p-1.5 shadow-md"
-                          >
-                            <Copy className="w-4 h-4" />
+                          <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                            <CopyPlus className="w-4 h-4" />
                           </button>
-                          <button
-                            onClick={(e) => deleteSection(e, languagesContentRef)}
-                            className="text-gray-600 rounded p-1.5 shadow-md"
-                          >
+                          <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
@@ -667,7 +651,11 @@ export default function Template02() {
         </div>
       </div>
     );
-  };
+  }; // Register PDF function with context
+  useEffect(() => {
+    registerPDFFunction(downloadPDF);
+  }, [downloadPDF, registerPDFFunction]);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">
       <div

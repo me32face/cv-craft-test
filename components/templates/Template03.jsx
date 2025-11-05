@@ -1,14 +1,34 @@
 "use client";
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Phone, Mail, MapPin, User, GraduationCap, Briefcase, Award, Settings, Copy, Trash2, } from 'lucide-react';
+import { Phone, Mail, MapPin, User, GraduationCap, Briefcase, Award, Settings, Copy, CopyPlus, Trash2, } from 'lucide-react';
 import Draggable from "react-draggable";
 import AISparkle from '../AISparkle';
+import { useUndoRedo } from '../../contexts/UndoRedoContext';
+import { usePDF } from '../../contexts/PDFContext';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+
 
 export default function Template03() {
+  const [profileImage, setProfileImage] = useState(null);
+  const { saveState } = useUndoRedo();
+  const [contentState, setContentState] = useState({});
+  const { registerPDFFunction } = usePDF();
 
   const cvRef = useRef(null);
   const editorContainerRef = useRef(null);
 
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        saveState({ profileImage, contentState });
+        setProfileImage(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
   const handleBulletListEnter = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -38,29 +58,40 @@ export default function Template03() {
     }
   };
 
-  const handleSimpleListCleanup = (e) => {
-    const lis = e.currentTarget.querySelectorAll('li');
-    lis.forEach(li => {
-      if (!li.textContent.trim()) li.remove();
-    });
-  };
+ 
 
-  const duplicateSection = (e, ref) => {
-    e.stopPropagation();
-    const element = ref.current;
-    if (element) {
-      const clone = element.cloneNode(true);
-      element.parentNode.insertBefore(clone, element.nextSibling);
-    }
-  };
+  const handleButtonClick = useCallback((e) => {
+    const button = e.target.closest('button');
+    if (!button) return;
 
-  const deleteSection = (e, ref) => {
-    e.stopPropagation();
-    const element = ref.current;
-    if (element) {
-      element.remove();
+    const action = button.getAttribute('data-action');
+    const section = button.closest('.relative.group');
+
+    if (!section) return;
+
+    if (action === 'duplicate') {
+      const draggableParent = section.parentElement;
+      if (draggableParent && draggableParent.classList.contains('react-draggable')) {
+        const outerDraggable = draggableParent.parentElement;
+        const clone = outerDraggable.cloneNode(true);
+        outerDraggable.parentNode.insertBefore(clone, outerDraggable.nextSibling);
+      } else {
+        const clone = section.cloneNode(true);
+        section.parentNode.insertBefore(clone, section.nextSibling);
+      }
+    } else if (action === 'delete') {
+      const draggableParent = section.parentElement;
+      if (draggableParent && draggableParent.classList.contains('react-draggable')) {
+        draggableParent.parentElement.remove();
+      } else {
+        section.remove();
+      }
     }
-  };
+  }, []);
+
+
+
+
   const handleAIGenerate = async (section, keywords) => {
     if (!geminiService.genAI) {
       const apiKey = prompt('Please enter your Gemini API key:');
@@ -154,6 +185,91 @@ export default function Template03() {
     }
   };
 
+  // Save state with debounce for content changes
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      saveState({ profileImage, contentState });
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
+  }, [contentState, profileImage, saveState]);
+
+  // Handle undo/redo events from Header
+  useEffect(() => {
+    const handleUndoRedo = (event) => {
+      const { state } = event.detail;
+      if (state) {
+        setProfileImage(state.profileImage || null);
+        setContentState(state.contentState || {});
+      }
+    };
+
+    window.addEventListener('undoRedo', handleUndoRedo);
+    return () => window.removeEventListener('undoRedo', handleUndoRedo);
+  }, []);
+
+  // Save initial state only once
+  useEffect(() => {
+    saveState({ profileImage: null, contentState: {} });
+  }, []);
+
+  const downloadPDF = useCallback(async () => {
+    const cvElement = cvRef.current;
+
+    if (!cvElement) {
+      console.error("No CV page found to download.");
+      return;
+    }
+
+    const parentContainer = editorContainerRef.current;
+    if (!parentContainer) {
+      console.error("Could not find parent scaling container.");
+      return;
+    }
+
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+
+    let oldTransform, oldTransition;
+
+    try {
+      // Save old scale and set to normal
+      oldTransform = parentContainer.style.transform;
+      oldTransition = parentContainer.style.transition;
+      parentContainer.style.transform = "scale(1)";
+      parentContainer.style.transition = "none";
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      const canvas = await html2canvas(cvElement, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: "#ffffff",
+        logging: false,
+        ignoreElements: (el) => el.tagName === "BUTTON"
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+      const imgX = (pdfWidth - imgWidth * ratio) / 2;
+      const imgY = 0;
+
+      pdf.addImage(imgData, "PNG", imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+
+      pdf.save("LORNAL_ALVARADO_CV.pdf");
+
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      alert("Error generating PDF. Please try again.");
+    } finally {
+      // Restore original scale
+      parentContainer.style.transform = oldTransform;
+      parentContainer.style.transition = oldTransition;
+    }
+  }, []);
 
 
   const CVPage = () => {
@@ -168,9 +284,12 @@ export default function Template03() {
     const educationContentRef = useRef(null);
     const experienceRef = useRef(null);
     const experienceContentRef = useRef(null);
+    const referencesRef = useRef(null);
+    const referencesContentRef = useRef(null);
+
 
     return (
-      <div className="min-h-screen bg-gray-50 p-8 flex justify-center items-center">
+      <div className="min-h-screen bg-gray-50  flex justify-center items-center" onClick={handleButtonClick}>
         <div className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-hidden relative">
           <style dangerouslySetInnerHTML={{
             __html: `
@@ -189,11 +308,23 @@ export default function Template03() {
               <div className="relative z-10 p-8">
                 {/* Profile Image */}
                 <div className="mb-6">
-                  <div className="w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-white shadow-xl bg-gray-200">
-                    <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
-                      <User size={60} className="text-gray-600" />
-                    </div>
+                  <div className="w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-white shadow-xl bg-gray-200"
+                    onClick={() => document.getElementById('profileImageInput').click()}>
+                    {profileImage ? (
+                      <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
+                        RS
+                      </div>
+                    )}
                   </div>
+                  <input
+                    id="profileImageInput"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
                 </div>
 
                 {/* Name */}
@@ -257,21 +388,10 @@ export default function Template03() {
                       </div>
 
                       <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            const element = e.currentTarget.parentElement.parentElement;
-                            const clone = element.cloneNode(true);
-                            element.parentNode.insertBefore(clone, element.nextSibling);
-                          }}
-                          className="text-gray-600 rounded p-1.5 shadow-md"
-                        >
-                          <Copy className="w-4 h-4" />
+                        <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                          <CopyPlus className="w-4 h-4" />
                         </button>
-                        <button
-                          onClick={(e) => deleteSection(e, contactContentRef)}
-                          className="text-gray-600 rounded p-1.5 shadow-md"
-                        >
+                        <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -294,21 +414,10 @@ export default function Template03() {
                     <div ref={aboutContentRef} className="relative group">
                       <div>
                         <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              const element = e.currentTarget.parentElement.parentElement;
-                              const clone = element.cloneNode(true);
-                              element.parentNode.insertBefore(clone, element.nextSibling);
-                            }}
-                            className="text-gray-600 rounded p-1.5 shadow-md"
-                          >
-                            <Copy className="w-4 h-4" />
+                          <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                            <CopyPlus className="w-4 h-4" />
                           </button>
-                          <button
-                            onClick={(e) => deleteSection(e, aboutContentRef)}
-                            className="text-gray-600 rounded p-1.5 shadow-md"
-                          >
+                          <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
@@ -328,7 +437,7 @@ export default function Template03() {
                         <Settings className="w-4 h-4" />
                         Skills
                       </h2>
-                      <AISparkle section="skills" onGenerate={handleAIGenerate} className='lg:ml-32' />
+                      <AISparkle section="skills" onGenerate={handleAIGenerate} className='lg:ml-24' />
                     </div>
                   </Draggable>
 
@@ -374,21 +483,10 @@ export default function Template03() {
                         <span className="text-xs text-gray-700">Digital Marketing</span>
                       </li>
                       <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            const element = e.currentTarget.parentElement.parentElement;
-                            const clone = element.cloneNode(true);
-                            element.parentNode.insertBefore(clone, element.nextSibling);
-                          }}
-                          className="text-gray-600 rounded p-1.5 shadow-md"
-                        >
-                          <Copy className="w-4 h-4" />
+                        <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                          <CopyPlus className="w-4 h-4" />
                         </button>
-                        <button
-                          onClick={(e) => deleteSection(e, skillsContentRef)}
-                          className="text-gray-600 rounded p-1.5 shadow-md"
-                        >
+                        <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -418,21 +516,10 @@ export default function Template03() {
                     >
                       {/* buttons */}
                       <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            const element = e.currentTarget.parentElement.parentElement;
-                            const clone = element.cloneNode(true);
-                            element.parentNode.insertBefore(clone, element.nextSibling);
-                          }}
-                          className="text-gray-600 rounded p-1.5 shadow-md"
-                        >
-                          <Copy className="w-4 h-4" />
+                        <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                          <CopyPlus className="w-4 h-4" />
                         </button>
-                        <button
-                          onClick={(e) => deleteSection(e, educationContentRef)}
-                          className="text-gray-600 rounded p-1.5 shadow-md"
-                        >
+                        <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -451,7 +538,7 @@ export default function Template03() {
                               contentEditable
                               suppressContentEditableWarning
                             >
-                          Bachelor of Business Management
+                              Bachelor of Business Management
                             </h3>
                             <p
                               className="text-xs text-gray-600"
@@ -486,28 +573,17 @@ export default function Template03() {
                   </Draggable>
 
                   {/* Education 2 */}
-                   <Draggable nodeRef={educationContentRef}>
+                  <Draggable nodeRef={educationContentRef}>
                     <div
                       ref={educationContentRef}
                       className="flex gap-3 group relative  mb-3"
                     >
                       {/* buttons */}
-                      <div className="absolute -right-0 top-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            const element = e.currentTarget.parentElement.parentElement;
-                            const clone = element.cloneNode(true);
-                            element.parentNode.insertBefore(clone, element.nextSibling);
-                          }}
-                          className="text-gray-600 rounded p-1.5 shadow-md"
-                        >
-                          <Copy className="w-4 h-4" />
+                      <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                        <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                          <CopyPlus className="w-4 h-4" />
                         </button>
-                        <button
-                          onClick={(e) => deleteSection(e, educationContentRef)}
-                          className="text-gray-600 rounded p-1.5 shadow-md"
-                        >
+                        <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -564,124 +640,365 @@ export default function Template03() {
 
               {/* Experience Section */}
               <div className="mb-8">
-                <h2 className="text-base font-bold text-gray-700 mb-4 pb-2 border-b-2 border-gray-300 flex items-center gap-2">
-                  <Briefcase className="w-5 h-5 text-gray-600" />
-                  Experience
-                </h2>
-                <Draggable nodeRef={educationRef}>
-                  <div className="flex items-center gap-2 mb-2 relative">
-                    <h2 ref={educationRef} className="text-sm font-bold text-gray-800  uppercase tracking-wide" contentEditable suppressContentEditableWarning>Education</h2>
-                    <GraduationCap className="w-5 h-5 text-gray-600" />
-                  </div>
-                </Draggable>
+                <div className='border-b-2 border-gray-300'>
+                  <Draggable nodeRef={experienceRef}>
+                    <div className="flex items-center  relative">
+                      <h2 ref={experienceRef} className="text-base font-bold text-gray-700 mb-4 pb-2  flex items-center gap-2">
+                        <Briefcase className="w-5 h-5 text-gray-600" />
+                        Experience
+                      </h2>
+                    </div>
+                  </Draggable>
+                </div>
                 <div className="space-y-4">
                   {/* Job 1 */}
-                  <div className="flex gap-3">
-                    <div className="flex-shrink-0">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5"></div>
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex justify-between items-start mb-1">
-                        <div>
-                          <h3 className="text-sm font-semibold text-gray-800" contentEditable suppressContentEditableWarning>Product Design Manager</h3>
-                          <p className="text-xs text-gray-600 italic" contentEditable suppressContentEditableWarning>Anowaal Industries</p>
+
+                  <div className="flex gap-3 group relative">
+                    <Draggable nodeRef={experienceContentRef}>
+                      <div ref={experienceContentRef} className="flex gap-3 relative flex-col">
+                        {/* --- hover action buttons --- */}
+                        <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                          <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                            <CopyPlus className="w-4 h-4" />
+                          </button>
+                          <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </div>
-                        <span className="text-xs text-gray-500 whitespace-nowrap" contentEditable suppressContentEditableWarning>2018 - 2020</span>
+                        <div className="flex-shrink-0">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5"></div>
+                        </div>
+                        <div className="flex-1">
+
+                          <div className="flex justify-between items-start mb-1">
+                            <div>
+                              <h3
+                                className="text-sm font-semibold text-gray-800"
+                                contentEditable
+                                suppressContentEditableWarning
+                              >
+                                Product Design Manager
+                              </h3>
+                              <p
+                                className="text-xs text-gray-600 italic"
+                                contentEditable
+                                suppressContentEditableWarning
+                              >
+                                Anowaal Industries
+                              </p>
+                            </div>
+                            <span
+                              className="text-xs text-gray-500 whitespace-nowrap"
+                              contentEditable
+                              suppressContentEditableWarning
+                            >
+                              2018 - 2020
+                            </span>
+                          </div>
+                          <p
+                            className="text-xs text-gray-600 leading-relaxed"
+                            contentEditable
+                            suppressContentEditableWarning
+                          >
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et
+                            ipsum nunc egestas accumsan. In enim nunc, tincidunt ut quam eget,
+                            luctus sollicitudin neque.
+                          </p>
+                        </div>
                       </div>
-                      <p className="text-xs text-gray-600 leading-relaxed" contentEditable suppressContentEditableWarning>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et ipsum nunc egestas accumsan. In enim nunc, tincidunt ut quam eget, luctus sollicitudin neque.
-                      </p>
-                    </div>
+                    </Draggable>
                   </div>
 
                   {/* Job 2 */}
-                  <div className="flex gap-3">
-                    <div className="flex-shrink-0">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5"></div>
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex justify-between items-start mb-1">
-                        <div>
-                          <h3 className="text-sm font-semibold text-gray-800" contentEditable suppressContentEditableWarning>Marketing Manager</h3>
-                          <p className="text-xs text-gray-600 italic" contentEditable suppressContentEditableWarning>Anowaal Industries</p>
+
+                  <div className="relative group">
+                    <Draggable nodeRef={experienceContentRef}>
+                      <div
+                        ref={experienceContentRef}
+                        className="flex gap-3 relative bg-white rounded-md p-2"
+                      >
+                        <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                          <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                            <CopyPlus className="w-4 h-4" />
+                          </button>
+                          <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </div>
-                        <span className="text-xs text-gray-500 whitespace-nowrap" contentEditable suppressContentEditableWarning>2018 - 2020</span>
+
+                        {/* 🔵 dot */}
+                        <div className="flex-shrink-0 relative">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 z-10 relative"></div>
+                        </div>
+
+                        {/* 📄 content */}
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start mb-1">
+                            <div>
+                              <h3
+                                className="text-sm font-semibold text-gray-800"
+                                contentEditable
+                                suppressContentEditableWarning
+                              >
+                                Marketing Manager
+                              </h3>
+                              <p
+                                className="text-xs text-gray-600 italic"
+                                contentEditable
+                                suppressContentEditableWarning
+                              >
+                                Anowaal Industries
+                              </p>
+                            </div>
+                            <span
+                              className="text-xs text-gray-500 whitespace-nowrap"
+                              contentEditable
+                              suppressContentEditableWarning
+                            >
+                              2018 - 2020
+                            </span>
+                          </div>
+                          <p
+                            className="text-xs text-gray-600 leading-relaxed"
+                            contentEditable
+                            suppressContentEditableWarning
+                          >
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et
+                            ipsum nunc egestas accumsan. In enim nunc, tincidunt ut quam eget,
+                            luctus sollicitudin neque.
+                          </p>
+                        </div>
                       </div>
-                      <p className="text-xs text-gray-600 leading-relaxed" contentEditable suppressContentEditableWarning>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et ipsum nunc egestas accumsan. In enim nunc, tincidunt ut quam eget, luctus sollicitudin neque.
-                      </p>
-                    </div>
+                    </Draggable>
                   </div>
 
                   {/* Job 3 */}
-                  <div className="flex gap-3">
-                    <div className="flex-shrink-0">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5"></div>
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex justify-between items-start mb-1">
-                        <div>
-                          <h3 className="text-sm font-semibold text-gray-800" contentEditable suppressContentEditableWarning>Marketing Manager</h3>
-                          <p className="text-xs text-gray-600 italic" contentEditable suppressContentEditableWarning>Anowaal Industries</p>
+                  <div className="relative group">
+                    <Draggable nodeRef={experienceContentRef}>
+                      <div
+                        ref={experienceContentRef}
+                        className="flex gap-3 relative bg-white rounded-md p-2"
+                      >
+                        <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                          <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                            <CopyPlus className="w-4 h-4" />
+                          </button>
+                          <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </div>
-                        <span className="text-xs text-gray-500 whitespace-nowrap" contentEditable suppressContentEditableWarning>2017 - 2018</span>
+
+                        {/* 🔵 dot */}
+                        <div className="flex-shrink-0 relative">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 z-10 relative"></div>
+                        </div>
+
+                        {/* 📄 content */}
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start mb-1">
+                            <div>
+                              <h3
+                                className="text-sm font-semibold text-gray-800"
+                                contentEditable
+                                suppressContentEditableWarning
+                              >
+                                Marketing Manager
+                              </h3>
+                              <p
+                                className="text-xs text-gray-600 italic"
+                                contentEditable
+                                suppressContentEditableWarning
+                              >
+                                Anowaal Industries
+                              </p>
+                            </div>
+                            <span
+                              className="text-xs text-gray-500 whitespace-nowrap"
+                              contentEditable
+                              suppressContentEditableWarning
+                            >
+                              2018 - 2020
+                            </span>
+                          </div>
+                          <p
+                            className="text-xs text-gray-600 leading-relaxed"
+                            contentEditable
+                            suppressContentEditableWarning
+                          >
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et
+                            ipsum nunc egestas accumsan. In enim nunc, tincidunt ut quam eget,
+                            luctus sollicitudin neque.
+                          </p>
+                        </div>
                       </div>
-                      <p className="text-xs text-gray-600 leading-relaxed" contentEditable suppressContentEditableWarning>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et ipsum nunc egestas accumsan. In enim nunc, tincidunt ut quam eget, luctus sollicitudin neque.
-                      </p>
-                    </div>
+                    </Draggable>
                   </div>
 
                   {/* Job 4 */}
-                  <div className="flex gap-3">
-                    <div className="flex-shrink-0">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5"></div>
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex justify-between items-start mb-1">
-                        <div>
-                          <h3 className="text-sm font-semibold text-gray-800" contentEditable suppressContentEditableWarning>Marketing Manager</h3>
-                          <p className="text-xs text-gray-600 italic" contentEditable suppressContentEditableWarning>Anowaal Industries</p>
+                  <div className="relative group">
+                    <Draggable nodeRef={experienceContentRef}>
+                      <div
+                        ref={experienceContentRef}
+                        className="flex gap-3 relative bg-white rounded-md p-2"
+                      >
+                        <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                          <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                            <CopyPlus className="w-4 h-4" />
+                          </button>
+                          <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </div>
-                        <span className="text-xs text-gray-500 whitespace-nowrap" contentEditable suppressContentEditableWarning>2016 - 2017</span>
+                        <div className="flex-shrink-0 relative">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 z-10 relative"></div>
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start mb-1">
+                            <div>
+                              <h3
+                                className="text-sm font-semibold text-gray-800"
+                                contentEditable
+                                suppressContentEditableWarning
+                              >
+                                Marketing Manager
+                              </h3>
+                              <p
+                                className="text-xs text-gray-600 italic"
+                                contentEditable
+                                suppressContentEditableWarning
+                              >
+                                Anowaal Industries
+                              </p>
+                            </div>
+                            <span
+                              className="text-xs text-gray-500 whitespace-nowrap"
+                              contentEditable
+                              suppressContentEditableWarning
+                            >
+                              2018 - 2020
+                            </span>
+                          </div>
+                          <p
+                            className="text-xs text-gray-600 leading-relaxed"
+                            contentEditable
+                            suppressContentEditableWarning
+                          >
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et
+                            ipsum nunc egestas accumsan. In enim nunc, tincidunt ut quam eget,
+                            luctus sollicitudin neque.
+                          </p>
+                        </div>
                       </div>
-                      <p className="text-xs text-gray-600 leading-relaxed" contentEditable suppressContentEditableWarning>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et ipsum nunc egestas accumsan. In enim nunc, tincidunt ut quam eget, luctus sollicitudin neque.
-                      </p>
-                    </div>
+                    </Draggable>
                   </div>
                 </div>
               </div>
 
               {/* References Section */}
               <div>
-                <h2 className="text-base font-bold text-gray-700 mb-4 pb-2 border-b-2 border-gray-300 flex items-center gap-2">
-                  <Award className="w-5 h-5 text-gray-600" />
-                  References
-                </h2>
+
+                <div className='border-b-2 border-gray-300'>
+                  <Draggable nodeRef={referencesRef}>
+                    <div className="flex items-center  relative">
+                      <h2 ref={referencesRef} className="text-base font-bold text-gray-700 mb-4 pb-2  flex items-center gap-2">
+                        <Award className="w-5 h-5 text-gray-600" />
+                        References
+                      </h2>
+                    </div>
+                  </Draggable>
+                </div>
+
                 <div className="grid grid-cols-2 gap-6">
                   {/* Reference 1 */}
-                  <div>
-                    <h3 className="text-sm font-semibold text-gray-800 mb-0.5" contentEditable suppressContentEditableWarning>Harumi Kobayashi</h3>
-                    <p className="text-xs text-gray-600 mb-2" contentEditable suppressContentEditableWarning>Wardiere Inc. / CEO</p>
-                    <p className="text-xs text-gray-600">
-                      <span className="font-semibold">Phone:</span> <span contentEditable suppressContentEditableWarning>123-456-7890</span>
-                    </p>
-                    <p className="text-xs text-gray-600">
-                      <span className="font-semibold">Email:</span> <span contentEditable suppressContentEditableWarning>hello@reallygreatsite.com</span>
-                    </p>
+                  <div className="relative group">
+                    <Draggable nodeRef={referencesContentRef}>
+                      <div
+                        ref={referencesContentRef}
+                        className="relative bg-white rounded-md p-3 shadow-sm"
+                      ><div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                          <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                            <CopyPlus className="w-4 h-4" />
+                          </button>
+                          <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div>
+                          <h3
+                            className="text-sm font-semibold text-gray-800 mb-0.5"
+                            contentEditable
+                            suppressContentEditableWarning
+                          >
+                            Harumi Kobayashi
+                          </h3>
+                          <p
+                            className="text-xs text-gray-600 mb-2"
+                            contentEditable
+                            suppressContentEditableWarning
+                          >
+                            Wardiere Inc. / CEO
+                          </p>
+                          <p className="text-xs text-gray-600">
+                            <span className="font-semibold">Phone:</span>{" "}
+                            <span contentEditable suppressContentEditableWarning>
+                              123-456-7890
+                            </span>
+                          </p>
+                          <p className="text-xs text-gray-600">
+                            <span className="font-semibold">Email:</span>{" "}
+                            <span contentEditable suppressContentEditableWarning>
+                              hello@reallygreatsite.com
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                    </Draggable>
                   </div>
 
                   {/* Reference 2 */}
-                  <div>
-                    <h3 className="text-sm font-semibold text-gray-800 mb-0.5" contentEditable suppressContentEditableWarning>Bailey Dupont</h3>
-                    <p className="text-xs text-gray-600 mb-2" contentEditable suppressContentEditableWarning>Wardiere Inc. / CEO</p>
-                    <p className="text-xs text-gray-600">
-                      <span className="font-semibold">Phone:</span> <span contentEditable suppressContentEditableWarning>123-456-7890</span>
-                    </p>
-                    <p className="text-xs text-gray-600">
-                      <span className="font-semibold">Email:</span> <span contentEditable suppressContentEditableWarning>hello@reallygreatsite.com</span>
-                    </p>
+                  <div className="relative group">
+                    <Draggable nodeRef={referencesContentRef}>
+                      <div
+                        ref={referencesContentRef}
+                        className="relative bg-white rounded-md p-3 shadow-sm"
+                      ><div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                          <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                            <CopyPlus className="w-4 h-4" />
+                          </button>
+                          <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div>
+                          <h3
+                            className="text-sm font-semibold text-gray-800 mb-0.5"
+                            contentEditable
+                            suppressContentEditableWarning
+                          >
+                            Bailey Dupont
+                          </h3>
+                          <p
+                            className="text-xs text-gray-600 mb-2"
+                            contentEditable
+                            suppressContentEditableWarning
+                          >
+                            Wardiere Inc. / CEO
+                          </p>
+                          <p className="text-xs text-gray-600">
+                            <span className="font-semibold">Phone:</span>{" "}
+                            <span contentEditable suppressContentEditableWarning>
+                              123-456-7890
+                            </span>
+                          </p>
+                          <p className="text-xs text-gray-600">
+                            <span className="font-semibold">Email:</span>{" "}
+                            <span contentEditable suppressContentEditableWarning>
+                              hello@reallygreatsite.com
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                    </Draggable>
                   </div>
                 </div>
               </div>
@@ -691,6 +1008,11 @@ export default function Template03() {
       </div>
     );
   };
+  // Register PDF function with context
+  useEffect(() => {
+    registerPDFFunction(downloadPDF);
+  }, [downloadPDF, registerPDFFunction]);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">
       <div
