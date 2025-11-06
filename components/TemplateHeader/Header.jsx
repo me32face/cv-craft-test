@@ -26,22 +26,36 @@ const Header = () => {
     const pdfWidth = pdf.internal.pageSize.getWidth()
     const pdfHeight = pdf.internal.pageSize.getHeight()
 
-    let oldTransform, oldTransition
+    // Clone the element to avoid affecting the original
+    const clonedElement = cvElement.cloneNode(true)
+    
+    // Remove all buttons from clone
+    clonedElement.querySelectorAll('button').forEach(btn => btn.remove())
+    
+    // Remove all transforms from Draggable elements in clone
+    clonedElement.querySelectorAll('.react-draggable').forEach(el => {
+      el.style.transform = 'none'
+    })
+    
+    // Create temporary container
+    const tempContainer = document.createElement('div')
+    tempContainer.style.position = 'fixed'
+    tempContainer.style.left = '-9999px'
+    tempContainer.style.top = '0'
+    tempContainer.style.width = '210mm'
+    tempContainer.style.height = '297mm'
+    tempContainer.appendChild(clonedElement)
+    document.body.appendChild(tempContainer)
 
     try {
-      oldTransform = parentContainer.style.transform
-      oldTransition = parentContainer.style.transition
-      parentContainer.style.transform = 'scale(1)'
-      parentContainer.style.transition = 'none'
-      await new Promise(resolve => setTimeout(resolve, 200))
+      await new Promise(resolve => setTimeout(resolve, 100))
 
-      const canvas = await html2canvas(cvElement, {
+      const canvas = await html2canvas(clonedElement, {
         scale: 2,
         useCORS: true,
         allowTaint: true,
         backgroundColor: '#ffffff',
-        logging: false,
-        ignoreElements: (el) => el.tagName === 'BUTTON'
+        logging: false
       })
 
       const imgData = canvas.toDataURL('image/png')
@@ -57,8 +71,8 @@ const Header = () => {
       console.error('Error generating PDF:', error)
       alert('Error generating PDF. Please try again.')
     } finally {
-      parentContainer.style.transform = oldTransform
-      parentContainer.style.transition = oldTransition
+      // Remove temporary container
+      document.body.removeChild(tempContainer)
     }
   }, [])
 
