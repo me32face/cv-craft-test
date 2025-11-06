@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { Mail, Phone, MapPin, Link as LinkIcon, Briefcase, BookOpen, MessageCircle, Trash2, CopyPlus, Download } from 'lucide-react';
+import { Mail, Phone, MapPin, Link as LinkIcon, Briefcase, BookOpen, MessageCircle, Trash2, CopyPlus } from 'lucide-react';
 
 // Add these imports for PDF functionality
 import jsPDF from 'jspdf';
@@ -327,18 +327,6 @@ const DeleteButton = ({ onClick, isSmall = false, isMain = false }) => (
   </button>
 );
 
-// --- PDF DOWNLOAD BUTTON ---
-const DownloadPDFButton = ({ onClick }) => (
-  <button
-    onClick={onClick}
-    className="fixed top-4 right-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 z-50 transition-colors"
-    title="Download as PDF"
-  >
-    <Download className="w-4 h-4" />
-    Download PDF
-  </button>
-);
-
 // --- MAIN APP COMPONENT ---
 const App = () => {
   const [resume, setResume] = useState(initialResumeData);
@@ -583,10 +571,7 @@ const App = () => {
   );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">
-      {/* PDF Download Button */}
-      <DownloadPDFButton onClick={downloadPDF} />
-      
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">      
       {isGeneratingPDF && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl flex items-center gap-3">
