@@ -48,6 +48,10 @@ const templateComponents = {
     ssr: false,
     loading: () => <TemplateLoader />
   }),
+  Template18: dynamic(() => import('@/components/templates/Template18'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />
+  }),
 };
 
 function TemplateLoader() {
