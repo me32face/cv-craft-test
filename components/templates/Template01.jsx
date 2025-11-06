@@ -267,7 +267,7 @@ export default function Template01() {
     const certificateContentRef = useRef(null);
     return (
 
-      <div className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-visible flex" onClick={handleButtonClick}>
+      <div className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-visible flex" onClick={handleButtonClick} style={{WebkitFontSmoothing: 'antialiased', textRendering: 'geometricPrecision', imageRendering: 'crisp-edges'}}>
 
         {/* Left Sidebar */}
         <div className="w-[35%] bg-gray-100 p-6 pl-8">
@@ -606,16 +606,16 @@ export default function Template01() {
                       </div>
                       <span className="text-xs text-gray-500 whitespace-nowrap" contentEditable suppressContentEditableWarning>2025 - 2029</span>
                     </div>
-                    <ul
-                      className="list-disc list-outside ml-4 text-xs text-gray-700 space-y-0.5 mt-1"
-                      contentEditable
-                      suppressContentEditableWarning
-                      onKeyDown={handleSimpleListEnter}
-                      onInput={handleSimpleListCleanup}
-                    >
-                      <li>Create and manage the marketing budget, ensuring efficient allocation of resources and maximizing ROI.</li>
-                      <li>Oversee market research to identify emerging trends, customer needs, and competitive intelligence.</li>
-                    </ul>
+                    <div className="ml-4 text-xs text-gray-700 mt-1" style={{lineHeight: '16px'}}>
+                      <div className="flex items-start" style={{marginBottom: '4px'}}>
+                        <span className="w-1 h-1 bg-gray-700 rounded-full flex-shrink-0" style={{marginTop: '8px', marginRight: '8px'}}></span>
+                        <span contentEditable suppressContentEditableWarning>Create and manage the marketing budget, ensuring efficient allocation of resources and maximizing ROI.</span>
+                      </div>
+                      <div className="flex items-start">
+                        <span className="w-1 h-1 bg-gray-700 rounded-full flex-shrink-0" style={{marginTop: '8px', marginRight: '8px'}}></span>
+                        <span contentEditable suppressContentEditableWarning>Oversee market research to identify emerging trends, customer needs, and competitive intelligence.</span>
+                      </div>
+                    </div>
                   </div>
                 </Draggable>
 
@@ -637,16 +637,16 @@ export default function Template01() {
                       </div>
                       <span className="text-xs text-gray-500 whitespace-nowrap" contentEditable suppressContentEditableWarning>2024 - 2025</span>
                     </div>
-                    <ul
-                      className="list-disc list-outside ml-4 text-xs text-gray-700 space-y-0.5 mt-1"
-                      contentEditable
-                      suppressContentEditableWarning
-                      onKeyDown={handleSimpleListEnter}
-                      onInput={handleSimpleListCleanup}
-                    >
-                      <li>Develop and maintain strong relationships with partners, agencies, and vendors to support marketing initiatives.</li>
-                      <li>Monitor and maintain brand consistency across all marketing channels and materials.</li>
-                    </ul>
+                    <div className="ml-4 text-xs text-gray-700 mt-1" style={{lineHeight: '16px'}}>
+                      <div className="flex items-start" style={{marginBottom: '4px'}}>
+                        <span className="w-1 h-1 bg-gray-700 rounded-full flex-shrink-0" style={{marginTop: '8px', marginRight: '8px'}}></span>
+                        <span contentEditable suppressContentEditableWarning>Develop and maintain strong relationships with partners, agencies, and vendors to support marketing initiatives.</span>
+                      </div>
+                      <div className="flex items-start">
+                        <span className="w-1 h-1 bg-gray-700 rounded-full flex-shrink-0" style={{marginTop: '8px', marginRight: '8px'}}></span>
+                        <span contentEditable suppressContentEditableWarning>Monitor and maintain brand consistency across all marketing channels and materials.</span>
+                      </div>
+                    </div>
                   </div>
                 </Draggable>
               </div>

@@ -1,5 +1,5 @@
-import React, { useCallback } from 'react'
-import { Download, Undo2, Redo2 } from 'lucide-react'
+import React, { useCallback,useState } from 'react'
+import { Download, Undo2, Redo2, Loader2 } from 'lucide-react'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import { usePDF } from '../../contexts/PDFContext'
@@ -7,18 +7,23 @@ import { useUndoRedo } from '../../contexts/UndoRedoContext'
 
 const Header = () => {
   const { triggerPDF } = usePDF()
+  const [isDownloading, setIsDownloading] = useState(false)
   const { undo, redo, canUndo, canRedo } = useUndoRedo()
 
   const downloadPDF = useCallback(async () => {
+    setIsDownloading(true)
+    
     const cvElement = document.querySelector('[data-cv-page]')
     if (!cvElement) {
       console.error('No CV page found to download.')
+      setIsDownloading(false)
       return
     }
 
     const parentContainer = document.querySelector('[data-editor-container]')
     if (!parentContainer) {
       console.error('Could not find parent scaling container.')
+      setIsDownloading(false)
       return
     }
 
@@ -55,7 +60,9 @@ const Header = () => {
         useCORS: true,
         allowTaint: true,
         backgroundColor: '#ffffff',
-        logging: false
+        logging: false,
+        pixelRatio: 1,
+        removeContainer: true
       })
 
       const imgData = canvas.toDataURL('image/png')
@@ -73,6 +80,7 @@ const Header = () => {
     } finally {
       // Remove temporary container
       document.body.removeChild(tempContainer)
+      setIsDownloading(false)
     }
   }, [])
 
@@ -125,10 +133,15 @@ const Header = () => {
       {/* Right side - Download */}
       <button
         onClick={downloadPDF}
-        className="flex items-center gap-2 px-3 py-2 bg-white text-gray-800 rounded-lg hover:bg-gray-100 transition-colors shadow-md"
+        disabled={isDownloading}
+        className="flex items-center gap-2 px-3 py-2 bg-white text-gray-800 rounded-lg hover:bg-gray-100 transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <Download className="w-4 h-4" />
-        Download
+        {isDownloading ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          <Download className="w-4 h-4" />
+        )}
+        {isDownloading ? 'Downloading...' : 'Download'}
       </button>
     </div>
   )
