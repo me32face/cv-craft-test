@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Phone, Mail, MapPin, Globe, Briefcase, GraduationCap, CopyPlus, Trash2 } from 'lucide-react';
 import Draggable from "react-draggable";
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import { usePDF } from '../../contexts/PDFContext';
+
 import { useUndoRedo } from '../../contexts/UndoRedoContext';
 import AISparkle from '../AISparkle';
 import { geminiService } from '../../lib/gemini';
@@ -13,7 +11,6 @@ import Image from 'next/image';
 export default function Template01() {
   const [profileImage, setProfileImage] = useState(null);
   const [contentState, setContentState] = useState({});
-  const { registerPDFFunction } = usePDF();
   const { saveState } = useUndoRedo();
 
   const cvRef = useRef(null);
@@ -249,63 +246,7 @@ export default function Template01() {
     saveState({ profileImage: null, contentState: {} });
   }, []);
 
-  const downloadPDF = useCallback(async () => {
-    const cvElement = cvRef.current;
 
-    if (!cvElement) {
-      console.error("No CV page found to download.");
-      return;
-    }
-
-    const parentContainer = editorContainerRef.current;
-    if (!parentContainer) {
-      console.error("Could not find parent scaling container.");
-      return;
-    }
-
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
-
-    let oldTransform, oldTransition;
-
-    try {
-      // Save old scale and set to normal
-      oldTransform = parentContainer.style.transform;
-      oldTransition = parentContainer.style.transition;
-      parentContainer.style.transform = "scale(1)";
-      parentContainer.style.transition = "none";
-      await new Promise(resolve => setTimeout(resolve, 200));
-
-      const canvas = await html2canvas(cvElement, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: "#ffffff",
-        logging: false,
-        ignoreElements: (el) => el.tagName === "BUTTON"
-      });
-
-      const imgData = canvas.toDataURL("image/png");
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-      const imgX = (pdfWidth - imgWidth * ratio) / 2;
-      const imgY = 0;
-
-      pdf.addImage(imgData, "PNG", imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-
-      pdf.save("RICHARD_SANCHEZ_CV.pdf");
-
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-      alert("Error generating PDF. Please try again.");
-    } finally {
-      // Restore original scale
-      parentContainer.style.transform = oldTransform;
-      parentContainer.style.transition = oldTransition;
-    }
-  }, []);
 
   // This component is defined inside Template01 so it can access 'profileImage'
   const CVPage = () => {
@@ -788,18 +729,16 @@ export default function Template01() {
     );
   };
 
-  // Register PDF function with context
-  useEffect(() => {
-    registerPDFFunction(downloadPDF);
-  }, [downloadPDF, registerPDFFunction]);
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">
       <div
         ref={editorContainerRef}
+        data-editor-container
         className="flex flex-col items-center scale-[0.5] origin-top transition-transform duration-500 pt-24"
       >
-        <div ref={cvRef}>
+        <div ref={cvRef} data-cv-page>
           <CVPage />
         </div>
       </div>

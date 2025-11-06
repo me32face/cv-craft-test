@@ -1,11 +1,66 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Download, Undo2, Redo2 } from 'lucide-react'
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
 import { usePDF } from '../../contexts/PDFContext'
 import { useUndoRedo } from '../../contexts/UndoRedoContext'
 
 const Header = () => {
   const { triggerPDF } = usePDF()
   const { undo, redo, canUndo, canRedo } = useUndoRedo()
+
+  const downloadPDF = useCallback(async () => {
+    const cvElement = document.querySelector('[data-cv-page]')
+    if (!cvElement) {
+      console.error('No CV page found to download.')
+      return
+    }
+
+    const parentContainer = document.querySelector('[data-editor-container]')
+    if (!parentContainer) {
+      console.error('Could not find parent scaling container.')
+      return
+    }
+
+    const pdf = new jsPDF('p', 'mm', 'a4')
+    const pdfWidth = pdf.internal.pageSize.getWidth()
+    const pdfHeight = pdf.internal.pageSize.getHeight()
+
+    let oldTransform, oldTransition
+
+    try {
+      oldTransform = parentContainer.style.transform
+      oldTransition = parentContainer.style.transition
+      parentContainer.style.transform = 'scale(1)'
+      parentContainer.style.transition = 'none'
+      await new Promise(resolve => setTimeout(resolve, 200))
+
+      const canvas = await html2canvas(cvElement, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        logging: false,
+        ignoreElements: (el) => el.tagName === 'BUTTON'
+      })
+
+      const imgData = canvas.toDataURL('image/png')
+      const imgWidth = canvas.width
+      const imgHeight = canvas.height
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight)
+      const imgX = (pdfWidth - imgWidth * ratio) / 2
+      const imgY = 0
+
+      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio)
+      pdf.save('CV.pdf')
+    } catch (error) {
+      console.error('Error generating PDF:', error)
+      alert('Error generating PDF. Please try again.')
+    } finally {
+      parentContainer.style.transform = oldTransform
+      parentContainer.style.transition = oldTransition
+    }
+  }, [])
 
   const handleUndo = () => {
     const prevState = undo();
@@ -55,7 +110,7 @@ const Header = () => {
 
       {/* Right side - Download */}
       <button
-        onClick={triggerPDF}
+        onClick={downloadPDF}
         className="flex items-center gap-2 px-3 py-2 bg-white text-gray-800 rounded-lg hover:bg-gray-100 transition-colors shadow-md"
       >
         <Download className="w-4 h-4" />
