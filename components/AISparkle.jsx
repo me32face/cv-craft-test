@@ -80,7 +80,7 @@ const AISparkle = ({ section, onGenerate, className = "" }) => {
               value={keywords}
               onChange={(e) => setKeywords(e.target.value)}
               placeholder={getSampleKeywords(section)}
-              className="w-full p-3 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+              className="w-full p-3 text-sm text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
               rows="4"
               autoFocus
               onMouseDown={(e) => e.stopPropagation()}

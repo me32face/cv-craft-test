@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import Image from "next/image";
+import axios from "axios";
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -18,11 +19,44 @@ export default function Signup() {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();heee
-    console.log('Account created:', formData);
-    alert('Account creation submitted!');
-  };
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  // Validate required fields
+  if (!formData.name || !formData.email || !formData.password || !formData.agreeTerms) {
+    alert("Please fill all required fields and agree to terms.");
+    return;
+  }
+
+  try {
+    const res = await axios.post("http://localhost:5000/api/register", {
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+    });
+
+    const data = res.data;
+
+    if (data.success) {
+      alert(data.message);
+
+      // If backend returns token, store it
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        // localStorage.setItem("user", JSON.stringify(data.user));
+      }
+
+      // Redirect to login page or dashboard
+      window.location.href = "/";
+      alert("Registration successful! Please log in.");
+    } else {
+      alert(data.message);
+    }
+  } catch (error) {
+    console.error("Registration error:", error);
+    alert(error.response?.data?.message || "Something went wrong. Please try again.");
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-50">

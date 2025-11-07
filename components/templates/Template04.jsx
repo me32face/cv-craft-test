@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Phone, Mail, MapPin, Circle, CopyPlus, Trash2 } from 'lucide-react';
 import Draggable from "react-draggable";
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import { usePDF } from '../../contexts/PDFContext';
+
 import { useUndoRedo } from '../../contexts/UndoRedoContext';
 import AISparkle from '../AISparkle';
 import { geminiService } from '../../lib/gemini';
@@ -11,7 +9,7 @@ import { geminiService } from '../../lib/gemini';
 export default function Template04() {
   const [profileImage, setProfileImage] = useState(null);
   const [contentState, setContentState] = useState({});
-  const { registerPDFFunction } = usePDF();
+  const [renderKey, setRenderKey] = useState(0);
   const { saveState } = useUndoRedo();
 
   const cvRef = useRef(null);
@@ -88,13 +86,23 @@ export default function Template04() {
         case 'skills':
           const expertiseElement = document.querySelector('[data-section="expertise"] ul');
           if (expertiseElement) {
-            const skills = generatedContent.split('\n').filter(skill => skill.trim());
-            expertiseElement.innerHTML = skills.map(skill =>
-              `<li class="flex items-center gap-2">
+            let cleanedContent = generatedContent
+              .replace(/^#{1,6}\s+.+$/gm, '')
+              .replace(/\*\*(.+?)\*\*/g, '$1')
+              .replace(/\*(.+?)\*/g, '$1')
+              .replace(/^[-•*]\s*/gm, '')
+              .replace(/^\d+\.\s*/gm, '')
+              .trim();
+            const skills = cleanedContent.split('\n')
+              .map(s => s.trim())
+              .filter(s => s && !s.toLowerCase().includes('here') && !s.toLowerCase().includes('of course') && s.length < 100);
+            expertiseElement.innerHTML = skills.map(skill => {
+              const cleanSkill = skill.replace(/["'`]/g, '');
+              return `<li class="flex items-center gap-2">
                 <svg class="w-2 h-2 fill-white" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
-                <span>${skill.trim()}</span>
-              </li>`
-            ).join('');
+                <span contentEditable suppressContentEditableWarning>${cleanSkill}</span>
+              </li>`;
+            }).join('');
           }
           break;
       }
@@ -116,18 +124,35 @@ export default function Template04() {
   };
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      saveState({ profileImage, contentState });
-    }, 1000);
-    return () => clearTimeout(timeoutId);
-  }, [contentState, saveState]);
+    const cvElement = cvRef.current;
+    if (!cvElement) return;
+
+    let timeoutId;
+    const handleInput = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        saveState({ profileImage, html: cvElement.innerHTML });
+      }, 1000);
+    };
+
+    cvElement.addEventListener('input', handleInput);
+    return () => {
+      cvElement.removeEventListener('input', handleInput);
+      clearTimeout(timeoutId);
+    };
+  }, [profileImage, saveState]);
 
   useEffect(() => {
     const handleUndoRedo = (event) => {
       const { state } = event.detail;
       if (state) {
-        setProfileImage(state.profileImage || null);
-        setContentState(state.contentState || {});
+        if (state.profileImage !== undefined) {
+          setProfileImage(state.profileImage);
+        }
+        if (state.html && cvRef.current) {
+          cvRef.current.innerHTML = state.html;
+          setRenderKey(prev => prev + 1);
+        }
       }
     };
     window.addEventListener('undoRedo', handleUndoRedo);
@@ -135,67 +160,23 @@ export default function Template04() {
   }, []);
 
   useEffect(() => {
-    saveState({ profileImage: null, contentState: {} });
-  }, []);
-
-  const downloadPDF = useCallback(async () => {
-    const cvElement = cvRef.current;
-    if (!cvElement) return;
-
-    const parentContainer = editorContainerRef.current;
-    if (!parentContainer) return;
-
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
-
-    let oldTransform, oldTransition;
-
-    try {
-      oldTransform = parentContainer.style.transform;
-      oldTransition = parentContainer.style.transition;
-      parentContainer.style.transform = "scale(1)";
-      parentContainer.style.transition = "none";
-      await new Promise(resolve => setTimeout(resolve, 200));
-
-      const canvas = await html2canvas(cvElement, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: "#ffffff",
-        logging: false,
-        ignoreElements: (el) => el.tagName === "BUTTON"
-      });
-
-      const imgData = canvas.toDataURL("image/png");
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-      const imgX = (pdfWidth - imgWidth * ratio) / 2;
-      const imgY = 0;
-
-      pdf.addImage(imgData, "PNG", imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-      pdf.save("CV.pdf");
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-      alert("Error generating PDF. Please try again.");
-    } finally {
-      parentContainer.style.transform = oldTransform;
-      parentContainer.style.transition = oldTransition;
+    if (cvRef.current) {
+      saveState({ profileImage: null, html: cvRef.current.innerHTML });
     }
-  }, []);
+  }, [saveState]);
 
-  useEffect(() => {
-    registerPDFFunction(downloadPDF);
-  }, [downloadPDF, registerPDFFunction]);
+
+
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto">
       <div
         ref={editorContainerRef}
+        data-editor-container
         className="flex flex-col items-center scale-[0.5] origin-top transition-transform duration-500 pt-24"
       >
-        <div ref={cvRef} className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-hidden flex" onClick={handleButtonClick}>
+        <div key={renderKey} ref={cvRef} data-cv-page className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-hidden flex" onClick={handleButtonClick}>
           {/* Left Sidebar - Dark Blue/Gray */}
           <div className="w-[33%] bg-slate-700 text-white p-8">
             {/* Profile Image */}
@@ -288,7 +269,31 @@ export default function Template04() {
                 </div>
               </div>
               <Draggable nodeRef={expertiseRef}>
-                <ul ref={expertiseRef} data-section-item className="space-y-2 text-xs relative group">
+                <ul 
+                  ref={expertiseRef} 
+                  data-section-item 
+                  className="space-y-2 text-xs relative group"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      const newLi = document.createElement('li');
+                      newLi.className = 'flex items-center gap-2';
+                      newLi.innerHTML = `<svg class="w-2 h-2 fill-white" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg><span contentEditable suppressContentEditableWarning></span>`;
+                      const target = e.target.closest('li');
+                      if (target) {
+                        target.parentNode.insertBefore(newLi, target.nextSibling);
+                        newLi.querySelector('span').focus();
+                      }
+                    } else if (e.key === 'Backspace') {
+                      const target = e.target;
+                      if (target.tagName === 'SPAN' && !target.textContent.trim()) {
+                        e.preventDefault();
+                        const li = target.closest('li');
+                        if (li) li.remove();
+                      }
+                    }
+                  }}
+                >
                   <li className="flex items-center gap-2">
                     <Circle className="w-2 h-2 fill-white" />
                     <span contentEditable suppressContentEditableWarning>UI/UX</span>

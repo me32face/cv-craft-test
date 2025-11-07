@@ -6,7 +6,6 @@ const templatePreviews = {
   Template03: '/previews/template03.jpg',
   Template04: '/previews/template04.jpg',
   Template05: '/previews/template05.jpg',
-  Template15: '/previews/template15.jpg',
 };
 
 export default function TemplatePreview({ templateId }) {

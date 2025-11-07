@@ -1,8 +1,12 @@
 "use client";
-import React, { useState, useCallback } from 'react';
-import { Mail, Phone, MapPin, Link as LinkIcon, Briefcase, BookOpen, MessageCircle, Trash2, Plus } from 'lucide-react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { Mail, Phone, MapPin, Link as LinkIcon, Briefcase, BookOpen, MessageCircle, Trash2, CopyPlus } from 'lucide-react';
 
-// --- INITIAL RESUME DATA (Now the initial state) ---
+// Add these imports for PDF functionality
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+
+// --- INITIAL RESUME DATA ---
 const initialResumeData = {
   name: "RICHARD SANCHEZ",
   title: "MARKETING MANAGER",
@@ -52,14 +56,6 @@ const initialResumeData = {
 };
 
 // --- GENERIC EDITABLE COMPONENTS ---
-
-/**
- * Text component that allows in-place editing.
- * @param {string} value - The current text value.
- * @param {function} onUpdate - Callback function (newValue) => void.
- * @param {string} className - Tailwind classes for styling.
- * @param {string} type - 'p' for paragraph (default) or 'h1', 'h2', etc.
- */
 const EditableText = ({ value, onUpdate, className, type = 'p' }) => {
   const Tag = type;
   return (
@@ -73,12 +69,11 @@ const EditableText = ({ value, onUpdate, className, type = 'p' }) => {
   );
 };
 
-// --- HELPER COMPONENTS (REFACTORED) ---
-
+// --- HELPER COMPONENTS ---
 const SectionTitle = ({ title, icon: Icon }) => (
   <div className="mb-2">
     <h2 className="text-sm font-bold tracking-widest uppercase text-gray-800 flex items-center">
-      {Icon && <Icon className="w-4 h-4 mr-2 text-gray-700 hidden sm:inline" />}
+      {Icon && <Icon className="w-4 h-4 mr-2 text-gray-700" />}
       {title}
     </h2>
     <hr className="border-t-2 border-gray-400 mt-1" />
@@ -106,14 +101,13 @@ const ContactSection = ({ data, onUpdate }) => (
   </>
 );
 
-const EducationSection = ({ data, onUpdate, onDelete, onAdd }) => {
-  const newEducation = { years: 'YYYY - YYYY', degree: 'New Degree', institution: 'New University', gpa: null };
+const EducationSection = ({ data, onUpdate, onDelete, onDuplicate }) => {
   return (
     <>
       <SectionTitle title="EDUCATION" icon={BookOpen} />
       <div className="space-y-4">
         {data.map((edu, index) => (
-          <div key={index} className="text-xs group relative pr-8">
+          <div key={index} className="text-xs group relative pr-16">
             <EditableText
               value={edu.years}
               onUpdate={(newValue) => onUpdate(index, 'years', newValue)}
@@ -134,43 +128,46 @@ const EducationSection = ({ data, onUpdate, onDelete, onAdd }) => {
               onUpdate={(newValue) => onUpdate(index, 'gpa', newValue)}
               className="text-gray-600 mt-0.5"
             />
-            <DeleteButton onClick={() => onDelete(index)} />
+            <div className="absolute top-1 right-0 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <DuplicateButton onClick={() => onDuplicate(index)} />
+                <DeleteButton onClick={() => onDelete(index)} />
+            </div>
           </div>
         ))}
-        <AddButton onClick={() => onAdd(newEducation)} label="Add Education" />
       </div>
     </>
   );
 };
 
-const SkillsSection = ({ data, onUpdate, onDelete, onAdd }) => (
+const SkillsSection = ({ data, onUpdate, onDelete, onDuplicate }) => (
   <>
     <SectionTitle title="SKILLS" icon={Briefcase} />
     <ul className="text-xs space-y-1 list-none p-0">
       {data.map((skill, index) => (
-        <li key={index} className="flex items-start group relative pr-8">
+        <li key={index} className="flex items-start group relative pr-16">
           <span className="text-gray-800 mr-2 transform -translate-y-[1px]">•</span>
           <EditableText
             value={skill}
             onUpdate={(newValue) => onUpdate(index, newValue)}
             className="text-gray-700 flex-1"
           />
-          <DeleteButton onClick={() => onDelete(index)} />
+          <div className="absolute top-1 right-0 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <DuplicateButton onClick={() => onDuplicate(index)} isSmall={true} />
+            <DeleteButton onClick={() => onDelete(index)} isSmall={true} />
+          </div>
         </li>
       ))}
     </ul>
-    <AddButton onClick={() => onAdd('New Skill')} label="Add Skill" />
   </>
 );
 
-const LanguagesSection = ({ data, onUpdate, onDelete, onAdd }) => {
-  const newLang = { lang: 'New Language', proficiency: 'Proficiency' };
+const LanguagesSection = ({ data, onUpdate, onDelete, onDuplicate }) => {
   return (
     <>
       <SectionTitle title="LANGUAGES" icon={MessageCircle} />
       <div className="text-xs space-y-1">
         {data.map((lang, index) => (
-          <p key={index} className="text-gray-700 group relative pr-8">
+          <p key={index} className="text-gray-700 group relative pr-16">
             <EditableText
               value={lang.lang}
               onUpdate={(newValue) => onUpdate(index, 'lang', newValue)}
@@ -182,44 +179,39 @@ const LanguagesSection = ({ data, onUpdate, onDelete, onAdd }) => {
               onUpdate={(newValue) => onUpdate(index, 'proficiency', newValue)}
               className="inline"
             />)
-            <DeleteButton onClick={() => onDelete(index)} />
+            <div className="absolute top-1 right-0 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <DuplicateButton onClick={() => onDuplicate(index)} />
+                <DeleteButton onClick={() => onDelete(index)} />
+            </div>
           </p>
         ))}
-        <AddButton onClick={() => onAdd(newLang)} label="Add Language" />
       </div>
     </>
   );
 };
 
 const ProfileSection = ({ data, onUpdate }) => {
-    // Add these two lines to calculate current length and limit
     const MAX_LENGTH = 500;
     const currentLength = data.length;
-    
+
     return (
         <div className="mb-6">
-            {/* Display character count next to the title */}
             <div className="flex justify-between items-end">
                 <SectionTitle title="PROFILE" />
-                {/* <span className={`text-xs font-semibold ${currentLength > MAX_LENGTH ? 'text-red-600' : 'text-gray-500'}`}>
-                    {currentLength}/{MAX_LENGTH}
-                </span> */}
             </div>
-
             <EditableText
                 type="div"
                 value={data}
                 onUpdate={onUpdate}
-                // Ensure to keep the profile text visually readable and expansive
                 className="text-sm text-gray-700 leading-relaxed text-justify"
             />
         </div>
     );
 };
 
-const ExperienceEntry = ({ entry, index, onUpdate, onDetailUpdate, onDetailAdd, onDetailDelete, onDelete }) => {
+const ExperienceEntry = ({ entry, index, onUpdate, onDetailUpdate, onDetailDuplicate, onDetailDelete, onDelete, onDuplicate }) => {
   return (
-    <div className="mb-4 group relative pr-8">
+    <div className="mb-4 group relative pr-16">
       <div className="flex justify-between items-start text-sm">
         <EditableText
           value={entry.company}
@@ -241,30 +233,29 @@ const ExperienceEntry = ({ entry, index, onUpdate, onDetailUpdate, onDetailAdd, 
 
       <ul className="text-xs list-none p-0 ml-1 space-y-1">
         {entry.details.map((detail, detailIndex) => (
-          <li key={detailIndex} className="flex items-start group/detail relative pr-8">
+          <li key={detailIndex} className="flex items-start group/detail relative pr-16">
             <span className="text-gray-800 mr-2 transform translate-y-[1px]">•</span>
             <EditableText
               value={detail}
               onUpdate={(newValue) => onDetailUpdate(index, detailIndex, newValue)}
               className="text-gray-700 flex-1 leading-relaxed"
             />
-            <DeleteButton onClick={() => onDetailDelete(index, detailIndex)} isSmall={true} />
+            <div className="absolute top-0 right-0 flex space-x-1 opacity-0 group-hover/detail:opacity-100 transition-opacity">
+                <DuplicateButton onClick={() => onDetailDuplicate(index, detailIndex)} isSmall={true} />
+                <DeleteButton onClick={() => onDetailDelete(index, detailIndex)} isSmall={true} />
+            </div>
           </li>
         ))}
-        <AddButton onClick={() => onDetailAdd(index)} label="Add Detail" isSmall={true} />
       </ul>
-      <DeleteButton onClick={() => onDelete(index)} isMain={true} />
+      <div className="absolute -top-1 right-0 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <DuplicateButton onClick={() => onDuplicate(index)} isMain={true} />
+        <DeleteButton onClick={() => onDelete(index)} isMain={true} />
+      </div>
     </div>
   );
 };
 
 const ExperienceSection = ({ data, ...handlers }) => {
-  const newExp = {
-    title: 'New Position Title',
-    company: 'New Company Name',
-    years: 'YYYY - YYYY',
-    details: ['Responsible for new initiative.']
-  };
   return (
     <div className="mb-6">
       <SectionTitle title="WORK EXPERIENCE" />
@@ -275,24 +266,23 @@ const ExperienceSection = ({ data, ...handlers }) => {
           index={index}
           onUpdate={handlers.onUpdate}
           onDetailUpdate={handlers.onDetailUpdate}
-          onDetailAdd={handlers.onDetailAdd}
+          onDetailDuplicate={handlers.onDetailDuplicate}
           onDetailDelete={handlers.onDetailDelete}
           onDelete={handlers.onDelete}
+          onDuplicate={handlers.onDuplicate}
         />
       ))}
-      <AddButton onClick={() => handlers.onAdd(newExp)} label="Add Experience" />
     </div>
   );
 };
 
-const ReferencesSection = ({ data, onUpdate, onDelete, onAdd }) => {
-  const newRef = { name: 'New Referent', title: 'Title / Company', phone: '000-000-0000', email: 'email@example.com' };
+const ReferencesSection = ({ data, onUpdate, onDelete, onDuplicate }) => {
   return (
     <div>
       <SectionTitle title="REFERENCES" />
-      <div className="flex flex-wrap justify-between text-xs mt-3">
+      <div className="flex justify-between text-xs mt-3">
         {data.map((ref, index) => (
-          <div key={index} className="w-full sm:w-1/2 mb-4 group relative pr-8">
+          <div key={index} className="w-1/2 mb-4 group relative pr-16">
             <EditableText
               value={ref.name}
               onUpdate={(newValue) => onUpdate(index, 'name', newValue)}
@@ -305,56 +295,127 @@ const ReferencesSection = ({ data, onUpdate, onDelete, onAdd }) => {
             />
             <p className="text-gray-700">Phone: <EditableText value={ref.phone} onUpdate={(newValue) => onUpdate(index, 'phone', newValue)} className="inline" /></p>
             <p className="text-gray-700">Email: <EditableText value={ref.email} onUpdate={(newValue) => onUpdate(index, 'email', newValue)} className="inline" /></p>
-            <DeleteButton onClick={() => onDelete(index)} />
+            <div className="absolute top-1 right-0 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <DuplicateButton onClick={() => onDuplicate(index)} />
+                <DeleteButton onClick={() => onDelete(index)} />
+            </div>
           </div>
         ))}
       </div>
-      <AddButton onClick={() => onAdd(newRef)} label="Add Reference" />
     </div>
   );
 };
 
 // --- ACTION BUTTONS ---
+const DuplicateButton = ({ onClick, isSmall = false, isMain = false }) => (
+  <button
+    onClick={onClick}
+    title="Duplicate Item"
+    className={`text-gray-500 hover:text-gray-700 p-1 rounded-full`}
+  >
+    <CopyPlus className={isSmall ? 'w-3 h-3' : 'w-4 h-4'} />
+  </button>
+);
+
 const DeleteButton = ({ onClick, isSmall = false, isMain = false }) => (
   <button
     onClick={onClick}
     title="Delete Item"
-    className={`absolute text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded-full ${isSmall ? 'top-1 right-0' : (isMain ? '-top-2 right-0' : 'top-1 right-0')}`}
+    className={`text-red-500 hover:text-red-700 p-1 rounded-full`}
   >
     <Trash2 className={isSmall ? 'w-3 h-3' : 'w-4 h-4'} />
   </button>
 );
 
-const AddButton = ({ onClick, label, isSmall = false }) => (
-  <button
-    onClick={onClick}
-    className={`flex items-center text-blue-600 hover:text-blue-800 transition-colors mt-2 ${isSmall ? 'text-xs' : 'text-sm font-semibold'}`}
-  >
-    <Plus className={`mr-1 ${isSmall ? 'w-3 h-3' : 'w-4 h-4'}`} />
-    {label}
-  </button>
-);
-
-
 // --- MAIN APP COMPONENT ---
-
 const App = () => {
   const [resume, setResume] = useState(initialResumeData);
+  const editorContainerRef = useRef(null);
+  const cvRef = useRef(null);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-  // --- STATE UPDATE HANDLERS (for top-level fields: name, title, profile) ---
+  // PDF Download Function
+  const downloadPDF = useCallback(async () => {
+    if (isGeneratingPDF) return;
+    
+    setIsGeneratingPDF(true);
+    const cvElement = cvRef.current;
+
+    if (!cvElement) {
+      console.error("No CV page found to download.");
+      setIsGeneratingPDF(false);
+      return;
+    }
+
+    const parentContainer = editorContainerRef.current;
+    if (!parentContainer) {
+      console.error("Could not find parent scaling container.");
+      setIsGeneratingPDF(false);
+      return;
+    }
+
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+
+    let oldTransform, oldTransition;
+
+    try {
+      // Save old scale and set to normal
+      oldTransform = parentContainer.style.transform;
+      oldTransition = parentContainer.style.transition;
+      parentContainer.style.transform = "scale(1)";
+      parentContainer.style.transition = "none";
+      
+      // Wait for the DOM to update
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      const canvas = await html2canvas(cvElement, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: "#ffffff",
+        logging: false,
+        ignoreElements: (el) => {
+          // Hide interactive elements for PDF
+          return el.tagName === "BUTTON" || 
+                 el.classList.contains('group-hover:opacity-100') ||
+                 el.classList.contains('opacity-0');
+        }
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+      const imgX = (pdfWidth - imgWidth * ratio) / 2;
+      const imgY = 0;
+
+      pdf.addImage(imgData, "PNG", imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+
+      // Use the resume name for the filename
+      const fileName = `${resume.name.replace(/\s+/g, '_')}_Resume.pdf`;
+      pdf.save(fileName);
+
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      alert("Error generating PDF. Please try again.");
+    } finally {
+      // Restore original scale
+      parentContainer.style.transform = oldTransform;
+      parentContainer.style.transition = oldTransition;
+      setIsGeneratingPDF(false);
+    }
+  }, [isGeneratingPDF, resume.name]);
+
   const handleTopLevelUpdate = useCallback((key, newValue) => {
-      // Define the maximum length for the 'profile' field
       const MAX_PROFILE_LENGTH = 500; 
-
       if (key === 'profile' && newValue.length > MAX_PROFILE_LENGTH) {
-          // Truncate the value if it exceeds the limit
           newValue = newValue.substring(0, MAX_PROFILE_LENGTH);
       }
-      
       setResume(prev => ({ ...prev, [key]: newValue }));
   }, []);
 
-  // --- ARRAY ITEM UPDATE HANDLERS (for structured lists: contact, education, languages, references, workExperience) ---
   const handleListItemUpdate = useCallback((listKey, index, field, newValue) => {
     setResume(prev => {
       const updatedList = prev[listKey].map((item, i) =>
@@ -364,7 +425,6 @@ const App = () => {
     });
   }, []);
 
-  // --- ARRAY ITEM UPDATE HANDLERS (for simple string lists: skills) ---
   const handleSimpleListUpdate = useCallback((index, newValue) => {
     setResume(prev => {
       const updatedList = prev.skills.map((item, i) =>
@@ -374,25 +434,25 @@ const App = () => {
     });
   }, []);
 
-  // --- ARRAY ITEM ADD/DELETE HANDLERS ---
-  const handleAddItem = useCallback((listKey, newItem) => {
-    setResume(prev => ({
-      ...prev,
-      [listKey]: [...prev[listKey], newItem],
-    }));
-  }, []);
-
-  // --- ARRAY ITEM ADD/DELETE HANDLERS ---
   const handleDeleteItem = useCallback((listKey, index) => {
     setResume(prev => ({
       ...prev,
       [listKey]: prev[listKey].filter((_, i) => i !== index),
     }));
   }, []);
+  
+  const handleDuplicateItem = useCallback((listKey, index) => {
+    setResume(prev => {
+        const itemToDuplicate = JSON.parse(JSON.stringify(prev[listKey][index]));
+        const updatedList = [
+            ...prev[listKey].slice(0, index + 1),
+            itemToDuplicate,
+            ...prev[listKey].slice(index + 1)
+        ];
+        return { ...prev, [listKey]: updatedList };
+    });
+  }, []);
 
-  // --- SPECIAL HANDLERS FOR WORK EXPERIENCE DETAILS (Nested Array) ---
-
-  // Update a single bullet point in an experience entry
   const handleDetailUpdate = useCallback((expIndex, detailIndex, newValue) => {
     setResume(prev => {
       const updatedExperience = prev.workExperience.map((exp, i) => {
@@ -406,12 +466,17 @@ const App = () => {
     });
   }, []);
 
-  // Add a new bullet point to an experience entry
-  const handleDetailAdd = useCallback((expIndex) => {
+  const handleDetailDuplicate = useCallback((expIndex, detailIndex) => {
     setResume(prev => {
       const updatedExperience = prev.workExperience.map((exp, i) => {
         if (i === expIndex) {
-          return { ...exp, details: [...exp.details, 'New responsibility or achievement.'] };
+            const detailToDuplicate = exp.details[detailIndex];
+            const updatedDetails = [
+                ...exp.details.slice(0, detailIndex + 1),
+                detailToDuplicate,
+                ...exp.details.slice(detailIndex + 1)
+            ];
+            return { ...exp, details: updatedDetails };
         }
         return exp;
       });
@@ -419,7 +484,6 @@ const App = () => {
     });
   }, []);
 
-  // Delete a bullet point from an experience entry
   const handleDetailDelete = useCallback((expIndex, detailIndex) => {
     setResume(prev => {
       const updatedExperience = prev.workExperience.map((exp, i) => {
@@ -433,81 +497,97 @@ const App = () => {
     });
   }, []);
 
+  // CV Page Component
+  const CVPage = () => (
+    <div className="w-[210mm] h-[297mm] bg-white shadow-2xl rounded-lg border border-gray-300 p-12 mx-auto">
+      {/* --- HEADER --- */}
+      <header className="mb-6 pb-2 border-b border-gray-400">
+        <EditableText
+          value={resume.name}
+          onUpdate={(val) => handleTopLevelUpdate('name', val)}
+          className="text-3xl font-extrabold tracking-tight text-gray-900 uppercase"
+          type="h1"
+        />
+        <EditableText
+          value={resume.title}
+          onUpdate={(val) => handleTopLevelUpdate('title', val)}
+          className="text-lg font-medium tracking-widest uppercase text-gray-700 mt-1"
+          type="p"
+        />
+      </header>
+
+      {/* --- MAIN CONTENT GRID --- */}
+      <div className="grid grid-cols-3 gap-6 pt-2">
+        {/* Left Column */}
+        <div className="col-span-1 space-y-6">
+          <ContactSection
+            data={resume.contact}
+            onUpdate={(index, field, val) => handleListItemUpdate('contact', index, field, val)}
+          />
+          <EducationSection
+            data={resume.education}
+            onUpdate={(index, field, val) => handleListItemUpdate('education', index, field, val)}
+            onDelete={(index) => handleDeleteItem('education', index)}
+            onDuplicate={(index) => handleDuplicateItem('education', index)}
+          />
+          <SkillsSection
+            data={resume.skills}
+            onUpdate={handleSimpleListUpdate}
+            onDelete={(index) => handleDeleteItem('skills', index)}
+            onDuplicate={(index) => handleDuplicateItem('skills', index)}
+          />
+          <LanguagesSection
+            data={resume.languages}
+            onUpdate={(index, field, val) => handleListItemUpdate('languages', index, field, val)}
+            onDelete={(index) => handleDeleteItem('languages', index)}
+            onDuplicate={(index) => handleDuplicateItem('languages', index)}
+          />
+        </div>
+
+        {/* Right Column */}
+        <div className="col-span-2 relative pl-6 border-l border-gray-300 space-y-6">
+          <ProfileSection
+            data={resume.profile}
+            onUpdate={(val) => handleTopLevelUpdate('profile', val)}
+          />
+          <ExperienceSection
+            data={resume.workExperience}
+            onUpdate={(index, field, val) => handleListItemUpdate('workExperience', index, field, val)}
+            onDetailUpdate={handleDetailUpdate}
+            onDetailDuplicate={handleDetailDuplicate}
+            onDetailDelete={handleDetailDelete}
+            onDelete={(index) => handleDeleteItem('workExperience', index)}
+            onDuplicate={(index) => handleDuplicateItem('workExperience', index)}
+          />
+          <ReferencesSection
+            data={resume.references}
+            onUpdate={(index, field, val) => handleListItemUpdate('references', index, field, val)}
+            onDelete={(index) => handleDeleteItem('references', index)}
+            onDuplicate={(index) => handleDuplicateItem('references', index)}
+          />
+        </div>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="bg-gray-100 min-h-screen p-4 sm:p-8 font-inter">
-      {/* Optimized for A4 size (210mm x 297mm) */}
-      <div className="p-12 mx-auto bg-white shadow-2xl rounded-lg border border-gray-300"
-           style={{ width: '210mm', minHeight: '297mm' }}>
-
-        {/* --- HEADER --- */}
-        <header className="mb-6 pb-2 border-b border-gray-400">
-          <EditableText
-            value={resume.name}
-            onUpdate={(val) => handleTopLevelUpdate('name', val)}
-            className="text-3xl font-extrabold tracking-tight text-gray-900 uppercase"
-            type="h1"
-          />
-          <EditableText
-            value={resume.title}
-            onUpdate={(val) => handleTopLevelUpdate('title', val)}
-            className="text-lg font-medium tracking-widest uppercase text-gray-700 mt-1"
-            type="p"
-          />
-        </header>
-
-        {/* --- MAIN CONTENT GRID --- */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-
-          {/* Left Column (Contact, Education, Skills, Languages) */}
-          <div className="md:col-span-1 space-y-6 order-2 md:order-1">
-            <ContactSection
-              data={resume.contact}
-              onUpdate={(index, field, val) => handleListItemUpdate('contact', index, field, val)}
-            />
-            <EducationSection
-              data={resume.education}
-              onUpdate={(index, field, val) => handleListItemUpdate('education', index, field, val)}
-              onDelete={(index) => handleDeleteItem('education', index)}
-              onAdd={(newItem) => handleAddItem('education', newItem)}
-            />
-            <SkillsSection
-              data={resume.skills}
-              onUpdate={handleSimpleListUpdate}
-              onDelete={(index) => handleDeleteItem('skills', index)}
-              onAdd={(newItem) => handleAddItem('skills', newItem)}
-            />
-            <LanguagesSection
-              data={resume.languages}
-              onUpdate={(index, field, val) => handleListItemUpdate('languages', index, field, val)}
-              onDelete={(index) => handleDeleteItem('languages', index)}
-              onAdd={(newItem) => handleAddItem('languages', newItem)}
-            />
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">      
+      {isGeneratingPDF && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl flex items-center gap-3">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <span className="text-gray-700">Generating PDF...</span>
           </div>
+        </div>
+      )}
 
-          {/* Right Column (Profile, Experience, References) */}
-          <div className="md:col-span-2 relative md:pl-6 md:border-l md:border-gray-300 space-y-6 order-1 md:order-2">
-            <ProfileSection
-              data={resume.profile}
-              onUpdate={(val) => handleTopLevelUpdate('profile', val)}
-            />
-            <ExperienceSection
-              data={resume.workExperience}
-              onUpdate={(index, field, val) => handleListItemUpdate('workExperience', index, field, val)}
-              onDetailUpdate={handleDetailUpdate}
-              onDetailAdd={handleDetailAdd}
-              onDetailDelete={handleDetailDelete}
-              onDelete={(index) => handleDeleteItem('workExperience', index)}
-              onAdd={(newItem) => handleAddItem('workExperience', newItem)}
-            />
-            <ReferencesSection
-              data={resume.references}
-              onUpdate={(index, field, val) => handleListItemUpdate('references', index, field, val)}
-              onDelete={(index) => handleDeleteItem('references', index)}
-              onAdd={(newItem) => handleAddItem('references', newItem)}
-            />
-          </div>
-
+      <div
+        ref={editorContainerRef}
+        data-editor-container
+        className="flex flex-col items-center scale-[0.5] origin-top transition-transform duration-500 pt-24"
+      >
+        <div ref={cvRef} data-cv-page>
+          <CVPage />
         </div>
       </div>
     </div>

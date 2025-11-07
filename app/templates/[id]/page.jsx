@@ -28,7 +28,27 @@ const templateComponents = {
     ssr: false,
     loading: () => <TemplateLoader />
   }),
+  Template06: dynamic(() => import('@/components/templates/Template06'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />
+  }),
+    Template07: dynamic(() => import('@/components/templates/Template07'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />
+  }),
   Template15: dynamic(() => import('@/components/templates/Template15'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />
+  }),
+  Template16: dynamic(() => import('@/components/templates/Template16'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />
+  }),
+  Template17: dynamic(() => import('@/components/templates/Template17'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />
+  }),
+  Template18: dynamic(() => import('@/components/templates/Template18'), { 
     ssr: false,
     loading: () => <TemplateLoader />
   }),
