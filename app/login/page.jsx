@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from "next/image";
+import axios from "axios";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -17,10 +18,44 @@ export default function Login() {
     }));
   };
 
-  const handleSubmit = (e) => {
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Sign up attempt:', formData);
+
+    if (!formData.email || !formData.password) {
+      alert("Please fill in both email and password");
+      return;
+    }
+
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/login",
+        {
+          email: formData.email,
+          password: formData.password,
+        }
+      );
+
+      const data = res.data;
+
+      if (data.success) {
+        alert("Login successful!");
+
+        // Store token in localStorage
+        localStorage.setItem("token", data.token);
+
+        // Redirect to profile/dashboard page
+        window.location.href = "/";
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert(error.response?.data?.message || "Something went wrong. Please try again.");
+    }
   };
+
 
   const handleSocialLogin = (provider) => {
     console.log(`Sign in with ${provider}`);
@@ -110,48 +145,48 @@ export default function Login() {
             {/* Right Section - Sign Up Card */}
             <div className="bg-white w-full max-w-[500px] rounded-lg shadow-sm p-8 lg:p-10">
               <h2 className="text-2xl font-medium text-gray-900 text-center mb-8">
-Sign in your account
+                Sign in your account
               </h2>
 
               <div className="flex flex-col sm:flex-row gap-3 mb-6">
-                <button 
+                <button
                   onClick={() => handleSocialLogin('LinkedIn')}
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition"
                 >
                   <Image
-                        src="/LinkedinLogo.jpeg"
-                        alt="Achievement icon"
-                        width={40}
-                        height={40}
-                        className="rounded-lg"
-                      />
+                    src="/LinkedinLogo.jpeg"
+                    alt="Achievement icon"
+                    width={40}
+                    height={40}
+                    className="rounded-lg"
+                  />
 
                   <span className="font-medium text-gray-700">LinkedIn</span>
                 </button>
-                <button 
+                <button
                   onClick={() => handleSocialLogin('Google')}
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition"
                 >
                   <Image
-                        src="/Googlelogo.jpeg"
-                        alt="Achievement icon"
-                        width={40}
-                        height={40}
-                        className=" rounded-lg"
-                      />
+                    src="/Googlelogo.jpeg"
+                    alt="Achievement icon"
+                    width={40}
+                    height={40}
+                    className=" rounded-lg"
+                  />
                   <span className="font-medium text-gray-700">Google</span>
                 </button>
-                <button 
+                <button
                   onClick={() => handleSocialLogin('Google')}
                   className="flex-1 flex items-center justify-center gap-2 px-5 py-2 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition"
                 >
                   <Image
-                        src="/FacebookLogo.jpeg"
-                        alt="Achievement icon"
-                        width={40}
-                        height={40}
-                        className=""
-                      />
+                    src="/FacebookLogo.jpeg"
+                    alt="Achievement icon"
+                    width={40}
+                    height={40}
+                    className=""
+                  />
                   <span className="font-medium text-gray-700">Facebook</span>
                 </button>
               </div>

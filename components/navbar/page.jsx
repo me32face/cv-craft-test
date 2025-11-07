@@ -1,20 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import Signup from "../../app/signup/page"
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Check if user is logged in
+  useEffect(() => {
+    const token = localStorage.getItem("token"); // replace with your auth token logic
+    setIsLoggedIn(!!token);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // remove token
+    setIsLoggedIn(false);
+    window.location.href = "/"; // redirect after logout
+  };
 
   return (
     <nav className="w-full bg-[#f7f9fc] py-3 sm:py-4 px-4 sm:px-6 lg:px-8 shadow-sm fixed top-0 left-0 z-50">
       <div className="max-w-8xl mx-auto flex items-center justify-between">
-        {/* Left Section - Logo and Nav */}
+        {/* Left Section - Logo */}
         <div className="flex items-center gap-4 sm:gap-6 lg:gap-10">
-          {/* Logo */}
           <div className="flex items-center space-x-1 sm:space-x-2">
             <Image
               src="/logo.png"
@@ -53,23 +64,26 @@ const Navbar = () => {
           </ul>
         </div>
 
-        {/* Right - Buttons */}
-        <div className="hidden md:flex items-center space-x-2 lg:space-x-4">
-          <Link
-            href="/signup"
-            className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 lg:px-5 py-1.5 lg:py-2 rounded-full text-sm lg:text-base font-medium hover:opacity-90 transition-all duration-300 whitespace-nowrap"
-          >
-            Sign-up
-          </Link>
-          <Link
-            href="/login"
-            className="border border-purple-400 text-purple-600 pl-3 lg:pl-4 pr-1.5 lg:pr-2 py-1 lg:py-1.5 rounded-full hover:bg-purple-50 transition flex items-center justify-center gap-2 lg:gap-3"
-          >
-            <span className="text-sm lg:text-base">Login</span>
-            <div className="w-6 h-6 lg:w-8 lg:h-8 bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center rounded-full">
-              <span className="text-white text-sm lg:text-base">→</span>
-            </div>
-          </Link>
+        {/* Right - Login / Logout */}
+        <div className="hidden md:flex items-center">
+          {!isLoggedIn ? (
+            <Link
+              href="/login"
+              className="border border-purple-400 text-purple-600 pl-3 lg:pl-4 pr-1.5 lg:pr-2 py-1 lg:py-1.5 rounded-full hover:bg-purple-50 transition flex items-center justify-center gap-2 lg:gap-3"
+            >
+              <span className="text-sm lg:text-base">Login</span>
+              <div className="w-6 h-6 lg:w-8 lg:h-8 bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center rounded-full">
+                <span className="text-white text-sm lg:text-base">→</span>
+              </div>
+            </Link>
+          ) : (
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 text-white px-4 py-2 rounded-full hover:opacity-90 transition whitespace-nowrap"
+            >
+              Logout
+            </button>
+          )}
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -78,11 +92,7 @@ const Navbar = () => {
           className="md:hidden focus:outline-none"
           aria-label="Toggle menu"
         >
-          {menuOpen ? (
-            <X className="w-6 h-6 text-purple-700" />
-          ) : (
-            <Menu className="w-6 h-6 text-purple-700" />
-          )}
+          {menuOpen ? <X className="w-6 h-6 text-purple-700" /> : <Menu className="w-6 h-6 text-purple-700" />}
         </button>
       </div>
 
@@ -119,20 +129,25 @@ const Navbar = () => {
           </Link>
 
           <div className="flex flex-col space-y-3 pt-3 border-t border-gray-200">
-            <Link
-              href="/Signup"
-              onClick={() => setMenuOpen(false)}
-              className="bg-linear-to-r from-blue-500 to-purple-500 text-white text-center px-4 py-2 rounded-full hover:opacity-90 transition whitespace-nowrap cursor-pointer"
-            >
-              Sign-up
-            </Link>
-            <Link
-              href="/login"
-              onClick={() => setMenuOpen(false)}
-              className="border border-purple-400 text-purple-600 text-center px-4 py-2 rounded-full hover:bg-purple-50 transition whitespace-nowrap cursor-pointer"
-            >
-              Login →
-            </Link>
+            {!isLoggedIn ? (
+              <Link
+                href="/login"
+                onClick={() => setMenuOpen(false)}
+                className="border border-purple-400 text-purple-600 text-center px-4 py-2 rounded-full hover:bg-purple-50 transition whitespace-nowrap cursor-pointer"
+              >
+                Login →
+              </Link>
+            ) : (
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setMenuOpen(false);
+                }}
+                className="bg-red-500 text-white px-4 py-2 rounded-full hover:opacity-90 transition whitespace-nowrap"
+              >
+                Logout →
+              </button>
+            )}
           </div>
         </div>
       )}

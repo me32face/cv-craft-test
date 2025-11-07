@@ -28,11 +28,13 @@ export default function Home() {
     { id: 'Template02', name: 'Modern Minimal', image: '/template/template02.png' },
     { id: 'Template03', name: 'Creative Bold', image: '/template/template03.png' },
     { id: 'Template05', name: 'Clean Layout', image: '/template/template05.png' },
-    { id: 'Template14', name: 'Sample Layout', image: '/template/template14.png' },
+    { id: 'Template06', name: 'Sample Layout', image: '/template/template06.png' },
+    { id: 'Template07', name: 'Professional Classic', image: '/template/template07.png' },
     { id: 'Template15', name: 'Sample Layout', image: '/template/template15.png' },
     { id: 'Template16', name: 'Classic Layout', image: '/template/template16.png' },
     { id: 'Template17', name: 'Elegant Layout', image: '/template/template17.png' },
-    { id: 'Template18', name: 'Unique Layout', image: '/template/template18.png' },
+
+
   ];
 
   const duplicatedTemplates = [...templates, ...templates];
@@ -133,9 +135,8 @@ export default function Home() {
             <div ref={scrollRef} className="overflow-x-auto pb-4 scrollbar-hide scroll-smooth">
               <div className="flex gap-6 min-w-max mt-2" style={{ scrollSnapType: 'x mandatory' }}>
                 {duplicatedTemplates.map((template, index) => (
-                  <Link
+                  <div
                     key={`${template.id}-${index}`}
-                    href={`/templates/${template.id}`}
                     className="group relative bg-gradient-to-b from-[#f6f9fc] to-[#e8edf5] rounded-2xl shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden block flex-shrink-0 w-80 hover:bg-gradient-to-r hover:from-blue-100 hover:to-purple-100"
                     style={{ scrollSnapAlign: 'start' }}
                   >
@@ -161,15 +162,27 @@ export default function Home() {
                       </h3>
 
                       <div className="flex items-center justify-center mt-3">
-                        <p className="text-sm text-gray-700 border border-gray-500 px-4 py-2 rounded-full w-full text-center backdrop-blur-lg bg-white/40 hover:bg-white/60 transition">
+                        <button
+                          className="text-sm text-gray-700 border border-gray-500 px-4 py-2 rounded-full w-full text-center backdrop-blur-lg bg-white/40 hover:bg-white/60 transition"
+                          onClick={() => {
+                            // Check if user is logged in
+                            const token = localStorage.getItem('token');
+                            if (token) {
+                              // If logged in, redirect to template page
+                              window.location.href = `/templates/${template.id}`;
+                            } else {
+                              // If not logged in, redirect to login page
+                              window.location.href = '/login';
+                            }
+                          }}
+                        >
                           Use Template
-                        </p>
+                        </button>
                       </div>
                     </div>
-
-
-                  </Link>
+                  </div>
                 ))}
+
               </div>
             </div>
             <div className="flex justify-center mt-6 gap-2">

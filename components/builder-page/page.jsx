@@ -41,7 +41,7 @@ const BuildSection = () => {
         }
       `}</style>
 
-      <section className="w-full bg-[#EDF2FD] py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 mt-15 ">
+      <section className="w-full h-screen bg-[#EDF2FD] py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 mt-15 ">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
 

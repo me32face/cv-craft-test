@@ -32,7 +32,7 @@ const templateComponents = {
     ssr: false,
     loading: () => <TemplateLoader />
   }),
-   Template14: dynamic(() => import('@/components/templates/Template14'), { 
+    Template07: dynamic(() => import('@/components/templates/Template07'), { 
     ssr: false,
     loading: () => <TemplateLoader />
   }),
