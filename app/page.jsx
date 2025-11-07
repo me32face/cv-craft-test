@@ -39,8 +39,9 @@ export default function Home() {
     { id: 'Template16', name: 'Classic Layout', image: '/template/template16.png' },
     { id: 'Template17', name: 'Elegant Layout', image: '/template/template17.png' },
     { id: 'Template12', name: 'Elegant Layout', image: '/template/template12.png' },
-
-
+    { id: 'Template18', name: 'Unique Layout', image: '/template/template18.png' },
+    { id: 'Template19', name: 'Modest Layout', image: '/template/template19.png' },
+    { id: 'Template20', name: 'Infographic Developer Template', image: '/template/template20.png' },
   ];
 
   const duplicatedTemplates = [...templates, ...templates];

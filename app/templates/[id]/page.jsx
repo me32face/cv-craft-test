@@ -79,6 +79,14 @@ const templateComponents = {
     loading: () => <TemplateLoader />
   }),
  
+  Template19: dynamic(() => import('@/components/templates/Template19'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />
+  }),
+  Template20: dynamic(() => import('@/components/templates/Template20'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />
+  }),
 };
 
 function TemplateLoader() {
