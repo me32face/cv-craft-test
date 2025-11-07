@@ -195,9 +195,10 @@ const CVPage =  () =>{
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto">
       <div
         ref={editorContainerRef}
+        data-editor-container
         className="flex flex-col items-center scale-[0.5] origin-top transition-transform duration-500 pt-24"
       >
-        <div ref={cvRef} className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-hidden flex" onClick={handleButtonClick}>
+        <div ref={cvRef} data-cv-page className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-hidden flex" onClick={handleButtonClick}>
           {/* Left Sidebar */}
           <div className="w-1/3 bg-slate-600 text-white p-8">
             {/* Profile Image */}

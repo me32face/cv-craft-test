@@ -539,7 +539,7 @@ export default function Template13() {
           </div>
 
           {/* Main Content */}
-          <div className="w-2/3 p-8 pt-6">
+          <div className="w-2/3 p-8 pt-0">
             {/* Profile */}
             <section className="mb-8">
               <h2 className="text-sm font-bold tracking-wider text-gray-800 mb-3 border-b border-gray-300 pb-2">PROFILE</h2>
