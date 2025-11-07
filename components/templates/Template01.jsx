@@ -881,9 +881,9 @@ export default function Template01() {
   };
 
  // Register PDF function with context
-  useEffect(() => {
-    registerPDFFunction(downloadPDF);
-  }, [downloadPDF, registerPDFFunction]);
+  // useEffect(() => {
+  //   registerPDFFunction(downloadPDF);
+  // }, [downloadPDF, registerPDFFunction]);
 
 
   return (
