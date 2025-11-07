@@ -115,7 +115,7 @@ const CVPage =  () =>{
 
               <div className="mb-10 ">
                 <h1 className="text-4xl font-bold text-amber-900 leading-tight" contentEditable suppressContentEditableWarning>
-                  RICHARD <br /><span className="font-semibold pl-14" contentEditable suppressContentEditableWarning>NAVEEEN</span>
+                  RICHARD <br /><span className="font-semibold pl-14" contentEditable suppressContentEditableWarning>SUJITH</span>
                 </h1>
                 <p className="text-sm text-amber-800 mt-2 tracking-wide" contentEditable suppressContentEditableWarning>Data Analyst</p>
               </div>
@@ -259,7 +259,7 @@ const CVPage =  () =>{
                 <h3 className="" contentEditable suppressContentEditableWarning></h3>
                 <div className="w-full h-px bg-amber-900 mb-3"></div>
                 <Draggable nodeRef={summaryRef} >
-                  <div ref={summaryRef} data-section-item >
+                  <div ref={summaryRef} data-section-item className='relative group'>
                     <p className="text-xs text-amber-900 leading-relaxed" contentEditable suppressContentEditableWarning>
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                       eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
@@ -270,7 +270,7 @@ const CVPage =  () =>{
                       Ut enim ad minim veniam quis nostrud. Sed ut perspiciatis unde omnis iste
                       natus.
                     </p>
-                    <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <div className="absolute -right-4 -top-12 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                       <button data-action="duplicate" className="text-amber-700 rounded p-1.5 shadow-md">
                         <CopyPlus className="w-4 h-4" />
                       </button>
@@ -284,14 +284,14 @@ const CVPage =  () =>{
 
               {/* Education Section */}
               <div className='bg-amber-50 p-5'>
-                <div className="mb-8 group">
-                  <h3 className="text-lg font-bold text-amber-900 mb-3 tracking-wide" contentEditable suppressContentEditableWarning>EDUCATION</h3>
+                <div className="mb-8 ">
+                  <h3 className="text-lg font-bold text-amber-900 mb-3 tracking-wide" contentEditable suppressContentEditableWarning> EXPERIENCE</h3>
                   <div className="w-full h-px bg-amber-900 mb-4"></div>
 
-                  <div className="space-y-4 group">
+                  <div className="space-y-4 ">
                     {/* Education 1 */}
                     <Draggable nodeRef={job1Ref} >
-                      <div ref={job1Ref} data-section-item>
+                      <div ref={job1Ref} data-section-item className='relative group '>
                         <div className="flex justify-between items-start mb-1">
                           <h4 className="font-bold text-amber-900 text-sm" contentEditable suppressContentEditableWarning>Master of IT Management</h4>
                           <span className="text-xs text-amber-800" contentEditable suppressContentEditableWarning>2021 - 2023</span>
@@ -316,7 +316,7 @@ const CVPage =  () =>{
 
                     {/* Education 2 */}
                     <Draggable nodeRef={job2Ref}>
-                      <div ref={job2Ref} data-section-item>
+                      <div ref={job2Ref} data-section-item className='relative group '>
                         <div className="flex justify-between items-start mb-1">
                           <h4 className="font-bold text-amber-900 text-sm" contentEditable suppressContentEditableWarning>Bachelor of IT Management</h4>
                           <span className="text-xs text-amber-800" contentEditable suppressContentEditableWarning>2016 - 2020</span>
@@ -340,7 +340,7 @@ const CVPage =  () =>{
 
                     {/* Education 3 */}
                     <Draggable nodeRef={job3Ref}>
-                      <div ref={job3Ref} data-section-item>
+                      <div ref={job3Ref} data-section-item className='relative group '>
                         <div className="flex justify-between items-start mb-1">
                           <h4 className="font-bold text-amber-900 text-sm" contentEditable suppressContentEditableWarning>Master Of Science</h4>
                           <span className="text-xs text-amber-800" contentEditable suppressContentEditableWarning>2012 - 2016</span>
@@ -365,8 +365,8 @@ const CVPage =  () =>{
                 </div>
 
                 {/* Experience Section */}
-                <div className="mb-8 group ">
-                  <h3 className="text-lg font-bold text-amber-900 mb-3 tracking-wide" contentEditable suppressContentEditableWarning>EXPERIENCE</h3>
+                <div className="mb-8  relative group  ">
+                  <h3 className="text-lg font-bold text-amber-900 mb-3 tracking-wide" contentEditable suppressContentEditableWarning>EDUCATION</h3>
                   <div className="w-full h-px bg-amber-900 mb-4"></div>
                   <Draggable nodeRef={expertiseRef}>
                     <div ref={expertiseRef} data-section-item>
@@ -401,10 +401,10 @@ const CVPage =  () =>{
                   <h3 className="text-lg font-bold text-amber-900 mb-3 tracking-wide" contentEditable suppressContentEditableWarning>REFERENCES</h3>
                   <div className="w-full h-px bg-amber-900 mb-4"></div>
 
-                  <div className="grid grid-cols-2 gap-6 group">
+                  <div className="grid grid-cols-2 gap-6 ">
                     {/* Reference 1 */}
                     <Draggable nodeRef={ref1Ref}>
-                      <div ref={ref1Ref} data-section-item className="text-xs" contentEditable suppressContentEditableWarning>
+                      <div ref={ref1Ref} data-section-item className="text-xs relative group" contentEditable suppressContentEditableWarning>
                         <h4 className="font-bold text-amber-900 text-sm mb-1">Fatma Hasan</h4>
                         <p className="text-amber-800 mb-2">Wardiere Inc. / CTO</p>
                         <div className="text-amber-900 space-y-0.5">
@@ -424,7 +424,7 @@ const CVPage =  () =>{
 
                     {/* Reference 2 */}
                     <Draggable nodeRef={ref2Ref}>
-                      <div ref={ref2Ref} data-section-item className="text-xs" contentEditable suppressContentEditableWarning>
+                      <div ref={ref2Ref} data-section-item className="text-xs relative group" contentEditable suppressContentEditableWarning>
                         <h4 className="font-bold text-amber-900 text-sm mb-1">Ronan Olandiwar</h4>
                         <p className="text-amber-800 mb-2">Wardiere Inc. / CEO</p>
                         <div className="text-amber-900 space-y-0.5">

@@ -1044,12 +1044,13 @@ export default function Template03() {
   }, [downloadPDF, registerPDFFunction]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">
+   <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">
       <div
         ref={editorContainerRef}
+        data-editor-container
         className="flex flex-col items-center scale-[0.5] origin-top transition-transform duration-500 pt-24"
       >
-        <div ref={cvRef}>
+        <div ref={cvRef} data-cv-page>
           <CVPage />
         </div>
       </div>

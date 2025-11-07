@@ -16,16 +16,7 @@ export default function Template05() {
 
   const cvRef = useRef(null);
   const editorContainerRef = useRef(null);
-  const contactRef = useRef(null);
-  const educationRef = useRef(null);
-  const skillsRef = useRef(null);
-  const languagesRef = useRef(null);
-  const summaryRef = useRef(null);
-  const job1Ref = useRef(null);
-  const job2Ref = useRef(null);
-  const job3Ref = useRef(null);
- const ref1Ref = useRef(null);
-  const ref2Ref = useRef(null);
+
 
   const handleButtonClick = useCallback((e) => {
     const button = e.target.closest('button');
@@ -188,6 +179,17 @@ export default function Template05() {
   useEffect(() => {
     registerPDFFunction(downloadPDF);
   }, [downloadPDF, registerPDFFunction]);
+const CVPage =  () =>{
+  const contactRef = useRef(null);
+  const educationRef = useRef(null);
+  const skillsRef = useRef(null);
+  const languagesRef = useRef(null);
+  const summaryRef = useRef(null);
+  const job1Ref = useRef(null);
+  const job2Ref = useRef(null);
+  const job3Ref = useRef(null);
+  const ref1Ref = useRef(null);
+  const ref2Ref = useRef(null);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto">
@@ -199,25 +201,26 @@ export default function Template05() {
           {/* Left Sidebar */}
           <div className="w-1/3 bg-slate-600 text-white p-8">
             {/* Profile Image */}
-            <div className="mb-8">
-              <div
-                className="w-40 h-40 mx-auto  overflow-hidden border-4 border-white shadow-xl bg-gray-300 cursor-pointer hover:opacity-80 transition-opacity"
-                onClick={() => document.getElementById('profileImageInput').click()}
-              >
-                {/* {profileImage ? ( */}
-                <img src={'/templateprofile/template02profile.webp'} alt="Profile" className="w-full h-full object-cover" />
-                {/* ) : ( */}
-                {/* <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400"></div> */}
-                {/* )} */}
-              </div>
-              <input
-                id="profileImageInput"
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-              />
-            </div>
+            <div className="mb-6">
+                  <div className="w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-white shadow-xl bg-gray-200"
+                    onClick={() => document.getElementById('profileImageInput').click()}>
+                    {profileImage ? (
+                      <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
+                        RS
+                      </div>
+                    )}
+                  </div>
+                  <input
+                    id="profileImageInput"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                </div>
+
 
             {/* Contact Section */}
             <div className="mb-8">
@@ -350,7 +353,7 @@ export default function Template05() {
           {/* Right Content */}
           <div className="w-2/3 p-8 bg-gray-50">
             {/* Header */}
-          <div className="mb-8 -ml-8 p-5 bg-gradient-to-r from-slate-200 via-slate-300 to-slate-400">
+            <div className="mb-8 -ml-8 p-5 bg-gradient-to-r from-slate-200 via-slate-300 to-slate-400">
               <h1 className="text-4xl font-bold text-slate-800" contentEditable suppressContentEditableWarning>
                 RICHARD <span className="font-light" contentEditable suppressContentEditableWarning>SANCHEZ</span>
               </h1>
@@ -395,21 +398,20 @@ export default function Template05() {
               <h3 className="text-lg font-bold text-slate-800 mb-4" contentEditable suppressContentEditableWarning>WORK EXPERIENCE</h3>
               <div className="space-y-5">
                 {/* Job 1 */}
-                  <Draggable nodeRef={job1Ref}>
-                <div ref={job1Ref} data-section-item className=" gap-3 relative group">
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <h4 className="font-bold text-slate-800 text-sm" contentEditable suppressContentEditableWarning>Borcelle Studio</h4>
-                      <p className="text-xs text-slate-600" contentEditable suppressContentEditableWarning>Marketing Manager & Specialist</p>
+                <Draggable nodeRef={job1Ref}>
+                  <div ref={job1Ref} data-section-item className=" gap-3 relative group">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h4 className="font-bold text-slate-800 text-sm" contentEditable suppressContentEditableWarning>Tangen Studio</h4>
+                        <p className="text-xs text-slate-600" contentEditable suppressContentEditableWarning>Marketing Manager & Specialist</p>
+                      </div>
+                      <span className="text-xs text-slate-500 whitespace-nowrap ml-4" contentEditable suppressContentEditableWarning>2025 | 2028</span>
                     </div>
-                    <span className="text-xs text-slate-500 whitespace-nowrap ml-4" contentEditable suppressContentEditableWarning>2028 | Present</span>
-                  </div>
-                  <ul className="text-xs text-slate-700 space-y-1 ml-4 list-disc" contentEditable suppressContentEditableWarning>
-                    <li>Develop and execute comprehensive marketing strategies and campaigns to increase brand awareness and engagement.</li>
-                    <li>Lead, mentor and manage a high-performing marketing team, fostering a collaborative and innovative work environment.</li>
-                    <li>Analyze market trends, customer insights and competitor strategies.</li>
-                  </ul>
-                  <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <ul className="text-xs text-slate-700 space-y-1 ml-4 list-disc" contentEditable suppressContentEditableWarning>
+                      <li>Create and manage the marketing budget, ensuring efficient allocation of resources to maximize ROI and achieve business objectives.</li>
+                      <li>Collaborate with internal teams and external partners to drive brand consistency across marketing channels and materials.</li>
+                    </ul>
+                    <div className="absolute right-0 top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                       <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
                         <CopyPlus className="w-4 h-4" />
                       </button>
@@ -417,24 +419,24 @@ export default function Template05() {
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
-                </div>
+                  </div>
                 </Draggable>
 
                 {/* Job 2 */}
                 <Draggable nodeRef={job2Ref}>
-                <div ref={job2Ref} data-section-item className=" gap-3 relative group">
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <h4 className="font-bold text-slate-800 text-sm" contentEditable suppressContentEditableWarning>Tangen Studio</h4>
-                      <p className="text-xs text-slate-600" contentEditable suppressContentEditableWarning>Marketing Manager & Specialist</p>
+                  <div ref={job2Ref} data-section-item className=" gap-3 relative group">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h4 className="font-bold text-slate-800 text-sm" contentEditable suppressContentEditableWarning>Tangen Studio</h4>
+                        <p className="text-xs text-slate-600" contentEditable suppressContentEditableWarning>Marketing Manager & Specialist</p>
+                      </div>
+                      <span className="text-xs text-slate-500 whitespace-nowrap ml-4" contentEditable suppressContentEditableWarning>2025 | 2028</span>
                     </div>
-                    <span className="text-xs text-slate-500 whitespace-nowrap ml-4" contentEditable suppressContentEditableWarning>2025 | 2028</span>
-                  </div>
-                  <ul className="text-xs text-slate-700 space-y-1 ml-4 list-disc" contentEditable suppressContentEditableWarning>
-                    <li>Create and manage the marketing budget, ensuring efficient allocation of resources to maximize ROI and achieve business objectives.</li>
-                    <li>Collaborate with internal teams and external partners to drive brand consistency across marketing channels and materials.</li>
-                  </ul>
-                  <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <ul className="text-xs text-slate-700 space-y-1 ml-4 list-disc" contentEditable suppressContentEditableWarning>
+                      <li>Create and manage the marketing budget, ensuring efficient allocation of resources to maximize ROI and achieve business objectives.</li>
+                      <li>Collaborate with internal teams and external partners to drive brand consistency across marketing channels and materials.</li>
+                    </ul>
+                    <div className="absolute right-0 top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                       <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
                         <CopyPlus className="w-4 h-4" />
                       </button>
@@ -442,24 +444,24 @@ export default function Template05() {
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
-                </div>
+                  </div>
                 </Draggable>
 
                 {/* Job 3 */}
                 <Draggable nodeRef={job3Ref}>
                   <div ref={job3Ref} data-section-item className=" relative group">
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <h4 className="font-bold text-slate-800 text-sm" contentEditable suppressContentEditableWarning>Studio Shodwe</h4>
-                      <p className="text-xs text-slate-600" contentEditable suppressContentEditableWarning>Marketing Manager & Specialist</p>
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h4 className="font-bold text-slate-800 text-sm" contentEditable suppressContentEditableWarning>Studio Shodwe</h4>
+                        <p className="text-xs text-slate-600" contentEditable suppressContentEditableWarning>Marketing Manager & Specialist</p>
+                      </div>
+                      <span className="text-xs text-slate-500 whitespace-nowrap ml-4" contentEditable suppressContentEditableWarning>2023 | 2025</span>
                     </div>
-                    <span className="text-xs text-slate-500 whitespace-nowrap ml-4" contentEditable suppressContentEditableWarning>2023 | 2025</span>
-                  </div>
-                  <ul className="text-xs text-slate-700 space-y-1 ml-4 list-disc" contentEditable suppressContentEditableWarning>
-                    <li>Conduct market research and competitive analysis, systems, agencies, and vendors to support marketing initiatives.</li>
-                    <li>Monitor and measure brand performance, analyzing key metrics to optimize strategy, tactics and engagement.</li>
-                  </ul>
-                  <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <ul className="text-xs text-slate-700 space-y-1 ml-4 list-disc" contentEditable suppressContentEditableWarning>
+                      <li>Conduct market research and competitive analysis, systems, agencies, and vendors to support marketing initiatives.</li>
+                      <li>Monitor and measure brand performance, analyzing key metrics to optimize strategy, tactics and engagement.</li>
+                    </ul>
+                    <div className="absolute right-0 top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                       <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
                         <CopyPlus className="w-4 h-4" />
                       </button>
@@ -467,7 +469,7 @@ export default function Template05() {
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
-                </div>
+                  </div>
                 </Draggable>
               </div>
             </div>
@@ -477,15 +479,15 @@ export default function Template05() {
               <h3 className="text-lg font-bold text-slate-800 mb-4" contentEditable suppressContentEditableWarning>REFERENCE</h3>
               <div className="grid grid-cols-2 gap-6">
                 {/* Reference 1 */}
-               <Draggable nodeRef={ref1Ref}>
+                <Draggable nodeRef={ref1Ref}>
                   <div ref={ref1Ref} data-section-item className="relative group">
-                   <h4 className="font-bold text-slate-800 text-sm mb-1" contentEditable suppressContentEditableWarning>Estelle Darcy</h4>
-                  <p className="text-slate-600 mb-2" contentEditable suppressContentEditableWarning>Wardiere Inc. / CEO</p>
-                  <div className="text-slate-600 space-y-0.5">
-                    <p contentEditable suppressContentEditableWarning><span className="font-semibold" >Phone:</span> 123-456-7890</p>
-                    <p contentEditable suppressContentEditableWarning><span className="font-semibold">Email:</span> hello@reallygreatsite.com</p>
-                  </div>
-                  <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <h4 className="font-bold text-slate-800 text-sm mb-1" contentEditable suppressContentEditableWarning>Estelle Darcy</h4>
+                    <p className="text-slate-600 mb-2" contentEditable suppressContentEditableWarning>Wardiere Inc. / CEO</p>
+                    <div className="text-slate-600 space-y-0.5">
+                      <p contentEditable suppressContentEditableWarning><span className="font-semibold" >Phone:</span> 123-456-7890</p>
+                      <p contentEditable suppressContentEditableWarning><span className="font-semibold">Email:</span> hello@reallygreatsite.com</p>
+                    </div>
+                    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                       <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
                         <CopyPlus className="w-4 h-4" />
                       </button>
@@ -493,19 +495,19 @@ export default function Template05() {
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
-                </div>
+                  </div>
                 </Draggable>
 
                 {/* Reference 2 */}
                 <Draggable nodeRef={ref2Ref}>
                   <div ref={ref2Ref} data-section-item className="relative group">
-                  <h4 className="font-bold text-slate-800 text-sm mb-1" contentEditable suppressContentEditableWarning>Harper Richard</h4>
-                  <p className="text-slate-600 mb-2" contentEditable suppressContentEditableWarning>Wardiere Inc. / CEO</p>
-                  <div className="text-slate-600 space-y-0.5">
-                    <p contentEditable suppressContentEditableWarning><span className="font-semibold" >Phone:</span> 123-456-7890</p>
-                    <p contentEditable suppressContentEditableWarning><span className="font-semibold" >Email:</span> hello@reallygreatsite.com</p>
-                  </div>
-                  <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <h4 className="font-bold text-slate-800 text-sm mb-1" contentEditable suppressContentEditableWarning>Harper Richard</h4>
+                    <p className="text-slate-600 mb-2" contentEditable suppressContentEditableWarning>Wardiere Inc. / CEO</p>
+                    <div className="text-slate-600 space-y-0.5">
+                      <p contentEditable suppressContentEditableWarning><span className="font-semibold" >Phone:</span> 123-456-7890</p>
+                      <p contentEditable suppressContentEditableWarning><span className="font-semibold" >Email:</span> hello@reallygreatsite.com</p>
+                    </div>
+                    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                       <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
                         <CopyPlus className="w-4 h-4" />
                       </button>
@@ -513,7 +515,7 @@ export default function Template05() {
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
-                </div>
+                  </div>
                 </Draggable>
               </div>
             </div>
@@ -522,4 +524,19 @@ export default function Template05() {
       </div>
     </div>
   );
-};
+}
+
+return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">
+      <div
+        ref={editorContainerRef}
+        data-editor-container
+        className="flex flex-col items-center scale-[0.5] origin-top transition-transform duration-500 pt-24"
+      >
+        <div ref={cvRef} data-cv-page>
+          <CVPage />
+        </div>
+      </div>
+    </div>
+  );
+}

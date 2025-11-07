@@ -368,27 +368,7 @@ export default function Template12() {
                 </Draggable>
               </div>
 
-              {/* Education */}
-              <div className=''>
-                <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2" contentEditable suppressContentEditableWarning>
-                  EDUCATION
-                </h3>
-                <Draggable nodeRef={educationRef}>
-                  <div ref={educationRef} data-section-item className='relative group' >
-                    <p className="text-sm text-gray-700 leading-relaxed" contentEditable suppressContentEditableWarning>
-                      School of Innovation and Creative Thinking.HFCA.Communication and strategy. Advertising (advertising specialist)
-                    </p>
-                    <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button data-action="duplicate" className="text-black rounded p-1.5 shadow-md">
-                        <CopyPlus className="w-4 h-4" />
-                      </button>
-                      <button data-action="delete" className="text-black rounded p-1.5 shadow-md">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </Draggable>
-              </div>
+             
 
               {/* Work Experience */}
               <div>
@@ -420,7 +400,74 @@ export default function Template12() {
                       </div>
                     </div>
                   </Draggable>
+                <Draggable nodeRef={job2Ref}>
+                    <div ref={job2Ref} data-section-item className=" gap-3 relative group">
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <h4 className="font-bold text-slate-800 text-sm" contentEditable suppressContentEditableWarning>Borcelle Studio</h4>
+                          <p className="text-xs text-slate-600" contentEditable suppressContentEditableWarning>Marketing Manager & Specialist</p>
+                        </div>
+                        <span className="text-xs text-slate-500 whitespace-nowrap ml-4" contentEditable suppressContentEditableWarning>2028 | Present</span>
+                      </div>
+                      <ul className="text-xs text-slate-700 space-y-1 ml-4 list-disc" contentEditable suppressContentEditableWarning>
+                        <li>Develop and execute comprehensive marketing strategies and campaigns to increase brand awareness and engagement.</li>
+                        <li>Analyze market trends, customer insights and competitor strategies.</li>
+                      </ul>
+                      <div className="absolute right-0 top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                        <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                          <CopyPlus className="w-4 h-4" />
+                        </button>
+                        <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </Draggable>
+                  <Draggable nodeRef={job3Ref}>
+                    <div ref={job3Ref} data-section-item className=" gap-3 relative group">
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <h4 className="font-bold text-slate-800 text-sm" contentEditable suppressContentEditableWarning>Borcelle Studio</h4>
+                          <p className="text-xs text-slate-600" contentEditable suppressContentEditableWarning>Marketing Manager & Specialist</p>
+                        </div>
+                        <span className="text-xs text-slate-500 whitespace-nowrap ml-4" contentEditable suppressContentEditableWarning>2028 | Present</span>
+                      </div>
+                      <ul className="text-xs text-slate-700 space-y-1 ml-4 list-disc" contentEditable suppressContentEditableWarning>
+                        <li>Develop and execute comprehensive marketing strategies and campaigns to increase brand awareness and engagement.</li>
+                        <li>Analyze market trends, customer insights and competitor strategies.</li>
+                      </ul>
+                      <div className="absolute right-0 top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                        <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                          <CopyPlus className="w-4 h-4" />
+                        </button>
+                        <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </Draggable>
                 </div>
+              </div>
+               {/* Education */}
+              <div className=''>
+                <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2" contentEditable suppressContentEditableWarning>
+                  EDUCATION
+                </h3>
+                <Draggable nodeRef={educationRef}>
+                  <div ref={educationRef} data-section-item className='relative group' >
+                    <p className="text-sm text-gray-700 leading-relaxed" contentEditable suppressContentEditableWarning>
+                      School of Innovation and Creative Thinking.HFCA.Communication and strategy. Advertising (advertising specialist)
+                    </p>
+                    <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                      <button data-action="duplicate" className="text-black rounded p-1.5 shadow-md">
+                        <CopyPlus className="w-4 h-4" />
+                      </button>
+                      <button data-action="delete" className="text-black rounded p-1.5 shadow-md">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                </Draggable>
               </div>
             </div>
           </div>

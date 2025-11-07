@@ -880,6 +880,12 @@ export default function Template01() {
     );
   };
 
+ // Register PDF function with context
+  useEffect(() => {
+    registerPDFFunction(downloadPDF);
+  }, [downloadPDF, registerPDFFunction]);
+
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">
       <div
