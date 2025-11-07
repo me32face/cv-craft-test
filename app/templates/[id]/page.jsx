@@ -36,6 +36,14 @@ const templateComponents = {
     ssr: false,
     loading: () => <TemplateLoader />
   }),
+   Template13: dynamic(() => import('@/components/templates/Template13'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />
+  }),
+  Template14: dynamic(() => import('@/components/templates/Template14'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />
+  }),
   Template15: dynamic(() => import('@/components/templates/Template15'), { 
     ssr: false,
     loading: () => <TemplateLoader />

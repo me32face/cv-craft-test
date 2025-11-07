@@ -33,6 +33,8 @@ export default function Home() {
     { id: 'Template08', name: 'Beige Whait', image: '/template/template08.png' },
     { id: 'Template09', name: 'Beige Whait', image: '/template/template09.png' },
     { id: 'Template10', name: 'Elegant Layout', image: '/template/template10.png' },
+    { id: 'Template13', name: 'Clean Layout', image: '/template/template13.png' },
+    { id: 'Template14', name: 'Clean Layout', image: '/template/template14.png' },
     { id: 'Template15', name: 'Sample Layout', image: '/template/template15.png' },
     { id: 'Template16', name: 'Classic Layout', image: '/template/template16.png' },
     { id: 'Template17', name: 'Elegant Layout', image: '/template/template17.png' },

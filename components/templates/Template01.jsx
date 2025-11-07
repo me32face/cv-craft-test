@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Phone, Mail, MapPin, Globe, Briefcase, GraduationCap, CopyPlus, Trash2 } from 'lucide-react';
+import { Phone, Mail, MapPin, Globe, Briefcase,User, GraduationCap, CopyPlus, Trash2 } from 'lucide-react';
 import Draggable from "react-draggable";
 
 import { useUndoRedo } from '../../contexts/UndoRedoContext';
@@ -368,7 +368,7 @@ export default function Template01() {
               <Draggable nodeRef={skillsRef}>
                 <h3 ref={skillsRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Skills</h3>
               </Draggable>
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity ">
                 <AISparkle className='mt-1' section="Skills" onGenerate={handleAIGenerate} />
               </div>
             </div>
@@ -616,11 +616,13 @@ export default function Template01() {
             {/* Profile Section */}
             <div className="mb-5 section-container group" data-section="profile">
               <div className="flex items-center gap-2 mb-2 relative">
+                <div className="w-6 h-6 bg-slate-700 rounded-full flex  justify-center">
                 <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-white text-xs font-bold">P</span>
+                    <User className="w-3 h-3 text-white" />
+                  </div>
                 </div>
                 <h2 contentEditable suppressContentEditableWarning className="text-sm font-bold text-gray-800 uppercase tracking-wide">Profile</h2>
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity  ">
                   <AISparkle section="Profile" onGenerate={handleAIGenerate} />
                 </div>
               </div>
@@ -738,7 +740,7 @@ export default function Template01() {
                       </li>
                       <li className="flex items-start relative group">
                         <span className="mr-2">•</span>
-                        <span contentEditable suppressContentEditableWarning>Oversee market research to identify emerging trends, customer needs, and competitive intelligence.</span>
+                        <span contentEditable suppressContentEditableWarning>Oversee market research to identify emerging trends,<br/> customer needs, and competitive intelligence.</span>
                         <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                           <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
                             <CopyPlus className="w-3 h-3" />
@@ -877,8 +879,6 @@ export default function Template01() {
       </div>
     );
   };
-
-
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">

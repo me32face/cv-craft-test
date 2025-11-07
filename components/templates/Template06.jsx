@@ -237,7 +237,7 @@ export default function Template06() {
                 </ul>
               </div>
             </div>
-            <div className="absolute -right-4 -top-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+            <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
               <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md bg-white">
                 <CopyPlus className="w-4 h-4" />
               </button>
@@ -273,7 +273,7 @@ export default function Template06() {
                 </ul>
               </div>
             </div>
-            <div className="absolute -right-4 -top-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+            <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
               <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md bg-white">
                 <CopyPlus className="w-4 h-4" />
               </button>
@@ -379,7 +379,7 @@ export default function Template06() {
             <span className="text-xs text-gray-600 whitespace-nowrap" contentEditable suppressContentEditableWarning>
               2015 – 2019
             </span>
-            <div className="absolute -right-4 -top-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+            <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
               <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md bg-white">
                 <CopyPlus className="w-4 h-4" />
               </button>
@@ -402,7 +402,7 @@ export default function Template06() {
             <span className="text-xs text-gray-600 whitespace-nowrap" contentEditable suppressContentEditableWarning>
               2015 – 2019
             </span>
-            <div className="absolute -right-4 -top-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+            <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
               <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md bg-white">
                 <CopyPlus className="w-4 h-4" />
               </button>
