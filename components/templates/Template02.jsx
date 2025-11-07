@@ -13,15 +13,29 @@ export default function Template02() {
   const editorContainerRef = useRef(null);
   const { registerPDFFunction } = usePDF();
 
-  const handleBulletListEnter = (e) => {
+   const handleBulletListEnter = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      const newLi = document.createElement('li');
-      newLi.className = 'flex items-start gap-2';
-      newLi.innerHTML = '<span class="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span><span class="text-xs text-gray-700"></span>';
-      e.currentTarget.appendChild(newLi);
-      const textSpan = newLi.querySelector('.text-xs');
-      textSpan?.focus();
+      const selection = window.getSelection();
+      let currentLi = selection.anchorNode;
+      
+      while (currentLi && currentLi.tagName !== 'LI') {
+        currentLi = currentLi.parentElement;
+      }
+      
+      if (currentLi) {
+        const newLi = document.createElement('li');
+        newLi.className = 'flex items-start gap-2';
+        newLi.innerHTML = '<span class="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span><span class="text-xs text-gray-700">\u200B</span>';
+        currentLi.parentNode.insertBefore(newLi, currentLi.nextSibling);
+        
+        const textSpan = newLi.querySelector('.text-xs');
+        const range = document.createRange();
+        range.setStart(textSpan.firstChild, 1);
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
     }
   };
 
@@ -32,13 +46,27 @@ export default function Template02() {
     });
   };
 
-  const handleSimpleListEnter = (e) => {
+    const handleSimpleListEnter = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      const newLi = document.createElement('li');
-      newLi.textContent = '';
-      e.currentTarget.appendChild(newLi);
-      newLi.focus();
+      const selection = window.getSelection();
+      let currentLi = selection.anchorNode;
+      
+      while (currentLi && currentLi.tagName !== 'LI') {
+        currentLi = currentLi.parentElement;
+      }
+      
+      if (currentLi) {
+        const newLi = document.createElement('li');
+        newLi.textContent = '\u200B';
+        currentLi.parentNode.insertBefore(newLi, currentLi.nextSibling);
+        
+        const range = document.createRange();
+        range.setStart(newLi.firstChild, 1);
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
     }
   };
 
@@ -77,6 +105,7 @@ export default function Template02() {
       }
     }
   }, []);
+  
   const handleAIGenerate = async (section, keywords) => {
     if (!geminiService.genAI) {
       const apiKey = prompt('Please enter your Gemini API key:');
@@ -252,9 +281,7 @@ export default function Template02() {
             {/* Header */}
             <div className="text-center mb-6 pb-6 border-b border-gray-300 relative">
               {/* Large decorative initial */}
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 text-[120px] font-serif text-gray-200 leading-none" style={{ fontFamily: 'Georgia, serif' }}>
-                O
-              </div>
+              
               <div className="relative z-10 pt-8">
                 <h1 className="text-4xl font-light tracking-widest text-gray-800 mb-1" contentEditable suppressContentEditableWarning>
                   OLIVIA WILSON
@@ -371,7 +398,7 @@ export default function Template02() {
                   <Draggable nodeRef={skillsRef} >
                     <div className="flex items-center gap-2 mb-2 relative">
                       <h2 ref={skillsRef} contentEditable suppressContentEditableWarning className="text-sm font-bold text-gray-800 uppercase tracking-wide">Skills</h2>
-                      <AISparkle section="skills" onGenerate={handleAIGenerate} />
+                    <AISparkle section="skills" onGenerate={handleAIGenerate} className='lg:ml-36 -mt-2   ' />
                     </div>
                   </Draggable>
                   <Draggable nodeRef={skillsContentRef} >

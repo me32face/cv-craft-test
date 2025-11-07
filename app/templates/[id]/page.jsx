@@ -45,13 +45,28 @@ const templateComponents = {
     loading: () => <TemplateLoader />
   }),
   Template17: dynamic(() => import('@/components/templates/Template17'), { 
-    ssr: false,
+     ssr: false,
     loading: () => <TemplateLoader />
   }),
+   
   Template18: dynamic(() => import('@/components/templates/Template18'), { 
+     ssr: false,
+    loading: () => <TemplateLoader />
+  }),
+
+   Template08: dynamic(() => import('@/components/templates/Template08'), { 
     ssr: false,
     loading: () => <TemplateLoader />
   }),
+  Template09: dynamic(() => import('@/components/templates/Template09'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />
+  }),
+  Template10: dynamic(() => import('@/components/templates/Template10'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />
+  }),
+ 
 };
 
 function TemplateLoader() {

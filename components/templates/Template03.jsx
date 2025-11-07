@@ -32,12 +32,26 @@ export default function Template03() {
   const handleBulletListEnter = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      const newLi = document.createElement('li');
-      newLi.className = 'flex items-start gap-2';
-      newLi.innerHTML = '<span class="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span><span class="text-xs text-gray-700"></span>';
-      e.currentTarget.appendChild(newLi);
-      const textSpan = newLi.querySelector('.text-xs');
-      textSpan?.focus();
+      const selection = window.getSelection();
+      let currentLi = selection.anchorNode;
+      
+      while (currentLi && currentLi.tagName !== 'LI') {
+        currentLi = currentLi.parentElement;
+      }
+      
+      if (currentLi) {
+        const newLi = document.createElement('li');
+        newLi.className = 'flex items-start gap-2';
+        newLi.innerHTML = '<span class="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span><span class="text-xs text-gray-700">\u200B</span>';
+        currentLi.parentNode.insertBefore(newLi, currentLi.nextSibling);
+        
+        const textSpan = newLi.querySelector('.text-xs');
+        const range = document.createRange();
+        range.setStart(textSpan.firstChild, 1);
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
     }
   };
 
@@ -51,10 +65,24 @@ export default function Template03() {
   const handleSimpleListEnter = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      const newLi = document.createElement('li');
-      newLi.textContent = '';
-      e.currentTarget.appendChild(newLi);
-      newLi.focus();
+      const selection = window.getSelection();
+      let currentLi = selection.anchorNode;
+      
+      while (currentLi && currentLi.tagName !== 'LI') {
+        currentLi = currentLi.parentElement;
+      }
+      
+      if (currentLi) {
+        const newLi = document.createElement('li');
+        newLi.textContent = '\u200B';
+        currentLi.parentNode.insertBefore(newLi, currentLi.nextSibling);
+        
+        const range = document.createRange();
+        range.setStart(newLi.firstChild, 1);
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
     }
   };
 
