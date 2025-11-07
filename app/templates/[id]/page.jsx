@@ -66,6 +66,10 @@ const templateComponents = {
     ssr: false,
     loading: () => <TemplateLoader />
   }),
+  Template12: dynamic(() => import('@/components/templates/Template12'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />
+  }),
  
 };
 

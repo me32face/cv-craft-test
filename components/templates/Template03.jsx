@@ -34,17 +34,17 @@ export default function Template03() {
       e.preventDefault();
       const selection = window.getSelection();
       let currentLi = selection.anchorNode;
-      
+
       while (currentLi && currentLi.tagName !== 'LI') {
         currentLi = currentLi.parentElement;
       }
-      
+
       if (currentLi) {
         const newLi = document.createElement('li');
         newLi.className = 'flex items-start gap-2';
         newLi.innerHTML = '<span class="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span><span class="text-xs text-gray-700">\u200B</span>';
         currentLi.parentNode.insertBefore(newLi, currentLi.nextSibling);
-        
+
         const textSpan = newLi.querySelector('.text-xs');
         const range = document.createRange();
         range.setStart(textSpan.firstChild, 1);
@@ -67,16 +67,16 @@ export default function Template03() {
       e.preventDefault();
       const selection = window.getSelection();
       let currentLi = selection.anchorNode;
-      
+
       while (currentLi && currentLi.tagName !== 'LI') {
         currentLi = currentLi.parentElement;
       }
-      
+
       if (currentLi) {
         const newLi = document.createElement('li');
         newLi.textContent = '\u200B';
         currentLi.parentNode.insertBefore(newLi, currentLi.nextSibling);
-        
+
         const range = document.createRange();
         range.setStart(newLi.firstChild, 1);
         range.collapse(true);
@@ -86,7 +86,7 @@ export default function Template03() {
     }
   };
 
- 
+
 
   const handleButtonClick = useCallback((e) => {
     const button = e.target.closest('button');
@@ -435,8 +435,9 @@ export default function Template03() {
                         <User className="w-4 h-4" />
                         About Me
                       </h2>
-                      <AISparkle section="Profile" onGenerate={handleAIGenerate} />
-                    </div>
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        <AISparkle className='mt-1' section="Skills" onGenerate={handleAIGenerate} />
+                      </div>                    </div>
                   </Draggable>
                   <Draggable nodeRef={aboutContentRef}>
                     <div ref={aboutContentRef} className="relative group">
@@ -458,15 +459,16 @@ export default function Template03() {
                 </div>
 
                 {/* Skills Section */}
-                <div className="mb-6 section-container" data-section="skills">
+                <div className="mb-6 section-container relative group" data-section="skills">
                   <Draggable nodeRef={skillsRef} >
-                    <div className="flex items-center  relative">
+                    <div className="flex items-center  relative ">
                       <h2 ref={skillsRef} className="text-sm font-bold text-gray-700  flex items-center gap-2">
                         <Settings className="w-4 h-4" />
                         Skills
                       </h2>
-                      <AISparkle section="skills" onGenerate={handleAIGenerate} className='lg:ml-24' />
-                    </div>
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        <AISparkle className='mt-1' section="Skills" onGenerate={handleAIGenerate} />
+                      </div>                    </div>
                   </Draggable>
 
                   <Draggable nodeRef={skillsContentRef} >

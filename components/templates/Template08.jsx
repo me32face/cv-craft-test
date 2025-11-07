@@ -9,21 +9,10 @@ import AISparkle from '../AISparkle';
 import { geminiService } from '../../lib/gemini';
 
 export default function Template08() {
-  const { registerPDFFunction } = usePDF();
 
   const cvRef = useRef(null);
   const editorContainerRef = useRef(null);
-  const summaryRef = useRef(null);
-  const expertiseRef = useRef(null);
-  const contactRef = useRef(null);
-  const skillsRef = useRef(null);
-  const educationRef = useRef(null);
-  const languageRef = useRef(null);
-  const job1Ref = useRef(null);
-  const job2Ref = useRef(null);
-  const job3Ref = useRef(null);
-  const ref1Ref = useRef(null);
-  const ref2Ref = useRef(null);
+
 
   const handleButtonClick = useCallback((e) => {
     const button = e.target.closest('button');
@@ -101,65 +90,25 @@ export default function Template08() {
     }
   };
 
-  const downloadPDF = useCallback(async () => {
-    const cvElement = cvRef.current;
-    if (!cvElement) return;
+ 
 
-    const parentContainer = editorContainerRef.current;
-    if (!parentContainer) return;
 
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
-
-    let oldTransform, oldTransition;
-
-    try {
-      oldTransform = parentContainer.style.transform;
-      oldTransition = parentContainer.style.transition;
-      parentContainer.style.transform = "scale(1)";
-      parentContainer.style.transition = "none";
-      await new Promise(resolve => setTimeout(resolve, 200));
-
-      const canvas = await html2canvas(cvElement, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: "#ffffff",
-        logging: false,
-        ignoreElements: (el) => el.tagName === "BUTTON"
-      });
-
-      const imgData = canvas.toDataURL("image/png");
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-      const imgX = (pdfWidth - imgWidth * ratio) / 2;
-      const imgY = 0;
-
-      pdf.addImage(imgData, "PNG", imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-      pdf.save("CV.pdf");
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-      alert("Error generating PDF. Please try again.");
-    } finally {
-      parentContainer.style.transform = oldTransform;
-      parentContainer.style.transition = oldTransition;
-    }
-  }, []);
-
-  useEffect(() => {
-    registerPDFFunction(downloadPDF);
-  }, [downloadPDF, registerPDFFunction]);
-
+const CVPage =  () =>{
+    const summaryRef = useRef(null);
+  const expertiseRef = useRef(null);
+  const contactRef = useRef(null);
+  const skillsRef = useRef(null);
+  const educationRef = useRef(null);
+  const languageRef = useRef(null);
+  const job1Ref = useRef(null);
+  const job2Ref = useRef(null);
+  const job3Ref = useRef(null);
+  const ref1Ref = useRef(null);
+  const ref2Ref = useRef(null);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto">
-      <div
-        ref={editorContainerRef}
-        className="flex flex-col items-center scale-[0.5] origin-top transition-transform duration-500 pt-24">
-        <div ref={cvRef} className="max-w-4xl mx-auto bg-white shadow-2xl" onClick={handleButtonClick}>
-          <div className="flex min-h-screen ">
+        <div className="w-[210mm]  bg-white shadow-2xl overflow-visible flex" onClick={handleButtonClick} style={{WebkitFontSmoothing: 'antialiased', textRendering: 'geometricPrecision', imageRendering: 'crisp-edges'}}>
+  <div className="flex min-h-screen ">
             {/* Left Sidebar - Beige */}
             <div className="w-2/5 bg-amber-50 p-10">
               {/* Name Header */}
@@ -496,6 +445,19 @@ export default function Template08() {
               </div>
             </div>
           </div>
+        </div>
+      
+  );
+}
+return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">
+      <div
+        ref={editorContainerRef}
+        data-editor-container
+        className="flex flex-col items-center scale-[0.5] origin-top transition-transform duration-500 pt-24"
+      >
+        <div ref={cvRef} data-cv-page>
+          <CVPage />
         </div>
       </div>
     </div>

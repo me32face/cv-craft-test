@@ -36,6 +36,7 @@ export default function Home() {
     { id: 'Template15', name: 'Sample Layout', image: '/template/template15.png' },
     { id: 'Template16', name: 'Classic Layout', image: '/template/template16.png' },
     { id: 'Template17', name: 'Elegant Layout', image: '/template/template17.png' },
+    { id: 'Template12', name: 'Elegant Layout', image: '/template/template12.png' },
 
 
   ];

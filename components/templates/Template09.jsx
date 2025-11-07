@@ -17,16 +17,7 @@ export default function Template09() {
 
   const cvRef = useRef(null);
   const editorContainerRef = useRef(null);
-  const contactRef = useRef(null);
-  const educationRef = useRef(null);
-  const skillsRef = useRef(null);
-  const languagesRef = useRef(null);
-  const summaryRef = useRef(null);
-  const job1Ref = useRef(null);
-  const job2Ref = useRef(null);
-  const job3Ref = useRef(null);
-  const ref1Ref = useRef(null);
-  const ref2Ref = useRef(null);
+ 
 
 
   const handleButtonClick = useCallback((e) => {
@@ -190,17 +181,23 @@ export default function Template09() {
     registerPDFFunction(downloadPDF);
   }, [downloadPDF, registerPDFFunction]);
 
-
+const CVPage =() => {
+   const contactRef = useRef(null);
+  const educationRef = useRef(null);
+  const skillsRef = useRef(null);
+  const languagesRef = useRef(null);
+  const summaryRef = useRef(null);
+  const job1Ref = useRef(null);
+  const job2Ref = useRef(null);
+  const job3Ref = useRef(null);
+  const ref1Ref = useRef(null);
+  const ref2Ref = useRef(null);
   return (
 
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto">
-      <div
-        ref={editorContainerRef}
-        className="flex flex-col items-center scale-[0.5] origin-top transition-transform duration-500 pt-24">
-        <div ref={cvRef} className="max-w-4xl mx-auto bg-white shadow-lg" onClick={handleButtonClick}>
+      <div className="w-[210mm]  bg-white shadow-2xl overflow-visible " onClick={handleButtonClick} style={{WebkitFontSmoothing: 'antialiased', textRendering: 'geometricPrecision', imageRendering: 'crisp-edges'}}>
           {/* Header Section */}
-          <div className="bg-blue-900 text-white p-10 relative">
-            <div className="flex items-center gap-8">
+          <div className="bg-blue-900 text-white  relative">
+            <div className="flex items-center gap-8 p-10 ">
               {/* Profile Image */}
               <div className="relative">
                 <div className="w-44 h-48 rounded-2xl  border-8 border-blue-100 bg-gray-300 overflow-hidden"
@@ -230,7 +227,7 @@ export default function Template09() {
             </div>
 
             {/* Contact Info */}
-            <div className="mt-6 ml-40 group">
+            <div className="pb-5 mt-0 ml-40 group">
               <Draggable nodeRef={contactRef}>
                 <div ref={contactRef} data-section-item className="grid grid-cols-2 gap-4 relative group">
                   <div className="flex items-center gap-2">
@@ -545,8 +542,20 @@ export default function Template09() {
             </div>
           </div>
         </div>
+     
+  );
+}
+return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">
+      <div
+        ref={editorContainerRef}
+        data-editor-container
+        className="flex flex-col items-center scale-[0.5] origin-top transition-transform duration-500 pt-24"
+      >
+        <div ref={cvRef} data-cv-page>
+          <CVPage />
+        </div>
       </div>
     </div>
   );
 }
-

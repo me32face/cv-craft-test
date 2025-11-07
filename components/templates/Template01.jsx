@@ -364,7 +364,7 @@ export default function Template01() {
 
           {/* Skills Section */}
           <div className="mb-6 section-container" data-section="skills">
-            <div className="relative flex gap-2 group">
+            <div className="relative flex gap-2  group">
               <Draggable nodeRef={skillsRef}>
                 <h3 ref={skillsRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Skills</h3>
               </Draggable>
