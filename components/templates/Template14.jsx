@@ -46,7 +46,49 @@ export default function Template14() {
     }
     try {
       const generatedContent = await geminiService.generateContent(section, keywords);
-      console.log('Generated content:', generatedContent);
+      switch (section.toLowerCase()) {
+        case 'profile':
+        case 'about me':
+          const profileElement = document.getElementById('profile-text');
+          if (profileElement) {
+            let cleanedContent = generatedContent
+              .replace(/^#{1,6}\s+.+$/gm, '')
+              .replace(/\*\*(.+?)\*\*/g, '$1')
+              .replace(/\*(.+?)\*/g, '$1')
+              .trim();
+            const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
+            const actualSummary = paragraphs.find(p =>
+              !p.toLowerCase().includes('here are') &&
+              !p.toLowerCase().includes('of course') &&
+              !p.toLowerCase().includes('choose the option') &&
+              !p.toLowerCase().includes('pro-tip') &&
+              p.length > 100
+            );
+            profileElement.textContent = actualSummary?.trim() || paragraphs[0]?.trim() || cleanedContent;
+          }
+          break;
+        case 'skills':
+        case 'skill':
+          const skillsElement = document.querySelector('[data-section="skills"] ul');
+          if (skillsElement) {
+            const skills = generatedContent.split('\n').filter(skill => skill.trim());
+            skillsElement.innerHTML = skills.map(skill =>
+              `<li class="text-sm flex items-start relative group">
+                <span class="mr-2">•</span>
+                <span contentEditable suppressContentEditableWarning>${skill.trim()}</span>
+                <div class="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                  <button data-action="duplicate" class="text-gray-600 rounded p-1 shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  </button>
+                  <button data-action="delete" class="text-gray-600 rounded p-1 shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                  </button>
+                </div>
+              </li>`
+            ).join('');
+          }
+          break;
+      }
     } catch (error) {
       alert('Failed to generate content. Please check your API key and try again.');
     }
@@ -92,10 +134,15 @@ export default function Template14() {
         </div>
 
         {/* About Me */}
-        <div className="mb-8">
-          <h2 className="text-xl font-bold mb-2" contentEditable suppressContentEditableWarning>ABOUT ME</h2>
+        <div className="mb-8 section-container group" data-section="profile">
+          <div className="flex items-center gap-2 mb-2">
+            <h2 className="text-xl font-bold" contentEditable suppressContentEditableWarning>ABOUT ME</h2>
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+              <AISparkle section="Profile" onGenerate={handleAIGenerate} />
+            </div>
+          </div>
           <div className="h-0.5 bg-gray-800 w-24 mb-3"></div>
-          <p className="text-sm text-gray-700 leading-relaxed" contentEditable suppressContentEditableWarning>
+          <p id="profile-text" className="text-sm text-gray-700 leading-relaxed" contentEditable suppressContentEditableWarning>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore 
             magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea 
             commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla 
@@ -156,8 +203,13 @@ export default function Template14() {
             </div>
 
             {/* Skills */}
-            <div className="mb-8">
-              <h2 className="text-xl font-bold mb-2" contentEditable suppressContentEditableWarning>SKILL</h2>
+            <div className="mb-8 section-container" data-section="skills">
+              <div className="flex items-center gap-2 mb-2 relative group">
+                <h2 className="text-xl font-bold" contentEditable suppressContentEditableWarning>SKILL</h2>
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  <AISparkle section="Skills" onGenerate={handleAIGenerate} />
+                </div>
+              </div>
               <div className="h-0.5 bg-gray-800 w-24 mb-4"></div>
               <ul className="space-y-2">
                 <li className="text-sm flex items-start relative group">

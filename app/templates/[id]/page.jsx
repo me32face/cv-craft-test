@@ -35,7 +35,15 @@ const templateComponents = {
     ssr: false,
     loading: () => <TemplateLoader />,
   }),
-  Template14: dynamic(() => import("@/components/templates/Template14"), {
+    Template07: dynamic(() => import('@/components/templates/Template07'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />
+  }),
+   Template13: dynamic(() => import('@/components/templates/Template13'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />
+  }),
+  Template14: dynamic(() => import('@/components/templates/Template14'), { 
     ssr: false,
     loading: () => <TemplateLoader />,
   }),
@@ -47,11 +55,38 @@ const templateComponents = {
     ssr: false,
     loading: () => <TemplateLoader />,
   }),
-  Template17: dynamic(() => import("@/components/templates/Template17"), {
-    ssr: false,
-    loading: () => <TemplateLoader />,
+  Template17: dynamic(() => import('@/components/templates/Template17'), { 
+     ssr: false,
+    loading: () => <TemplateLoader />
   }),
-  Template18: dynamic(() => import("@/components/templates/Template18"), {
+   
+  Template18: dynamic(() => import('@/components/templates/Template18'), { 
+     ssr: false,
+    loading: () => <TemplateLoader />
+  }),
+
+   Template08: dynamic(() => import('@/components/templates/Template08'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />
+  }),
+  Template09: dynamic(() => import('@/components/templates/Template09'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />
+  }),
+  Template10: dynamic(() => import('@/components/templates/Template10'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />
+  }),
+  Template12: dynamic(() => import('@/components/templates/Template12'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />
+  }),
+ 
+  Template19: dynamic(() => import('@/components/templates/Template19'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />
+  }),
+  Template20: dynamic(() => import('@/components/templates/Template20'), { 
     ssr: false,
     loading: () => <TemplateLoader />,
   }),

@@ -36,9 +36,8 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts",
     ".next\\dev/types/**/*.ts",
-    ".next\\dev/types/**/*.ts"
-
-, "app/page.jsx", "components/templates/Template02.jsx", "components/templates/Template03.jsx", "components/templates/Template15.tsx", "components/templates/Template17.jsx", "components/templates/Template14.jsx"  ],
+    ".next\\dev/types/**/*.ts",
+     "app/page.jsx", "components/templates/Template02.jsx", "components/templates/Template03.jsx", "components/templates/Template15.tsx", "components/templates/Template17.jsx" ,"components/templates/Template07.jsx"  ],
   "exclude": [
     "node_modules"
   ]

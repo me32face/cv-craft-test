@@ -16,12 +16,26 @@ export default function Template02() {
   const handleBulletListEnter = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      const newLi = document.createElement('li');
-      newLi.className = 'flex items-start gap-2';
-      newLi.innerHTML = '<span class="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span><span class="text-xs text-gray-700"></span>';
-      e.currentTarget.appendChild(newLi);
-      const textSpan = newLi.querySelector('.text-xs');
-      textSpan?.focus();
+      const selection = window.getSelection();
+      let currentLi = selection.anchorNode;
+
+      while (currentLi && currentLi.tagName !== 'LI') {
+        currentLi = currentLi.parentElement;
+      }
+
+      if (currentLi) {
+        const newLi = document.createElement('li');
+        newLi.className = 'flex items-start gap-2';
+        newLi.innerHTML = '<span class="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span><span class="text-xs text-gray-700">\u200B</span>';
+        currentLi.parentNode.insertBefore(newLi, currentLi.nextSibling);
+
+        const textSpan = newLi.querySelector('.text-xs');
+        const range = document.createRange();
+        range.setStart(textSpan.firstChild, 1);
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
     }
   };
 
@@ -35,10 +49,24 @@ export default function Template02() {
   const handleSimpleListEnter = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      const newLi = document.createElement('li');
-      newLi.textContent = '';
-      e.currentTarget.appendChild(newLi);
-      newLi.focus();
+      const selection = window.getSelection();
+      let currentLi = selection.anchorNode;
+
+      while (currentLi && currentLi.tagName !== 'LI') {
+        currentLi = currentLi.parentElement;
+      }
+
+      if (currentLi) {
+        const newLi = document.createElement('li');
+        newLi.textContent = '\u200B';
+        currentLi.parentNode.insertBefore(newLi, currentLi.nextSibling);
+
+        const range = document.createRange();
+        range.setStart(newLi.firstChild, 1);
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
     }
   };
 
@@ -77,13 +105,13 @@ export default function Template02() {
       }
     }
   }, []);
-  const handleAIGenerate = async (section, keywords) => {
+
+ const handleAIGenerate = async (section, keywords) => {
     if (!geminiService.genAI) {
       const apiKey = prompt('Please enter your Gemini API key:');
       if (!apiKey) return;
       geminiService.initialize(apiKey);
     }
-
 
     try {
       const generatedContent = await geminiService.generateContent(section, keywords);
@@ -129,10 +157,18 @@ export default function Template02() {
           if (skillsElement) {
             const skills = generatedContent.split('\n').filter(skill => skill.trim());
             skillsElement.innerHTML = skills.map(skill =>
-              `<li class="flex items-start gap-2">
-                 <span class="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
-                 <span class="text-xs text-gray-700">${skill.trim()}</span>
-               </li>`
+              `<li class="text-xs flex items-start relative group text-gray-700">
+                <span class="mr-2">•</span>
+                <span contentEditable suppressContentEditableWarning>${skill.trim()}</span>
+                <div class="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                  <button data-action="duplicate" class="text-gray-600 rounded p-1 shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  </button>
+                  <button data-action="delete" class="text-gray-600 rounded p-1 shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                  </button>
+                </div>
+              </li>`
             ).join('');
           }
           break;
@@ -148,17 +184,17 @@ export default function Template02() {
               const duties = lines.slice(3).filter(duty => duty.trim());
 
               return `<div>
-                 <div class="flex justify-between items-start mt-4">
-                   <div>
-                     <h3 class="text-sm font-bold text-gray-800">${company}</h3>
-                     <p class="text-xs text-gray-600">${position}</p>
-                   </div>
-                   <span class="text-xs text-gray-500 whitespace-nowrap">${period}</span>
-                 </div>
-                 <ul class="list-disc list-outside ml-4 text-xs text-gray-700 space-y-0.5 mt-1">
-                   ${duties.map(duty => `<li>${duty.trim()}</li>`).join('')}
-                 </ul>
-               </div>`;
+                <div class="flex justify-between items-start mt-4">
+                  <div>
+                    <h3 class="text-sm font-bold text-gray-800">${company}</h3>
+                    <p class="text-xs text-gray-600">${position}</p>
+                  </div>
+                  <span class="text-xs text-gray-500 whitespace-nowrap">${period}</span>
+                </div>
+                <ul class="list-disc list-outside ml-4 text-xs text-gray-700 space-y-0.5 mt-1">
+                  ${duties.map(duty => `<li>${duty.trim()}</li>`).join('')}
+                </ul>
+              </div>`;
             }).join('');
           }
           break;
@@ -169,8 +205,7 @@ export default function Template02() {
       alert('Failed to generate content. Please check your API key and try again.');
     }
   };
-
-   const downloadPDF = useCallback(async () => {
+  const downloadPDF = useCallback(async () => {
     const cvElement = cvRef.current;
 
     if (!cvElement) {
@@ -252,9 +287,7 @@ export default function Template02() {
             {/* Header */}
             <div className="text-center mb-6 pb-6 border-b border-gray-300 relative">
               {/* Large decorative initial */}
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 text-[120px] font-serif text-gray-200 leading-none" style={{ fontFamily: 'Georgia, serif' }}>
-                O
-              </div>
+
               <div className="relative z-10 pt-8">
                 <h1 className="text-4xl font-light tracking-widest text-gray-800 mb-1" contentEditable suppressContentEditableWarning>
                   OLIVIA WILSON
@@ -367,11 +400,13 @@ export default function Template02() {
                   </div>
                 </Draggable>
                 {/* Skills */}
-                <div className="mb-6 section-container" data-section="skills">
+                <div className="mb-6 section-container group" data-section="skills">
                   <Draggable nodeRef={skillsRef} >
-                    <div className="flex items-center gap-2 mb-2 relative">
+                    <div className="flex items-center  gap-2 mb-2 relative">
                       <h2 ref={skillsRef} contentEditable suppressContentEditableWarning className="text-sm font-bold text-gray-800 uppercase tracking-wide">Skills</h2>
-                      <AISparkle section="skills" onGenerate={handleAIGenerate} />
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        <AISparkle className='mt-1' section="Skills" onGenerate={handleAIGenerate} />
+                      </div>            
                     </div>
                   </Draggable>
                   <Draggable nodeRef={skillsContentRef} >
@@ -476,9 +511,11 @@ export default function Template02() {
                 <div className="mb-5 section-container group" data-section="profile">
 
                   <Draggable nodeRef={profileRef}>
-                    <div className="flex items-center gap-2 mb-2 relative">
-                      <h3 ref={profileRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Profile</h3>
-                      <AISparkle section="Profile" onGenerate={handleAIGenerate} />
+                    <div className="flex items-center  gap-2 mb-2 relative">
+                      <h2 ref={profileRef} contentEditable suppressContentEditableWarning className="text-sm font-bold text-gray-800 uppercase tracking-wide">Profile</h2>
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        <AISparkle className='mt-1' section="Skills" onGenerate={handleAIGenerate} />
+                      </div>            
                     </div>
                   </Draggable>
 

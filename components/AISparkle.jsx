@@ -38,7 +38,7 @@ const AISparkle = ({ section, onGenerate, className = "" }) => {
   return (
     <div className="relative" ref={popoverRef} onClick={(e) => e.stopPropagation()}>
       <Sparkles 
-        className={`w-3 h-3 text-purple-600 hover:text-purple-700 cursor-pointer ${className}`}
+        className={`w-4 h-4 text-purple-600 hover:text-purple-700 cursor-pointer ${className}`}
         onClick={(e) => {
           e.stopPropagation();
           e.preventDefault();
@@ -55,7 +55,7 @@ const AISparkle = ({ section, onGenerate, className = "" }) => {
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-purple-600" />
+              <Sparkles className="w-5 h-5 text-purple-600 " />
               <h3 className="text-lg font-semibold text-gray-900">AI Generate Profile</h3>
             </div>
             <button

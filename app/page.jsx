@@ -22,20 +22,32 @@ export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeFilter, setActiveFilter] = useState('All');
   const templates = [
-    { id: 'Template01', name: 'Professional Classic', image: '/template/template01n.png' },
-    { id: 'Template06', name: 'Sample Layout', image: '/template/template06n.png' },
-    { id: 'Template04', name: 'Executive Style', image: '/template/template04n.png' },
-    { id: 'Template02', name: 'Modern Minimal', image: '/template/template02.png' },
-    { id: 'Template03', name: 'Creative Bold', image: '/template/template03.png' },
-    { id: 'Template05', name: 'Clean Layout', image: '/template/template05.png' },
-    { id: 'Template14', name: 'Sample Layout', image: '/template/template14.png' },
-    { id: 'Template15', name: 'Sample Layout', image: '/template/template15.png' },
-    { id: 'Template16', name: 'Classic Layout', image: '/template/template16.png' },
-    { id: 'Template17', name: 'Elegant Layout', image: '/template/template17.png' },
-    { id: 'Template18', name: 'Unique Layout', image: '/template/template18.png' },
+    { id: 'Template01', name: 'Professional Classic',key:'Richard Sanchez', image: '/template/template01n.png', category:'modern' },
+    { id: 'Template06', name: 'Sample Layout',key:'Olivia Schwaiger', image: '/template/template06n.png', category:'modern' },
+    { id: 'Template04', name: 'Executive Style',key:'Mariana Anderson', image: '/template/template04n.png', category:'creative' },
+    { id: 'Template02', name: 'Modern Minimal',key:'Olivia Wilson', image: '/template/template02.png',category:'simple' },
+    { id: 'Template03', name: 'Creative Bold',key:'Lorna Alvarado', image: '/template/template03.png',category:'proffessional' },
+    { id: 'Template05', name: 'Clean Layout',key:'Richard Sanchez', image: '/template/template05.png',category:'modern' },
+    { id: 'Template06', name: 'Sample Layout',key:'Sharya Singh', image: '/template/template06.png',category:'simple' },
+    { id: 'Template07', name: 'Professional Classic',key:'Olivia Wilson', image: '/template/template07.png',category:'creative' },
+    { id: 'Template08', name: 'Beige Whait',key:'Olivia Wilson', image: '/template/template09.png',category:'modern' },
+    { id: 'Template10', name: 'Elegant Layout',key:'Sahib Khan', image: '/template/template10.png',category:'creative' },
+    { id: 'Template13', name: 'Clean Layout',key:'Jonathan Patterson', image: '/template/template13.png',category:'proffessional' },
+    { id: 'Template14', name: 'Clean Layout',key:'Deepal Surve', image: '/template/template14.png',category:'proffessional' },
+    { id: 'Template15', name: 'Sample Layout',key:'Richard Sanchez', image: '/template/template15.png',category:'proffessional' },
+    { id: 'Template16', name: 'Classic Layout',key:'Hanson johnson', image: '/template/template16.png',category:'creative' },
+    { id: 'Template17', name: 'Elegant Layout',key:'Hanna Morales', image: '/template/template17.png',category:'creative' },
+    { id: 'Template12', name: 'Elegant Layout',key:'Andry gardon', image: '/template/template12.png',category:'modern' },
+    { id: 'Template18', name: 'Unique Layout',key:'Juliana silva', image: '/template/template18.png',category:'simple' },
+    { id: 'Template19', name: 'Modest Layout',key:'isabel mercado', image: '/template/template19.png',category:'proffessional' },
+    { id: 'Template20', name: 'Infographic Developer Template',key:'daniel Gallego', image: '/template/template20.png',category:'creative' },
   ];
 
-  const duplicatedTemplates = [...templates, ...templates];
+  const filteredTemplates = activeFilter === 'All'
+    ? templates
+    : templates.filter(template => template.category.toLowerCase() === activeFilter.toLowerCase());
+
+  const duplicatedTemplates = [...filteredTemplates, ...filteredTemplates];
 
   const scrollPrev = () => {
     scrollRef.current?.scrollBy({ left: -344, behavior: 'smooth' });
@@ -80,6 +92,7 @@ export default function Home() {
   //   };
   // }, [currentIndex, templates.length]);
 
+
   return (
     <>
       <Navbar />
@@ -96,7 +109,7 @@ export default function Home() {
 
           <div className="flex justify-center mb-10 overflow-x-auto scrollbar-hide pl-44 sm:pl-44 md:pl-0 lg:pl-0 xl:pl-0">
             <div className="flex gap-4 mx-auto min-w-max px-2">
-              {['All', 'Modern', 'Creative', 'Professional', 'Simple'].map((filter) => (
+              {['All', 'Modern', 'Creative', 'Proffessional', 'Simple'].map((filter) => (
                 <button
                   key={filter}
                   onClick={() => setActiveFilter(filter)}
@@ -133,9 +146,8 @@ export default function Home() {
             <div ref={scrollRef} className="overflow-x-auto pb-4 scrollbar-hide scroll-smooth">
               <div className="flex gap-6 min-w-max mt-2" style={{ scrollSnapType: 'x mandatory' }}>
                 {duplicatedTemplates.map((template, index) => (
-                  <Link
+                  <div
                     key={`${template.id}-${index}`}
-                    href={`/templates/${template.id}`}
                     className="group relative bg-gradient-to-b from-[#f6f9fc] to-[#e8edf5] rounded-2xl shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden block flex-shrink-0 w-80 hover:bg-gradient-to-r hover:from-blue-100 hover:to-purple-100"
                     style={{ scrollSnapAlign: 'start' }}
                   >
@@ -161,15 +173,27 @@ export default function Home() {
                       </h3>
 
                       <div className="flex items-center justify-center mt-3">
-                        <p className="text-sm text-gray-700 border border-gray-500 px-4 py-2 rounded-full w-full text-center backdrop-blur-lg bg-white/40 hover:bg-white/60 transition">
+                        <button
+                          className="text-sm text-gray-700 border border-gray-500 px-4 py-2 rounded-full w-full text-center backdrop-blur-lg bg-white/40 hover:bg-white/60 transition"
+                          onClick={() => {
+                            // Check if user is logged in
+                            const token = localStorage.getItem('token');
+                            if (token) {
+                              // If logged in, redirect to template page
+                              window.location.href = `/templates/${template.id}`;
+                            } else {
+                              // If not logged in, redirect to login page
+                              window.location.href = '/login';
+                            }
+                          }}
+                        >
                           Use Template
-                        </p>
+                        </button>
                       </div>
                     </div>
-
-
-                  </Link>
+                  </div>
                 ))}
+
               </div>
             </div>
             <div className="flex justify-center mt-6 gap-2">
