@@ -20,7 +20,7 @@ export default function FormatToolbar() {
       const editableParent =
         node &&
         node.parentElement &&
-        node.parentElement.closest("[contenteditable='true']");
+       node.parentElement.closest("[contenteditable]");
 
       if (!editableParent) {
         setVisible(false);
@@ -37,7 +37,20 @@ export default function FormatToolbar() {
     return () => document.removeEventListener("selectionchange", handleSelectionChange);
   }, []);
 
-  const apply = (cmd) => document.execCommand(cmd, false, null);
+ const apply = (cmd) => {
+  const sel = window.getSelection();
+  if (!sel.rangeCount) return;
+
+  const node = sel.getRangeAt(0).startContainer.parentElement;
+
+  // force focus on editable node
+  if(node && node.closest("[contenteditable]")) {
+    node.closest("[contenteditable]").focus();
+  }
+
+  document.execCommand(cmd, false, null);
+};
+
 
   const updateFont = (size) => {
     const sel = window.getSelection();
@@ -49,22 +62,30 @@ export default function FormatToolbar() {
   };
 
   const cycleAlign = () => {
-    const modes = ["left", "center", "right", "justify"];
-    const idx = modes.indexOf(alignMode);
-    const next = modes[(idx + 1) % modes.length];
-    setAlignMode(next);
+  const sel = window.getSelection();
+  if (!sel.rangeCount) return;
+  
+  const node = sel.getRangeAt(0).startContainer.parentElement;
+  if(node && node.closest("[contenteditable]")) {
+    node.closest("[contenteditable]").focus();
+  }
 
-    const cmd =
-      next === "left"
-        ? "justifyLeft"
-        : next === "center"
-        ? "justifyCenter"
-        : next === "right"
-        ? "justifyRight"
-        : "justifyFull";
+  const modes = ["left", "center", "right", "justify"];
+  const idx = modes.indexOf(alignMode);
+  const next = modes[(idx + 1) % modes.length];
+  setAlignMode(next);
 
-    document.execCommand(cmd, false, null);
-  };
+  const cmd =
+    next === "left"
+      ? "justifyLeft"
+      : next === "center"
+      ? "justifyCenter"
+      : next === "right"
+      ? "justifyRight"
+      : "justifyFull";
+
+  document.execCommand(cmd, false, null);
+};
 
   const alignIcon =
     alignMode === "left"

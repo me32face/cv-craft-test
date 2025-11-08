@@ -27,3 +27,13 @@ body {
 .react-draggable {
   z-index: 1;
 }
+
+[contenteditable] {
+  user-select: text !important;
+  pointer-events: auto !important;
+}
+.react-draggable [contenteditable] {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  pointer-events: auto !important;
+}
