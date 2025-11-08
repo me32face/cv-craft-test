@@ -117,7 +117,13 @@ const Header = () => {
   };
 
   return (
-    <div className="w-full h-14 bg-gradient-to-r from-[#00C9C8] to-[#3D5AFE] flex items-center justify-between px-4">
+    <div className=" w-full
+      bg-gradient-to-r from-[#00C9C8] to-[#3D5AFE]
+      flex flex-col sm:flex-row
+      items-center
+      justify-between
+      gap-2
+      px-4 py-2">
       {/* Left side - Undo / Redo */}
       <div className="flex items-center gap-4">
         <button

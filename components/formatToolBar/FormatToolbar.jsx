@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import { Bold, Italic, Underline, Minus, Plus, AlignLeft, AlignCenter, AlignRight, AlignJustify } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -99,29 +99,35 @@ export default function FormatToolbar() {
   if (!visible) return null;
 
   return (
-    <div className="w-fit h-12 bg-white/90 border shadow rounded-lg flex items-center gap-3 px-3">
-      <button onClick={() => apply("bold")}><Bold size={18} /></button>
-      <button onClick={() => apply("italic")}><Italic size={18} /></button>
-      <button onClick={() => apply("underline")}><Underline size={18} /></button>
+   <div
+    className="
+      w-full max-w-max h-10 
+      bg-white/90 border shadow rounded-lg 
+      flex items-center gap-2 px-2
 
-      {/* single cycle alignment button */}
-      <button onClick={cycleAlign}>
-        {alignIcon}
-      </button>
+      overflow-x-auto scrollbar-none   /* ✅ mobile friendly */
+      sm:gap-3 sm:px-3 sm:h-12
+    "
+  >
+    <button onClick={() => apply("bold")}><Bold size={14} className="sm:w-5 sm:h-5" /></button>
+    <button onClick={() => apply("italic")}><Italic size={14} className="sm:w-5 sm:h-5" /></button>
+    <button onClick={() => apply("underline")}><Underline size={14} className="sm:w-5 sm:h-5" /></button>
 
-      {/* Canva style font size control */}
-      <div className="flex items-center gap-1 ml-3">
-        <button onClick={() => updateFont(fontSize - 1)}><Minus size={18} /></button>
-        <input
-          type="number"
-          min={6}
-          max={122}
-          value={fontSize}
-          onChange={(e)=>updateFont(parseInt(e.target.value))}
-          className="w-14 border rounded px-1 text-center text-sm"
-        />
-        <button onClick={() => updateFont(fontSize + 1)}><Plus size={18} /></button>
-      </div>
+    <button onClick={cycleAlign}>{alignIcon && React.cloneElement(alignIcon, { size: 14, className: "sm:w-5 sm:h-5"})}</button>
+
+    {/* Font Size Control */}
+    <div className="flex items-center gap-1 ml-1 sm:ml-3">
+      <button onClick={() => updateFont(fontSize - 1)}><Minus size={14} className="sm:w-5 sm:h-5" /></button>
+      <input
+        type="number"
+        min={6}
+        max={122}
+        value={fontSize}
+        onChange={(e)=>updateFont(parseInt(e.target.value))}
+        className="w-10 border rounded px-1 text-center text-xs sm:w-14 sm:text-sm"
+      />
+      <button onClick={() => updateFont(fontSize + 1)}><Plus size={14} className="sm:w-5 sm:h-5" /></button>
     </div>
+  </div>
   );
 }
