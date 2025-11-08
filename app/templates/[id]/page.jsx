@@ -90,6 +90,10 @@ const templateComponents = {
     ssr: false,
     loading: () => <TemplateLoader />,
   }),
+  Template21: dynamic(() => import('@/components/templates/Template21'), {
+    ssr: false,
+    loading: () => <TemplateLoader />,
+  }),
 };
 
 function TemplateLoader() {
