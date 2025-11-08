@@ -18,15 +18,17 @@ export default function JobSeekers() {
         },
         {
             id: 2,
-            quote: "The AI suggestions helped me land interviews at top tech companies. Within 2 weeks, I had 5 offers!",
-            name: "Sarah Johnson",
-            role: "Software Engineer"
+            quote:
+                "Clean, responsive layout and smart AI suggestions. This resume builder helped me clearly showcase my experience and skills.",
+            name: "Michael Lee",
+            role: "Full Stack Developer"
         },
         {
             id: 3,
-            quote: "The AI suggestions helped me land interviews at top tech companies. Within 2 weeks, I had 5 offers!",
-            name: "Sarah Johnson",
-            role: "Software Engineer"
+            quote:
+                "Super easy to use and the templates look premium. My resume now stands out, and I landed two interviews within a week.",
+            name: "Rachel Gomez",
+            role: "Product Manager"
         }
     ];
 
