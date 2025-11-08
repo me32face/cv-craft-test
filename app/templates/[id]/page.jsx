@@ -35,11 +35,11 @@ const templateComponents = {
     ssr: false,
     loading: () => <TemplateLoader />,
   }),
-    Template07: dynamic(() => import('@/components/templates/Template07'), { 
+  Template07: dynamic(() => import('@/components/templates/Template07'), { 
     ssr: false,
     loading: () => <TemplateLoader />
   }),
-   Template13: dynamic(() => import('@/components/templates/Template13'), { 
+  Template13: dynamic(() => import('@/components/templates/Template13'), { 
     ssr: false,
     loading: () => <TemplateLoader />
   }),
@@ -65,7 +65,7 @@ const templateComponents = {
     loading: () => <TemplateLoader />
   }),
 
-   Template08: dynamic(() => import('@/components/templates/Template08'), { 
+  Template08: dynamic(() => import('@/components/templates/Template08'), { 
     ssr: false,
     loading: () => <TemplateLoader />
   }),
@@ -87,6 +87,10 @@ const templateComponents = {
     loading: () => <TemplateLoader />
   }),
   Template20: dynamic(() => import('@/components/templates/Template20'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />,
+  }),
+  Template21: dynamic(() => import('@/components/templates/Template21'), {
     ssr: false,
     loading: () => <TemplateLoader />,
   }),
