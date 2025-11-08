@@ -24,7 +24,8 @@
     "react-draggable": "^4.5.0",
     "react-slick": "^0.31.0",
     "react-spinners": "^0.17.0",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+    "sweetalert2": "^11.26.3"
   },
   "devDependencies": {
     "@types/node": "^20",

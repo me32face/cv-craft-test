@@ -1,6 +1,8 @@
 "use client";
 import React from 'react';
 import { Star, ArrowRight, Zap } from 'lucide-react';
+import Image from "next/image";
+
 
 export default function DreamJob() {
   return (
@@ -37,13 +39,34 @@ export default function DreamJob() {
 
         {/* Stats */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-white/90 pt-4 animate-fadeIn">
-          <div className="flex items-center gap-2 brounded-full px-6 py-2">
+          <div className="flex items-center gap-2 rounded-full px-6 py-2 bg-white/10">
             <div className="flex items-center gap-1">
-              <div className="w-8 h-8 bg-white/20 rounded-full"></div>
-              <div className="w-8 h-8 bg-white/20 rounded-full -ml-3"></div>
-              <div className="w-8 h-8 bg-white/20 rounded-full -ml-3"></div>
+              <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-white">
+                <Image
+                  src="/user1.jpg"
+                  alt="User 1"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-white -ml-3">
+                <Image
+                  src="/user2.jpg"
+                  alt="User 2"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-white -ml-3">
+                <Image
+                  src="/user3.jpg"
+                  alt="User 3"
+                  fill
+                  className="object-cover"
+                />
+              </div>
             </div>
-            <span className="font-medium">10,000+ this week</span>
+            <span className="font-medium text-white">1000+ this week</span>
           </div>
 
           <div className="hidden sm:block text-white/40">━━━</div>

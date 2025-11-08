@@ -61,6 +61,7 @@ export default function Signup() {
 
     setLoading(true);
 
+
     try {
       const res = await axios.post("http://localhost:5000/api/register", {
         name: formData.name,
@@ -75,6 +76,7 @@ export default function Signup() {
       if (data.success) {
         setToastMessage("Registration successful!");
         setShowToast(true);
+
 
         // If backend returns token, store it
         if (data.token) {
@@ -93,6 +95,7 @@ export default function Signup() {
       console.error("Registration error:", error);
       setToastMessage(error.response?.data?.message || "Something went wrong. Please try again.");
       setShowToast(true);
+
     }
   };
 
@@ -101,13 +104,13 @@ export default function Signup() {
       {/* Header */}
       <div className="flex items-center px-6 py-5">
         <Image
-          src="/logo.png"
+          src="/cvlogo.png"
           alt="CV Craft Logo"
           width={100}
-          height={30}
-          className="object-contain sm:w-[75px] sm:h-[37px] lg:w-[90px] lg:h-[45px]"
+          height={50}
+          className="object-contain sm:w-[75px] sm:h-[37px] lg:w-[120px] lg:h-[40px]"
         />
-        <span className="text-2xl font-semibold text-gray-800">CRAFT</span>
+        {/* <span className="text-2xl font-semibold text-gray-800">CRAFT</span> */}
       </div>
       {/* Main Content */}
       <div className=" h-fit mx-auto px-6 py-0 ">
@@ -187,12 +190,12 @@ export default function Signup() {
             </h2>
 
             <div className="flex flex-col sm:flex-row gap-3 mb-6">
-              <button className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition">
+              {/* <button className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#0077B5">
                   <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                 </svg>
                 <span className="font-medium text-gray-700">LinkedIn</span>
-              </button>
+              </button> */}
               <button className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition">
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -270,7 +273,7 @@ export default function Signup() {
                 </label>
                 {errors.agreeTerms && <p className="text-red-500 text-sm mt-1">{errors.agreeTerms}</p>}
 
-                <label className="flex items-start gap-3 cursor-pointer">
+                {/* <label className="flex items-start gap-3 cursor-pointer">
                   <input
                     type="checkbox"
                     name="emailUpdates"
@@ -282,7 +285,7 @@ export default function Signup() {
                     Email me tailored resume advice & updates from CVcraft
                     <div className=""></div>
                   </span>
-                </label>
+                </label> */}
               </div>
 
               <button

@@ -24,26 +24,26 @@ export default function Home() {
   const [activeFilter, setActiveFilter] = useState('All');
   const [showToast, setShowToast] = useState(false);
   const templates = [
-    { id: 'Template01', name: 'Professional Classic',key:'Richard Sanchez', image: '/template/template01n.png', category:'modern' },
-    { id: 'Template06', name: 'Sample Layout',key:'Olivia Schwaiger', image: '/template/template06n.png', category:'modern' },
-    { id: 'Template04', name: 'Executive Style',key:'Mariana Anderson', image: '/template/template04n.png', category:'creative' },
-    { id: 'Template02', name: 'Modern Minimal',key:'Olivia Wilson', image: '/template/template02.png',category:'simple' },
-    { id: 'Template03', name: 'Creative Bold',key:'Lorna Alvarado', image: '/template/template03.png',category:'proffessional' },
-    { id: 'Template05', name: 'Clean Layout',key:'Richard Sanchez', image: '/template/template05.png',category:'modern' },
-    { id: 'Template06', name: 'Sample Layout',key:'Sharya Singh', image: '/template/template06.png',category:'simple' },
-    { id: 'Template07', name: 'Professional Classic',key:'Olivia Wilson', image: '/template/template07.png',category:'creative' },
-    { id: 'Template08', name: 'Beige Whait',key:'Olivia Wilson', image: '/template/template09.png',category:'modern' },
-    { id: 'Template10', name: 'Elegant Layout',key:'Sahib Khan', image: '/template/template10.png',category:'creative' },
-    { id: 'Template13', name: 'Clean Layout',key:'Jonathan Patterson', image: '/template/template13.png',category:'proffessional' },
-    { id: 'Template14', name: 'Clean Layout',key:'Deepal Surve', image: '/template/template14.png',category:'proffessional' },
-    { id: 'Template15', name: 'Sample Layout',key:'Richard Sanchez', image: '/template/template15.png',category:'proffessional' },
-    { id: 'Template16', name: 'Classic Layout',key:'Hanson johnson', image: '/template/template16.png',category:'creative' },
-    { id: 'Template17', name: 'Elegant Layout',key:'Hanna Morales', image: '/template/template17.png',category:'creative' },
-    { id: 'Template12', name: 'Elegant Layout',key:'Andry gardon', image: '/template/template12.png',category:'modern' },
-    { id: 'Template18', name: 'Unique Layout',key:'Juliana silva', image: '/template/template18.png',category:'simple' },
-    { id: 'Template19', name: 'Modest Layout',key:'isabel mercado', image: '/template/template19.png',category:'proffessional' },
-    { id: 'Template20', name: 'Infographic Developer Template',key:'daniel Gallego', image: '/template/template20.png',category:'creative' },
-    { id: 'Template21', name: 'Creative Designer Template',key:'Laura Martinez', image: '/template/template21n.png',category:'creative' },
+
+    { id: 'Template01', name: 'Professional Classic', key: 'Richard Sanchez', image: '/template/template01n.png', category: 'modern' },
+    { id: 'Template06', name: 'Sample Layout', key: 'Olivia Schwaiger', image: '/template/template06n.png', category: 'modern' },
+    { id: 'Template04', name: 'Executive Style', key: 'Mariana Anderson', image: '/template/template04n.png', category: 'creative' },
+    { id: 'Template02', name: 'Modern Minimal', key: 'Olivia Wilson', image: '/template/template02.png', category: 'simple' },
+    { id: 'Template03', name: 'Creative Bold', key: 'Lorna Alvarado', image: '/template/template03.png', category: 'proffessional' },
+    { id: 'Template05', name: 'Clean Layout', key: 'Richard Sanchez', image: '/template/template05.png', category: 'modern' },
+    { id: 'Template06', name: 'Sample Layout', key: 'Sharya Singh', image: '/template/template06.png', category: 'simple' },
+    { id: 'Template07', name: 'Professional Classic', key: 'Olivia Wilson', image: '/template/template07.png', category: 'creative' },
+    { id: 'Template08', name: 'Beige Whait', key: 'Olivia Wilson', image: '/template/template09.png', category: 'modern' },
+    { id: 'Template10', name: 'Elegant Layout', key: 'Sahib Khan', image: '/template/template10.png', category: 'creative' },
+    { id: 'Template13', name: 'Clean Layout', key: 'Jonathan Patterson', image: '/template/template13.png', category: 'proffessional' },
+    { id: 'Template14', name: 'Clean Layout', key: 'Deepal Surve', image: '/template/template14.png', category: 'proffessional' },
+    { id: 'Template15', name: 'Sample Layout', key: 'Richard Sanchez', image: '/template/template15.png', category: 'proffessional' },
+    { id: 'Template16', name: 'Classic Layout', key: 'Hanson johnson', image: '/template/template16.png', category: 'creative' },
+    { id: 'Template17', name: 'Elegant Layout', key: 'Hanna Morales', image: '/template/template17.png', category: 'creative' },
+    { id: 'Template12', name: 'Elegant Layout', key: 'Andry gardon', image: '/template/template12.png', category: 'modern' },
+    { id: 'Template18', name: 'Unique Layout', key: 'Juliana silva', image: '/template/template18.png', category: 'simple' },
+    { id: 'Template19', name: 'Modest Layout', key: 'isabel mercado', image: '/template/template19.png', category: 'proffessional' },
+    { id: 'Template20', name: 'Infographic Developer Template', key: 'daniel Gallego', image: '/template/template20.png', category: 'creative' },
   ];
 
   const filteredTemplates = activeFilter === 'All'
@@ -70,30 +70,30 @@ export default function Home() {
     setActiveIndex(index);
   };
 
-  // useEffect(() => {
-  //   const scrollContainer = scrollRef.current;
-  //   if (!scrollContainer) return;
+  useEffect(() => {
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer) return;
 
-  //   scrollContainer.addEventListener('scroll', updateActiveIndex);
+    scrollContainer.addEventListener('scroll', updateActiveIndex);
 
-  //   const scroll = () => {
-  //     const cardWidth = 344;
-  //     const nextIndex = (currentIndex + 1) % templates.length;
+    const scroll = () => {
+      const cardWidth = 344;
+      const nextIndex = (currentIndex + 1) % templates.length;
 
-  //     scrollContainer.scrollTo({
-  //       left: nextIndex * cardWidth,
-  //       behavior: 'smooth'
-  //     });
+      // scrollContainer.scrollTo({
+      //   left: nextIndex * cardWidth,
+      //   behavior: 'smooth'
+      // });
 
-  //     setCurrentIndex(nextIndex);
-  //   };
+      setCurrentIndex(nextIndex);
+    };
 
-  //   const interval = setInterval(scroll, 3000);
-  //   return () => {
-  //     clearInterval(interval);
-  //     scrollContainer.removeEventListener('scroll', updateActiveIndex);
-  //   };
-  // }, [currentIndex, templates.length]);
+    const interval = setInterval(scroll, 3000);
+    return () => {
+      clearInterval(interval);
+      // scrollContainer.removeEventListener('scroll', updateActiveIndex);
+    };
+  }, [currentIndex, templates.length]);
 
 
   return (
@@ -101,7 +101,7 @@ export default function Home() {
       <Navbar />
       <BuildSection />
       <HowItWorks />
-      <main id="template" className="min-h-screen   from-gray-50 to-white -mt-4 " >
+      <main  id='template'  className="min-h-screen   from-gray-50 to-white mt-10 py-5 px-4 sm:px-6 lg:px-8">
         <div className="max-w-8xl mx-auto">
           <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-5xl xl:text-5xl font-bold mb-5 text-center text-gray-500">
             Professional Resume Templates
@@ -180,11 +180,15 @@ export default function Home() {
                           className="text-sm text-gray-700 border border-gray-500 px-4 py-2 rounded-full w-full text-center backdrop-blur-lg bg-white/40 hover:bg-white/60 transition"
                           onClick={() => {
                             const token = localStorage.getItem('token');
-                            if (token) {
-                              window.location.href = `/templates/${template.id}`;
-                            } else {
+
+                            if (!token) {
+                              // User not logged in → store redirect path → go to login
+                              localStorage.setItem("redirectAfterLogin", `/templates/${template.id}`);
                               setShowToast(true);
                               setTimeout(() => window.location.href = '/login', 1500);
+                            } else {
+                              // User logged in → go directly to the template page
+                              window.location.href = `/templates/${template.id}`;
                             }
                           }}
                         >
@@ -201,16 +205,15 @@ export default function Home() {
               {templates.map((_, index) => (
                 <button
                   key={index}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${activeIndex === index
-                    ? 'bg-indigo-600 scale-125'
-                    : 'bg-gray-300 hover:bg-gray-400'
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${activeIndex === index ? 'bg-indigo-600 scale-125' : 'bg-gray-300 hover:bg-gray-400'
                     }`}
                   onClick={() => {
-                    const cardWidth = 344; // 320px width + 24px gap
+                    const cardWidth = 344; // card width + gap
                     scrollRef.current?.scrollTo({
-                      left: index * cardWidth,
+                      left: (index + 1) * cardWidth, // +1 to skip the first clone
                       behavior: 'smooth'
                     });
+                    setActiveIndex(index);
                   }}
                 />
               ))}
@@ -225,9 +228,9 @@ export default function Home() {
       <DreamJob />
       <Footer />
       {showToast && (
-        <Toast 
-          message="Please login to continue" 
-          onClose={() => setShowToast(false)} 
+        <Toast
+          message="Please login to continue"
+          onClose={() => setShowToast(false)}
         />
       )}
       {/* <Signup />

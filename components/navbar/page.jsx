@@ -4,10 +4,14 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import { Confirm1 } from "@/components/constants/page.jsx";
+import { useRouter } from 'next/navigation';
+
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
 
   // Check if user is logged in
   useEffect(() => {
@@ -15,28 +19,47 @@ const Navbar = () => {
     setIsLoggedIn(!!token);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token"); // remove token
-    setIsLoggedIn(false);
-    window.location.href = "/"; // redirect after logout
+  const handleLogout = async () => {
+    const confirmed = await Confirm1({
+      title: "Logout Confirmation",
+      message: "Are you sure you want to log out?",
+      confirmText: "Yes, Logout",
+      cancelText: "Cancel",
+      confirmColor: "#d33",
+    });
+
+    if (confirmed) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      router.push("/login");
+    }
   };
 
   return (
-    <nav className="w-full bg-[#f7f9fc] py-3 sm:py-4 px-4 sm:px-6 lg:px-8 shadow-sm fixed top-0 left-0 z-50">
+    <nav className="w-full bg-[#f7f9fc] py-1 sm:py-4 px-4 sm:px-6 lg:px-8 shadow-sm fixed top-0 left-0 z-50 mb-20" >
       <div className="max-w-8xl mx-auto flex items-center justify-between">
         {/* Left Section - Logo */}
         <div className="flex items-center gap-4 sm:gap-6 lg:gap-10">
           <div className="flex items-center space-x-1 sm:space-x-2">
             <Image
-              src="/logo.png"
+              src="/cvlogo.png"
               alt="CV Craft Logo"
-              width={100}
-              height={30}
-              className="object-contain sm:w-[75px] sm:h-[37px] lg:w-[90px] lg:h-[45px]"
+              unoptimized
+              width={160}
+              height={60}
+              className="
+                  object-contain
+                  w-[120px] h-[45px]         /* base (mobile) */
+                  sm:w-[100px] sm:h-[40px]   /* small screens */
+                  md:w-[120px] md:h-[45px]   /* tablets */
+                  lg:w-[120px] lg:h-[55px]   /* laptops/desktops */
+                  xl:w-[140px] xl:h-[45px]   /* large screens */
+                  transition-all duration-300 ease-in-out
+                "
             />
-            <span className="text-lg sm:text-xl lg:text-2xl font-extrabold text-blue-800">
+            {/* <span className="text-lg sm:text-xl lg:text-2xl font-extrabold text-blue-800">
               CRAFT
-            </span>
+            </span> */}
           </div>
 
           {/* Desktop Menu */}
@@ -47,7 +70,7 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
-              <Link href="/about" className="hover:text-purple-600 transition">
+              <Link href="#about" className="hover:text-purple-600 transition">
                 About
               </Link>
             </li>
@@ -57,7 +80,7 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
-              <Link href="/blog" className="hover:text-purple-600 transition">
+              <Link href="/" className="hover:text-purple-600 transition">
                 Blog
               </Link>
             </li>

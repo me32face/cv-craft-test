@@ -42,13 +42,10 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/login",
-        {
-          email: formData.email,
-          password: formData.password,
-        }
-      );
+      const res = await axios.post("http://localhost:5000/api/login", {
+        email: formData.email,
+        password: formData.password,
+      });
 
       const data = res.data;
 
@@ -59,10 +56,17 @@ export default function Login() {
         setShowToast(true);
 
         // Store token in localStorage
+
         localStorage.setItem("token", data.token);
 
-        // Redirect to profile/dashboard page
-        window.location.href = "/";
+        // ✅ Check if there's a redirect target
+        const redirectPath = localStorage.getItem("redirectAfterLogin");
+        if (redirectPath) {
+          localStorage.removeItem("redirectAfterLogin");
+          window.location.href = redirectPath; // Go to the template user wanted to edit
+        } else {
+          window.location.href = "/"; // Default dashboard
+        }
       } else {
         setToastMessage(data.message);
         setShowToast(true);
@@ -85,13 +89,13 @@ export default function Login() {
       {/* Header */}
       <div className="flex items-center px-6 py-5">
         <Image
-          src="/logo.png"
+          src="/cvlogo.png"
           alt="CV Craft Logo"
           width={100}
-          height={30}
-          className="object-contain sm:w-[75px] sm:h-[37px] lg:w-[90px] lg:h-[45px]"
+          height={50}
+          className="object-contain sm:w-[75px] sm:h-[37px] lg:w-[120px] lg:h-[40px]"
         />
-        <span className="text-2xl font-semibold text-gray-800">CRAFT</span>
+        {/* <span className="text-2xl font-semibold text-gray-800">CRAFT</span> */}
       </div>
 
       {/* Main Content */}
@@ -168,7 +172,7 @@ export default function Login() {
               </h2>
 
               <div className="flex flex-col sm:flex-row gap-3 mb-6">
-                <button
+                {/* <button
                   onClick={() => handleSocialLogin('LinkedIn')}
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition"
                 >
@@ -181,21 +185,21 @@ export default function Login() {
                   />
 
                   <span className="font-medium text-gray-700">LinkedIn</span>
-                </button>
+                </button> */}
                 <button
                   onClick={() => handleSocialLogin('Google')}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-1 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition"
                 >
                   <Image
                     src="/Googlelogo.jpeg"
                     alt="Achievement icon"
                     width={40}
-                    height={40}
+                    height={20}
                     className=" rounded-lg"
                   />
                   <span className="font-medium text-gray-700">Google</span>
                 </button>
-                <button
+                {/* <button
                   onClick={() => handleSocialLogin('Google')}
                   className="flex-1 flex items-center justify-center gap-2 px-5 py-2 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition"
                 >
@@ -207,7 +211,7 @@ export default function Login() {
                     className=""
                   />
                   <span className="font-medium text-gray-700">Facebook</span>
-                </button>
+                </button> */}
               </div>
 
               <div className="relative mb-6">

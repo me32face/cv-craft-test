@@ -6,7 +6,7 @@ import { Sparkles, Check } from 'lucide-react';
 export default function AIContent() {
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 py-8 px-4 sm:px-6 lg:px-8">
+    <div id='about' className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 py-10 sm:py-12 md:py-16 lg:py-16 xl:py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-8xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
