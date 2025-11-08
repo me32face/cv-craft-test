@@ -43,7 +43,7 @@ export default function Home() {
     { id: 'Template18', name: 'Unique Layout',key:'Juliana silva', image: '/template/template18.png',category:'simple' },
     { id: 'Template19', name: 'Modest Layout',key:'isabel mercado', image: '/template/template19.png',category:'proffessional' },
     { id: 'Template20', name: 'Infographic Developer Template',key:'daniel Gallego', image: '/template/template20.png',category:'creative' },
-    { id: 'Template21', name: 'Creative Designer Template',key:'Laura Martinez', image: '/template/template21.png',category:'creative' },
+    { id: 'Template21', name: 'Creative Designer Template',key:'Laura Martinez', image: '/template/template21n.png',category:'creative' },
   ];
 
   const filteredTemplates = activeFilter === 'All'
@@ -101,7 +101,7 @@ export default function Home() {
       <Navbar />
       <BuildSection />
       <HowItWorks />
-      <main className="min-h-screen   from-gray-50 to-white -mt-4">
+      <main id="template" className="min-h-screen   from-gray-50 to-white -mt-4 " >
         <div className="max-w-8xl mx-auto">
           <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-5xl xl:text-5xl font-bold mb-5 text-center text-gray-500">
             Professional Resume Templates
