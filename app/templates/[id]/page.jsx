@@ -148,7 +148,6 @@ export default function TemplatePage({ params }) {
         <SelectedElementProvider>
           <>
             <Header />
-            <FormatToolbar />
             <Suspense fallback={<TemplateLoader />}>
               <TemplateComponent />
             </Suspense>

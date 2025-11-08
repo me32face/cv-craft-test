@@ -42,3 +42,13 @@ body {
 .animate-slide-in {
   animation: slide-in 0.3s ease-out;
 }
+
+[contenteditable] {
+  user-select: text !important;
+  pointer-events: auto !important;
+}
+.react-draggable [contenteditable] {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  pointer-events: auto !important;
+}
