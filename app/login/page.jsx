@@ -3,8 +3,14 @@
 import React, { useState } from 'react';
 import Image from "next/image";
 import axios from "axios";
+import Toast from '@/components/Toast.jsx';
+import ClipLoader from "react-spinners/ClipLoader";
 
 export default function Login() {
+  const [loading, setLoading] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -23,10 +29,17 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.email || !formData.password) {
-      alert("Please fill in both email and password");
+    const newErrors = {};
+    if (!formData.email) newErrors.email = 'Email is required';
+    if (!formData.password) newErrors.password = 'Password is required';
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
+
+    setErrors({});
+    setLoading(true);
 
     try {
       const res = await axios.post(
@@ -39,8 +52,11 @@ export default function Login() {
 
       const data = res.data;
 
+      setLoading(false);
+
       if (data.success) {
-        alert("Login successful!");
+        setToastMessage("Login successful!");
+        setShowToast(true);
 
         // Store token in localStorage
         localStorage.setItem("token", data.token);
@@ -48,11 +64,14 @@ export default function Login() {
         // Redirect to profile/dashboard page
         window.location.href = "/";
       } else {
-        alert(data.message);
+        setToastMessage(data.message);
+        setShowToast(true);
       }
     } catch (error) {
+      setLoading(false);
       console.error("Login error:", error);
-      alert(error.response?.data?.message || "Something went wrong. Please try again.");
+      setToastMessage(error.response?.data?.message || "Something went wrong. Please try again.");
+      setShowToast(true);
     }
   };
 
@@ -208,9 +227,10 @@ export default function Login() {
                     placeholder="Email*"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition"
-                    required
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition ${errors.email ? 'border-red-500' : 'border-gray-300'
+                      }`}
                   />
+                  {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                 </div>
 
                 <div>
@@ -220,15 +240,20 @@ export default function Login() {
                     placeholder="Password*"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition"
-                    required
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition ${errors.password ? 'border-red-500' : 'border-gray-300'
+                      }`}
                   />
+                  {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                 </div>
                 <button
                   onClick={handleSubmit}
                   className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:opacity-90 transition-all duration-300 whitespace-nowrap text-white font-semibold py-3 px-6  rounded-lg  mt-8"
                 >
-                  LOGIN  ACCOUNT
+                  {loading ? (
+                    <ClipLoader size={22} color="#ffffff" />
+                  ) : (
+                    "LOGIN TO YOUR ACCOUNT"
+                  )}
                 </button>
               </div>
 
@@ -242,6 +267,12 @@ export default function Login() {
           </div>
         </div>
       </main>
+      {showToast && (
+        <Toast
+          message={toastMessage}
+          onClose={() => setShowToast(false)}
+        />
+      )}
     </div>
   );
 }

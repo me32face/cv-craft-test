@@ -2,8 +2,15 @@
 import React, { useState } from 'react';
 import Image from "next/image";
 import axios from "axios";
+import Toast from '@/components/Toast.jsx';
+import ClipLoader from "react-spinners/ClipLoader";
+
 
 export default function Signup() {
+  const [showToast, setShowToast] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -19,44 +26,75 @@ export default function Signup() {
     }));
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  // Validate required fields
-  if (!formData.name || !formData.email || !formData.password || !formData.agreeTerms) {
-    alert("Please fill all required fields and agree to terms.");
-    return;
-  }
 
-  try {
-    const res = await axios.post("http://localhost:5000/api/register", {
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
-    });
+    const newErrors = {};
 
-    const data = res.data;
-
-    if (data.success) {
-      alert(data.message);
-
-      // If backend returns token, store it
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-        // localStorage.setItem("user", JSON.stringify(data.user));
-      }
-
-      // Redirect to login page or dashboard
-      window.location.href = "/";
-      alert("Registration successful! Please log in.");
-    } else {
-      alert(data.message);
+    if (!formData.name) {
+      newErrors.name = 'Name is required';
+    } else if (formData.name.length < 3) {
+      newErrors.name = 'Name must be at least 3 letters';
     }
-  } catch (error) {
-    console.error("Registration error:", error);
-    alert(error.response?.data?.message || "Something went wrong. Please try again.");
-  }
-};
+
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      newErrors.email = 'Enter a valid email address';
+    }
+
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+
+    if (!formData.agreeTerms) newErrors.agreeTerms = 'You must agree to terms';
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+
+    setLoading(true);
+
+    try {
+      const res = await axios.post("http://localhost:5000/api/register", {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
+
+      const data = res.data;
+
+      setLoading(false);
+
+      if (data.success) {
+        setToastMessage("Registration successful!");
+        setShowToast(true);
+
+        // If backend returns token, store it
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+          // localStorage.setItem("user", JSON.stringify(data.user));
+        }
+
+        // Redirect to login page or dashboard
+       window.location.href = "/"
+      } else {
+        setToastMessage(data.message);
+        setShowToast(true);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error("Registration error:", error);
+      setToastMessage(error.response?.data?.message || "Something went wrong. Please try again.");
+      setShowToast(true);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -81,7 +119,7 @@ export default function Signup() {
                 <h2 className="text-xl sm:text-lg lg:text-2xl font-semibold text-gray-600 leading-tight">
                   Create a resume you<br /> are proud of
                 </h2>
-              </div> 
+              </div>
               <div className="space-y-0">
                 <div className="flex gap-3 sm:gap-4">
                   <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
@@ -182,8 +220,10 @@ export default function Signup() {
                   placeholder="Your name*"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition"
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition ${errors.name ? 'border-red-500' : 'border-gray-300'
+                    }`}
                 />
+                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
               </div>
 
               <div>
@@ -193,8 +233,10 @@ export default function Signup() {
                   placeholder="Email*"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition"
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition ${errors.email ? 'border-red-500' : 'border-gray-300'
+                    }`}
                 />
+                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
               </div>
 
               <div>
@@ -204,8 +246,10 @@ export default function Signup() {
                   placeholder="Password*"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition"
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition ${errors.password ? 'border-red-500' : 'border-gray-300'
+                    }`}
                 />
+                {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
               </div>
 
               <div className="space-y-3 pt-2">
@@ -224,6 +268,7 @@ export default function Signup() {
                     <a href="#" className="text-indigo-600 hover:underline">Privacy policy</a>*
                   </span>
                 </label>
+                {errors.agreeTerms && <p className="text-red-500 text-sm mt-1">{errors.agreeTerms}</p>}
 
                 <label className="flex items-start gap-3 cursor-pointer">
                   <input
@@ -242,10 +287,16 @@ export default function Signup() {
 
               <button
                 onClick={handleSubmit}
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:opacity-90 transition-all duration-300 whitespace-nowrap text-white font-semibold py-3 px-4 rounded-lg  mt-6"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:opacity-90 transition-all duration-300 whitespace-nowrap text-white font-semibold py-3 px-4 rounded-lg  mt-6 flex items-center justify-center"
               >
-                CREATE AN ACCOUNT
+                {loading ? (
+                  <ClipLoader size={22} color="#ffffff" />
+                ) : (
+                  "CREATE AN ACCOUNT"
+                )}
               </button>
+
             </div>
 
             <p className="text-center text-gray-600 mt-6">
@@ -257,6 +308,12 @@ export default function Signup() {
           </div>
         </div>
       </div>
+      {showToast && (
+        <Toast
+          message={toastMessage}
+          onClose={() => setShowToast(false)}
+        />
+      )}
     </div>
   );
 }
