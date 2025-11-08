@@ -13,6 +13,7 @@ import WhyChooseUs from '../components/whychoose/page'
 import FAQ from '../components/faquestions/page'
 import Footer from '../components/footer/page'
 import DreamJob from '../components/dreamjob/page'
+import Toast from '../components/Toast'
 // import Signup from './signup/page'
 // import Login from './login/page'
 
@@ -21,6 +22,7 @@ export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeFilter, setActiveFilter] = useState('All');
+  const [showToast, setShowToast] = useState(false);
   const templates = [
     { id: 'Template01', name: 'Professional Classic',key:'Richard Sanchez', image: '/template/template01n.png', category:'modern' },
     { id: 'Template06', name: 'Sample Layout',key:'Olivia Schwaiger', image: '/template/template06n.png', category:'modern' },
@@ -176,14 +178,12 @@ export default function Home() {
                         <button
                           className="text-sm text-gray-700 border border-gray-500 px-4 py-2 rounded-full w-full text-center backdrop-blur-lg bg-white/40 hover:bg-white/60 transition"
                           onClick={() => {
-                            // Check if user is logged in
                             const token = localStorage.getItem('token');
                             if (token) {
-                              // If logged in, redirect to template page
                               window.location.href = `/templates/${template.id}`;
                             } else {
-                              // If not logged in, redirect to login page
-                              window.location.href = '/login';
+                              setShowToast(true);
+                              setTimeout(() => window.location.href = '/login', 1500);
                             }
                           }}
                         >
@@ -223,6 +223,12 @@ export default function Home() {
       <FAQ />
       <DreamJob />
       <Footer />
+      {showToast && (
+        <Toast 
+          message="Please login to continue" 
+          onClose={() => setShowToast(false)} 
+        />
+      )}
       {/* <Signup />
       <Login /> */}
     </>
