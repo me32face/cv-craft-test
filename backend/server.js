@@ -10,7 +10,7 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
   origin: [
-    "https://cvcfrat.in",       
+    "https://cvcraft.in",       
     "http://localhost:3000"     
   ],
   credentials: true,
