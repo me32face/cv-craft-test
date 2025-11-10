@@ -7,7 +7,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 
 export default function Signup() {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
   const [showToast, setShowToast] = useState(false);
   const [loading, setLoading] = useState(false);
   const [toastMessage, setToastMessage] = useState('');

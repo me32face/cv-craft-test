@@ -44,6 +44,7 @@ export default function Home() {
     { id: 'Template18', name: 'Unique Layout', key: 'Juliana silva', image: '/template/template18.png', category: 'simple' },
     { id: 'Template19', name: 'Modest Layout', key: 'isabel mercado', image: '/template/template19.png', category: 'proffessional' },
     { id: 'Template20', name: 'Infographic Developer Template', key: 'daniel Gallego', image: '/template/template20.png', category: 'creative' },
+
   ];
 
   const filteredTemplates = activeFilter === 'All'
