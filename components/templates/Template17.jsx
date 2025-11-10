@@ -6,24 +6,26 @@ import {
     Phone,
     Mail,
     MapPin,
-    Globe, // Added to align with Code 1 import requirements
-    User, Briefcase, GraduationCap // Added common icons for structural completeness
+    Globe,
+    User, Briefcase, GraduationCap
 } from "lucide-react";
+import AISparkle from '../AISparkle'; // ADD THIS IMPORT
+import { geminiService } from '../../lib/gemini'; // ADD THIS IMPORT
 
 // --- INITIAL RESUME DATA (Based on Template 3 Image Content) ---
 const initialResumeData = {
     name: "HANNA MORALES",
     title: "DIGITAL MARKETING",
-    profileImage: "/profile-placeholder.png", // Used placeholder from Code 1 structure
+    profileImage: "/profile-placeholder.png",
     about:
         "Energetic digital marketing with 5+ years of experience in digital marketing company. Skilled in data processing and documentation analysis. At Liceria & Co. helped to increase work efficiency by 10% by implementing a new documentation workflow system.",
-    contact: [ // Switched to array structure to be editable/extensible like Code 1
+    contact: [
         { icon: Phone, value: "+123-456-7890", key: "phone" },
         { icon: Mail, value: "hello@reallygreatsite.com", key: "email" },
         { icon: MapPin, value: "123 Anywhere St., Any City", key: "address" },
         { icon: Globe, value: "www.mywebsite.com", key: "website" }, 
     ],
-    skills: [ // Simple list for easy contentEditable handling
+    skills: [
         "Program", "Marketing Analysis", "Team Work", "Technology", "Marketing",
     ],
     languages: ["English", "French", "Spanish", "Korean"],
@@ -78,7 +80,7 @@ export default function Template17() {
     const editorContainerRef = useRef(null);
     const cvRef = useRef(null);
     
-    // Refs for Draggable/Section containers (Retained structural pattern)
+    // Refs for Draggable/Section containers
     const headerRef = useRef(null);
     const aboutRef = useRef(null);
     const workExpSectionRef = useRef(null);
@@ -86,10 +88,71 @@ export default function Template17() {
     const contactSectionRef = useRef(null);
     const skillsSectionRef = useRef(null);
 
+    // ADD AI GENERATION FUNCTION FOR ABOUT ME AND SKILLS
+    const handleAIGenerate = async (section, keywords) => {
+        if (!geminiService.genAI) {
+            const apiKey = prompt('Please enter your Gemini API key:');
+            if (!apiKey) return;
+            geminiService.initialize(apiKey);
+        }
 
-    // --- Helper Functions (Replaced with stable contentEditable logic) ---
+        try {
+            const generatedContent = await geminiService.generateContent(section, keywords);
 
-    // Generic Duplication/Deletion logic for complex sections (Based on Code 1's handler)
+            switch (section.toLowerCase()) {
+                case 'about me':
+                case 'about':
+                    const aboutElement = document.querySelector('[data-section="about"] [contenteditable]');
+                    if (aboutElement) {
+                        let cleanedContent = generatedContent
+                            .replace(/^#{1,6}\s+.+$/gm, '')
+                            .replace(/\*\*(.+?)\*\*/g, '$1')
+                            .replace(/\*(.+?)\*/g, '$1')
+                            .trim();
+
+                        const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
+                        const actualAbout = paragraphs.find(p =>
+                            !p.toLowerCase().includes('here are') &&
+                            !p.toLowerCase().includes('of course') &&
+                            !p.toLowerCase().includes('choose the option') &&
+                            !p.toLowerCase().includes('pro-tip') &&
+                            p.length > 100
+                        );
+
+                        const finalContent = actualAbout?.trim() || paragraphs[0]?.trim() || cleanedContent;
+                        aboutElement.textContent = finalContent;
+                        
+                        // Update state
+                        setContentState(prev => ({
+                            ...prev,
+                            about: finalContent
+                        }));
+                    }
+                    break;
+
+                case 'skills':
+                    const skillsContainer = document.querySelector('[data-section="skills"] ul');
+                    if (skillsContainer) {
+                        const skills = generatedContent.split('\n').filter(skill => skill.trim());
+                        const newSkills = skills.slice(0, 8); // Limit to 8 skills
+                        
+                        // Update state
+                        setContentState(prev => ({
+                            ...prev,
+                            skills: newSkills.map(skill => skill.trim())
+                        }));
+                    }
+                    break;
+
+                default:
+                    console.log('Generated content:', generatedContent);
+            }
+        } catch (error) {
+            alert('Failed to generate content. Please check your API key and try again.');
+        }
+    };
+
+    // Generic Duplication/Deletion logic for complex sections
     const handleButtonClick = useCallback((e) => {
         const button = e.target.closest('button');
         if (!button) return;
@@ -108,7 +171,7 @@ export default function Template17() {
         }
     }, []);
 
-    // Helper for handling keypress and clean up lists (Simplified version of Code 1)
+    // Helper for handling keypress and clean up lists
     const handleListEnter = (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -141,8 +204,6 @@ export default function Template17() {
             if (!li.textContent.trim()) li.remove();
         });
     };
-    // --- End Helper Functions ---
-
 
     const handleImageChange = (e) => {
         const file = e.target.files?.[0];
@@ -186,7 +247,6 @@ export default function Template17() {
                                         suppressContentEditableWarning
                                         className="text-sm outline-none focus:bg-gray-700/50 rounded flex-1"
                                     >{item.value}</span>
-                                    {/* Duplication/Deletion Controls (based on Code 1 structure) */}
                                     <div className="flex gap-1 absolute right-0 opacity-0 group-hover:opacity-100 transition-opacity">
                                         <button data-action="duplicate" className="text-gray-400 rounded p-1"><CopyPlus size={14} /></button>
                                         <button data-action="delete" className="text-gray-400 rounded p-1"><Trash size={14} /></button>
@@ -197,11 +257,16 @@ export default function Template17() {
                     </div>
                 </section>
 
-                {/* Skills Section */}
+                {/* Skills Section with AI */}
                 <section className="w-full mb-6 section-item" data-section="skills">
-                    <h2 className="font-bold text-xl border-b border-white pb-1 mb-4 tracking-wide" contentEditable suppressContentEditableWarning>
-                        SKILLS
-                    </h2>
+                    <div className="relative group">
+                        <h2 className="font-bold text-xl border-b border-white pb-1 mb-4 tracking-wide" contentEditable suppressContentEditableWarning>
+                            SKILLS
+                        </h2>
+                        <div className="absolute right-0 -top-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <AISparkle section="Skills" onGenerate={handleAIGenerate} />
+                        </div>
+                    </div>
                     <ul className="space-y-2" onKeyDown={handleListEnter} onBlur={handleListCleanup}>
                         {contentState.skills.map((skill, i) => (
                             <li key={i} className="group flex items-center justify-between gap-2 relative section-item">
@@ -260,11 +325,16 @@ export default function Template17() {
                     >{contentState.title}</span>
                 </header>
 
-                {/* About Me */}
+                {/* About Me with AI */}
                 <section className="mb-6 section-item" data-section="about">
-                    <h2 className="font-bold text-xl border-b-2 border-black mb-4 tracking-wide" contentEditable suppressContentEditableWarning>
-                        ABOUT ME
-                    </h2>
+                    <div className="relative group">
+                        <h2 className="font-bold text-xl border-b-2 border-black mb-4 tracking-wide" contentEditable suppressContentEditableWarning>
+                            ABOUT ME
+                        </h2>
+                        <div className="absolute right-0 -top-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <AISparkle section="About Me" onGenerate={handleAIGenerate} />
+                        </div>
+                    </div>
                     <div 
                         contentEditable 
                         suppressContentEditableWarning

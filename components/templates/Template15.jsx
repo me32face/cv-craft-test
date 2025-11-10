@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Mail, Phone, MapPin, Link as LinkIcon, Briefcase, BookOpen, MessageCircle, Trash2, CopyPlus } from 'lucide-react';
+import AISparkle from '../AISparkle'; // ADD THIS IMPORT
+import { geminiService } from '../../lib/gemini'; // ADD THIS IMPORT
 
 // Add these imports for PDF functionality
 import jsPDF from 'jspdf';
@@ -70,13 +72,18 @@ const EditableText = ({ value, onUpdate, className, type = 'p' }) => {
 };
 
 // --- HELPER COMPONENTS ---
-const SectionTitle = ({ title, icon: Icon }) => (
-  <div className="mb-2">
+const SectionTitle = ({ title, icon: Icon, onGenerate }) => (
+  <div className="mb-2 relative group">
     <h2 className="text-sm font-bold tracking-widest uppercase text-gray-800 flex items-center">
       {Icon && <Icon className="w-4 h-4 mr-2 text-gray-700" />}
       {title}
     </h2>
     <hr className="border-t-2 border-gray-400 mt-1" />
+    {onGenerate && (
+      <div className="absolute -right-8 -top-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <AISparkle section={title} onGenerate={onGenerate} />
+      </div>
+    )}
   </div>
 );
 
@@ -141,7 +148,7 @@ const EducationSection = ({ data, onUpdate, onDelete, onDuplicate }) => {
 
 const SkillsSection = ({ data, onUpdate, onDelete, onDuplicate }) => (
   <>
-    <SectionTitle title="SKILLS" icon={Briefcase} />
+    <SectionTitle title="SKILLS" icon={Briefcase} onGenerate={useContext().handleAIGenerate} />
     <ul className="text-xs space-y-1 list-none p-0">
       {data.map((skill, index) => (
         <li key={index} className="flex items-start group relative pr-16">
@@ -190,14 +197,14 @@ const LanguagesSection = ({ data, onUpdate, onDelete, onDuplicate }) => {
   );
 };
 
-const ProfileSection = ({ data, onUpdate }) => {
+const ProfileSection = ({ data, onUpdate, onGenerate }) => {
     const MAX_LENGTH = 500;
     const currentLength = data.length;
 
     return (
-        <div className="mb-6">
+        <div className="mb-6 relative group">
             <div className="flex justify-between items-end">
-                <SectionTitle title="PROFILE" />
+                <SectionTitle title="PROFILE" onGenerate={onGenerate} />
             </div>
             <EditableText
                 type="div"
@@ -327,12 +334,76 @@ const DeleteButton = ({ onClick, isSmall = false, isMain = false }) => (
   </button>
 );
 
+// Create a context to pass the AI handler
+const AIContext = React.createContext();
+const useContext = () => React.useContext(AIContext);
+
 // --- MAIN APP COMPONENT ---
 const App = () => {
   const [resume, setResume] = useState(initialResumeData);
   const editorContainerRef = useRef(null);
   const cvRef = useRef(null);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+
+  // ADD AI GENERATION FUNCTION FOR PROFILE AND SKILLS
+  const handleAIGenerate = async (section, keywords) => {
+    if (!geminiService.genAI) {
+      const apiKey = prompt('Please enter your Gemini API key:');
+      if (!apiKey) return;
+      geminiService.initialize(apiKey);
+    }
+
+    try {
+      const generatedContent = await geminiService.generateContent(section, keywords);
+
+      switch (section.toLowerCase()) {
+        case 'profile':
+          const profileElement = document.querySelector('[data-section="profile"] [contenteditable]');
+          if (profileElement) {
+            let cleanedContent = generatedContent
+              .replace(/^#{1,6}\s+.+$/gm, '')
+              .replace(/\*\*(.+?)\*\*/g, '$1')
+              .replace(/\*(.+?)\*/g, '$1')
+              .trim();
+
+            const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
+            const actualProfile = paragraphs.find(p =>
+              !p.toLowerCase().includes('here are') &&
+              !p.toLowerCase().includes('of course') &&
+              !p.toLowerCase().includes('choose the option') &&
+              !p.toLowerCase().includes('pro-tip') &&
+              p.length > 100
+            );
+
+            const finalContent = actualProfile?.trim() || paragraphs[0]?.trim() || cleanedContent;
+            profileElement.textContent = finalContent;
+            
+            // Update state
+            setResume(prev => ({
+              ...prev,
+              profile: finalContent
+            }));
+          }
+          break;
+
+        case 'skills':
+          const skills = generatedContent.split('\n').filter(skill => skill.trim());
+          const newSkills = skills.slice(0, 10); // Limit to 10 skills
+          
+          // Update state
+          setResume(prev => ({
+            ...prev,
+            skills: newSkills.map(skill => skill.trim())
+          }));
+          break;
+
+        default:
+          console.log('Generated content:', generatedContent);
+      }
+    } catch (error) {
+      alert('Failed to generate content. Please check your API key and try again.');
+    }
+  };
 
   // PDF Download Function
   const downloadPDF = useCallback(async () => {
@@ -546,10 +617,13 @@ const App = () => {
 
         {/* Right Column */}
         <div className="col-span-2 relative pl-6 border-l border-gray-300 space-y-6">
-          <ProfileSection
-            data={resume.profile}
-            onUpdate={(val) => handleTopLevelUpdate('profile', val)}
-          />
+          <div data-section="profile">
+            <ProfileSection
+              data={resume.profile}
+              onUpdate={(val) => handleTopLevelUpdate('profile', val)}
+              onGenerate={handleAIGenerate}
+            />
+          </div>
           <ExperienceSection
             data={resume.workExperience}
             onUpdate={(index, field, val) => handleListItemUpdate('workExperience', index, field, val)}
@@ -571,26 +645,28 @@ const App = () => {
   );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">      
-      {isGeneratingPDF && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl flex items-center gap-3">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <span className="text-gray-700">Generating PDF...</span>
+    <AIContext.Provider value={{ handleAIGenerate }}>
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">      
+        {isGeneratingPDF && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-xl flex items-center gap-3">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <span className="text-gray-700">Generating PDF...</span>
+            </div>
+          </div>
+        )}
+
+        <div
+          ref={editorContainerRef}
+          data-editor-container
+          className="flex flex-col items-center scale-[0.5] origin-top transition-transform duration-500 pt-24"
+        >
+          <div ref={cvRef} data-cv-page>
+            <CVPage />
           </div>
         </div>
-      )}
-
-      <div
-        ref={editorContainerRef}
-        data-editor-container
-        className="flex flex-col items-center scale-[0.5] origin-top transition-transform duration-500 pt-24"
-      >
-        <div ref={cvRef} data-cv-page>
-          <CVPage />
-        </div>
       </div>
-    </div>
+    </AIContext.Provider>
   );
 };
 

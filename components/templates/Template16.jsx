@@ -4,6 +4,7 @@ import { Mail, Phone, MapPin, Trash2, CopyPlus, User, Briefcase, GraduationCap, 
 import Draggable from "react-draggable";
 
 import AISparkle from '../AISparkle';
+import { geminiService } from '../../lib/gemini'; // ADD THIS IMPORT
 import Image from 'next/image';
 
 // --- INITIAL RESUME DATA ---
@@ -62,6 +63,116 @@ export default function Template02() {
     const referencesSectionRef = useRef(null);
     const contactSectionRef = useRef(null);
 
+    // ADD AI GENERATION FUNCTION
+    const handleAIGenerate = async (section, keywords) => {
+        if (!geminiService.genAI) {
+            const apiKey = prompt('Please enter your Gemini API key:');
+            if (!apiKey) return;
+            geminiService.initialize(apiKey);
+        }
+
+        try {
+            const generatedContent = await geminiService.generateContent(section, keywords);
+
+            // Update the appropriate section based on the section type
+            switch (section.toLowerCase()) {
+                case 'profile':
+                case 'summary':
+                    const profileElement = document.getElementById('profile-text');
+                    if (profileElement) {
+                        // Clean the generated content
+                        let cleanedContent = generatedContent
+                            .replace(/^#{1,6}\s+.+$/gm, '')
+                            .replace(/\*\*(.+?)\*\*/g, '$1')
+                            .replace(/\*(.+?)\*/g, '$1')
+                            .trim();
+
+                        // Split into paragraphs
+                        const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
+
+                        // Skip introductory paragraphs
+                        const actualSummary = paragraphs.find(p =>
+                            !p.toLowerCase().includes('here are') &&
+                            !p.toLowerCase().includes('of course') &&
+                            !p.toLowerCase().includes('choose the option') &&
+                            !p.toLowerCase().includes('pro-tip') &&
+                            p.length > 100
+                        );
+
+                        const finalContent = actualSummary?.trim() || paragraphs[0]?.trim() || cleanedContent;
+                        profileElement.textContent = finalContent;
+                    }
+                    break;
+                    
+                case 'skills':
+                    const skillsContainer = document.querySelector('[data-section="my-skills"]');
+                    if (skillsContainer) {
+                        const skills = generatedContent.split('\n').filter(skill => skill.trim());
+                        const skillsList = skillsContainer.querySelector('.space-y-2');
+                        if (skillsList) {
+                            skillsList.innerHTML = skills.map(skill => 
+                                `<div class="text-xs group relative p-1 -m-1 draggable-item">
+                                    <div class="flex justify-between items-center mb-0.5">
+                                        <span class="font-medium text-gray-700" contentEditable>${skill.trim()}</span>
+                                        <span class="text-xs font-semibold text-gray-500 w-6 text-right" contentEditable>85</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-1">
+                                        <div class="bg-gray-700 h-1 rounded-full" style="width: 85%"></div>
+                                    </div>
+                                    <div class="absolute -right-4 -top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                                        <button data-action="duplicate" class="text-gray-600 rounded p-1.5 shadow-md bg-white"><CopyPlus class="w-4 h-4" /></button>
+                                        <button data-action="delete" class="text-gray-600 rounded p-1.5 shadow-md bg-white"><Trash2 class="w-4 h-4" /></button>
+                                    </div>
+                                </div>`
+                            ).join('');
+                        }
+                    }
+                    break;
+                    
+                case 'work experience':
+                    const workExpContainer = document.querySelector('[data-section="work-experience"] .space-y-4');
+                    if (workExpContainer) {
+                        const experiences = generatedContent.split('---').filter(exp => exp.trim());
+                        workExpContainer.innerHTML = experiences.map((exp, index) => {
+                            const lines = exp.trim().split('\n').filter(line => line.trim());
+                            const position = lines[0] || 'Position';
+                            const company = lines[1] || 'Company Name';
+                            const period = lines[2] || '2020 - Present';
+                            const duties = lines.slice(3).filter(duty => duty.trim());
+
+                            return `
+                                <div class="flex relative group draggable-item">
+                                    <div class="absolute -left-1.5 top-0 w-3 h-3 bg-white border border-gray-800 rounded-full z-10"></div>
+                                    <div class="absolute -left-1 top-3 w-px h-[calc(100%+10px)] bg-gray-400 z-0"></div>
+                                    <div class="pl-4 flex w-full justify-between items-start">
+                                        <div class="pr-3 w-[45%]">
+                                            <p class="text-xs font-semibold text-gray-800" contentEditable>${position}</p>
+                                            <p class="text-[10px] text-gray-700" contentEditable>${company}</p>
+                                            <p class="text-[10px] text-gray-500 mt-0.5" contentEditable>${period}</p>
+                                        </div>
+                                        <div class="w-[55%] pl-4 border-l border-gray-300">
+                                            <div class="text-xs text-gray-700 leading-relaxed" contentEditable>
+                                                ${duties.map(duty => `<p>${duty.trim()}</p>`).join('')}
+                                            </div>
+                                        </div>
+                                        <div class="absolute -right-4 -top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                                            <button data-action="duplicate" class="text-gray-600 rounded p-1.5 shadow-md bg-white"><CopyPlus class="w-4 h-4" /></button>
+                                            <button data-action="delete" class="text-gray-600 rounded p-1.5 shadow-md bg-white"><Trash2 class="w-4 h-4" /></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                    break;
+                    
+                default:
+                    console.log('Generated content:', generatedContent);
+            }
+        } catch (error) {
+            alert('Failed to generate content. Please check your API key and try again.');
+        }
+    };
 
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
@@ -114,11 +225,6 @@ export default function Template02() {
         });
     };
 
-    const handleAIGenerate = async (section, keywords) => {
-        console.log('AI Generation requested for:', section, keywords);
-        alert(`AI generation mock for: ${section}. Content would be generated here.`);
-    };
-
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             saveState({ profileImage, contentState });
@@ -149,8 +255,6 @@ export default function Template02() {
     const EditableText = ({ id, value, className, type = 'p', placeholder = '', ...props }) => {
         const Tag = type;
         
-        // **CRITICAL FIX:** Ensure value is present before setting dangerouslySetInnerHTML
-        // and that no children are passed to the component when using this prop.
         return (
             <Tag
                 id={id}
@@ -176,7 +280,7 @@ export default function Template02() {
                 </h2>
                 {onGenerate && (
                     <div className="opacity-0 group-hover:opacity-100 transition-opacity absolute right-0 -top-2">
-                        <AISparkle section={title} onGenerate={onGenerate} />
+                        <AISparkle section={title} onGenerate={handleAIGenerate} />
                     </div>
                 )}
             </div>
@@ -240,11 +344,9 @@ export default function Template02() {
                                 >{contentState.title}</p>
                             </div>
                             <div className="text-xs text-right space-y-1 mt-2">
-                                {/* Contact Info (Right Aligned) */}
                                 {contentState.contact.map((item, index) => (
                                     <div key={index} className="text-gray-700">
                                         <span className="font-semibold">{item.label}</span>
-                                        {/* FIX: Use value prop and make self-closing */}
                                         <EditableText
                                             value={item.value}
                                             className="inline ml-1 text-xs"
@@ -254,7 +356,6 @@ export default function Template02() {
                                 ))}
                             </div>
                         </div>
-                        {/* Drag/Delete controls for the entire Header block */}
                         <div className="absolute -right-4 -top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                             <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md bg-white"><CopyPlus className="w-4 h-4" /></button>
                             <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md bg-white"><Trash2 className="w-4 h-4" /></button>
@@ -267,7 +368,6 @@ export default function Template02() {
                     <div ref={welcomeRef} className="relative group mb-5">
                         <div className="border-b border-gray-400 pb-1 mb-4">
                             <h3 className="text-lg font-normal tracking-normal text-gray-800">
-                                {/* FIX: Use value prop and make self-closing */}
                                 <EditableText
                                     value={contentState.welcome}
                                     className="font-normal"
@@ -276,29 +376,26 @@ export default function Template02() {
                             </h3>
                         </div>
 
-                        {/* Profile Section (with AI sparkle from Code 1) */}
+                        {/* Profile Section with AI */}
                         <SectionHeader title="PROFILE" onGenerate={handleAIGenerate} />
                         <div className="relative group mb-4">
-                            {/* FIX: Use value prop and make self-closing */}
                             <EditableText
                                 type="div"
                                 value={contentState.profile}
                                 className="text-xs text-gray-700 leading-relaxed text-justify"
-                                id="profile-text"
+                                id="profile-text" // ADDED ID FOR AI TARGETING
                             />
                         </div>
 
-                        {/* Career Objective Section (similar style) */}
+                        {/* Career Objective Section */}
                         <SectionHeader title="CAREER OBJECTIVE" />
                         <div className="relative group">
-                            {/* FIX: Use value prop and make self-closing */}
                             <EditableText
                                 type="div"
                                 value={contentState.objective}
                                 className="text-xs text-gray-700 leading-relaxed text-justify"
                             />
                         </div>
-                        {/* Drag/Delete controls for the entire block */}
                         <div className="absolute -right-4 -top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                             <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md bg-white"><CopyPlus className="w-4 h-4" /></button>
                             <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md bg-white"><Trash2 className="w-4 h-4" /></button>
@@ -319,24 +416,17 @@ export default function Template02() {
                             return (
                                 <Draggable key={index} nodeRef={jobItemRef} bounds={false}>
                                     <div ref={jobItemRef} className="flex relative group draggable-item">
-                                        {/* Timeline Dot and Line */}
                                         <div className="absolute -left-1.5 top-0 w-3 h-3 bg-white border border-gray-800 rounded-full z-10"></div>
                                         <div className="absolute -left-1 top-3 w-px h-[calc(100%+10px)] bg-gray-400 z-0"></div>
                                         
                                         <div className="pl-4 flex w-full justify-between items-start">
-                                            {/* Left Column (Details) */}
                                             <div className="pr-3 w-[45%]">
-                                                {/* FIX: Use value prop and make self-closing */}
                                                 <EditableText value={job.details} className="text-xs font-semibold text-gray-800" type="p" />
-                                                {/* FIX: Use value prop and make self-closing */}
                                                 <EditableText value={job.company} className="text-[10px] text-gray-700" type="p" />
-                                                {/* FIX: Use value prop and make self-closing */}
                                                 <EditableText value={job.yearRange} className="text-[10px] text-gray-500 mt-0.5" type="p" />
                                             </div>
 
-                                            {/* Right Column (Description) */}
                                             <div className="w-[55%] pl-4 border-l border-gray-300">
-                                                {/* FIX: Use value prop and make self-closing */}
                                                 <EditableText
                                                     value={job.description}
                                                     className="text-xs text-gray-700 leading-relaxed"
@@ -345,7 +435,6 @@ export default function Template02() {
                                             </div>
                                         </div>
 
-                                        {/* Duplication/Deletion Controls */}
                                         <div className="absolute -right-4 -top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                                             <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md bg-white"><CopyPlus className="w-4 h-4" /></button>
                                             <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md bg-white"><Trash2 className="w-4 h-4" /></button>
@@ -373,20 +462,15 @@ export default function Template02() {
                                 return (
                                     <Draggable key={index} nodeRef={eduItemRef} bounds={false}>
                                         <div ref={eduItemRef} className="flex relative group draggable-item">
-                                            {/* Timeline Dot */}
                                             <div className="absolute -left-1.5 top-0 w-3 h-3 bg-white border border-gray-800 rounded-full z-10"></div>
                                             <div className="absolute -left-1 top-3 w-px h-[calc(100%+10px)] bg-gray-400 z-0"></div>
                                             
                                             <div className="pl-4">
-                                                {/* FIX: Use value prop and make self-closing */}
                                                 <EditableText value={edu.yearRange} className="text-xs font-semibold text-gray-800" type="p" />
-                                                {/* FIX: Use value prop and make self-closing */}
                                                 <EditableText value={edu.details} className="text-[10px] text-gray-700 mt-0.5" type="p" />
-                                                {/* FIX: Use value prop and make self-closing */}
                                                 <EditableText value={edu.university} className="text-[10px] text-gray-500" type="p" />
                                             </div>
 
-                                            {/* Duplication/Deletion Controls */}
                                             <div className="absolute -right-4 -top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                                                 <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md bg-white"><CopyPlus className="w-4 h-4" /></button>
                                                 <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md bg-white"><Trash2 className="w-4 h-4" /></button>
@@ -399,7 +483,7 @@ export default function Template02() {
                     </div>
 
                     {/* Skills Section (Column 2) */}
-                    <div className="col-span-1">
+                    <div className="col-span-1" data-section="my-skills"> {/* ADDED DATA-SECTION FOR AI TARGETING */}
                         <Draggable nodeRef={skillsSectionRef}>
                             <div ref={skillsSectionRef}>
                                 <SectionHeader title="MY SKILLS" onGenerate={handleAIGenerate} />
@@ -409,24 +493,19 @@ export default function Template02() {
                             {contentState.skills.map((skill, index) => {
                                 const skillItemRef = useRef(null);
                                 return (
-                                    // Removed unnecessary Draggable here since it's redundant on a simple list item structure.
                                     <div key={index} className="text-xs group relative p-1 -m-1 draggable-item"> 
-                                        {/* Skill Name and Level */}
                                         <div className="flex justify-between items-center mb-0.5">
-                                            {/* FIX: Use value prop and make self-closing */}
                                             <EditableText
                                                 value={skill.name}
                                                 className="font-medium text-gray-700"
                                                 type="span"
                                             />
-                                            {/* FIX: Use value prop and make self-closing */}
                                             <EditableText
                                                 value={String(skill.level)}
                                                 className="text-xs font-semibold text-gray-500 w-6 text-right"
                                                 type="span"
                                             />
                                         </div>
-                                        {/* Skill Bar */}
                                         <div className="w-full bg-gray-200 rounded-full h-1">
                                             <div
                                                 className="bg-gray-700 h-1 rounded-full"
@@ -434,7 +513,6 @@ export default function Template02() {
                                             ></div>
                                         </div>
 
-                                        {/* Duplication/Deletion Controls */}
                                         <div className="absolute -right-4 -top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                                             <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md bg-white"><CopyPlus className="w-4 h-4" /></button>
                                             <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md bg-white"><Trash2 className="w-4 h-4" /></button>
@@ -458,19 +536,16 @@ export default function Template02() {
                                 return (
                                     <Draggable key={index} nodeRef={refItemRef} bounds={false}>
                                         <div ref={refItemRef} className="relative group draggable-item">
-                                            {/* FIX: Use value prop and make self-closing */}
                                             <EditableText
                                                 value={ref.name}
                                                 className="font-bold text-gray-800"
                                                 type="p"
                                             />
-                                            {/* FIX: Use value prop and make self-closing */}
                                             <EditableText
                                                 value={`${ref.title} | ${ref.phone}`}
                                                 className="text-gray-600"
                                                 type="p"
                                             />
-                                            {/* Duplication/Deletion Controls */}
                                             <div className="absolute -right-4 -top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                                                 <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md bg-white"><CopyPlus className="w-4 h-4" /></button>
                                                 <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md bg-white"><Trash2 className="w-4 h-4" /></button>

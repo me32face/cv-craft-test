@@ -1,646 +1,818 @@
 "use client";
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useRef, useEffect } from "react";
+import { Copy, Trash2, Mail, Phone, MapPin, Upload } from "lucide-react";
+import AISparkle from '../AISparkle'; // ADD THIS IMPORT
+import { geminiService } from '../../lib/gemini'; // ADD THIS IMPORT
 
 // --- Resume Data Structure ---
 const initialResumeData = {
-  name: 'Neil Tran',
-  title: 'TEACHER',
-  description: 'Dedicated educator seeking a teaching position at Lincoln Elementary School to inspire and support student success.',
+  name: 'NEIL TRAN',
+  title: 'SENIOR EDUCATOR',
+  summary: 'Transforms education with extensive experience in technology automation. Guidelines for fostering inclusive learning environments and implementing innovative technology methodologies to maximize student potential and achievement.',
   contact: {
-    phone: '+1 234-567-8900',
-    email: 'hello@reallygreatsite.com',
-    address: '123 Anywhere St., Any City',
+    phone: '+1 (234) 567-8900',
+    email: 'neil.tran@email.com',
+    location: 'Chicago, IL',
   },
-  photoUrl: 'https://placehold.co/160x160/285F75/ffffff?text=Add+Photo',
-  skills: [
-    'Classroom Management',
+  photoUrl: 'https://placehold.co/200x200/6366F1/ffffff?text=PROFILE',
+  coreCompetencies: [
     'Curriculum Development',
-    'Differentiated Instruction',
-    'Educational Technology',
+    'Classroom Management',
     'Student Assessment',
+    'Educational Technology',
+    'Differentiated Instruction',
     'Parent Communication',
+    'Lesson Planning',
+    'Student Engagement'
   ],
   education: [
-    { degree: 'M.Ed. in Curriculum and Instruction', institution: 'University of Illinois', year: '2015' },
-    { degree: 'B.A. in Elementary Education', institution: 'University of Illinois', year: '2012' },
+    { 
+      id: 1, 
+      degree: 'Master of Education', 
+      major: 'Curriculum & Instruction',
+      institution: 'University of Illinois Urbana-Champaign',
+      year: '2015',
+      highlights: ['GPA: 3.9/4.0', 'Graduated Summa Cum Laude']
+    },
+    { 
+      id: 2, 
+      degree: 'Bachelor of Arts', 
+      major: 'Elementary Education',
+      institution: 'University of Illinois Chicago',
+      year: '2012',
+      highlights: ['Dean\'s List All Semesters', 'Student Teaching Award']
+    },
   ],
   experience: [
     { 
-      title: 'Teacher', 
-      company: 'Springfield Middle School', 
-      duration: '2015–Present', 
-      details: [
-        'Taught 4th-grade students and created interactive lesson plans that met diverse learning needs.',
-        'Implemented technology in the classroom to improve student engagement and understanding.',
+      id: 1,
+      position: 'Lead Teacher - 4th Grade', 
+      institution: 'Springfield Elementary School',
+      period: '2018 - Present',
+      achievements: [
+        'Implemented project-based learning curriculum resulting in 25% improvement in student engagement scores',
+        'Mentored 3 new teachers through district induction program',
+        'Integrated technology tools increasing digital literacy by 40% across grade level'
+      ]
+    },
+    { 
+      id: 2,
+      position: 'Elementary Teacher', 
+      institution: 'Lincoln Community School',
+      period: '2015 - 2018',
+      achievements: [
+        'Developed differentiated reading program that improved reading levels by 1.5 grades on average',
+        'Collaborated with special education team to create inclusive classroom environment',
+        'Organized annual science fair with 200+ participant increase over 3 years'
       ]
     },
   ],
   certifications: [
-    { name: 'Illinois Teaching Certification, Elementary Education', year: '2012' },
-    { name: 'Google Certified Educator, Level 2', year: '22019' },
+    { id: 1, name: 'Illinois Professional Educator License', year: '2012', credential: 'K-9 Elementary Education' },
+    { id: 2, name: 'Google Certified Educator', year: '2019', credential: 'Level 2' },
+    { id: 3, name: 'Trauma-Informed Teaching', year: '2020', credential: 'Advanced Certification' },
   ],
+  professionalDevelopment: [
+    'STEM Integration Workshop Series (2023)',
+    'Culturally Responsive Teaching Institute (2022)',
+    'Social-Emotional Learning Conference (2021)'
+  ]
 };
 
-// --- Helper Components for Editable Fields ---
-
-// Using inline SVGs for stability (visual equivalent of lucide-react CopyPlus)
-const CopyPlusIcon = (props) => (
-    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-copy-plus">
-        <line x1="12" x2="12" y1="15" y2="21" />
-        <line x1="15" x2="9" y1="18" y2="18" />
-        <rect width="14" height="14" x="8" y="2" rx="2" ry="2" />
-        <path d="M15 22H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h1" />
-    </svg>
-);
-
-const TrashIcon = (props) => (
-    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-trash">
-        <path d="M3 6h18" />
-        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-    </svg>
-);
-
-const EditableInput = ({ value, onChange, className = '', placeholder = '' }) => (
-  <input
-    type="text"
-    value={value}
-    onChange={(e) => onChange(e.target.value)}
-    className={`w-full bg-transparent border-none focus:ring-0 outline-none ${className}`}
-    placeholder={placeholder}
-  />
-);
-
-const EditableTextarea = ({ value, onChange, className = '', placeholder = '' }) => (
-  <textarea
-    value={value}
-    onChange={(e) => onChange(e.target.value)}
-    className={`w-full bg-transparent border-none focus:ring-0 outline-none resize-none ${className}`}
-    placeholder={placeholder}
-    rows={Math.max(2, Math.ceil(value.length / 50))} // Adjust height based on content
-  />
-);
-
-const EditableHeader = ({ value, onChange, tag: Tag = 'h1', className = '' }) => (
-  <Tag className={`font-extrabold ${className}`}>
-    <EditableInput value={value} onChange={onChange} className="text-inherit border-none p-0" />
-  </Tag>
-);
-
+// --- EditableText Component ---
+const EditableText = React.forwardRef(({ value, onUpdate, className = "", tagName = 'span', placeholder = "", ...props }, ref) => {
+    const Tag = tagName;
+    
+    return (
+        <Tag
+            ref={ref}
+            contentEditable
+            suppressContentEditableWarning
+            onBlur={(e) => {
+                if (onUpdate) {
+                    const sanitizedText = e.target.innerHTML.replace(/<br\s*\/?>/gi, '\n').replace(/&nbsp;/gi, ' ').trim();
+                    onUpdate(sanitizedText);
+                }
+            }}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter' && tagName !== 'div' && tagName !== 'p') {
+                    e.preventDefault();
+                    e.target.blur();
+                }
+            }}
+            dangerouslySetInnerHTML={{ __html: value?.replace(/\n/g, '<br/>') || (placeholder ? `<span class="text-gray-400">${placeholder}</span>` : '') }}
+            className={`focus:outline-none focus:ring-2 focus:ring-blue-300 rounded px-1 ${className}`}
+            style={{ 
+                minHeight: '1.2em',
+                WebkitUserSelect: 'text',
+                MozUserSelect: 'text',
+                msUserSelect: 'text',
+                userSelect: 'text'
+            }}
+            {...props}
+        />
+    );
+});
+EditableText.displayName = 'EditableText';
 
 // --- Main Application Component ---
-
 const App = () => {
   const [data, setData] = useState(initialResumeData);
-  const fileInputRef = useRef(null); // Reference for the hidden file input
+  const [scale, setScale] = useState(1);
+  const fileInputRef = useRef(null);
+  const containerRef = useRef(null);
+  const cvRef = useRef(null);
 
-  // Function to handle image file upload
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        // Sets the photoUrl to the base64 data URL
-        updateField('photoUrl', reader.result);
-      };
-      reader.readAsDataURL(file);
+  // ADD AI GENERATION FUNCTION
+  const handleAIGenerate = async (section, keywords) => {
+    if (!geminiService.genAI) {
+      const apiKey = prompt('Please enter your Gemini API key:');
+      if (!apiKey) return;
+      geminiService.initialize(apiKey);
+    }
+
+    try {
+      const generatedContent = await geminiService.generateContent(section, keywords);
+
+      // Update the appropriate section based on the section type
+      switch (section.toLowerCase()) {
+        case 'professional summary':
+        case 'summary':
+          const summaryElement = document.querySelector('[data-section="professional-summary"] .text-justify');
+          if (summaryElement) {
+            let cleanedContent = generatedContent
+              .replace(/^#{1,6}\s+.+$/gm, '')
+              .replace(/\*\*(.+?)\*\*/g, '$1')
+              .replace(/\*(.+?)\*/g, '$1')
+              .trim();
+
+            const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
+            const actualSummary = paragraphs.find(p =>
+              !p.toLowerCase().includes('here are') &&
+              !p.toLowerCase().includes('of course') &&
+              !p.toLowerCase().includes('choose the option') &&
+              !p.toLowerCase().includes('pro-tip') &&
+              p.length > 100
+            );
+
+            const finalContent = actualSummary?.trim() || paragraphs[0]?.trim() || cleanedContent;
+            summaryElement.textContent = finalContent;
+            handleEdit('summary', finalContent);
+          }
+          break;
+
+        case 'core competencies':
+        case 'skills':
+          const skillsContainer = document.querySelector('[data-section="core-competencies"]');
+          if (skillsContainer) {
+            const skills = generatedContent.split('\n').filter(skill => skill.trim());
+            const skillsList = skillsContainer.querySelector('.space-y-1');
+            if (skillsList) {
+              const newSkills = skills.slice(0, 8); // Limit to 8 skills
+              setData(prev => ({
+                ...prev,
+                coreCompetencies: newSkills.map(skill => skill.trim())
+              }));
+            }
+          }
+          break;
+
+        case 'professional experience':
+        case 'experience':
+          const experienceContainer = document.querySelector('[data-section="professional-experience"] .space-y-3');
+          if (experienceContainer) {
+            const experiences = generatedContent.split('---').filter(exp => exp.trim());
+            const newExperiences = experiences.slice(0, 2).map((exp, index) => {
+              const lines = exp.trim().split('\n').filter(line => line.trim());
+              const position = lines[0] || 'Position Title';
+              const institution = lines[1] || 'Institution/Company';
+              const period = lines[2] || '2020 - Present';
+              const achievements = lines.slice(3).filter(achievement => achievement.trim()).slice(0, 3);
+
+              return {
+                id: Date.now() + index,
+                position,
+                institution,
+                period,
+                achievements
+              };
+            });
+
+            setData(prev => ({
+              ...prev,
+              experience: newExperiences
+            }));
+          }
+          break;
+
+        case 'education':
+          const educationContainer = document.querySelector('[data-section="education"] .space-y-3');
+          if (educationContainer) {
+            const educations = generatedContent.split('---').filter(edu => edu.trim());
+            const newEducation = educations.slice(0, 2).map((edu, index) => {
+              const lines = edu.trim().split('\n').filter(line => line.trim());
+              const degree = lines[0] || 'Degree';
+              const major = lines[1] || 'Major/Concentration';
+              const institution = lines[2] || 'Institution';
+              const year = lines[3] || 'Year';
+              const highlights = lines.slice(4).filter(highlight => highlight.trim()).slice(0, 2);
+
+              return {
+                id: Date.now() + index,
+                degree,
+                major,
+                institution,
+                year,
+                highlights
+              };
+            });
+
+            setData(prev => ({
+              ...prev,
+              education: newEducation
+            }));
+          }
+          break;
+
+        default:
+          console.log('Generated content:', generatedContent);
+      }
+    } catch (error) {
+      alert('Failed to generate content. Please check your API key and try again.');
     }
   };
 
-  // General update function for top-level fields
-  const updateField = useCallback((field, value) => {
-    setData(prev => ({ ...prev, [field]: value }));
+  // Auto-scale to fit screen
+  useEffect(() => {
+    let timeoutId;
+    
+    const updateScale = () => {
+      const container = containerRef.current;
+      if (!container) return;
+
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+      const a4Width = 210 * 3.78;
+      const a4Height = 297 * 3.78;
+      
+      const widthScale = (screenWidth - 80) / a4Width;
+      const heightScale = (screenHeight - 80) / a4Height;
+      
+      const newScale = Math.min(widthScale, heightScale, 1);
+      setScale(Math.max(newScale, 0.4));
+    };
+
+    const debouncedUpdateScale = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(updateScale, 100);
+    };
+
+    updateScale();
+    window.addEventListener('resize', debouncedUpdateScale);
+    
+    return () => {
+      window.removeEventListener('resize', debouncedUpdateScale);
+      clearTimeout(timeoutId);
+    };
   }, []);
 
-  // Update function for contact fields
-  const updateContact = useCallback((field, value) => {
-    setData(prev => ({ ...prev, contact: { ...prev.contact, [field]: value } }));
-  }, []);
-
-  // --- Core Array Manipulation Functions ---
-
-  // For simple arrays (Skills)
-  const updateArrayItem = useCallback((arrayName, index, value) => {
-    setData(prev => {
-      const newArray = [...prev[arrayName]];
-      newArray[index] = value;
-      return { ...prev, [arrayName]: newArray };
+  // State management functions
+  const handleEdit = (path, value) => {
+    setData((prev) => {
+      const keys = path.split(".");
+      let newData = { ...prev };
+      
+      try {
+        if (keys.length === 1) {
+          newData[keys[0]] = value;
+        } else if (keys.length === 2) {
+          if (newData[keys[0]] && typeof newData[keys[0]] === 'object') {
+            newData = { 
+              ...prev, 
+              [keys[0]]: { ...prev[keys[0]], [keys[1]]: value } 
+            };
+          }
+        } else if (keys.length === 3) {
+          const section = keys[0];
+          const index = parseInt(keys[1], 10);
+          const field = keys[2];
+          
+          if (Array.isArray(newData[section]) && 
+              !isNaN(index) && 
+              index >= 0 && 
+              index < newData[section].length) {
+            const newArr = [...newData[section]];
+            newArr[index] = { ...newArr[index], [field]: value };
+            newData[section] = newArr;
+          }
+        } else if (keys.length === 4) {
+          const section = keys[0];
+          const index = parseInt(keys[1], 10);
+          const subSection = keys[2];
+          const subIndex = parseInt(keys[3], 10);
+          
+          if (Array.isArray(newData[section]) && 
+              !isNaN(index) && index >= 0 && index < newData[section].length &&
+              newData[section][index] &&
+              Array.isArray(newData[section][index][subSection]) &&
+              !isNaN(subIndex) && subIndex >= 0 && subIndex < newData[section][index][subSection].length) {
+            const newArr = [...newData[section]];
+            const newSubArr = [...newArr[index][subSection]];
+            newSubArr[subIndex] = value;
+            newArr[index] = { ...newArr[index], [subSection]: newSubArr };
+            newData[section] = newArr;
+          }
+        }
+      } catch (error) {
+        console.error('Error updating state:', error, { path, value });
+        return prev;
+      }
+      
+      return newData;
     });
-  }, []);
+  };
 
-  const removeArrayItem = useCallback((arrayName, index) => {
-    setData(prev => ({ ...prev, [arrayName]: prev[arrayName].filter((_, i) => i !== index) }));
-  }, []);
-
-  const duplicateArrayItem = useCallback((arrayName, index) => {
-    setData(prev => {
-      const newArray = [...prev[arrayName]];
-      // Insert a duplicate right after the original item
-      newArray.splice(index + 1, 0, newArray[index]);
-      return { ...prev, [arrayName]: newArray };
+  const duplicateItem = (section, index) => {
+    setData((prev) => {
+      if (!Array.isArray(prev[section]) || 
+          isNaN(index) || 
+          index < 0 || 
+          index >= prev[section].length) {
+        console.warn('Invalid duplicate operation:', { section, index });
+        return prev;
+      }
+      
+      const newArr = [...prev[section]];
+      const newItem = { ...newArr[index], id: Date.now() };
+      newArr.splice(index + 1, 0, newItem);
+      return { ...prev, [section]: newArr };
     });
-  }, []);
+  };
 
-  const addNewArrayItem = useCallback((arrayName, defaultValue) => {
-      setData(prev => ({ ...prev, [arrayName]: [...prev[arrayName], defaultValue] }));
-  }, []);
-
-
-  // For nested object arrays (Education, Experience, Certifications)
-  const updateNestedArrayItem = useCallback((arrayName, index, field, value) => {
-    setData(prev => {
-      const newArray = [...prev[arrayName]];
-      newArray[index] = { ...newArray[index], [field]: value };
-      return { ...prev, [arrayName]: newArray };
+  const deleteItem = (section, index) => {
+    setData((prev) => {
+      if (!Array.isArray(prev[section]) || 
+          prev[section].length <= 1 ||
+          isNaN(index) || 
+          index < 0 || 
+          index >= prev[section].length) {
+        console.warn('Invalid delete operation:', { section, index });
+        return prev;
+      }
+      
+      const newArr = prev[section].filter((_, i) => i !== index);
+      return { ...prev, [section]: newArr };
     });
-  }, []);
+  };
 
-  const duplicateEducationEntry = useCallback((index) => {
-    setData(prev => {
-      const newEducation = [...prev.education];
-      const duplicatedItem = { ...newEducation[index] };
-      newEducation.splice(index + 1, 0, duplicatedItem);
-      return { ...prev, education: newEducation };
-    });
-  }, []);
-  
-  const duplicateCertificationEntry = useCallback((index) => {
-    setData(prev => {
-      const newCerts = [...prev.certifications];
-      const duplicatedItem = { ...newCerts[index] };
-      newCerts.splice(index + 1, 0, duplicatedItem);
-      return { ...prev, certifications: newCerts };
-    });
-  }, []);
+  // Image upload
+  const handleImageUpload = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file (JPEG, PNG, etc.)');
+      return;
+    }
+    
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image size should be less than 5MB');
+      return;
+    }
 
-  const duplicateExperienceEntry = useCallback((index) => {
-    setData(prev => {
-      const newExperience = [...prev.experience];
-      // Deep copy details array to avoid shared reference
-      const duplicatedItem = { 
-        ...newExperience[index], 
-        details: [...newExperience[index].details] 
-      };
-      newExperience.splice(index + 1, 0, duplicatedItem);
-      return { ...prev, experience: newExperience };
-    });
-  }, []);
-  
-  // For Experience details array
-  const updateExperienceDetail = useCallback((expIndex, detailIndex, value) => {
-    setData(prev => {
-      const newExperience = [...prev.experience];
-      const newDetails = [...newExperience[expIndex].details];
-      newDetails[detailIndex] = value;
-      newExperience[expIndex] = { ...newExperience[expIndex], details: newDetails };
-      return { ...prev, experience: newExperience };
-    });
-  }, []);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      handleEdit('photoUrl', reader.result);
+    };
+    reader.onerror = () => {
+      alert('Error reading file. Please try again.');
+    };
+    reader.readAsDataURL(file);
+  };
 
-  const addNewExperienceDetail = useCallback((expIndex) => {
-    setData(prev => {
-      const newExperience = [...prev.experience];
-      newExperience[expIndex].details.push('New responsibility or achievement.');
-      return { ...prev, experience: newExperience };
-    });
-  }, []);
+  const triggerFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
 
-  const removeExperienceDetail = useCallback((expIndex, detailIndex) => {
-    setData(prev => {
-      const newExperience = [...prev.experience];
-      newExperience[expIndex].details = newExperience[expIndex].details.filter((_, i) => i !== detailIndex);
-      return { ...prev, experience: newExperience };
-    });
-  }, []);
-  
-  const duplicateExperienceDetail = useCallback((expIndex, detailIndex) => {
-    setData(prev => {
-      const newExperience = [...prev.experience];
-      const newDetails = [...newExperience[expIndex].details];
-      const duplicatedItem = newDetails[detailIndex];
-      newDetails.splice(detailIndex + 1, 0, duplicatedItem);
-      newExperience[expIndex] = { ...newExperience[expIndex], details: newDetails };
-      return { ...prev, experience: newExperience };
-    });
-  }, []);
-
-
-  const SectionHeader = ({ title }) => (
-    <div className="bg-cyan-600 px-4 py-2 mt-6 mb-2 print:bg-cyan-600">
-      <h2 className="text-xl font-semibold text-white print:text-white">
-        <EditableInput value={title} onChange={(val) => { /* Update via custom logic if necessary */ }} className="text-white border-none p-0 focus:border-none print:text-white" />
+  // UPDATED Section header component with AI integration
+  const SectionHeader = ({ title, icon: Icon, className = "", onGenerate }) => (
+    <div className={`flex items-center gap-3 mb-2 ${className} relative group`} data-section={title.toLowerCase().replace(/\s/g, '-')}>
+      {Icon && <Icon className="w-4 h-4 text-blue-600" />}
+      <h2 className="text-base font-bold text-gray-800 uppercase tracking-wide border-b border-blue-600 pb-1 flex-1">
+        {title}
       </h2>
+      {onGenerate && (
+        <div className="opacity-0 group-hover:opacity-100 transition-opacity absolute right-0 -top-1">
+          <AISparkle section={title} onGenerate={onGenerate} />
+        </div>
+      )}
     </div>
   );
 
-  // Function to handle clicking the photo area to open the file dialog
-  const triggerFileInput = () => {
-    fileInputRef.current.click();
-  };
-
   return (
-    // A4 paper size container with proper scaling
-    <div className="min-h-screen flex items-center justify-center bg-gray-200 overflow-auto cursor-pointer print:bg-white print:overflow-visible print:scale-100">
-      <div
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 overflow-auto p-4">
+      <div 
+        ref={containerRef}
         data-editor-container
-        className="flex flex-col items-center scale-[0.55] origin-top transition-transform duration-500 pt-16 print:scale-100 print:pt-0 print:items-start"
+        className="flex flex-col items-center transition-transform duration-300 ease-in-out"
+        style={{ 
+          transform: `scale(${scale})`,
+          transformOrigin: 'center top'
+        }}
       >
-        <div data-cv-page className="w-[210mm] h-[297mm] bg-white shadow-2xl rounded-lg border border-gray-300 overflow-hidden print:shadow-none print:border-0 print:rounded-none">
-          <div className="w-full h-full md:flex">
+        {/* Main Resume Container - A4 Size - NO SCROLL */}
+        <div 
+          ref={cvRef}
+          data-cv-page
+          className="bg-white shadow-2xl rounded-lg border border-gray-200"
+          style={{
+            width: '210mm',
+            height: '297mm',
+            maxWidth: '100%',
+            maxHeight: '100%',
+            overflow: 'hidden'
+          }}
+        >
+          <div className="h-full flex">
             
-            {/* --- Left Column (Sidebar) --- */}
-            <div className="md:w-1/3 bg-[#0E7490] text-white p-6 relative flex flex-col items-center md:items-stretch print:bg-[#0E7490]">
+            {/* Left Sidebar - Professional Info */}
+            <div className="w-2/5 bg-gradient-to-b from-blue-400 to-indigo-600 text-white p-10 flex flex-col">
               
-              {/* Photo Section */}
-              <div 
-                className="w-40 h-40 rounded-full overflow-hidden mb-6 relative z-10 border-4 border-white shadow-lg cursor-pointer group print:border-4 print:border-white"
-                onClick={triggerFileInput} // Trigger file selection on click
-              >
-                <img 
-                  src={data.photoUrl} 
-                  alt="Profile" 
-                  className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-70 print:opacity-100" 
-                  onError={(e) => e.target.src = 'https://placehold.co/160x160/285F75/ffffff?text=Photo+Error'}
-                />
-                {/* Hidden file input */}
-                <input
-                  type="file"
-                  accept="image/*"
-                  ref={fileInputRef}
-                  onChange={handleImageUpload}
-                  className="hidden"
-                />
-
-                {/* Overlay text for file selection - Hidden during print */}
-                <div className="absolute inset-0 flex items-center justify-center text-xs text-center p-2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/50 print:hidden">
-                    Click to Upload Photo
+              {/* Profile Section - Compact */}
+              <div className="text-center mb-4">
+                <div 
+                  className="w-28 h-28 rounded-full overflow-hidden border-4 border-white shadow-lg mx-auto mb-2 cursor-pointer relative group"
+                  onClick={triggerFileInput}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => e.key === 'Enter' && triggerFileInput()}
+                  aria-label="Upload profile photo"
+                >
+                  <img 
+                    src={data.photoUrl} 
+                    alt="Profile" 
+                    className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                    onError={(e) => {
+                      e.target.src = 'https://placehold.co/200x200/6366F1/ffffff?text=PROFILE+IMAGE';
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Upload className="w-5 h-5 text-white" />
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref={fileInputRef}
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
                 </div>
-
-                {/* Editable URL field (still available but hidden unless explicitly edited) */}
-                <EditableInput 
-                  value={data.photoUrl} 
-                  onChange={(val) => updateField('photoUrl', val)} 
-                  // Hide this input as the click handler replaces it, but keep it in case the user wants to paste a URL directly
-                  className="hidden"
-                  placeholder="Paste Image URL"
+                
+                <EditableText 
+                  tagName="h1"
+                  value={data.name} 
+                  onUpdate={(val) => handleEdit('name', val)} 
+                  className="text-lg font-bold mb-1 text-center uppercase tracking-wide"
+                  placeholder="Full Name"
+                />
+                <EditableText 
+                  tagName="h2"
+                  value={data.title} 
+                  onUpdate={(val) => handleEdit('title', val)} 
+                  className="text-xs text-blue-200 font-medium text-center"
+                  placeholder="Professional Title"
                 />
               </div>
 
-              {/* Contact Section */}
-              <div className="mb-8 w-full">
-                <h2 className="text-2xl font-bold mb-3 pb-1 print:text-white">Contact</h2>
-                <div className="space-y-3 text-sm">
-                  <div className="flex items-center space-x-2">
-                    <svg className="w-5 h-5 print:text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.744 4.466a1 1 0 01-.54 1.06l-1.548.774a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.06-.54l4.466.744a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/></svg>
-                    <EditableInput value={data.contact.phone} onChange={(val) => updateContact('phone', val)} placeholder="Phone Number" />
+              {/* Contact Information - Compact */}
+              <div className="mb-4">
+                <SectionHeader title="Contact" icon={Mail} className="!text-white !border-blue-300" />
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 group">
+                    <Phone className="w-3 h-3 text-blue-300 flex-shrink-0" />
+                    <EditableText
+                      value={data.contact.phone}
+                      onUpdate={(val) => handleEdit('contact.phone', val)}
+                      className="text-xs flex-1"
+                      placeholder="Phone Number"
+                    />
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <svg className="w-5 h-5 print:text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
-                    <EditableInput value={data.contact.email} onChange={(val) => updateContact('email', val)} placeholder="Email Address" />
+                  <div className="flex items-center gap-2 group">
+                    <Mail className="w-3 h-3 text-blue-300 flex-shrink-0" />
+                    <EditableText
+                      value={data.contact.email}
+                      onUpdate={(val) => handleEdit('contact.email', val)}
+                      className="text-xs flex-1"
+                      placeholder="Email Address"
+                    />
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <svg className="w-5 h-5 print:text-white" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"/></svg>
-                    <EditableTextarea value={data.contact.address} onChange={(val) => updateContact('address', val)} className="p-0 border-none" rows="1" placeholder="Address" />
+                  <div className="flex items-center gap-2 group">
+                    <MapPin className="w-3 h-3 text-blue-300 flex-shrink-0" />
+                    <EditableText
+                      value={data.contact.location}
+                      onUpdate={(val) => handleEdit('contact.location', val)}
+                      className="text-xs flex-1"
+                      placeholder="Location"
+                    />
                   </div>
                 </div>
               </div>
 
-              {/* Skills Section */}
-              <div className="w-full">
-                <h2 className="text-2xl font-bold mb-3 pb-1 print:text-white">Skills</h2>
-                <ul className="space-y-2 text-sm">
-                  {data.skills.map((skill, index) => (
-                    <li key={index} className="flex items-center group">
-                      <span className="mr-2 text-cyan-400 print:text-cyan-400">•</span>
-                      <EditableInput 
-                        value={skill} 
-                        onChange={(val) => updateArrayItem('skills', index, val)} 
-                        className="p-0" 
-                        placeholder="Enter Skill"
-                      />
-                      {/* Edit controls - hidden during print */}
-                      <div className="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity print:hidden">
+              {/* Core Competencies - Compact with AI */}
+              <div className="mb-4" data-section="core-competencies">
+                <SectionHeader 
+                  title="Core Competencies" 
+                  icon={null} 
+                  className="!text-white !border-blue-300" 
+                  onGenerate={handleAIGenerate}
+                />
+                <div className="space-y-1">
+                  {data.coreCompetencies.map((skill, index) => (
+                    <div key={index} className="group flex items-center justify-between">
+                      <div className="flex items-center gap-1">
+                        <div className="w-1.5 h-1.5 bg-blue-300 rounded-full"></div>
+                        <EditableText
+                          value={skill}
+                          onUpdate={(val) => handleEdit(`coreCompetencies.${index}`, val)}
+                          className="text-xs flex-1"
+                          placeholder="Skill"
+                        />
+                      </div>
+                      <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button 
-                          onClick={() => duplicateArrayItem('skills', index)} 
-                          className="text-cyan-300 hover:text-cyan-100 text-xs"
-                          title="Duplicate Skill"
+                          onClick={() => duplicateItem('coreCompetencies', index)} 
+                          className="text-blue-300 hover:text-white p-0.5 transition-colors"
+                          title="Duplicate skill"
+                          aria-label={`Duplicate ${skill}`}
                         >
-                          <CopyPlusIcon className="w-4 h-4" />
+                          <Copy className="w-2.5 h-2.5" />
                         </button>
                         <button 
-                          onClick={() => removeArrayItem('skills', index)} 
-                          className="text-red-300 hover:text-red-500 text-xs"
-                          title="Remove Skill"
+                          onClick={() => deleteItem('coreCompetencies', index)} 
+                          className="text-blue-300 hover:text-red-300 p-0.5 transition-colors"
+                          title="Remove skill"
+                          aria-label={`Remove ${skill}`}
                         >
-                          <TrashIcon className="w-4 h-4" />
+                          <Trash2 className="w-2.5 h-2.5" />
                         </button>
                       </div>
-                    </li>
-                  ))}
-                  {/* Add New Button for empty state - hidden during print */}
-                  {data.skills.length === 0 && (
-                    <div className="flex justify-center mt-4 print:hidden">
-                        <button 
-                            onClick={() => addNewArrayItem('skills', 'New Skill')} 
-                            className="text-cyan-300 hover:text-cyan-100 p-2 border border-cyan-300 rounded-full transition-colors"
-                            title="Add New Skill"
-                        >
-                            <CopyPlusIcon className="w-6 h-6" />
-                        </button>
                     </div>
-                  )}
-                </ul>
+                  ))}
+                </div>
+              </div>
+
+              {/* Professional Development - Compact */}
+              <div className="flex-1">
+                <SectionHeader title="Professional Development" icon={null} className="!text-white !border-blue-300" />
+                <div className="space-y-1">
+                  {data.professionalDevelopment.map((item, index) => (
+                    <div key={index} className="group flex items-center justify-between">
+                      <div className="flex items-center gap-1">
+                        <div className="w-1 h-1 bg-blue-300 rounded-full flex-shrink-0"></div>
+                        <EditableText
+                          value={item}
+                          onUpdate={(val) => handleEdit(`professionalDevelopment.${index}`, val)}
+                          className="text-xs flex-1"
+                          placeholder="Development Activity"
+                        />
+                      </div>
+                      <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                        <button 
+                          onClick={() => duplicateItem('professionalDevelopment', index)} 
+                          className="text-blue-300 hover:text-white p-0.5 transition-colors"
+                          title="Duplicate item"
+                          aria-label={`Duplicate ${item}`}
+                        >
+                          <Copy className="w-2.5 h-2.5" />
+                        </button>
+                        <button 
+                          onClick={() => deleteItem('professionalDevelopment', index)} 
+                          className="text-blue-300 hover:text-red-300 p-0.5 transition-colors"
+                          title="Remove item"
+                          aria-label={`Remove ${item}`}
+                        >
+                          <Trash2 className="w-2.5 h-2.5" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
-            {/* --- Right Column (Content) --- */}
-            <div className="md:w-2/3 bg-[#0C4A6E] text-white p-6 print:bg-[#0C4A6E]">
+            {/* Right Content - Compact layout to fit in A4 */}
+            <div className="flex-1 p-4 bg-white overflow-hidden">
               
-              {/* Header */}
-              <EditableHeader 
-                value={data.name} 
-                onChange={(val) => updateField('name', val)} 
-                tag="h1" 
-                className="text-5xl uppercase mb-2 print:text-white" 
-              />
-              <div className="bg-cyan-600 px-4 py-2 mb-6 inline-block print:bg-cyan-600">
-                <h2 className="text-xl font-medium uppercase tracking-widest">
-                  <EditableInput 
-                    value={data.title} 
-                    onChange={(val) => updateField('title', val)} 
-                    className="text-white border-none p-0 focus:border-none print:text-white" 
-                  />
-                </h2>
+              {/* Professional Summary - Compact with AI */}
+              <div className="mb-4" data-section="professional-summary">
+                <SectionHeader title="Professional Summary" icon={null} onGenerate={handleAIGenerate} />
+                <EditableText 
+                  tagName="div"
+                  value={data.summary} 
+                  onUpdate={(val) => handleEdit('summary', val)} 
+                  className="text-gray-700 leading-relaxed text-justify text-xs min-h-[60px]"
+                  placeholder="Brief professional summary highlighting your experience and key strengths..."
+                />
               </div>
 
-              {/* Description */}
-              <SectionHeader title="Description" />
-              <EditableTextarea 
-                value={data.description} 
-                onChange={(val) => updateField('description', val)} 
-                className="text-base text-gray-200 border-none p-0 print:text-gray-200"
-                placeholder="Professional Summary"
-              />
-
-              {/* Education */}
-              <SectionHeader title="Education" />
-              {data.education.map((edu, index) => (
-                <div key={index} className="mb-4 group">
-                  <div className="flex justify-between items-start">
-                      <EditableInput
-                        value={edu.degree}
-                        onChange={(val) => updateNestedArrayItem('education', index, 'degree', val)}
-                        className="text-lg font-semibold border-none w-full"
-                        placeholder="Degree/Major"
-                      />
-                      {/* Edit controls - hidden during print */}
-                      <div className="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity print:hidden">
-                          <button 
-                            onClick={() => duplicateEducationEntry(index)} 
-                            className="text-cyan-300 hover:text-cyan-100 text-xs"
-                            title="Duplicate Entry"
-                          >
-                              <CopyPlusIcon className="w-4 h-4" />
-                          </button>
-                          <button 
-                            onClick={() => removeArrayItem('education', index)} 
-                            className="text-red-300 hover:text-red-500 text-xs"
-                            title="Remove Entry"
-                          >
-                            <TrashIcon className="w-4 h-4" />
-                          </button>
-                      </div>
-                  </div>
-                  <div className="flex justify-between items-start text-sm mt-1">
-                    <EditableInput
-                      value={edu.institution}
-                      onChange={(val) => updateNestedArrayItem('education', index, 'institution', val)}
-                      className="font-light w-2/3 p-0 border-none"
-                      placeholder="Institution Name"
-                    />
-                    <EditableInput
-                      value={edu.year}
-                      onChange={(val) => updateNestedArrayItem('education', index, 'year', val)}
-                      className="text-right w-1/3 p-0 border-none"
-                      placeholder="Year"
-                    />
-                  </div>
-                </div>
-              ))}
-              {/* Add New Button for empty state - hidden during print */}
-              {data.education.length === 0 && (
-                <div className="flex justify-center mt-4 print:hidden">
-                    <button 
-                        onClick={() => addNewArrayItem('education', { degree: 'New Degree', institution: 'University', year: 'Year' })} 
-                        className="text-cyan-300 hover:text-cyan-100 p-2 border border-cyan-300 rounded-full transition-colors"
-                        title="Add New Education Entry"
-                    >
-                        <CopyPlusIcon className="w-6 h-6" />
-                    </button>
-                </div>
-              )}
-
-
-              {/* Experience */}
-              <SectionHeader title="Experience" />
-              {data.experience.map((exp, expIndex) => (
-                <div key={expIndex} className="mb-6 border-b border-white/20 pb-4 last:border-b-0 group print:border-white/20">
-                  
-                  <div className="flex justify-between items-start">
-                    <EditableInput
-                      value={exp.title}
-                      onChange={(val) => updateNestedArrayItem('experience', expIndex, 'title', val)}
-                      className="text-lg font-semibold w-full"
-                      placeholder="Job Title"
-                    />
-                    {/* Edit controls - hidden during print */}
-                    <div className="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity print:hidden">
-                      <button 
-                        onClick={() => duplicateExperienceEntry(expIndex)} 
-                        className="text-cyan-300 hover:text-cyan-100 text-xs"
-                        title="Duplicate Job"
-                      >
-                        <CopyPlusIcon className="w-4 h-4" />
-                      </button>
-                      <button 
-                        onClick={() => removeArrayItem('experience', expIndex)} 
-                        className="text-red-300 hover:text-red-500 text-xs"
-                        title="Remove Job"
-                      >
-                        <TrashIcon className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between items-start text-sm mt-1">
-                    <EditableInput
-                      value={exp.company}
-                      onChange={(val) => updateNestedArrayItem('experience', expIndex, 'company', val)}
-                      className="font-light w-2/3 p-0 border-none"
-                      placeholder="Company Name"
-                    />
-                    <EditableInput
-                      value={exp.duration}
-                      onChange={(val) => updateNestedArrayItem('experience', expIndex, 'duration', val)}
-                      className="text-right w-1/3 p-0 border-none"
-                      placeholder="Duration (e.g., 2015-Present)"
-                    />
-                  </div>
-
-                  {/* Experience Details (Bullet Points) */}
-                  <ul className="list-disc pl-5 mt-2 space-y-1 text-sm text-gray-200 print:text-gray-200">
-                    {exp.details.map((detail, detailIndex) => (
-                      <li key={detailIndex} className="flex items-start group/detail">
-                        <span className="mr-2 mt-1 text-xs">•</span>
-                        <EditableTextarea
-                          value={detail}
-                          onChange={(val) => updateExperienceDetail(expIndex, detailIndex, val)}
-                          className="p-0 border-none w-full"
-                          rows="1"
-                          placeholder="Detail point"
+              {/* Education - Compact with AI */}
+              <div className="mb-4" data-section="education">
+                <SectionHeader title="Education"/>
+                <div className="space-y-3">
+                  {data.education.map((edu, index) => (
+                    <div key={edu.id} className="group relative">
+                      <div className="flex justify-between items-start mb-1">
+                        <div className="flex-1">
+                          <EditableText
+                            tagName="h3"
+                            value={edu.degree}
+                            onUpdate={(val) => handleEdit(`education.${index}.degree`, val)}
+                            className="font-bold text-gray-900 text-sm mb-0.5"
+                            placeholder="Degree"
+                          />
+                          <EditableText
+                            value={edu.major}
+                            onUpdate={(val) => handleEdit(`education.${index}.major`, val)}
+                            className="text-blue-600 font-medium text-xs mb-0.5"
+                            placeholder="Major/Concentration"
+                          />
+                          <EditableText
+                            value={edu.institution}
+                            onUpdate={(val) => handleEdit(`education.${index}.institution`, val)}
+                            className="text-gray-700 text-xs mb-0.5"
+                            placeholder="Institution"
+                          />
+                        </div>
+                        <EditableText
+                          value={edu.year}
+                          onUpdate={(val) => handleEdit(`education.${index}.year`, val)}
+                          className="text-xs text-gray-500 bg-blue-50 px-1.5 py-0.5 rounded font-medium flex-shrink-0"
+                          placeholder="Year"
                         />
-                        {/* Edit controls - hidden during print */}
-                        <div className="flex space-x-2 opacity-0 group-hover/detail:opacity-100 transition-opacity mt-1 print:hidden">
+                      </div>
+                      <div className="space-y-0.5">
+                        {edu.highlights.map((highlight, hIndex) => (
+                          <div key={hIndex} className="flex items-center gap-1 group/highlight">
+                            <div className="w-1 h-1 bg-blue-400 rounded-full flex-shrink-0"></div>
+                            <EditableText
+                              value={highlight}
+                              onUpdate={(val) => handleEdit(`education.${index}.highlights.${hIndex}`, val)}
+                              className="text-xs text-gray-600 flex-1"
+                              placeholder="Achievement or highlight"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity mt-1">
+                        <button 
+                          onClick={() => duplicateItem('education', index)} 
+                          className="text-gray-400 hover:text-blue-600 p-0.5 transition-colors"
+                          title="Duplicate education entry"
+                          aria-label={`Duplicate ${edu.degree}`}
+                        >
+                          <Copy className="w-3 h-3" />
+                        </button>
+                        <button 
+                          onClick={() => deleteItem('education', index)} 
+                          className="text-gray-400 hover:text-red-600 p-0.5 transition-colors"
+                          title="Remove education entry"
+                          aria-label={`Remove ${edu.degree}`}
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Professional Experience - Compact with AI */}
+              <div className="mb-4" data-section="professional-experience">
+                <SectionHeader title="Professional Experience"/>
+                <div className="space-y-3">
+                  {data.experience.map((exp, index) => (
+                    <div key={exp.id} className="group relative">
+                      <div className="flex justify-between items-start mb-1">
+                        <div className="flex-1">
+                          <EditableText
+                            tagName="h3"
+                            value={exp.position}
+                            onUpdate={(val) => handleEdit(`experience.${index}.position`, val)}
+                            className="font-bold text-gray-900 text-sm mb-0.5"
+                            placeholder="Position Title"
+                          />
+                          <EditableText
+                            value={exp.institution}
+                            onUpdate={(val) => handleEdit(`experience.${index}.institution`, val)}
+                            className="text-blue-600 font-medium text-xs mb-0.5"
+                            placeholder="Institution/Company"
+                          />
+                        </div>
+                        <EditableText
+                          value={exp.period}
+                          onUpdate={(val) => handleEdit(`experience.${index}.period`, val)}
+                          className="text-xs text-gray-500 bg-blue-50 px-1.5 py-0.5 rounded font-medium flex-shrink-0"
+                          placeholder="Time Period"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        {exp.achievements.map((achievement, aIndex) => (
+                          <div key={aIndex} className="flex items-start gap-2 group/achievement">
+                            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-0.5 flex-shrink-0"></div>
+                            <EditableText
+                              tagName="div"
+                              value={achievement}
+                              onUpdate={(val) => handleEdit(`experience.${index}.achievements.${aIndex}`, val)}
+                              className="text-gray-700 text-xs flex-1 leading-relaxed"
+                              placeholder="Key achievement or responsibility"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity mt-1">
+                        <button 
+                          onClick={() => duplicateItem('experience', index)} 
+                          className="text-gray-400 hover:text-blue-600 p-0.5 transition-colors"
+                          title="Duplicate experience entry"
+                          aria-label={`Duplicate ${exp.position}`}
+                        >
+                          <Copy className="w-3 h-3" />
+                        </button>
+                        <button 
+                          onClick={() => deleteItem('experience', index)} 
+                          className="text-gray-400 hover:text-red-600 p-0.5 transition-colors"
+                          title="Remove experience entry"
+                          aria-label={`Remove ${exp.position}`}
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Certifications - Compact */}
+              <div>
+                <SectionHeader title="Certifications & Licenses" icon={null} />
+                <div className="grid grid-cols-1 gap-1">
+                  {data.certifications.map((cert, index) => (
+                    <div key={cert.id} className="group flex items-center justify-between">
+                      <div className="flex-1">
+                        <EditableText
+                          value={cert.name}
+                          onUpdate={(val) => handleEdit(`certifications.${index}.name`, val)}
+                          className="font-medium text-gray-900 text-xs"
+                          placeholder="Certification Name"
+                        />
+                        <EditableText
+                          value={cert.credential}
+                          onUpdate={(val) => handleEdit(`certifications.${index}.credential`, val)}
+                          className="text-xs text-gray-600"
+                          placeholder="Credential Details"
+                        />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <EditableText
+                          value={cert.year}
+                          onUpdate={(val) => handleEdit(`certifications.${index}.year`, val)}
+                          className="text-xs text-gray-500 bg-blue-50 px-1.5 py-0.5 rounded flex-shrink-0"
+                          placeholder="Year"
+                        />
+                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button 
-                            onClick={() => duplicateExperienceDetail(expIndex, detailIndex)} 
-                            className="text-cyan-300 hover:text-cyan-100 text-xs"
-                            title="Duplicate Detail"
+                            onClick={() => duplicateItem('certifications', index)} 
+                            className="text-gray-400 hover:text-blue-600 p-0.5 transition-colors"
+                            title="Duplicate certification"
+                            aria-label={`Duplicate ${cert.name}`}
                           >
-                            <CopyPlusIcon className="w-3 h-3" />
+                            <Copy className="w-3 h-3" />
                           </button>
                           <button 
-                            onClick={() => removeExperienceDetail(expIndex, detailIndex)} 
-                            className="text-red-300 hover:text-red-500 text-xs"
-                            title="Remove Detail"
+                            onClick={() => deleteItem('certifications', index)} 
+                            className="text-gray-400 hover:text-red-600 p-0.5 transition-colors"
+                            title="Remove certification"
+                            aria-label={`Remove ${cert.name}`}
                           >
-                            <TrashIcon className="w-3 h-3" />
+                            <Trash2 className="w-3 h-3" />
                           </button>
                         </div>
-                      </li>
-                    ))}
-                  </ul>
-                  {/* Add New Detail Button for empty state - hidden during print */}
-                  {exp.details.length === 0 && (
-                    <button 
-                        onClick={() => addNewExperienceDetail(expIndex)} 
-                        className="mt-2 text-xs text-cyan-300 hover:text-cyan-100 border border-cyan-300/50 px-1 py-0.5 rounded transition-colors print:hidden"
-                    >
-                        + Add Initial Detail
-                    </button>
-                  )}
-                </div>
-              ))}
-              {/* Add New Button for empty state - hidden during print */}
-              {data.experience.length === 0 && (
-                <div className="flex justify-center mt-4 print:hidden">
-                    <button 
-                        onClick={() => addNewArrayItem('experience', { title: 'New Job Title', company: 'Company Name', duration: 'Start-End', details: ['Key achievement or responsibility.'] })} 
-                        className="text-cyan-300 hover:text-cyan-100 p-2 border border-cyan-300 rounded-full transition-colors"
-                        title="Add New Experience Entry"
-                    >
-                        <CopyPlusIcon className="w-6 h-6" />
-                    </button>
-                </div>
-              )}
-
-
-              {/* Certifications */}
-              <SectionHeader title="Certifications" />
-              <ul className="space-y-2 text-sm pl-4">
-                {data.certifications.map((cert, index) => (
-                  <li key={index} className="mb-4 group">
-                    <div className="flex justify-between items-start">
-                      <EditableInput
-                          value={cert.name}
-                          onChange={(val) => updateNestedArrayItem('certifications', index, 'name', val)}
-                          className="text-lg font-semibold border-none w-full"
-                          placeholder="Certification Name"
-                      />
-                      {/* Edit controls - hidden during print */}
-                      <div className="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity print:hidden">
-                          <button 
-                            onClick={() => duplicateCertificationEntry(index)} 
-                            className="text-cyan-300 hover:text-cyan-100 text-xs"
-                            title="Duplicate Entry"
-                          >
-                              <CopyPlusIcon className="w-4 h-4" />
-                          </button>
-                          <button 
-                            onClick={() => removeArrayItem('certifications', index)} 
-                            className="text-red-300 hover:text-red-500 text-xs"
-                            title="Remove Entry"
-                          >
-                            <TrashIcon className="w-4 h-4" />
-                          </button>
                       </div>
                     </div>
-                    <div className="flex justify-between items-start text-sm mt-1">
-                      <span className="mr-2 text-cyan-400 print:text-cyan-400">•</span>
-                      <EditableInput
-                        value={cert.year}
-                        onChange={(val) => updateNestedArrayItem('certifications', index, 'year', val)}
-                        className="font-light w-full p-0 border-none"
-                        placeholder="Issuing Organization, Year"
-                      />
-                    </div>
-                  </li>
-                ))}
-                {/* Add New Button for empty state - hidden during print */}
-                {data.certifications.length === 0 && (
-                  <div className="flex justify-center mt-4 print:hidden">
-                      <button 
-                        onClick={() => addNewArrayItem('certifications', { name: 'New Certification Name', year: 'Year' })} 
-                        className="text-cyan-300 hover:text-cyan-100 p-2 border border-cyan-300 rounded-full transition-colors"
-                        title="Add New Certification"
-                      >
-                        <CopyPlusIcon className="w-6 h-6" />
-                      </button>
-                  </div>
-                )}
-              </ul>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
+        
+        {/* Instructions */}
+        <div className="mt-3 text-center text-xs text-gray-600 bg-white/80 backdrop-blur-sm rounded-full px-3 py-1">
+          💡 <strong>Perfect Fit:</strong> All content fits within A4 page • No scrolling needed
+        </div>
       </div>
-
-      {/* Print Styles */}
-      <style jsx global>{`
-        @media print {
-          body {
-            margin: 0;
-            padding: 0;
-            background: white !important;
-          }
-          .print\\:hidden {
-            display: none !important;
-          }
-          .print\\:scale-100 {
-            transform: scale(1) !important;
-          }
-          .print\\:pt-0 {
-            padding-top: 0 !important;
-          }
-          .print\\:items-start {
-            align-items: flex-start !important;
-          }
-          .print\\:shadow-none {
-            box-shadow: none !important;
-          }
-          .print\\:border-0 {
-            border: 0 !important;
-          }
-          .print\\:rounded-none {
-            border-radius: 0 !important;
-          }
-          .print\\:bg-white {
-            background: white !important;
-          }
-          .print\\:overflow-visible {
-            overflow: visible !important;
-          }
-        }
-      `}</style>
     </div>
   );
 };

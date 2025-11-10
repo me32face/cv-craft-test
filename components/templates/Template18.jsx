@@ -4,6 +4,8 @@ import {
     Copy, Trash2, CopyPlus, Trash, Globe, Phone, Mail, MapPin,
     User, Briefcase, GraduationCap 
 } from "lucide-react"; 
+import AISparkle from '../AISparkle'; // ADD THIS IMPORT
+import { geminiService } from '../../lib/gemini'; // ADD THIS IMPORT
 
 // --- INITIAL DATA (Retaining Template 3 content structure) ---
 const initialData = {
@@ -71,6 +73,69 @@ export default function Template18() {
     const editorContainerRef = useRef(null);
     const cvRef = useRef(null);
     const profileTextareaRef = useRef(null); 
+
+    // ADD AI GENERATION FUNCTION FOR PROFILE AND SKILLS
+    const handleAIGenerate = async (section, keywords) => {
+        if (!geminiService.genAI) {
+            const apiKey = prompt('Please enter your Gemini API key:');
+            if (!apiKey) return;
+            geminiService.initialize(apiKey);
+        }
+
+        try {
+            const generatedContent = await geminiService.generateContent(section, keywords);
+
+            switch (section.toLowerCase()) {
+                case 'profile':
+                    const profileElement = document.querySelector('[data-section="profile"] [contenteditable]');
+                    if (profileElement) {
+                        let cleanedContent = generatedContent
+                            .replace(/^#{1,6}\s+.+$/gm, '')
+                            .replace(/\*\*(.+?)\*\*/g, '$1')
+                            .replace(/\*(.+?)\*/g, '$1')
+                            .trim();
+
+                        const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
+                        const actualProfile = paragraphs.find(p =>
+                            !p.toLowerCase().includes('here are') &&
+                            !p.toLowerCase().includes('of course') &&
+                            !p.toLowerCase().includes('choose the option') &&
+                            !p.toLowerCase().includes('pro-tip') &&
+                            p.length > 100
+                        );
+
+                        const finalContent = actualProfile?.trim() || paragraphs[0]?.trim() || cleanedContent;
+                        profileElement.textContent = finalContent;
+                        
+                        // Update state
+                        setResume(prev => ({
+                            ...prev,
+                            profile: finalContent
+                        }));
+                    }
+                    break;
+
+                case 'skills':
+                    const skillsContainer = document.querySelector('[data-section="skills"] ul');
+                    if (skillsContainer) {
+                        const skills = generatedContent.split('\n').filter(skill => skill.trim());
+                        const newSkills = skills.slice(0, 10); // Limit to 10 skills
+                        
+                        // Update state
+                        setResume(prev => ({
+                            ...prev,
+                            skills: newSkills.map(skill => skill.trim())
+                        }));
+                    }
+                    break;
+
+                default:
+                    console.log('Generated content:', generatedContent);
+            }
+        } catch (error) {
+            alert('Failed to generate content. Please check your API key and try again.');
+        }
+    };
 
     // ---- handlers ----
     const handleEdit = (path, value) => {
@@ -227,11 +292,16 @@ export default function Template18() {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mt-6 lg:mt-8">
                             {/* LEFT COLUMN */}
                             <div className="space-y-6 lg:space-y-8">
-                                {/* PROFILE */}
-                                <section className="relative group">
-                                    <h2 className="text-yellow-600 font-semibold tracking-widest mb-2 sm:mb-3 text-base sm:text-lg" contentEditable suppressContentEditableWarning>
-                                        PROFILE
-                                    </h2>
+                                {/* PROFILE with AI */}
+                                <section className="relative group" data-section="profile">
+                                    <div className="flex items-center justify-between mb-2 sm:mb-3">
+                                        <h2 className="text-yellow-600 font-semibold tracking-widest text-base sm:text-lg" contentEditable suppressContentEditableWarning>
+                                            PROFILE
+                                        </h2>
+                                        <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <AISparkle section="Profile" onGenerate={handleAIGenerate} />
+                                        </div>
+                                    </div>
                                     <div className="min-h-[80px] sm:min-h-[100px]">
                                         <EditableText
                                             ref={profileTextareaRef}
@@ -344,11 +414,16 @@ export default function Template18() {
 
                             {/* RIGHT COLUMN */}
                             <div className="space-y-6 lg:space-y-8">
-                                {/* SKILLS */}
-                                <section>
-                                    <h2 className="text-yellow-600 font-semibold tracking-widest mb-2 sm:mb-3 text-base sm:text-lg" contentEditable suppressContentEditableWarning>
-                                        SKILLS
-                                    </h2>
+                                {/* SKILLS with AI */}
+                                <section className="relative group" data-section="skills">
+                                    <div className="flex items-center justify-between mb-2 sm:mb-3">
+                                        <h2 className="text-yellow-600 font-semibold tracking-widest text-base sm:text-lg" contentEditable suppressContentEditableWarning>
+                                            SKILLS
+                                        </h2>
+                                        <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <AISparkle section="Skills" onGenerate={handleAIGenerate} />
+                                        </div>
+                                    </div>
                                     <ul className="space-y-1 sm:space-y-2">
                                         {resume.skills.map((skill, i) => (
                                             <li
