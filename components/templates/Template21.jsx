@@ -396,18 +396,20 @@ const App = () => {
     }
   };
 
-  // UPDATED Section header component with AI integration
+  // Section header component with AI integration
   const SectionHeader = ({ title, icon: Icon, className = "", onGenerate }) => (
-    <div className={`flex items-center gap-3 mb-2 ${className} relative group`} data-section={title.toLowerCase().replace(/\s/g, '-')}>
-      {Icon && <Icon className="w-4 h-4 text-blue-600" />}
-      <h2 className="text-base font-bold text-gray-800 uppercase tracking-wide border-b border-blue-600 pb-1 flex-1">
-        {title}
-      </h2>
+    <div className={`flex flex-col items-start mb-2 ${className} group relative`} data-section={title.toLowerCase().replace(/\s/g, '-')}>
       {onGenerate && (
-        <div className="opacity-0 group-hover:opacity-100 transition-opacity absolute right-0 -top-1">
+        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 mb-1">
           <AISparkle section={title} onGenerate={onGenerate} />
         </div>
       )}
+      <div className="flex items-center gap-2">
+        {Icon && <Icon className="w-4 h-4 text-blue-600 flex-shrink-0" />}
+        <h2 className="text-base font-bold text-gray-800 uppercase tracking-wide border-b border-blue-600 pb-1">
+          {title}
+        </h2>
+      </div>
     </div>
   );
 
@@ -605,14 +607,14 @@ const App = () => {
             {/* Right Content - Compact layout to fit in A4 */}
             <div className="flex-1 p-4 bg-white overflow-hidden">
               
-              {/* Professional Summary - Compact with AI */}
+              {/* Professional Summary - Fixed with AI */}
               <div className="mb-4" data-section="professional-summary">
                 <SectionHeader title="Professional Summary" icon={null} onGenerate={handleAIGenerate} />
                 <EditableText 
                   tagName="div"
                   value={data.summary} 
                   onUpdate={(val) => handleEdit('summary', val)} 
-                  className="text-gray-700 leading-relaxed text-justify text-xs min-h-[60px]"
+                  className="text-gray-700 leading-relaxed text-justify text-xs min-h-[60px] mt-1"
                   placeholder="Brief professional summary highlighting your experience and key strengths..."
                 />
               </div>

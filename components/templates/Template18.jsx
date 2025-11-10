@@ -298,7 +298,7 @@ export default function Template18() {
                                         <h2 className="text-yellow-600 font-semibold tracking-widest text-base sm:text-lg" contentEditable suppressContentEditableWarning>
                                             PROFILE
                                         </h2>
-                                        <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <div className="absolute left-0 -top-5 opacity-0 group-hover:opacity-100 transition-opacity">
                                             <AISparkle section="Profile" onGenerate={handleAIGenerate} />
                                         </div>
                                     </div>
@@ -420,7 +420,7 @@ export default function Template18() {
                                         <h2 className="text-yellow-600 font-semibold tracking-widest text-base sm:text-lg" contentEditable suppressContentEditableWarning>
                                             SKILLS
                                         </h2>
-                                        <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <div className="absolute left-0 -top-5 opacity-0 group-hover:opacity-100 transition-opacity">
                                             <AISparkle section="Skills" onGenerate={handleAIGenerate} />
                                         </div>
                                     </div>

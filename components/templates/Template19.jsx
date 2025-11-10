@@ -1,8 +1,8 @@
 "use client";
-import React, { useState, useCallback, useMemo, useRef } from 'react';
-import { Mail, Phone, MapPin, CopyPlus, Trash2, PlusCircle, Upload } from 'lucide-react';
-import AISparkle from '../AISparkle'; // ADD THIS IMPORT
-import { geminiService } from '../../lib/gemini'; // ADD THIS IMPORT
+import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import { Mail, Phone, MapPin, CopyPlus, Trash2, Upload } from 'lucide-react';
+import AISparkle from '../AISparkle';
+import { geminiService } from '../../lib/gemini';
 
 // --- Data Structure ---
 const initialData = {
@@ -46,15 +46,29 @@ const initialData = {
   ],
 };
 
-// --- Reusable Editable Text Component ---
-const EditableText = ({ tag: Tag = 'div', children, className = '', onSave, ...props }) => {
+// --- Fixed Reusable Editable Text Component ---
+const EditableText = React.forwardRef(({ 
+  tag: Tag = 'div', 
+  children, 
+  className = '', 
+  onSave, 
+  placeholder = '',
+  ...props 
+}, ref) => {
   const [content, setContent] = useState(children);
 
+  // Ensure content is always a string for dangerouslySetInnerHTML
+  const safeContent = typeof content === 'string' ? content : String(content || '');
+  
   const handleBlur = (e) => {
-    const newContent = e.currentTarget.textContent;
-    if (newContent !== content) {
-      setContent(newContent);
-      onSave(newContent);
+    const sanitizedText = e.target.innerHTML
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/&nbsp;/gi, ' ')
+      .trim();
+    
+    if (sanitizedText !== safeContent) {
+      setContent(sanitizedText);
+      onSave(sanitizedText);
     }
   };
 
@@ -67,18 +81,19 @@ const EditableText = ({ tag: Tag = 'div', children, className = '', onSave, ...p
 
   return (
     <Tag
+      ref={ref}
       contentEditable={true}
       suppressContentEditableWarning={true}
       onInput={(e) => setContent(e.currentTarget.textContent)}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
-      className={`${className} focus:outline-none focus:bg-gray-100 focus:pb-0.5 cursor-text transition-all duration-100`}
+      dangerouslySetInnerHTML={{ __html: safeContent.replace(/\n/g, '<br/>') }}
+      className={`${className} focus:outline-none focus:ring-1 focus:ring-blue-300 rounded block resize-none focus:bg-gray-100 focus:pb-0.5 cursor-text transition-all duration-100`}
       {...props}
-    >
-      {children}
-    </Tag>
+    />
   );
-};
+});
+EditableText.displayName = 'EditableText';
 
 // --- Item Actions Component ---
 const ItemActions = ({ onDuplicate, onDelete }) => (
@@ -94,12 +109,16 @@ const ItemActions = ({ onDuplicate, onDelete }) => (
 
 // --- Section Header Component with AI ---
 const SectionHeader = ({ title, onGenerate }) => (
-  <div className="relative group">
-    <h2 className="text-xl font-bold uppercase tracking-widest text-gray-800 pt-4 pb-1 border-b-2 border-gray-800 mb-3">
+  <div className="relative group flex items-center gap-2">
+    <h2 
+      contentEditable 
+      suppressContentEditableWarning
+      className="text-xl font-bold uppercase tracking-widest text-gray-800 pt-4 pb-1 border-b-2 border-gray-800 mb-3 focus:outline-none focus:ring-1 focus:ring-blue-300 rounded px-1"
+    >
       {title}
     </h2>
     {onGenerate && (
-      <div className="absolute right-0 -top-1 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="opacity-0 group-hover:opacity-100 transition-opacity">
         <AISparkle section={title} onGenerate={onGenerate} />
       </div>
     )}
@@ -108,6 +127,8 @@ const SectionHeader = ({ title, onGenerate }) => (
 
 // --- Photo Uploader Component ---
 const PhotoUploader = ({ photoUrl, onPhotoChange }) => {
+  const fileInputRef = useRef(null);
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -119,9 +140,16 @@ const PhotoUploader = ({ photoUrl, onPhotoChange }) => {
     }
   };
 
+  const handleClick = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
     <div className="mb-3 pt-2 flex flex-col items-center">
-      <div className="w-28 h-28 mx-auto rounded-full overflow-hidden border-3 border-gray-300 shadow-md mb-3 relative group cursor-pointer">
+      <div 
+        className="w-28 h-28 mx-auto rounded-full overflow-hidden border-3 border-gray-300 shadow-md mb-3 relative group cursor-pointer"
+        onClick={handleClick}
+      >
         {photoUrl ? (
           <img
             src={photoUrl}
@@ -134,19 +162,16 @@ const PhotoUploader = ({ photoUrl, onPhotoChange }) => {
           </div>
         )}
         
-        <label 
-          htmlFor="photo-upload" 
-          className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        >
-          <Upload size={20} className="text-white" />
-          <input 
-            id="photo-upload" 
-            type="file" 
-            accept="image/*" 
-            onChange={handleFileChange} 
-            className="hidden" 
-          />
-        </label>
+        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition text-white text-xs font-medium text-center p-2">
+          Click to Change
+        </div>
+        <input 
+          ref={fileInputRef}
+          type="file" 
+          accept="image/*" 
+          onChange={handleFileChange} 
+          className="hidden" 
+        />
       </div>
     </div>
   );
@@ -157,8 +182,16 @@ const App = () => {
   const [resume, setResume] = useState(initialData);
   const editorContainerRef = useRef(null);
   const cvRef = useRef(null);
+  const profileTextareaRef = useRef(null);
 
-  // ADD AI GENERATION FUNCTION FOR PROFILE AND SKILLS
+  // Initialize textarea height on component mount and when profile changes
+  useEffect(() => {
+    if (profileTextareaRef.current) {
+      profileTextareaRef.current.style.height = profileTextareaRef.current.scrollHeight + 'px';
+    }
+  }, [resume.profile]);
+
+  // AI GENERATION FUNCTION
   const handleAIGenerate = async (section, keywords) => {
     if (!geminiService.genAI) {
       const apiKey = prompt('Please enter your Gemini API key:');
@@ -171,32 +204,27 @@ const App = () => {
 
       switch (section.toLowerCase()) {
         case 'profile':
-          const profileElement = document.querySelector('[data-section="profile"] [contenteditable]');
-          if (profileElement) {
-            let cleanedContent = generatedContent
-              .replace(/^#{1,6}\s+.+$/gm, '')
-              .replace(/\*\*(.+?)\*\*/g, '$1')
-              .replace(/\*(.+?)\*/g, '$1')
-              .trim();
+          let cleanedContent = generatedContent
+            .replace(/^#{1,6}\s+.+$/gm, '')
+            .replace(/\*\*(.+?)\*\*/g, '$1')
+            .replace(/\*(.+?)\*/g, '$1')
+            .trim();
 
-            const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
-            const actualProfile = paragraphs.find(p =>
-              !p.toLowerCase().includes('here are') &&
-              !p.toLowerCase().includes('of course') &&
-              !p.toLowerCase().includes('choose the option') &&
-              !p.toLowerCase().includes('pro-tip') &&
-              p.length > 100
-            );
+          const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
+          const actualProfile = paragraphs.find(p =>
+            !p.toLowerCase().includes('here are') &&
+            !p.toLowerCase().includes('of course') &&
+            !p.toLowerCase().includes('choose the option') &&
+            !p.toLowerCase().includes('pro-tip') &&
+            p.length > 100
+          );
 
-            const finalContent = actualProfile?.trim() || paragraphs[0]?.trim() || cleanedContent;
-            profileElement.textContent = finalContent;
-            
-            // Update state
-            setResume(prev => ({
-              ...prev,
-              profile: finalContent
-            }));
-          }
+          const finalContent = actualProfile?.trim() || paragraphs[0]?.trim() || cleanedContent;
+          
+          setResume(prev => ({
+            ...prev,
+            profile: finalContent
+          }));
           break;
 
         case 'my skills':
@@ -205,10 +233,9 @@ const App = () => {
           const newSkills = skills.slice(0, 8).map((skill, index) => ({
             id: crypto.randomUUID(),
             name: skill.trim(),
-            level: Math.floor(Math.random() * 5) + 1 // Random level between 1-5
+            level: Math.floor(Math.random() * 5) + 1
           }));
           
-          // Update state
           setResume(prev => ({
             ...prev,
             skills: newSkills
@@ -270,36 +297,18 @@ const App = () => {
     }));
   }, []);
 
-  // Action Handler: Add a new blank item
-  const handleAdd = useCallback((section) => {
-    let newItem = {};
-    if (section === 'contact') {
-      newItem = { id: crypto.randomUUID(), type: 'misc', icon: Mail, value: 'New Contact Info' };
-    } else if (section === 'skills') {
-      newItem = { id: crypto.randomUUID(), name: 'New Skill', level: 3 };
-    } else if (section === 'experience') {
-      newItem = { id: crypto.randomUUID(), company: 'New Company', role: 'New Role', period: 'Start - End', details: ['New detail 1'] };
-    } else if (section === 'education') {
-      newItem = { id: crypto.randomUUID(), year: 'YYYY', institution: 'New Institution', degree: 'New Degree' };
-    }
-
-    setResume(prev => ({
-      ...prev,
-      [section]: [...prev[section], newItem],
-    }));
-  }, []);
-
-  // --- Components for specific sections ---
+  // --- Enhanced Components for specific sections ---
 
   const ContactItem = useMemo(() => ({ item }) => {
     const Icon = item.icon || Mail;
     return (
-      <div className="flex items-start group relative py-1">
+      <div className="flex items-start group relative py-1 rounded border border-transparent hover:border-gray-200 hover:bg-gray-50 transition-colors px-2">
         <Icon size={12} className="text-gray-600 mr-2 mt-0.5 flex-shrink-0" />
         <EditableText
           tag="span"
           onSave={(value) => updateListItem('contact', item.id, 'value', value)}
           className="text-m flex-grow text-gray-700"
+          placeholder={item.type === 'phone' ? 'Phone number' : item.type === 'email' ? 'Email address' : 'Contact information'}
         >
           {item.value}
         </EditableText>
@@ -317,11 +326,12 @@ const App = () => {
     };
 
     return (
-      <div className="group relative py-0.5">
+      <div className="group relative py-0.5 rounded border border-transparent hover:border-gray-200 hover:bg-gray-50 transition-colors px-2">
         <EditableText
           tag="p"
           onSave={(value) => updateListItem('skills', item.id, 'name', value)}
           className="text-lg font-semibold mb-0.5 text-gray-800"
+          placeholder="Skill name"
         >
           {item.name}
         </EditableText>
@@ -344,11 +354,12 @@ const App = () => {
   }, [updateListItem, handleDuplicate, handleDelete]);
 
   const ExperienceItem = useMemo(() => ({ item }) => (
-    <div className="group relative py-2 border-b border-gray-200 last:border-b-0"> 
+    <div className="group relative py-2 border-b border-gray-200 last:border-b-0 rounded border border-transparent hover:border-gray-200 hover:bg-gray-50 transition-colors px-2"> 
       <EditableText
         tag="h4"
         onSave={(value) => updateListItem('experience', item.id, 'company', value)}
         className="font-bold text-sm text-gray-800"
+        placeholder="Company name"
       >
         {item.company}
       </EditableText>
@@ -356,6 +367,7 @@ const App = () => {
         tag="p"
         onSave={(value) => updateListItem('experience', item.id, 'role', value)}
         className="text-lg font-semibold text-gray-700 mt-0.5"
+        placeholder="Job title"
       >
         {item.role}
       </EditableText>
@@ -363,19 +375,23 @@ const App = () => {
         tag="p"
         onSave={(value) => updateListItem('experience', item.id, 'period', value)}
         className="text-lg italic text-gray-500 mb-1"
+        placeholder="Employment period"
       >
         {item.period}
       </EditableText>
       <EditableText
         tag="ul"
-        onSave={(value) => updateListItem('experience', item.id, 'details', value.split('\n'))}
+        onSave={(value) => {
+          const details = value.split('\n').filter(detail => detail.trim());
+          updateListItem('experience', item.id, 'details', details);
+        }}
         className="list-disc pl-4 text-m space-y-0.5"
       >
-        {item.details.map((detail, index) => (
+        {Array.isArray(item.details) ? item.details.map((detail, index) => (
           <li key={index} className="text-gray-700">
             {detail}
           </li>
-        ))}
+        )) : null}
       </EditableText>
       <ItemActions
         onDuplicate={() => handleDuplicate('experience', item)}
@@ -385,12 +401,13 @@ const App = () => {
   ), [updateListItem, handleDuplicate, handleDelete]);
 
   const EducationItem = useMemo(() => ({ item }) => (
-    <div className="group relative py-1 border-b border-gray-200 last:border-b-0">
+    <div className="group relative py-1 border-b border-gray-200 last:border-b-0 rounded border border-transparent hover:border-gray-200 hover:bg-gray-50 transition-colors px-2">
       <div className="flex justify-between items-start">
         <EditableText
           tag="h4"
           onSave={(value) => updateListItem('education', item.id, 'institution', value)}
           className="font-bold text-lg flex-grow text-gray-800"
+          placeholder="Institution name"
         >
           {item.institution}
         </EditableText>
@@ -398,6 +415,7 @@ const App = () => {
           tag="span"
           onSave={(value) => updateListItem('education', item.id, 'year', value)}
           className="text-m font-bold ml-3 flex-shrink-0 text-gray-800"
+          placeholder="Year"
         >
           {item.year}
         </EditableText>
@@ -406,6 +424,7 @@ const App = () => {
         tag="p"
         onSave={(value) => updateListItem('education', item.id, 'degree', value)}
         className="text-m text-gray-600 italic"
+        placeholder="Degree or qualification"
       >
         {item.degree}
       </EditableText>
@@ -426,12 +445,14 @@ const App = () => {
             photoUrl={resume.personal.photoUrl} 
             onPhotoChange={handlePhotoChange}
           />
+          
           <div className="pt-1">
             <SectionHeader title="CONTACT" />
-            <div className="mt-2">
+            <div className="mt-2 space-y-1">
               {resume.contact.map(item => <ContactItem key={item.id} item={item} />)}
             </div>
           </div>
+          
           <div className="pt-1">
             <SectionHeader title="MY SKILLS" onGenerate={handleAIGenerate} />
             <div className="mt-2 space-y-2">
@@ -446,14 +467,16 @@ const App = () => {
             <EditableText
               tag="h1"
               onSave={(value) => updateGeneralField('personal', { ...resume.personal, name: value })}
-              className="text-3xl font-extrabold tracking-wider text-gray-900"
+              className="text-3xl font-extrabold tracking-wider text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-300 rounded px-1"
+              placeholder="Your full name"
             >
               {resume.personal.name}
             </EditableText>
             <EditableText
               tag="p"
               onSave={(value) => updateGeneralField('personal', { ...resume.personal, title: value })}
-              className="inline-block px-2 py-0.5 mt-1 text-lg font-medium uppercase tracking-wider bg-gray-200 rounded-full text-gray-700"
+              className="inline-block px-2 py-0.5 mt-1 text-lg font-medium uppercase tracking-wider bg-gray-200 rounded-full text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-300"
+              placeholder="Your professional title"
             >
               {resume.personal.title}
             </EditableText>
@@ -463,9 +486,11 @@ const App = () => {
             <SectionHeader title="PROFILE" onGenerate={handleAIGenerate} />
             <div className="mt-2">
               <EditableText
+                ref={profileTextareaRef}
                 tag="p"
                 onSave={(value) => updateGeneralField('profile', value)}
-                className="text-gray-700 text-m leading-relaxed"
+                className="text-gray-700 text-m leading-relaxed min-h-[80px] border border-transparent hover:border-gray-200 rounded p-2 transition-colors"
+                placeholder="Enter your professional profile summary..."
               >
                 {resume.profile}
               </EditableText>

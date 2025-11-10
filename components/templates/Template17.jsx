@@ -218,7 +218,7 @@ export default function Template17() {
 
     // CV Page Component
     const CVPage = () => (
-        <div className="w-[210mm] h-[297mm] bg-white shadow-2xl flex overflow-hidden">
+        <div className="w-[210mm] h-[297mm] bg-white shadow-2xl flex overflow-hidden relative">
             {/* Left Sidebar (Dark Column) */}
             <aside className="w-[35%] bg-black text-white flex flex-col items-center py-6 px-8 leading-relaxed" onClick={handleButtonClick}>
                 <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-black bg-gray-300 mb-6 relative cursor-pointer">
@@ -263,6 +263,7 @@ export default function Template17() {
                         <h2 className="font-bold text-xl border-b border-white pb-1 mb-4 tracking-wide" contentEditable suppressContentEditableWarning>
                             SKILLS
                         </h2>
+                        {/* AI Button positioned close to Skills heading */}
                         <div className="absolute right-0 -top-1 opacity-0 group-hover:opacity-100 transition-opacity">
                             <AISparkle section="Skills" onGenerate={handleAIGenerate} />
                         </div>
@@ -331,7 +332,8 @@ export default function Template17() {
                         <h2 className="font-bold text-xl border-b-2 border-black mb-4 tracking-wide" contentEditable suppressContentEditableWarning>
                             ABOUT ME
                         </h2>
-                        <div className="absolute right-0 -top-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        {/* AI Button positioned close to About Me heading */}
+                        <div className="absolute left-0 -top-5 opacity-0 group-hover:opacity-100 transition-opacity">
                             <AISparkle section="About Me" onGenerate={handleAIGenerate} />
                         </div>
                     </div>
@@ -432,10 +434,15 @@ export default function Template17() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">
+            {/* AI Popup Container - Positioned outside the scaled container */}
+            <div id="ai-popup-container" className="fixed inset-0 pointer-events-none z-50">
+                {/* This container will hold AI popups via portal */}
+            </div>
+
             <div
                 ref={editorContainerRef}
                 data-editor-container
-                className="flex flex-col items-center scale-[0.5] origin-top transition-transform duration-500 pt-10"
+                className="flex flex-col items-center scale-[0.5] origin-top transition-transform duration-500 pt-10 relative"
             >
                 <div ref={cvRef} data-cv-page>
                     <CVPage />
