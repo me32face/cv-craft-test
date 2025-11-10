@@ -63,6 +63,7 @@ export default function Footer() {
                                     alt="CV Craft Logo"
                                     width={160}
                                     height={40}
+                                    unoptimized
                                     className="relative object-contain sm:w-[80px] sm:h-[35px] lg:w-[160px] lg:h-[45px] transition-transform duration-500 group-hover:scale-105"
                                 />
                             </div>

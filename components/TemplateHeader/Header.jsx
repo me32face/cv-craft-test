@@ -118,7 +118,7 @@ const Header = () => {
 
   return (
     <div className=" w-full
-      bg-gradient-to-r from-[#00C9C8] to-[#3D5AFE]
+      bg-gradient-to-r from-[#4F8DF9] to-[#8A3FFC]
       flex flex-col sm:flex-row
       items-center
       justify-between
@@ -156,7 +156,7 @@ const Header = () => {
       <button
         onClick={downloadPDF}
         disabled={isDownloading}
-        className="flex items-center gap-2 px-3 py-2 bg-white text-gray-800 rounded-lg hover:bg-gray-100 transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex items-center gap-2 px-3 py-2 bg-white text-gray-800 rounded-full hover:bg-gray-100 transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isDownloading ? (
           <Loader2 className="w-4 h-4 animate-spin" />

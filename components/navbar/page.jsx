@@ -31,7 +31,8 @@ const Navbar = () => {
     if (confirmed) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      router.push("/login");
+      setIsLoggedIn(false);
+      router.push("/");
     }
   };
 

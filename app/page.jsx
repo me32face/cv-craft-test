@@ -26,7 +26,7 @@ export default function Home() {
   const templates = [
 
     { id: 'Template01', name: 'Professional Classic', key: 'Richard Sanchez', image: '/template/template01n.png', category: 'modern' },
-    { id: 'Template06', name: 'Sample Layout', key: 'Olivia Schwaiger', image: '/template/template06n.png', category: 'modern' },
+    { id: 'Template06', name: 'Sample Layout', key: 'Olivia Schwaiger', image: '/template/template06.png', category: 'modern' },
     { id: 'Template04', name: 'Executive Style', key: 'Mariana Anderson', image: '/template/template04n.png', category: 'creative' },
     { id: 'Template02', name: 'Modern Minimal', key: 'Olivia Wilson', image: '/template/template02.png', category: 'simple' },
     { id: 'Template03', name: 'Creative Bold', key: 'Lorna Alvarado', image: '/template/template03.png', category: 'proffessional' },
@@ -161,6 +161,7 @@ export default function Home() {
                           alt={template.name}
                           width={288}
                           height={200}
+                          unoptimized
                           className="w-full h-58 object-contain rounded-lg shadow-lg"
                         />
                       ) : (

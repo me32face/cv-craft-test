@@ -46,6 +46,7 @@ export default function DreamJob() {
                   src="/user1.jpg"
                   alt="User 1"
                   fill
+                  unoptimized
                   className="object-cover"
                 />
               </div>
@@ -54,6 +55,7 @@ export default function DreamJob() {
                   src="/user2.jpg"
                   alt="User 2"
                   fill
+                  unoptimized
                   className="object-cover"
                 />
               </div>

@@ -8,7 +8,15 @@ dotenv.config();
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({
+  origin: [
+    "https://cvcfrat.in",       
+    "http://localhost:3000"     
+  ],
+  credentials: true,
+})
+);
+
 app.use(express.json());
 
 //  Connect to MongoDB Atlas

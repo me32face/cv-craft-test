@@ -7,6 +7,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 
 export default function Signup() {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const [showToast, setShowToast] = useState(false);
   const [loading, setLoading] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
@@ -63,7 +64,7 @@ export default function Signup() {
 
 
     try {
-      const res = await axios.post("http://localhost:5000/api/register", {
+      const res = await axios.post(`${API_URL}/api/register`, {
         name: formData.name,
         email: formData.email,
         password: formData.password,
@@ -108,6 +109,7 @@ export default function Signup() {
           alt="CV Craft Logo"
           width={100}
           height={50}
+          unoptimized
           className="object-contain sm:w-[75px] sm:h-[37px] lg:w-[120px] lg:h-[40px]"
         />
         {/* <span className="text-2xl font-semibold text-gray-800">CRAFT</span> */}
@@ -132,6 +134,7 @@ export default function Signup() {
                       width={40}
                       height={20}
                       className=""
+                      unoptimized
                     />
                   </div>
                   <div>
@@ -148,6 +151,7 @@ export default function Signup() {
                       width={40}
                       height={20}
                       className=""
+                      unoptimized
                     />
                   </div>
                   <div>
@@ -165,6 +169,7 @@ export default function Signup() {
                     width={30}
                     height={20}
                     className=""
+                    unoptimized
                   />
                 </div>
                 <div>
