@@ -436,12 +436,13 @@ export default function Template03() {
                 {/* Skills Section */}
                 <div className="mb-6 section-container" data-section="skills">
                   <div className="relative flex gap-2  group">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Skills</h2>
+                    <Draggable nodeRef={skillsRef}>
+                      <h3 ref={skillsRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Skills</h3>
+                    </Draggable>
                     <div className="opacity-0 group-hover:opacity-100 transition-opacity ">
                       <AISparkle className='mt-1' section="Skills" onGenerate={handleAIGenerate} />
                     </div>
                   </div>
-
                   <ul className="space-y-1.5 text-gray-700" onKeyDown={(e) => {
                     if (e.key === 'Backspace') {
                       const lis = e.currentTarget.querySelectorAll('li');
@@ -583,12 +584,13 @@ export default function Template03() {
 
                       {/* dot */}
                       <div className="flex-shrink-0">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5"></div>
+                        <span className="text-3xl  text-blue-500">•</span>
                       </div>
 
                       {/* content */}
                       <div>
                         <div className="flex justify-between items-start mb-1">
+
                           <div>
                             <h3
                               className="text-sm font-semibold text-gray-800"
@@ -647,7 +649,7 @@ export default function Template03() {
 
                       {/* dot */}
                       <div className="flex-shrink-0">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5"></div>
+                        <span className="text-3xl  text-blue-500">•</span>
                       </div>
 
                       {/* content */}
@@ -726,7 +728,7 @@ export default function Template03() {
 
                         {/* 🔵 dot */}
                         <div className="flex-shrink-0 relative">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 z-10 relative"></div>
+                          <span className="text-3xl  text-blue-500">•</span>
                         </div>
 
                         {/* 📄 content */}
@@ -789,7 +791,7 @@ export default function Template03() {
 
                         {/* 🔵 dot */}
                         <div className="flex-shrink-0 relative">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 z-10 relative"></div>
+                          <span className="text-3xl  text-blue-500">•</span>
                         </div>
 
                         {/* 📄 content */}
@@ -851,7 +853,7 @@ export default function Template03() {
 
                         {/* 🔵 dot */}
                         <div className="flex-shrink-0 relative">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 z-10 relative"></div>
+                          <span className="text-3xl  text-blue-500">•</span>
                         </div>
 
                         {/* 📄 content */}
@@ -911,7 +913,7 @@ export default function Template03() {
                           </button>
                         </div>
                         <div className="flex-shrink-0 relative">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 z-10 relative"></div>
+                          <span className="text-3xl  text-blue-500">•</span>
                         </div>
                         <div className="flex-1">
                           <div className="flex justify-between items-start mb-1">
