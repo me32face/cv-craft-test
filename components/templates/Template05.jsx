@@ -57,37 +57,83 @@ export default function Template05() {
     try {
       const generatedContent = await geminiService.generateContent(section, keywords);
 
+      // Update the appropriate section based on the section type
       switch (section.toLowerCase()) {
+        case 'profile':
         case 'summary':
-          const summaryElement = document.getElementById('summary-text');
-          if (summaryElement) {
+          const profileElement = document.getElementById('profile-text');
+          if (profileElement) {
+            // Clean the generated content
             let cleanedContent = generatedContent
+              // Remove markdown headers (###, ##, #)
               .replace(/^#{1,6}\s+.+$/gm, '')
+              // Remove markdown bold (**text**)
               .replace(/\*\*(.+?)\*\*/g, '$1')
+              // Remove markdown italic (*text*)
               .replace(/\*(.+?)\*/g, '$1')
               .trim();
+
+            // Split into paragraphs
             const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
+
+            // Skip introductory paragraphs (like "Of course. Here are...")
+            // Find the first paragraph that doesn't contain phrases like "here are", "options", "choose"
             const actualSummary = paragraphs.find(p =>
               !p.toLowerCase().includes('here are') &&
               !p.toLowerCase().includes('of course') &&
-              p.length > 100
+              !p.toLowerCase().includes('choose the option') &&
+              !p.toLowerCase().includes('pro-tip') &&
+              p.length > 100 // Ensure it's substantial
             );
-            summaryElement.textContent = actualSummary?.trim() || paragraphs[0]?.trim() || cleanedContent;
+
+            const finalContent = actualSummary?.trim() || paragraphs[0]?.trim() || cleanedContent;
+
+            profileElement.textContent = finalContent;
+          } else {
+            console.error('Profile element not found');
           }
           break;
-        case 'expertise':
         case 'skills':
-          const expertiseElement = document.querySelector('[data-section="expertise"] ul');
-          if (expertiseElement) {
+          const skillsElement = document.querySelector('[data-section="skills"] ul');
+          if (skillsElement) {
             const skills = generatedContent.split('\n').filter(skill => skill.trim());
-            expertiseElement.innerHTML = skills.map(skill =>
-              `<li class="flex items-center gap-2">
-                <svg class="w-2 h-2 fill-white" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
-                <span>${skill.trim()}</span>
-              </li>`
+            skillsElement.innerHTML = skills.map(skill =>
+              `<li class="text-xs flex items-start relative group text-white">
+                  <span class="mr-2">•</span>
+                  <span contentEditable suppressContentEditableWarning>${skill.trim()}</span>
+                 
+                </li>`
             ).join('');
           }
           break;
+        case 'work experience':
+          const workExpElement = document.querySelector('[data-section="work-experience"] .space-y-4');
+          if (workExpElement) {
+            const experiences = generatedContent.split('---').filter(exp => exp.trim());
+            workExpElement.innerHTML = experiences.map(exp => {
+              const lines = exp.trim().split('\n').filter(line => line.trim());
+              const company = lines[0] || 'Company Name';
+              const position = lines[1] || 'Position';
+              const period = lines[2] || '2020 - Present';
+              const duties = lines.slice(3).filter(duty => duty.trim());
+
+              return `<div>
+                  <div class="flex justify-between items-start mt-4">
+                    <div>
+                      <h3 class="text-sm font-bold text-gray-50">${company}</h3>
+                      <p class="text-xs text-gray-50">${position}</p>
+                    </div>
+                    <span class="text-xs text-gray-50 whitespace-nowrap">${period}</span>
+                  </div>
+                  <ul class="list-disc list-outside ml-4 text-xs text-gray-700 space-y-0.5 mt-1">
+                    ${duties.map(duty => `<li>${duty.trim()}</li>`).join('')}
+                  </ul>
+                </div>`;
+            }).join('');
+          }
+          break;
+        default:
+          console.log('Generated content:', generatedContent);
       }
     } catch (error) {
       alert('Failed to generate content. Please check your API key and try again.');
@@ -179,210 +225,304 @@ export default function Template05() {
   useEffect(() => {
     registerPDFFunction(downloadPDF);
   }, [downloadPDF, registerPDFFunction]);
-const CVPage =  () =>{
-  const contactRef = useRef(null);
-  const educationRef = useRef(null);
-  const skillsRef = useRef(null);
-  const languagesRef = useRef(null);
-  const summaryRef = useRef(null);
-  const job1Ref = useRef(null);
-  const job2Ref = useRef(null);
-  const job3Ref = useRef(null);
-  const ref1Ref = useRef(null);
-  const ref2Ref = useRef(null);
+  const CVPage = () => {
+    const contactRef = useRef(null);
+    const educationRef = useRef(null);
+    const skillsRef = useRef(null);
+    const languagesRef = useRef(null);
+    const profileRef = useRef(null);
+    const job1Ref = useRef(null);
+    const job2Ref = useRef(null);
+    const job3Ref = useRef(null);
+    const ref1Ref = useRef(null);
+    const ref2Ref = useRef(null);
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto">
-      <div
-        ref={editorContainerRef}
-        data-editor-container
-        className="flex flex-col items-center scale-[0.5] origin-top transition-transform duration-500 pt-24"
-      >
-        <div ref={cvRef} data-cv-page className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-hidden flex" onClick={handleButtonClick}>
-          {/* Left Sidebar */}
-          <div className="w-1/3 bg-slate-600 text-white p-8">
-            {/* Profile Image */}
-            <div className="mb-6">
-                  <div className="w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-white shadow-xl bg-gray-200"
-                    onClick={() => document.getElementById('profileImageInput').click()}>
-                    {profileImage ? (
-                      <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
-                        RS
-                      </div>
-                    )}
-                  </div>
-                  <input
-                    id="profileImageInput"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                  />
+    return (
+
+      <div data-editor-container className="w-[210mm] bg-white shadow-2xl overflow-hidden flex" onClick={handleButtonClick}>
+        {/* Left Sidebar */}
+        <div data-cv-page className="w-1/3 bg-slate-600 text-white p-10 pb-12 ">
+          {/* Profile Image */}
+          <div className="mb-10">
+            <div className="w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-white shadow-xl bg-gray-200"
+              onClick={() => document.getElementById('profileImageInput').click()}>
+              {profileImage ? (
+                <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
+                  RS
                 </div>
-
-
-            {/* Contact Section */}
-            <div className="mb-8">
-              <h2 className="text-lg font-bold mb-4 pb-2 border-b border-slate-600" contentEditable suppressContentEditableWarning>CONTACT</h2>
-              <Draggable nodeRef={contactRef} >
-                <div ref={contactRef} data-section-item className="space-y-3 text-xs">
-                  <div className="flex items-start gap-2">
-                    <Phone size={14} className="mt-0.5 flex-shrink-0" />
-                    <span contentEditable suppressContentEditableWarning>+123-456-7890</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Mail size={14} className="mt-0.5 flex-shrink-0" />
-                    <span className="break-all" contentEditable suppressContentEditableWarning>hello@reallygreatsite.com</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Globe size={14} className="mt-0.5 flex-shrink-0" />
-                    <span className="break-all" contentEditable suppressContentEditableWarning>www.reallygreatsite.com</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <MapPin size={14} className="mt-0.5 flex-shrink-0" />
-                    <span contentEditable suppressContentEditableWarning>123 Anywhere St., Any City</span>
-                  </div>
-                  <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                    <button data-action="duplicate" className="text-white rounded p-1.5 shadow-md">
-                      <CopyPlus className="w-4 h-4" />
-                    </button>
-                    <button data-action="delete" className="text-white rounded p-1.5 shadow-md">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              </Draggable>
+              )}
             </div>
-
-            {/* Education Section */}
-            <div className="mb-8">
-              <h2 className="text-lg font-bold mb-4 pb-2 border-b border-slate-600" contentEditable suppressContentEditableWarning>EDUCATION</h2>
-              <Draggable nodeRef={educationRef} >
-                <div ref={educationRef} data-section-item className="space-y-4 text-xs">
-                  <div >
-                    <p className="text-gray-400 mb-1" contentEditable suppressContentEditableWarning>2019 - 2020</p>
-                    <p className="font-bold text-sm" contentEditable suppressContentEditableWarning>WARDIERE UNIVERSITY</p>
-                    <p className="text-gray-300 mt-1" contentEditable suppressContentEditableWarning>Master's Degree in Business Management</p>
-                    <p className="text-gray-400 mt-1" contentEditable suppressContentEditableWarning>GPA: 3.8 / 4.0</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-400 mb-1" contentEditable suppressContentEditableWarning>2015 - 2019</p>
-                    <p className="font-bold text-sm" contentEditable suppressContentEditableWarning>WARDIERE UNIVERSITY</p>
-                    <p className="text-gray-300 mt-1" contentEditable suppressContentEditableWarning>Bachelor's Degree in Business Management</p>
-                    <p className="text-gray-400 mt-1" contentEditable suppressContentEditableWarning>GPA: 3.8 / 4.0</p>
-                  </div>
-                </div>
-              </Draggable>
-            </div>
-
-            {/* Skills Section */}
-            <div className="mb-8 group" data-section="skills">
-              <div className="flex items-center gap-2 mb-4">
-                <h2 className="text-xl font-bold pb-2 border-b border-gray-500">SKILLS</h2>
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                  <AISparkle className='-mt-2 ml-1' section="Skills" onGenerate={handleAIGenerate} />
-                </div>
-              </div>
-              <Draggable nodeRef={skillsRef}>
-                {/* The ref must be on the element Draggable actually moves */}
-                <ul ref={skillsRef} data-section-item className="space-y-2 text-xs relative group">
-                  <li className="flex items-center gap-2">
-                    <Circle className="w-2 h-2 fill-white" />
-                    <span contentEditable suppressContentEditableWarning>Project Management</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Circle className="w-2 h-2 fill-white" />
-                    <span contentEditable suppressContentEditableWarning>Public Relations</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Circle className="w-2 h-2 fill-white" />
-                    <span contentEditable suppressContentEditableWarning>Teamwork</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Circle className="w-2 h-2 fill-white" />
-                    <span contentEditable suppressContentEditableWarning>Time Management</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Circle className="w-2 h-2 fill-white" />
-                    <span contentEditable suppressContentEditableWarning>Leadership</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Circle className="w-2 h-2 fill-white" />
-                    <span contentEditable suppressContentEditableWarning>Effective Communication</span>
-                  </li>
-                  <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                    <button data-action="duplicate" className="text-white rounded p-1.5 shadow-md">
-                      <CopyPlus className="w-4 h-4" />
-                    </button>
-                    <button data-action="delete" className="text-white rounded p-1.5 shadow-md">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </ul>
-              </Draggable>
-            </div>
-
-            {/* Languages Section */}
-            <div>
-              <h2 className="text-lg font-bold mb-4 pb-2 border-b border-slate-600" contentEditable suppressContentEditableWarning>LANGUAGES</h2>
-              <Draggable nodeRef={languagesRef} >
-                <div ref={languagesRef}>
-                  <ul
-                    className="space-y-1.5 text-xs text-gray-300 list-disc list-inside"
-                    contentEditable suppressContentEditableWarning
-                  >
-                    <li>English </li>
-                    <li>French </li>
-                    <li>Chinese </li>
-                    <li>Spanish </li>
-                  </ul>
-                  <div className="absolute -right-4 -top-12 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                    <button data-action="duplicate" className="text-white rounded p-1.5 shadow-md">
-                      <CopyPlus className="w-4 h-4" />
-                    </button>
-                    <button data-action="delete" className="text-white rounded p-1.5 shadow-md">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              </Draggable>
-            </div>
+            <input
+              id="profileImageInput"
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="hidden"
+            />
           </div>
 
-          {/* Right Content */}
-          <div className="w-2/3 p-8 bg-gray-50">
-            {/* Header */}
-            <div className="mb-8 -ml-8 p-5 bg-gradient-to-r from-slate-200 via-slate-300 to-slate-400">
-              <h1 className="text-4xl font-bold text-slate-800" contentEditable suppressContentEditableWarning>
-                RICHARD <span className="font-light" contentEditable suppressContentEditableWarning>SANCHEZ</span>
-              </h1>
-              <p className="text-sm text-slate-600 tracking-wider mt-1" contentEditable suppressContentEditableWarning>MARKETING MANAGER</p>
-              <div className="w-16 h-0.5 bg-slate-800 mt-2"></div>
-            </div>
 
-            {/* Profile Section */}
-            <div className="mb-8 group ">
-              <div className='flex items-center  gap-2'>
-                <h3 className="text-lg font-bold text-slate-800 mb-1" contentEditable suppressContentEditableWarning>
-                  PROFILE
-                </h3>
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                  <AISparkle className='mb-4' section="Summary" onGenerate={handleAIGenerate} />
+          {/* Contact Section */}
+          <div className="pb-8">
+            <h2 className="text-lg font-bold mb-4 pb-2 border-b border-slate-600" contentEditable suppressContentEditableWarning>CONTACT</h2>
+            <Draggable nodeRef={contactRef} >
+              <div ref={contactRef} data-section-item className="space-y-3 text-xs">
+                <div className="flex items-start gap-2">
+                  <Phone size={14} className="mt-0.5 flex-shrink-0" />
+                  <span contentEditable suppressContentEditableWarning>+123-456-7890</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Mail size={14} className="mt-0.5 flex-shrink-0" />
+                  <span className="break-all" contentEditable suppressContentEditableWarning>hello@reallygreatsite.com</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Globe size={14} className="mt-0.5 flex-shrink-0" />
+                  <span className="break-all" contentEditable suppressContentEditableWarning>www.reallygreatsite.com</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <MapPin size={14} className="mt-0.5 flex-shrink-0" />
+                  <span contentEditable suppressContentEditableWarning>123 Anywhere St., Any City</span>
+                </div>
+                <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                  <button data-action="duplicate" className="text-white rounded p-1.5 shadow-md">
+                    <CopyPlus className="w-4 h-4" />
+                  </button>
+                  <button data-action="delete" className="text-white rounded p-1.5 shadow-md">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
-              <Draggable nodeRef={summaryRef}>
-                <div ref={summaryRef} data-section-item className="relative group">
-                  <p id='summary-text' className="text-xs text-slate-700 leading-relaxed" contentEditable suppressContentEditableWarning>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam quis
-                    nostrud exercitation ullamco laboris. Lorem ipsum dolor sit amet, consectetur
-                    adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua veniam quis nostrud exercitation. Ut enim ad minim veniam quis nostrud
-                    exercitation ullamco.
-                  </p>
-                  <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+            </Draggable>
+          </div>
+
+          {/* Education Section */}
+          <div className="pb-8">
+            <h2 className="text-lg font-bold mb-4 pb-2 border-b border-slate-600" contentEditable suppressContentEditableWarning>EDUCATION</h2>
+            <Draggable nodeRef={educationRef} >
+              <div ref={educationRef} data-section-item className="space-y-4 text-xs">
+                <div >
+                  <p className="text-gray-400 mb-1" contentEditable suppressContentEditableWarning>2019 - 2020</p>
+                  <p className="font-bold text-sm" contentEditable suppressContentEditableWarning>WARDIERE UNIVERSITY</p>
+                  <p className="text-gray-300 mt-1" contentEditable suppressContentEditableWarning>Master's Degree in Business Management</p>
+                  <p className="text-gray-400 mt-1" contentEditable suppressContentEditableWarning>GPA: 3.8 / 4.0</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 mb-1" contentEditable suppressContentEditableWarning>2015 - 2019</p>
+                  <p className="font-bold text-sm" contentEditable suppressContentEditableWarning>WARDIERE UNIVERSITY</p>
+                  <p className="text-gray-300 mt-1" contentEditable suppressContentEditableWarning>Bachelor's Degree in Business Management</p>
+                  <p className="text-gray-400 mt-1" contentEditable suppressContentEditableWarning>GPA: 3.8 / 4.0</p>
+                </div>
+              </div>
+            </Draggable>
+          </div>
+
+          {/* Skills Section */}
+          <div className="pb-8 group" data-section="skills">
+            <div className="flex items-center gap-2 mb-4">
+              <h2 className="text-xl font-bold pb-2 border-b border-gray-500">SKILLS</h2>
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                <AISparkle className='-mt-2 ml-1' section="Skills" onGenerate={handleAIGenerate} />
+              </div>
+            </div>
+            <Draggable nodeRef={skillsRef}>
+              {/* The ref must be on the element Draggable actually moves */}
+              <ul ref={skillsRef} data-section-item className="space-y-2 text-xs relative group">
+                <li className="flex items-center gap-2">
+                  <Circle className="w-2 h-2 fill-white" />
+                  <span contentEditable suppressContentEditableWarning>Project Management</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Circle className="w-2 h-2 fill-white" />
+                  <span contentEditable suppressContentEditableWarning>Public Relations</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Circle className="w-2 h-2 fill-white" />
+                  <span contentEditable suppressContentEditableWarning>Teamwork</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Circle className="w-2 h-2 fill-white" />
+                  <span contentEditable suppressContentEditableWarning>Time Management</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Circle className="w-2 h-2 fill-white" />
+                  <span contentEditable suppressContentEditableWarning>Leadership</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Circle className="w-2 h-2 fill-white" />
+                  <span contentEditable suppressContentEditableWarning>Effective Communication</span>
+                </li>
+                <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                  <button data-action="duplicate" className="text-white rounded p-1.5 shadow-md">
+                    <CopyPlus className="w-4 h-4" />
+                  </button>
+                  <button data-action="delete" className="text-white rounded p-1.5 shadow-md">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </ul>
+            </Draggable>
+          </div>
+
+          {/* Languages Section */}
+          <div>
+            <h2 className="text-lg font-bold mb-4 pb-2 border-b border-slate-600" contentEditable suppressContentEditableWarning>LANGUAGES</h2>
+            <Draggable nodeRef={languagesRef} >
+              <div ref={languagesRef}>
+                <ul
+                  className="space-y-1.5 text-xs text-gray-300 list-disc list-inside"
+                  contentEditable suppressContentEditableWarning
+                >
+                  <li>English </li>
+                  <li>French </li>
+                  <li>Chinese </li>
+                  <li>Spanish </li>
+                </ul>
+                <div className="absolute -right-4 -top-12 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                  <button data-action="duplicate" className="text-white rounded p-1.5 shadow-md">
+                    <CopyPlus className="w-4 h-4" />
+                  </button>
+                  <button data-action="delete" className="text-white rounded p-1.5 shadow-md">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </Draggable>
+          </div>
+        </div>
+
+        {/* Right Content */}
+        <div className="w-2/3 p-8 bg-gray-50">
+          {/* Header */}
+          <div className="pb-8 -ml-8 p-5 bg-gradient-to-r from-slate-200 via-slate-300 to-slate-400">
+            <h1 className="text-4xl font-bold text-slate-800" contentEditable suppressContentEditableWarning>
+              RICHARD <span className="font-light" contentEditable suppressContentEditableWarning>SANCHEZ</span>
+            </h1>
+            <p className="text-sm text-slate-600 tracking-wider mt-1" contentEditable suppressContentEditableWarning>MARKETING MANAGER</p>
+            <div className="w-16 h-0.5 bg-slate-800 mt-2"></div>
+          </div>
+
+          {/* Profile Section */}
+           <div className="mb-5 section-container relative group" data-section="profile">
+                <div className="flex items-center gap-2 mb-2 relative">
+                  <h2
+                    contentEditable
+                    suppressContentEditableWarning
+                    className="text-2xl font-bold text-gray-800 uppercase tracking-wide"
+                  >
+                    Profile
+                  </h2>
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                    <AISparkle section="Profile" onGenerate={handleAIGenerate} />
+                  </div>
+                </div>
+
+                {/* Make this section draggable */}
+                <Draggable nodeRef={profileRef}>
+                  <div ref={profileRef} className="relative group">
+                    <div>
+                      <p
+                        id="profile-text"
+                        className="text-xs text-gray-700 leading-relaxed"
+                        contentEditable
+                        suppressContentEditableWarning
+                      >
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation. Lorem ipsum
+                        dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+                        magna aliqua. Ut enim ad minim veniam laboris.
+                      </p>
+                    </div>
+
+                    {/* Hover buttons */}
+                    <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                      <button
+                        data-action="duplicate"
+                        className="text-gray-600 bg-white rounded p-1 shadow-md hover:scale-110 transition-transform"
+                      >
+                        <CopyPlus className="w-3 h-3" />
+                      </button>
+                      <button
+                        data-action="delete"
+                        className="text-gray-600 bg-white rounded p-1 shadow-md hover:scale-110 transition-transform"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </div>
+                </Draggable>
+              </div>
+
+          {/* Work Experience Section */}
+          <div className="pb-8">
+            <h3 className="text-lg font-bold text-slate-800 mb-4" contentEditable suppressContentEditableWarning>WORK EXPERIENCE</h3>
+            <div className="space-y-5">
+              {/* Job 1 */}
+              <Draggable nodeRef={job1Ref}>
+                <div ref={job1Ref} data-section-item className=" gap-3 relative group">
+                  <div className="flex justify-between items-start mb-2">
+                    <div>
+                      <h4 className="font-bold text-slate-800 text-sm" contentEditable suppressContentEditableWarning>Tangen Studio</h4>
+                      <p className="text-xs text-slate-600" contentEditable suppressContentEditableWarning>Marketing Manager & Specialist</p>
+                    </div>
+                    <span className="text-xs text-slate-500 whitespace-nowrap ml-4" contentEditable suppressContentEditableWarning>2025 | 2028</span>
+                  </div>
+                  <ul className="text-xs text-slate-700 space-y-1 ml-4 list-disc" contentEditable suppressContentEditableWarning>
+                    <li>Create and manage the marketing budget, ensuring efficient allocation of resources to maximize ROI and achieve business objectives.</li>
+                    <li>Collaborate with internal teams and external partners to drive brand consistency across marketing channels and materials.</li>
+                  </ul>
+                  <div className="absolute right-0 top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                      <CopyPlus className="w-4 h-4" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </Draggable>
+
+              {/* Job 2 */}
+              <Draggable nodeRef={job2Ref}>
+                <div ref={job2Ref} data-section-item className=" gap-3 relative group">
+                  <div className="flex justify-between items-start mb-2">
+                    <div>
+                      <h4 className="font-bold text-slate-800 text-sm" contentEditable suppressContentEditableWarning>Tangen Studio</h4>
+                      <p className="text-xs text-slate-600" contentEditable suppressContentEditableWarning>Marketing Manager & Specialist</p>
+                    </div>
+                    <span className="text-xs text-slate-500 whitespace-nowrap ml-4" contentEditable suppressContentEditableWarning>2025 | 2028</span>
+                  </div>
+                  <ul className="text-xs text-slate-700 space-y-1 ml-4 list-disc" contentEditable suppressContentEditableWarning>
+                    <li>Create and manage the marketing budget, ensuring efficient allocation of resources to maximize ROI and achieve business objectives.</li>
+                    <li>Collaborate with internal teams and external partners to drive brand consistency across marketing channels and materials.</li>
+                  </ul>
+                  <div className="absolute right-0 top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                      <CopyPlus className="w-4 h-4" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </Draggable>
+
+              {/* Job 3 */}
+              <Draggable nodeRef={job3Ref}>
+                <div ref={job3Ref} data-section-item className=" relative group">
+                  <div className="flex justify-between items-start mb-2">
+                    <div>
+                      <h4 className="font-bold text-slate-800 text-sm" contentEditable suppressContentEditableWarning>Studio Shodwe</h4>
+                      <p className="text-xs text-slate-600" contentEditable suppressContentEditableWarning>Marketing Manager & Specialist</p>
+                    </div>
+                    <span className="text-xs text-slate-500 whitespace-nowrap ml-4" contentEditable suppressContentEditableWarning>2023 | 2025</span>
+                  </div>
+                  <ul className="text-xs text-slate-700 space-y-1 ml-4 list-disc" contentEditable suppressContentEditableWarning>
+                    <li>Conduct market research and competitive analysis, systems, agencies, and vendors to support marketing initiatives.</li>
+                    <li>Monitor and measure brand performance, analyzing key metrics to optimize strategy, tactics and engagement.</li>
+                  </ul>
+                  <div className="absolute right-0 top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                     <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
                       <CopyPlus className="w-4 h-4" />
                     </button>
@@ -393,141 +533,59 @@ const CVPage =  () =>{
                 </div>
               </Draggable>
             </div>
+          </div>
 
-            {/* Work Experience Section */}
-            <div className="mb-8">
-              <h3 className="text-lg font-bold text-slate-800 mb-4" contentEditable suppressContentEditableWarning>WORK EXPERIENCE</h3>
-              <div className="space-y-5">
-                {/* Job 1 */}
-                <Draggable nodeRef={job1Ref}>
-                  <div ref={job1Ref} data-section-item className=" gap-3 relative group">
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h4 className="font-bold text-slate-800 text-sm" contentEditable suppressContentEditableWarning>Tangen Studio</h4>
-                        <p className="text-xs text-slate-600" contentEditable suppressContentEditableWarning>Marketing Manager & Specialist</p>
-                      </div>
-                      <span className="text-xs text-slate-500 whitespace-nowrap ml-4" contentEditable suppressContentEditableWarning>2025 | 2028</span>
-                    </div>
-                    <ul className="text-xs text-slate-700 space-y-1 ml-4 list-disc" contentEditable suppressContentEditableWarning>
-                      <li>Create and manage the marketing budget, ensuring efficient allocation of resources to maximize ROI and achieve business objectives.</li>
-                      <li>Collaborate with internal teams and external partners to drive brand consistency across marketing channels and materials.</li>
-                    </ul>
-                    <div className="absolute right-0 top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <CopyPlus className="w-4 h-4" />
-                      </button>
-                      <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
+          {/* Reference Section */}
+          <div>
+            <h3 className="text-lg font-bold text-slate-800 mb-4" contentEditable suppressContentEditableWarning>REFERENCE</h3>
+            <div className="grid grid-cols-2 gap-6">
+              {/* Reference 1 */}
+              <Draggable nodeRef={ref1Ref}>
+                <div ref={ref1Ref} data-section-item className="relative group">
+                  <h4 className="font-bold text-slate-800 text-sm mb-1" contentEditable suppressContentEditableWarning>Estelle Darcy</h4>
+                  <p className="text-slate-600 mb-2" contentEditable suppressContentEditableWarning>Wardiere Inc. / CEO</p>
+                  <div className="text-slate-600 space-y-0.5">
+                    <p contentEditable suppressContentEditableWarning><span className="font-semibold" >Phone:</span> 123-456-7890</p>
+                    <p contentEditable suppressContentEditableWarning><span className="font-semibold">Email:</span> hello@reallygreatsite.com</p>
                   </div>
-                </Draggable>
+                  <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                      <CopyPlus className="w-4 h-4" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </Draggable>
 
-                {/* Job 2 */}
-                <Draggable nodeRef={job2Ref}>
-                  <div ref={job2Ref} data-section-item className=" gap-3 relative group">
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h4 className="font-bold text-slate-800 text-sm" contentEditable suppressContentEditableWarning>Tangen Studio</h4>
-                        <p className="text-xs text-slate-600" contentEditable suppressContentEditableWarning>Marketing Manager & Specialist</p>
-                      </div>
-                      <span className="text-xs text-slate-500 whitespace-nowrap ml-4" contentEditable suppressContentEditableWarning>2025 | 2028</span>
-                    </div>
-                    <ul className="text-xs text-slate-700 space-y-1 ml-4 list-disc" contentEditable suppressContentEditableWarning>
-                      <li>Create and manage the marketing budget, ensuring efficient allocation of resources to maximize ROI and achieve business objectives.</li>
-                      <li>Collaborate with internal teams and external partners to drive brand consistency across marketing channels and materials.</li>
-                    </ul>
-                    <div className="absolute right-0 top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <CopyPlus className="w-4 h-4" />
-                      </button>
-                      <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
+              {/* Reference 2 */}
+              <Draggable nodeRef={ref2Ref}>
+                <div ref={ref2Ref} data-section-item className="relative group">
+                  <h4 className="font-bold text-slate-800 text-sm mb-1" contentEditable suppressContentEditableWarning>Harper Richard</h4>
+                  <p className="text-slate-600 mb-2" contentEditable suppressContentEditableWarning>Wardiere Inc. / CEO</p>
+                  <div className="text-slate-600 space-y-0.5">
+                    <p contentEditable suppressContentEditableWarning><span className="font-semibold" >Phone:</span> 123-456-7890</p>
+                    <p contentEditable suppressContentEditableWarning><span className="font-semibold" >Email:</span> hello@reallygreatsite.com</p>
                   </div>
-                </Draggable>
-
-                {/* Job 3 */}
-                <Draggable nodeRef={job3Ref}>
-                  <div ref={job3Ref} data-section-item className=" relative group">
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h4 className="font-bold text-slate-800 text-sm" contentEditable suppressContentEditableWarning>Studio Shodwe</h4>
-                        <p className="text-xs text-slate-600" contentEditable suppressContentEditableWarning>Marketing Manager & Specialist</p>
-                      </div>
-                      <span className="text-xs text-slate-500 whitespace-nowrap ml-4" contentEditable suppressContentEditableWarning>2023 | 2025</span>
-                    </div>
-                    <ul className="text-xs text-slate-700 space-y-1 ml-4 list-disc" contentEditable suppressContentEditableWarning>
-                      <li>Conduct market research and competitive analysis, systems, agencies, and vendors to support marketing initiatives.</li>
-                      <li>Monitor and measure brand performance, analyzing key metrics to optimize strategy, tactics and engagement.</li>
-                    </ul>
-                    <div className="absolute right-0 top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <CopyPlus className="w-4 h-4" />
-                      </button>
-                      <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
+                  <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                      <CopyPlus className="w-4 h-4" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
-                </Draggable>
-              </div>
-            </div>
-
-            {/* Reference Section */}
-            <div>
-              <h3 className="text-lg font-bold text-slate-800 mb-4" contentEditable suppressContentEditableWarning>REFERENCE</h3>
-              <div className="grid grid-cols-2 gap-6">
-                {/* Reference 1 */}
-                <Draggable nodeRef={ref1Ref}>
-                  <div ref={ref1Ref} data-section-item className="relative group">
-                    <h4 className="font-bold text-slate-800 text-sm mb-1" contentEditable suppressContentEditableWarning>Estelle Darcy</h4>
-                    <p className="text-slate-600 mb-2" contentEditable suppressContentEditableWarning>Wardiere Inc. / CEO</p>
-                    <div className="text-slate-600 space-y-0.5">
-                      <p contentEditable suppressContentEditableWarning><span className="font-semibold" >Phone:</span> 123-456-7890</p>
-                      <p contentEditable suppressContentEditableWarning><span className="font-semibold">Email:</span> hello@reallygreatsite.com</p>
-                    </div>
-                    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <CopyPlus className="w-4 h-4" />
-                      </button>
-                      <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </Draggable>
-
-                {/* Reference 2 */}
-                <Draggable nodeRef={ref2Ref}>
-                  <div ref={ref2Ref} data-section-item className="relative group">
-                    <h4 className="font-bold text-slate-800 text-sm mb-1" contentEditable suppressContentEditableWarning>Harper Richard</h4>
-                    <p className="text-slate-600 mb-2" contentEditable suppressContentEditableWarning>Wardiere Inc. / CEO</p>
-                    <div className="text-slate-600 space-y-0.5">
-                      <p contentEditable suppressContentEditableWarning><span className="font-semibold" >Phone:</span> 123-456-7890</p>
-                      <p contentEditable suppressContentEditableWarning><span className="font-semibold" >Email:</span> hello@reallygreatsite.com</p>
-                    </div>
-                    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <CopyPlus className="w-4 h-4" />
-                      </button>
-                      <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </Draggable>
-              </div>
+                </div>
+              </Draggable>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
-return (
+  return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">
       <div
         ref={editorContainerRef}

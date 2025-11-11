@@ -9,18 +9,13 @@ import { useUndoRedo } from '../../contexts/UndoRedoContext';
 import AISparkle from '../AISparkle';
 import { geminiService } from '../../lib/gemini';
 
-
-
 export default function Template10() {
   const [profileImage, setProfileImage] = useState(null);
   const [contentState, setContentState] = useState({});
-  const { registerPDFFunction } = usePDF();
   const { saveState } = useUndoRedo();
 
   const cvRef = useRef(null);
   const editorContainerRef = useRef(null);
-
-
 
   const handleButtonClick = useCallback((e) => {
     const button = e.target.closest('button');
@@ -31,28 +26,29 @@ export default function Template10() {
 
     if (!section) return;
 
-    if (action === 'duplicate') {
-      const draggableParent = section.parentElement;
-      if (draggableParent && draggableParent.classList.contains('react-draggable')) {
-        const outerDraggable = draggableParent.parentElement;
-        const clone = outerDraggable.cloneNode(true);
-        outerDraggable.parentNode.insertBefore(clone, outerDraggable.nextSibling);
-      } else {
-        const clone = section.cloneNode(true);
-        section.parentNode.insertBefore(clone, section.nextSibling);
+    requestAnimationFrame(() => {
+      if (action === 'duplicate') {
+        const draggableParent = section.parentElement;
+        if (draggableParent && draggableParent.classList.contains('react-draggable')) {
+          const outerDraggable = draggableParent.parentElement;
+          const clone = outerDraggable.cloneNode(true);
+          outerDraggable.parentNode.insertBefore(clone, outerDraggable.nextSibling);
+        } else {
+          const clone = section.cloneNode(true);
+          section.parentNode.insertBefore(clone, section.nextSibling);
+        }
+      } else if (action === 'delete') {
+        const draggableParent = section.parentElement;
+        if (draggableParent && draggableParent.classList.contains('react-draggable')) {
+          draggableParent.parentElement.remove();
+        } else {
+          section.remove();
+        }
       }
-    } else if (action === 'delete') {
-      const draggableParent = section.parentElement;
-      if (draggableParent && draggableParent.classList.contains('react-draggable')) {
-        draggableParent.parentElement.remove();
-      } else {
-        section.remove();
-      }
-    }
+    });
   }, []);
 
-
-  const handleAIGenerate = async (section, keywords) => {
+  const handleAIGenerate = useCallback(async (section, keywords) => {
     if (!geminiService.genAI) {
       const apiKey = prompt('Please enter your Gemini API key:');
       if (!apiKey) return;
@@ -87,9 +83,9 @@ export default function Template10() {
             const skills = generatedContent.split('\n').filter(skill => skill.trim());
             expertiseElement.innerHTML = skills.map(skill =>
               `<li class="flex items-center gap-2">
-                    <svg class="w-2 h-2 fill-white" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
-                    <span>${skill.trim()}</span>
-                  </li>`
+                <svg class="w-2 h-2 fill-white" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+                <span>${skill.trim()}</span>
+              </li>`
             ).join('');
           }
           break;
@@ -97,9 +93,9 @@ export default function Template10() {
     } catch (error) {
       alert('Failed to generate content. Please check your API key and try again.');
     }
-  };
+  }, []);
 
-  const handleImageUpload = (event) => {
+  const handleImageUpload = useCallback((event) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -109,7 +105,7 @@ export default function Template10() {
       };
       reader.readAsDataURL(file);
     }
-  };
+  }, [profileImage, contentState, saveState]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -134,9 +130,7 @@ export default function Template10() {
     saveState({ profileImage: null, contentState: {} });
   }, []);
 
-
   const CVPage = () => {
-
     const contactRef = useRef(null);
     const educationRef = useRef(null);
     const skillsRef = useRef(null);
@@ -148,14 +142,14 @@ export default function Template10() {
     const ref1Ref = useRef(null);
 
     return (
-
-      <div className="w-[210mm]  bg-white shadow-2xl overflow-visible flex" onClick={handleButtonClick} style={{ WebkitFontSmoothing: 'antialiased', textRendering: 'geometricPrecision', imageRendering: 'crisp-edges' }}>
-        <div className="max-w-4xl mx-auto bg-white shadow-2xl">
+      <div className="min-h-screen bg-gray-50 flex justify-center items-start" onClick={handleButtonClick}>
+        {/* FIXED: Removed extra wrapper div and adjusted spacing */}
+        <div className="w-[210mm] bg-white shadow-2xl">
           {/* Header Section */}
-          <div className="relative bg-gradient-to-tr from-slate-400 via-slate-500 to-slate-600 text-white">
+          <div className="relative bg-gradient-to-tr from-slate-400 via-slate-400 to-slate-600 text-white">
             {/* Decorative Diagonal Elements */}
-            <div className="absolute top-0 right-0 w-96 h-full bg-slate-700 opacity-30" style={{ clipPath: 'polygon(30% 0, 100% 0, 100% 100%, 0% 100%)' }}></div>
-            <div className="absolute top-0 right-0 w-80 h-full bg-slate-800 opacity-20" style={{ clipPath: 'polygon(40% 0, 100% 0, 100% 100%, 10% 100%)' }}></div>
+            <div className="absolute top-0 right-0 w-96 h-full bg-slate-500 opacity-30" style={{ clipPath: 'polygon(30% 0, 100% 0, 100% 100%, 0% 100%)' }}></div>
+            <div className="absolute top-0 right-0 w-80 h-full bg-slate-600 opacity-20" style={{ clipPath: 'polygon(40% 0, 100% 0, 100% 100%, 10% 100%)' }}></div>
 
             <div className="relative z-10 p-5 ml-12 pt-5 flex items-start justify-between">
               <div className="flex-1">
@@ -165,13 +159,13 @@ export default function Template10() {
 
               {/* Profile Picture */}
               <div className="relative">
-                <div className="w-36 h-36 rounded-full  border-8 border-blue-100 bg-gray-300 overflow-hidden"
+                <div className="w-36 h-36 rounded-full border-8 border-blue-100 bg-gray-300 overflow-hidden cursor-pointer"
                   onClick={() => document.getElementById('profileImageInput').click()}>
                   {profileImage ? (
                     <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
-                      RS
+                    <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center text-2xl font-bold">
+                      SK
                     </div>
                   )}
                 </div>
@@ -186,16 +180,16 @@ export default function Template10() {
             </div>
           </div>
 
-          {/* Main Content */}
-          <div className="grid grid-cols-3 gap-0">
+          {/* Main Content - FIXED: Changed grid to flex for better control */}
+          <div className="flex">
             {/* Left Sidebar */}
-            <div className="col-span-1 bg-gradient-to-bl from-slate-400 to-slate-600 text-white p-6 space-y-6">
+            <div className="w-1/3 h-auto bg-white p-6 space-y-6">
               {/* Contact */}
               <div>
-                <h3 className="flex items-center gap-2 text-lg font-bold mb-3 border-b-2 border-white/30 pb-2" contentEditable suppressContentEditableWarning>
-                  Contact
-                </h3>
-                <Draggable nodeRef={contactRef} >
+                <h2 className="flex items-center gap-2 text-xl font-bold mb-3  text-slate-700 border-b-2 border-white/30 pb-2" contentEditable suppressContentEditableWarning>
+                  CONTACT
+                </h2>
+                <Draggable nodeRef={contactRef}>
                   <div ref={contactRef} data-section-item className="space-y-3 text-xs relative group">
                     <div className="flex items-start gap-2">
                       <Phone size={14} className="mt-0.5 flex-shrink-0" />
@@ -214,10 +208,10 @@ export default function Template10() {
                       <span contentEditable suppressContentEditableWarning>123 Anywhere St., Any City</span>
                     </div>
                     <div className="absolute -right-4 -top-5 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button data-action="duplicate" className="text-white rounded p-1.5 shadow-md">
+                      <button data-action="duplicate" className="text-white bg-slate-500/50 rounded p-1.5 shadow-md">
                         <CopyPlus className="w-4 h-4" />
                       </button>
-                      <button data-action="delete" className="text-white rounded p-1.5 shadow-md">
+                      <button data-action="delete" className="text-white bg-slate-500/50 rounded p-1.5 shadow-md">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -228,13 +222,12 @@ export default function Template10() {
               {/* Personal Skills */}
               <div className="mb-8 group" data-section="skills">
                 <div className="flex items-center gap-2 mb-4">
-                  <h2 className="text-xl font-bold pb-2 border-b border-gray-500">SKILLS</h2>
+                  <h2 className="text-xl font-bold pb-2 border-b border-gray-500 text-[#334155]">SKILLS</h2>
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                     <AISparkle className='-mt-2 ml-1' section="Skills" onGenerate={handleAIGenerate} />
                   </div>
                 </div>
                 <Draggable nodeRef={skillsRef}>
-                  {/* The ref must be on the element Draggable actually moves */}
                   <ul ref={skillsRef} data-section-item className="space-y-2 text-xs relative group">
                     <li className="flex items-center gap-2">
                       <Circle className="w-2 h-2 fill-white" />
@@ -261,10 +254,10 @@ export default function Template10() {
                       <span contentEditable suppressContentEditableWarning>Effective Communication</span>
                     </li>
                     <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button data-action="duplicate" className="text-white rounded p-1.5 shadow-md">
+                      <button data-action="duplicate" className="text-white bg-slate-500/50 rounded p-1.5 shadow-md">
                         <CopyPlus className="w-4 h-4" />
                       </button>
-                      <button data-action="delete" className="text-white rounded p-1.5 shadow-md">
+                      <button data-action="delete" className="text-white bg-slate-500/50 rounded p-1.5 shadow-md">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -272,27 +265,28 @@ export default function Template10() {
                 </Draggable>
               </div>
 
+              {/* Education */}
               <div className='group'>
-                <h2 className="text-lg font-bold mb-4 pb-2 border-b border-slate-600" contentEditable suppressContentEditableWarning> EDUCATION</h2>
-                <Draggable nodeRef={educationRef} >
+                <h2 className="text-lg font-bold mb-4 pb-2 border-b border-slate-700 text-[#334155]" contentEditable suppressContentEditableWarning>EDUCATION</h2>
+                <Draggable nodeRef={educationRef}>
                   <div ref={educationRef} data-section-item className="space-y-4 text-xs relative group">
-                    <div >
-                      <p className="text-gray-400 mb-1" contentEditable suppressContentEditableWarning>2019 - 2020</p>
-                      <p className="font-bold text-sm" contentEditable suppressContentEditableWarning>WARDIERE UNIVERSITY</p>
-                      <p className="text-gray-300 mt-1" contentEditable suppressContentEditableWarning>Master's Degree in Business Management</p>
-                      <p className="text-gray-400 mt-1" contentEditable suppressContentEditableWarning>GPA: 3.8 / 4.0</p>
+                    <div>
+                      <p className="text-slate-700 mb-1" contentEditable suppressContentEditableWarning>2019 - 2020</p>
+                      <p className="font-bold text-sm text-slate-800" contentEditable suppressContentEditableWarning>WARDIERE UNIVERSITY</p>
+                      <p className="text-slate-700 mt-1" contentEditable suppressContentEditableWarning>Master's Degree in Business Management</p>
+                      <p className="text-slate-700 mt-1" contentEditable suppressContentEditableWarning>GPA: 3.8 / 4.0</p>
                     </div>
                     <div>
-                      <p className="text-gray-400 mb-1" contentEditable suppressContentEditableWarning>2015 - 2019</p>
-                      <p className="font-bold text-sm" contentEditable suppressContentEditableWarning>WARDIERE UNIVERSITY</p>
-                      <p className="text-gray-300 mt-1" contentEditable suppressContentEditableWarning>Bachelor's Degree in Business Management</p>
-                      <p className="text-gray-400 mt-1" contentEditable suppressContentEditableWarning>GPA: 3.8 / 4.0</p>
+                      <p className="text-slate-700 mb-1" contentEditable suppressContentEditableWarning>2015 - 2019</p>
+                      <p className="font-bold text-sm text-slate-800" contentEditable suppressContentEditableWarning>WARDIERE UNIVERSITY</p>
+                      <p className="text-slate-700 mt-1" contentEditable suppressContentEditableWarning>Bachelor's Degree in Business Management</p>
+                      <p className="text-slate-700 mt-1" contentEditable suppressContentEditableWarning>GPA: 3.8 / 4.0</p>
                     </div>
                     <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button data-action="duplicate" className="text-white rounded p-1.5 shadow-md">
+                      <button data-action="duplicate" className="text-white bg-slate-500/50 rounded p-1.5 shadow-md">
                         <CopyPlus className="w-4 h-4" />
                       </button>
-                      <button data-action="delete" className="text-white rounded p-1.5 shadow-md">
+                      <button data-action="delete" className="text-white bg-slate-500/50 rounded p-1.5 shadow-md">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -303,41 +297,35 @@ export default function Template10() {
               {/* Languages */}
               <div>
                 <h2 className="text-lg font-bold mb-4 pb-2 border-b border-slate-600" contentEditable suppressContentEditableWarning>LANGUAGES</h2>
-                <Draggable nodeRef={languagesRef} >
+                <Draggable nodeRef={languagesRef}>
                   <div ref={languagesRef} data-section-item className='relative group'>
-                    <ul
-                      className="space-y-1.5 text-xs text-white list-disc list-inside"
-                      contentEditable suppressContentEditableWarning
-                    >
-                      <li>English </li>
-                      <li>French </li>
-                      <li>Chinese </li>
-                      <li>Spanish </li>
+                    <ul className="space-y-1.5 text-xs text-[#334155] list-disc list-inside" contentEditable suppressContentEditableWarning>
+                      <li>English</li>
+                      <li>French</li>
+                      <li>Chinese</li>
+                      <li>Spanish</li>
                     </ul>
                     <div className="absolute -right-4 -top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button data-action="duplicate" className="text-white rounded p-1.5 shadow-md">
+                      <button data-action="duplicate" className="text-white bg-slate-500/50 rounded p-1.5 shadow-md">
                         <CopyPlus className="w-4 h-4" />
                       </button>
-                      <button data-action="delete" className="text-white rounded p-1.5 shadow-md">
+                      <button data-action="delete" className="text-white bg-slate-500/50 rounded p-1.5 shadow-md">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
                 </Draggable>
               </div>
-
-
             </div>
 
-            {/* Right Content Area */}
-            <div className="col-span-2 p-8 space-y-6  ">
+            {/* Right Content Area - FIXED: Adjusted padding */}
+            <div className="w-2/3 p-8 space-y-6">
               {/* Career Objective */}
               <div className='group'>
-                <div className='flex items-center  gap-2'>
+                <div className='flex items-center gap-2'>
                   <h3 className="text-xl font-bold text-slate-700 mb-3 border-b-2 border-slate-300 pb-2" contentEditable suppressContentEditableWarning>
                     PROFILE
                   </h3>
-
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                     <AISparkle className='mb-4' section="Summary" onGenerate={handleAIGenerate} />
                   </div>
@@ -348,10 +336,10 @@ export default function Template10() {
                       I am an ambitious and eager to learning graphic designer. I am seeking a position where I can develop existing design skills, learn new techniques and contribute positively to future and gain valuable professional experience.
                     </p>
                     <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                      <button data-action="duplicate" className="text-gray-600 bg-white rounded p-1.5 shadow-md">
                         <CopyPlus className="w-4 h-4" />
                       </button>
-                      <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
+                      <button data-action="delete" className="text-gray-600 bg-white rounded p-1.5 shadow-md">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -367,7 +355,7 @@ export default function Template10() {
                 <div className="space-y-5">
                   {/* Job 1 */}
                   <Draggable nodeRef={job1Ref}>
-                    <div ref={job1Ref} data-section-item className=" gap-3 relative group">
+                    <div ref={job1Ref} data-section-item className="gap-3 relative group">
                       <div className="flex justify-between items-start mb-2">
                         <div>
                           <h4 className="font-bold text-slate-800 text-sm" contentEditable suppressContentEditableWarning>Borcelle Studio</h4>
@@ -381,10 +369,10 @@ export default function Template10() {
                         <li>Analyze market trends, customer insights and competitor strategies.</li>
                       </ul>
                       <div className="absolute right-0 top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                        <button data-action="duplicate" className="text-gray-600 bg-white rounded p-1.5 shadow-md">
                           <CopyPlus className="w-4 h-4" />
                         </button>
-                        <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
+                        <button data-action="delete" className="text-gray-600 bg-white rounded p-1.5 shadow-md">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -393,7 +381,7 @@ export default function Template10() {
 
                   {/* Job 2 */}
                   <Draggable nodeRef={job2Ref}>
-                    <div ref={job2Ref} data-section-item className=" gap-3 relative group">
+                    <div ref={job2Ref} data-section-item className="gap-3 relative group">
                       <div className="flex justify-between items-start mb-2">
                         <div>
                           <h4 className="font-bold text-slate-800 text-sm" contentEditable suppressContentEditableWarning>Tangen Studio</h4>
@@ -406,10 +394,10 @@ export default function Template10() {
                         <li>Collaborate with internal teams and external partners to drive brand consistency across marketing channels and materials.</li>
                       </ul>
                       <div className="absolute right-0 top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                        <button data-action="duplicate" className="text-gray-600 bg-white rounded p-1.5 shadow-md">
                           <CopyPlus className="w-4 h-4" />
                         </button>
-                        <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
+                        <button data-action="delete" className="text-gray-600 bg-white rounded p-1.5 shadow-md">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -418,7 +406,7 @@ export default function Template10() {
 
                   {/* Job 3 */}
                   <Draggable nodeRef={job3Ref}>
-                    <div ref={job3Ref} data-section-item className=" relative group">
+                    <div ref={job3Ref} data-section-item className="relative group">
                       <div className="flex justify-between items-start mb-2">
                         <div>
                           <h4 className="font-bold text-slate-800 text-sm" contentEditable suppressContentEditableWarning>Studio Shodwe</h4>
@@ -431,10 +419,10 @@ export default function Template10() {
                         <li>Monitor and measure brand performance, analyzing key metrics to optimize strategy, tactics and engagement.</li>
                       </ul>
                       <div className="absolute right-0 top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                        <button data-action="duplicate" className="text-gray-600 bg-white rounded p-1.5 shadow-md">
                           <CopyPlus className="w-4 h-4" />
                         </button>
-                        <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
+                        <button data-action="delete" className="text-gray-600 bg-white rounded p-1.5 shadow-md">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -450,7 +438,7 @@ export default function Template10() {
                 </h3>
                 <Draggable nodeRef={ref1Ref}>
                   <ul ref={ref1Ref} data-section-item className="grid grid-cols-2 gap-2 text-sm relative group">
-                    <li className="flex items-center gap-2" >
+                    <li className="flex items-center gap-2">
                       <span className="w-2 h-2 bg-slate-600 rounded-full"></span>
                       <p contentEditable suppressContentEditableWarning>Photoshop</p>
                     </li>
@@ -475,10 +463,10 @@ export default function Template10() {
                       <p contentEditable suppressContentEditableWarning>WordPress</p>
                     </li>
                     <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                      <button data-action="duplicate" className="text-gray-600 bg-white rounded p-1.5 shadow-md">
                         <CopyPlus className="w-4 h-4" />
                       </button>
-                      <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
+                      <button data-action="delete" className="text-gray-600 bg-white rounded p-1.5 shadow-md">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -489,11 +477,11 @@ export default function Template10() {
           </div>
         </div>
       </div>
-
     );
   }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto">
       <div
         ref={editorContainerRef}
         data-editor-container
@@ -506,4 +494,3 @@ export default function Template10() {
     </div>
   );
 }
-

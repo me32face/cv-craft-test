@@ -173,7 +173,7 @@ export default function Template12() {
           {/* Header Section */}
           <div className="grid grid-cols-3 gap-5">
             {/* Left - Yellow Section with Name */}
-            <div className="col-span-1 pt-24 pl-40 flex items-center">
+            <div className="col-span-1 pt-20 pl-40 flex items-center">
               <div>
                 <h1 className="text-4xl font-bold text-gray-800 leading-tight" contentEditable suppressContentEditableWarning>Andry</h1>
                 <h1 className="text-4xl font-bold text-gray-800 leading-tight" contentEditable suppressContentEditableWarning>Gordon</h1>
@@ -182,20 +182,29 @@ export default function Template12() {
 
             {/* Right - White Section with Contact Info and Photo */}
             <div className="col-span-2 p-8 flex justify-between items-start">
-              <div className="space-y-1 text-sm text-gray-700 pt-20  pl-5">
-                <div className="flex items-center gap-2">
-                  <Phone className="w-4 h-4" />
-                  <span contentEditable suppressContentEditableWarning>PHONE: 12 4567 8910</span>
+              <div className="space-y-2 text-sm text-gray-700 pt-20 pl-5">
+                <div className="flex items-center gap-3">
+                  <Phone className="w-4 h-4 text-gray-600" />
+                  <span contentEditable suppressContentEditableWarning className="tracking-wide">
+                    PHONE: 12 4567 8910
+                  </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Mail className="w-4 h-4" />
-                  <span contentEditable suppressContentEditableWarning>E-MAIL: HELLO@REALLYGREATSITE.COM</span>
+
+                <div className="flex items-center gap-3">
+                  <Mail className="w-4 h-4 text-gray-600" />
+                  <span contentEditable suppressContentEditableWarning className="tracking-wide">
+                    E-MAIL: HELLO@REALLYGREATSITE.COM
+                  </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-bold">@</span>
-                  <span contentEditable suppressContentEditableWarning>SOCIAL PROFILE: @REALLYGREATSITE</span>
+
+                <div className="flex items-center gap-3">
+                  <span className="font-bold text-gray-600">@</span>
+                  <span contentEditable suppressContentEditableWarning className="tracking-wide">
+                    SOCIAL PROFILE: @REALLYGREATSITE
+                  </span>
                 </div>
               </div>
+
 
               {/* Profile Photo */}
               <div className="relative">
@@ -237,7 +246,6 @@ export default function Template12() {
                     </div>
                     <div>
                       <p contentEditable suppressContentEditableWarning className="font-md">Social1: @ANDYGDR</p>
-                      <p contentEditable suppressContentEditableWarning className="font-md">Social2: Hello@andry.com</p>
                       <p contentEditable suppressContentEditableWarning className="font-md">Social3: @A.G</p>
                     </div>
                     <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
@@ -253,45 +261,42 @@ export default function Template12() {
               </div>
 
               {/* Skills */}
-              <div className='group'>
+              <div className="group">
                 <div className="flex items-center gap-2 mb-4">
-                  <h2 className="text-xl font-bold pb-2 ">SKILLS</h2>
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    <AISparkle className='-mt-2 ml-1' section="Skills" onGenerate={handleAIGenerate} />
+                  <h2 className="text-xl font-bold pb-2 tracking-wide">SKILLS</h2>
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <AISparkle
+                      className="-mt-1 ml-1"
+                      section="Skills"
+                      onGenerate={handleAIGenerate}
+                    />
                   </div>
                 </div>
+
                 <Draggable nodeRef={skillsRef}>
-                  {/* The ref must be on the element Draggable actually moves */}
-                  <ul ref={skillsRef} data-section-item className="space-y-2 text-xs relative group">
-                    <li className="flex items-center gap-2">
-                      <Circle className="w-2 h-2 fill-black" />
-                      <span contentEditable suppressContentEditableWarning>Project Management</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Circle className="w-2 h-2 fill-black" />
-                      <span contentEditable suppressContentEditableWarning>Public Relations</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Circle className="w-2 h-2 fill-black" />
-                      <span contentEditable suppressContentEditableWarning>Teamwork</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Circle className="w-2 h-2 fill-black" />
-                      <span contentEditable suppressContentEditableWarning>Time Management</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Circle className="w-2 h-2 fill-black" />
-                      <span contentEditable suppressContentEditableWarning>Leadership</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Circle className="w-2 h-2 fill-black" />
-                      <span contentEditable suppressContentEditableWarning>Effective Communication</span>
-                    </li>
+                  <ul
+                    ref={skillsRef}
+                    data-section-item
+                    className="list-disc list-inside space-y-2 text-xs relative group pb-6"
+                  >
+                    <li contentEditable suppressContentEditableWarning>Project Management</li>
+                    <li contentEditable suppressContentEditableWarning>Public Relations</li>
+                    <li contentEditable suppressContentEditableWarning>Teamwork</li>
+                    <li contentEditable suppressContentEditableWarning>Time Management</li>
+                    <li contentEditable suppressContentEditableWarning>Leadership</li>
+                    <li contentEditable suppressContentEditableWarning>Effective Communication</li>
+
                     <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button data-action="duplicate" className="text-black rounded p-1.5 shadow-md">
+                      <button
+                        data-action="duplicate"
+                        className="text-black rounded p-1.5 shadow-md bg-white"
+                      >
                         <CopyPlus className="w-4 h-4" />
                       </button>
-                      <button data-action="delete" className="text-black rounded p-1.5 shadow-md">
+                      <button
+                        data-action="delete"
+                        className="text-black rounded p-1.5 shadow-md bg-white"
+                      >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -368,7 +373,7 @@ export default function Template12() {
                 </Draggable>
               </div>
 
-             
+
 
               {/* Work Experience */}
               <div>
@@ -400,7 +405,7 @@ export default function Template12() {
                       </div>
                     </div>
                   </Draggable>
-                <Draggable nodeRef={job2Ref}>
+                  <Draggable nodeRef={job2Ref}>
                     <div ref={job2Ref} data-section-item className=" gap-3 relative group">
                       <div className="flex justify-between items-start mb-2">
                         <div>
@@ -448,7 +453,7 @@ export default function Template12() {
                   </Draggable>
                 </div>
               </div>
-               {/* Education */}
+              {/* Education */}
               <div className=''>
                 <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2" contentEditable suppressContentEditableWarning>
                   EDUCATION
