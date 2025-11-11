@@ -120,7 +120,7 @@ EditableText.displayName = 'EditableText';
 
 // --- Item Actions Component ---
 const ItemActions = ({ onDuplicate, onDelete }) => (
-  <div className="absolute top-0 -right-7 flex space-x-1 p-1 text-gray-500 opacity-0 group-hover:opacity-100 transition duration-150">
+  <div className="absolute top-0 -right-7 flex space-x-1 p-1 text-gray-500 opacity-0 group-hover:opacity-100 transition duration-150 print:hidden">
     <button onClick={onDuplicate} className="hover:text-black" aria-label="Duplicate item">
       <CopyPlus size={14} />
     </button>
@@ -141,7 +141,7 @@ const SectionHeader = ({ title, onGenerate, onTitleChange }) => (
       {title}
     </EditableText>
     {onGenerate && (
-      <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="opacity-0 group-hover:opacity-100 transition-opacity print:hidden">
         <AISparkle section={title} onGenerate={onGenerate} />
       </div>
     )}
@@ -170,7 +170,7 @@ const PhotoUploader = ({ photoUrl, onPhotoChange }) => {
   return (
     <div className="mb-3 pt-2 flex flex-col items-center">
       <div 
-        className="w-28 h-28 mx-auto rounded-full overflow-hidden border-3 border-gray-300 shadow-md mb-3 relative group cursor-pointer"
+        className="w-28 h-28 mx-auto rounded-full overflow-hidden border-3 border-gray-300 shadow-md mb-3 relative group cursor-pointer print:cursor-default"
         onClick={handleClick}
       >
         {photoUrl ? (
@@ -185,7 +185,7 @@ const PhotoUploader = ({ photoUrl, onPhotoChange }) => {
           </div>
         )}
         
-        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition text-white text-xs font-medium text-center p-2">
+        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition text-white text-xs font-medium text-center p-2 print:hidden">
           Click to Change
         </div>
         <input 
@@ -357,7 +357,7 @@ const App = () => {
   const ContactItem = useMemo(() => ({ item }) => {
     const Icon = item.icon || Mail;
     return (
-      <div className="flex items-start group relative py-1 rounded border border-transparent hover:border-gray-200 hover:bg-gray-50 transition-colors px-2">
+      <div className="flex items-start group relative py-1 rounded border border-transparent hover:border-gray-200 hover:bg-gray-50 transition-colors px-2 print:border-none print:hover:bg-transparent">
         <Icon size={12} className="text-gray-600 mr-2 mt-0.5 flex-shrink-0" />
         <EditableText
           tag="span"
@@ -381,7 +381,7 @@ const App = () => {
     };
 
     return (
-      <div className="group relative py-0.5 rounded border border-transparent hover:border-gray-200 hover:bg-gray-50 transition-colors px-2">
+      <div className="group relative py-0.5 rounded border border-transparent hover:border-gray-200 hover:bg-gray-50 transition-colors px-2 print:border-none print:hover:bg-transparent">
         <EditableText
           tag="p"
           onSave={(value) => updateListItem('skills', item.id, 'name', value)}
@@ -390,16 +390,20 @@ const App = () => {
         >
           {item.name}
         </EditableText>
-        <div className="flex space-x-0.5">
-          {[...Array(5)].map((_, i) => (
-            <button
-              key={i}
-              onClick={() => handleLevelClick(i + 1)}
-              className={`w-2.5 h-2.5 rounded-full transition-colors duration-150 cursor-pointer ${i < item.level ? 'bg-gray-800' : 'bg-gray-300'}`}
-              aria-label={`Set skill level to ${i + 1} for ${item.name}`}
-            />
-          ))}
+        
+        {/* FIXED: Static skill bars for printing + Interactive for editing */}
+        <div className="flex items-center space-x-2">
+          {/* Static skill level display (always visible, including in print) */}
+          <div className="flex space-x-0.5 print:flex pt-4">
+            {[...Array(5)].map((_, i) => (
+              <div
+                key={i}
+                className={`w-2.5 h-2.5 rounded-full ${i < item.level ? 'bg-gray-800' : 'bg-gray-300'} print:bg-gray-800 print:opacity-${i < item.level ? '100' : '30'}`}
+              />
+            ))}
+          </div>
         </div>
+        
         <ItemActions
           onDuplicate={() => handleDuplicate('skills', item)}
           onDelete={() => handleDelete('skills', item.id)}
@@ -409,7 +413,7 @@ const App = () => {
   }, [updateListItem, handleDuplicate, handleDelete]);
 
   const ExperienceItem = useMemo(() => ({ item }) => (
-    <div className="group relative py-2 border-b border-gray-200 last:border-b-0 rounded border border-transparent hover:border-gray-200 hover:bg-gray-50 transition-colors px-2"> 
+    <div className="group relative py-2 border-b border-gray-200 last:border-b-0 rounded border border-transparent hover:border-gray-200 hover:bg-gray-50 transition-colors px-2 print:border-none print:hover:bg-transparent"> 
       <EditableText
         tag="h4"
         onSave={(value) => updateListItem('experience', item.id, 'company', value)}
@@ -459,7 +463,7 @@ const App = () => {
   ), [updateListItem, handleDuplicate, handleDelete]);
 
   const EducationItem = useMemo(() => ({ item }) => (
-    <div className="group relative py-1 border-b border-gray-200 last:border-b-0 rounded border border-transparent hover:border-gray-200 hover:bg-gray-50 transition-colors px-2">
+    <div className="group relative py-1 border-b border-gray-200 last:border-b-0 rounded border border-transparent hover:border-gray-200 hover:bg-gray-50 transition-colors px-2 print:border-none print:hover:bg-transparent">
       <div className="flex justify-between items-start gap-2">
         <EditableText
           tag="h4"
@@ -497,11 +501,11 @@ const App = () => {
   const CVPage = () => (
     <div 
       key={contentVersion}
-      className="w-[210mm] h-[297mm] bg-white shadow-2xl rounded-lg border border-gray-300 overflow-hidden"
+      className="w-[210mm] h-[297mm] bg-white shadow-2xl rounded-lg border border-gray-300 overflow-hidden print:shadow-none print:border-0"
     >
       <div className="grid grid-cols-3 h-full">
         {/* LEFT COLUMN (Sidebar) */}
-        <div className="col-span-1 bg-gray-50 p-6 border-r border-gray-200 h-full overflow-hidden">
+        <div className="col-span-1 bg-gray-50 p-6 border-r border-gray-200 h-full overflow-hidden print:bg-white">
           <PhotoUploader 
             photoUrl={resume.personal.photoUrl} 
             onPhotoChange={handlePhotoChange}
@@ -543,7 +547,7 @@ const App = () => {
             <EditableText
               tag="p"
               onSave={(value) => updateGeneralField('personal', { ...resume.personal, title: value })}
-              className="inline-block px-2 py-0.5 mt-1 text-lg font-medium uppercase tracking-wider bg-gray-200 rounded-full text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-300 min-w-[150px]"
+              className="inline-block px-2 py-0.5 mt-1 text-lg font-medium uppercase tracking-wider bg-gray-200 rounded-full text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-300 min-w-[150px] print:bg-gray-100"
               placeholder="Your professional title"
             >
               {resume.personal.title}
@@ -560,7 +564,7 @@ const App = () => {
               <EditableText
                 tag="p"
                 onSave={(value) => updateGeneralField('profile', value)}
-                className="text-gray-700 text-m leading-relaxed min-h-[80px] border border-transparent hover:border-gray-200 rounded p-2 transition-colors w-full"
+                className="text-gray-700 text-m leading-relaxed min-h-[80px] border border-transparent hover:border-gray-200 rounded p-2 transition-colors w-full print:border-0 print:hover:border-0"
                 placeholder="Enter your professional profile summary..."
                 autoResize={true}
               >
@@ -590,11 +594,11 @@ const App = () => {
   );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-200 overflow-auto cursor-pointer">
+    <div className="min-h-screen flex items-center justify-center bg-gray-200 overflow-auto cursor-pointer print:bg-white">
       <div
         ref={editorContainerRef}
         data-editor-container
-        className="flex flex-col items-center scale-[0.55] origin-top transition-transform duration-500 pt-16"
+        className="flex flex-col items-center scale-[0.55] origin-top transition-transform duration-500 pt-16 print:scale-100 print:pt-0"
       >
         <div ref={cvRef} data-cv-page>
           <CVPage />
