@@ -214,11 +214,11 @@ export default function Template04() {
                 className="w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-white shadow-xl bg-gray-300 cursor-pointer hover:opacity-80 transition-opacity"
                 onClick={() => document.getElementById('profileImageInput').click()}
               >
-                {/* {profileImage ? ( */}
-                <img src={'/templateprofile/template02profile.webp'} alt="Profile" className="w-full h-full object-cover" />
-                {/* ) : ( */}
-                {/* <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400"></div> */}
-                {/* )} */}
+                {profileImage ? (
+                  <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  <img src={'/templateprofile/template02profile.webp'} alt="Profile" className="w-full h-full object-cover" />
+                )}
               </div>
               <input
                 id="profileImageInput"

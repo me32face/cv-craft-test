@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Mail, Phone, MapPin, Plus, X, Edit2, Check } from 'lucide-react';
 import { useUndoRedo } from '../../contexts/UndoRedoContext';
+import AISparkle from '../AISparkle';
+import { geminiService } from '../../lib/gemini';
 
 export default function Template13() {
   const { saveState } = useUndoRedo();
@@ -218,6 +220,51 @@ export default function Template13() {
     setEditExperience({ ...editExperience, points: newPoints });
   };
 
+  const handleAIGenerate = async (section, keywords) => {
+    if (!geminiService.genAI) {
+      const apiKey = prompt('Please enter your Gemini API key:');
+      if (!apiKey) return;
+      geminiService.initialize(apiKey);
+    }
+
+    try {
+      const generatedContent = await geminiService.generateContent(section, keywords);
+
+      switch (section.toLowerCase()) {
+        case 'profile':
+          const profileElement = document.querySelector('[data-section="profile"] p');
+          if (profileElement) {
+            let cleanedContent = generatedContent
+              .replace(/^#{1,6}\s+.+$/gm, '')
+              .replace(/\*\*(.+?)\*\*/g, '$1')
+              .replace(/\*(.+?)\*/g, '$1')
+              .trim();
+            const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
+            const actualSummary = paragraphs.find(p =>
+              !p.toLowerCase().includes('here are') &&
+              !p.toLowerCase().includes('of course') &&
+              !p.toLowerCase().includes('choose the option') &&
+              !p.toLowerCase().includes('pro-tip') &&
+              p.length > 100
+            );
+            profileElement.textContent = actualSummary?.trim() || paragraphs[0]?.trim() || cleanedContent;
+          }
+          break;
+        case 'skills':
+          const skillsGenerated = generatedContent.split('\n').filter(skill => skill.trim());
+          const newSkills = skillsGenerated.map((skill, index) => ({
+            id: Date.now() + index,
+            name: skill.trim(),
+            level: Math.floor(Math.random() * 30) + 70
+          }));
+          setSkills(newSkills);
+          break;
+      }
+    } catch (error) {
+      alert('Failed to generate content. Please check your API key and try again.');
+    }
+  };
+
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       saveState({ skills, education, references, experiences });
@@ -252,23 +299,23 @@ export default function Template13() {
             <div className="space-y-4 mb-8">
               <div className="flex items-start gap-2">
                 <Mail className="w-4 h-4 text-gray-600 mt-1" />
-                <span className="text-sm text-gray-700">hello@reallygreatsite.com</span>
+                <span className="text-sm text-gray-700" contentEditable suppressContentEditableWarning>hello@reallygreatsite.com</span>
               </div>
               <div className="flex items-start gap-2">
                 <Phone className="w-4 h-4 text-gray-600 mt-1" />
-                <span className="text-sm text-gray-700">+123-456-7890</span>
+                <span className="text-sm text-gray-700" contentEditable suppressContentEditableWarning>+123-456-7890</span>
               </div>
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-gray-600 mt-1" />
-                <span className="text-sm text-gray-700">123 Anywhere St., Any City</span>
+                <span className="text-sm text-gray-700" contentEditable suppressContentEditableWarning>123 Anywhere St., Any City</span>
               </div>
             </div>
           </div>
 
           {/* Right Column - Name */}
           <div className="w-2/3 p-8 pb-0">
-            <h1 className="text-4xl font-light text-gray-800 mb-2">Jonathan Patterson</h1>
-            <p className="text-sm tracking-widest text-gray-600">GRAPHIC DESIGNER</p>
+            <h1 className="text-4xl font-light text-gray-800 mb-2" contentEditable suppressContentEditableWarning>Jonathan Patterson</h1>
+            <p className="text-sm tracking-widest text-gray-600" contentEditable suppressContentEditableWarning>GRAPHIC DESIGNER</p>
           </div>
         </div>
 
@@ -284,7 +331,7 @@ export default function Template13() {
                   className="p-1 hover:bg-gray-200 rounded transition-all opacity-0 group-hover:opacity-100"
                   title="Add education"
                 >
-                  <Plus className="w-4 h-4 text-gray-600" />
+                  <Plus className="w-5 h-5 text-gray-600" />
                 </button>
               </div>
               
@@ -367,13 +414,18 @@ export default function Template13() {
             {/* Skills */}
             <section className="mb-8 group">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-sm font-bold tracking-wider text-gray-800">SKILLS</h2>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-sm font-bold tracking-wider text-gray-800">SKILLS</h2>
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                    <AISparkle section="Skills" onGenerate={handleAIGenerate} />
+                  </div>
+                </div>
                 <button
                   onClick={addSkill}
                   className="p-1 hover:bg-gray-200 rounded transition-all opacity-0 group-hover:opacity-100"
                   title="Add skill"
                 >
-                  <Plus className="w-4 h-4 text-gray-600" />
+                  <Plus className="w-5 h-5 text-gray-600" />
                 </button>
               </div>
               
@@ -435,7 +487,7 @@ export default function Template13() {
                           </button>
                         </div>
                       </div>
-                      <div className="w-full bg-gray-300 h-2 rounded">
+                      <div className="w-full bg-gray-300 h-2 rounded mt-3">
                         <div 
                           className="bg-gray-700 h-2 rounded transition-all duration-300" 
                           style={{ width: `${skill.level}%` }}
@@ -456,7 +508,7 @@ export default function Template13() {
                   className="p-1 hover:bg-gray-200 rounded transition-all opacity-0 group-hover:opacity-100"
                   title="Add reference"
                 >
-                  <Plus className="w-4 h-4 text-gray-600" />
+                  <Plus className="w-5 h-5 text-gray-600" />
                 </button>
               </div>
               
@@ -541,9 +593,14 @@ export default function Template13() {
           {/* Main Content */}
           <div className="w-2/3 p-8 pt-0">
             {/* Profile */}
-            <section className="mb-8">
-              <h2 className="text-sm font-bold tracking-wider text-gray-800 mb-3 border-b border-gray-300 pb-2">PROFILE</h2>
-              <p className="text-xs text-gray-600 leading-relaxed">
+            <section className="mb-8 group" data-section="profile">
+              <div className="flex items-center gap-2 mb-3 border-b border-gray-300 pb-2">
+                <h2 className="text-sm font-bold tracking-wider text-gray-800">PROFILE</h2>
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  <AISparkle section="Profile" onGenerate={handleAIGenerate} />
+                </div>
+              </div>
+              <p className="text-xs text-gray-600 leading-relaxed" contentEditable suppressContentEditableWarning>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sit amet sollicitudin nulla. Duis fermentum dapibus nec ullamcorper. Quisque molestae et orci vitae scelerisque. Aliquam volutpat malesuada purus, vitae accumsan ante. Phasellus tristique pulvinar rutrum. Duis tellus erat, consequat vitae consetetur adipiscing sed enim. Aenean molestie massa rutro, at eleifend nisl dignissim hendrerit.
               </p>
             </section>
@@ -557,7 +614,7 @@ export default function Template13() {
                   className="p-1 hover:bg-gray-200 rounded transition-all opacity-0 group-hover:opacity-100"
                   title="Add experience"
                 >
-                  <Plus className="w-4 h-4 text-gray-600" />
+                  <Plus className="w-5 h-5 text-gray-600" />
                 </button>
               </div>
               
@@ -603,7 +660,7 @@ export default function Template13() {
                             className="p-1 hover:bg-gray-200 rounded"
                             title="Add point"
                           >
-                            <Plus className="w-3 h-3 text-gray-600" />
+                            <Plus className="w-5 h-5 text-gray-600" />
                           </button>
                         </div>
                         {editExperience.points?.map((point, idx) => (
@@ -666,9 +723,12 @@ export default function Template13() {
                       <p className="text-xs text-gray-600 leading-relaxed mb-2">
                         {exp.description}
                       </p>
-                      <ul className="list-disc list-inside text-xs text-gray-600 space-y-1">
+                      <ul className="ml-4 text-xs text-gray-600 space-y-1">
                         {exp.points.map((point, idx) => (
-                          <li key={idx}>{point}</li>
+                          <li key={idx} className="flex items-start">
+                            <span className="mr-2">•</span>
+                            <span>{point}</span>
+                          </li>
                         ))}
                       </ul>
                     </div>
