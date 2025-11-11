@@ -52,7 +52,7 @@ export default function Home() {
     ? templates
     : templates.filter(template => template.category.toLowerCase() === activeFilter.toLowerCase());
 
-  const duplicatedTemplates = [...filteredTemplates, ...filteredTemplates];
+
 
   const scrollPrev = () => {
     scrollRef.current?.scrollBy({ left: -344, behavior: 'smooth' });
@@ -150,7 +150,7 @@ export default function Home() {
             </button>
             <div ref={scrollRef} className="overflow-x-auto pb-4 scrollbar-hide scroll-smooth">
               <div className="flex gap-6 min-w-max mt-2" style={{ scrollSnapType: 'x mandatory' }}>
-                {duplicatedTemplates.map((template, index) => (
+                {filteredTemplates.map((template, index) => (
                   <div
                     key={`${template.id}-${index}`}
                     className="group relative bg-gradient-to-b from-[#f6f9fc] to-[#e8edf5] rounded-2xl shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden block flex-shrink-0 w-80 hover:bg-gradient-to-r hover:from-blue-100 hover:to-purple-100"
@@ -205,15 +205,15 @@ export default function Home() {
               </div>
             </div>
             <div className="flex justify-center mt-6 gap-2">
-              {templates.map((_, index) => (
+              {filteredTemplates.map((_, index) => (
                 <button
                   key={index}
                   className={`w-2 h-2 rounded-full transition-all duration-300 ${activeIndex === index ? 'bg-indigo-600 scale-125' : 'bg-gray-300 hover:bg-gray-400'
                     }`}
                   onClick={() => {
-                    const cardWidth = 344; // card width + gap
+                    const cardWidth = 344;
                     scrollRef.current?.scrollTo({
-                      left: (index + 1) * cardWidth, // +1 to skip the first clone
+                      left: index * cardWidth,
                       behavior: 'smooth'
                     });
                     setActiveIndex(index);
