@@ -38,7 +38,7 @@ const AISparkle = ({ section, onGenerate, className = "" }) => {
   return (
     <div className="relative" ref={popoverRef} onClick={(e) => e.stopPropagation()}>
       <Sparkles 
-        className={`w-4 h-4 text-purple-600 hover:text-purple-700 cursor-pointer ${className}`}
+        className={`ai-icon w-4 h-4 text-purple-600 hover:text-purple-700 cursor-pointer ${className}`}
         onClick={(e) => {
           e.stopPropagation();
           e.preventDefault();

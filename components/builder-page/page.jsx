@@ -66,12 +66,12 @@ const BuildSection = () => {
         }
       `}</style>
 
-      <section className="w-full min-h-screen bg-[#EDF2FD] py-10 sm:py-12 md:py-16 lg:py-16 xl:py-20 px-4 sm:px-6 lg:px-8">
+      <section className="w-full min-h-screen bg-[#EDF2FD] py-10 sm:py-12 md:py-16 lg:py-16 xl:py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8 lg:gap-12">
 
             {/* Left Content */}
-            <div className="w-full lg:w-1/2 xl:w-[55%] text-center lg:text-left space-y-4 sm:space-y-6 animate-fade-in-up py-0 sm:py-4 md:py-6 lg:py-10">
+            <div className="w-full lg:w-1/2 xl:w-[55%] text-center lg:text-left space-y-4 sm:space-y-6 animate-fade-in-up pt-0 sm:pt-4 md:pt-6 lg:pt-14">
               {/* Rating Badge */}
               <div className="inline-flex items-center bg-white px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 rounded-full shadow-sm border cursor-pointer border-gray-100 hover:shadow-xl transition-shadow duration-300">
                 <Star className="w-4 h-4 sm:w-5 sm:h-5 text-[#28c260] fill-[#09b348] mr-1.5 sm:mr-2 animate-pulse" />
