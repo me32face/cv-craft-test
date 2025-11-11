@@ -4,8 +4,8 @@ import {
     Copy, Trash2, CopyPlus, Trash, Globe, Phone, Mail, MapPin,
     User, Briefcase, GraduationCap 
 } from "lucide-react"; 
-import AISparkle from '../AISparkle'; // ADD THIS IMPORT
-import { geminiService } from '../../lib/gemini'; // ADD THIS IMPORT
+import AISparkle from '../AISparkle';
+import { geminiService } from '../../lib/gemini';
 
 // --- INITIAL DATA (Retaining Template 3 content structure) ---
 const initialData = {
@@ -15,7 +15,7 @@ const initialData = {
       "Knowledgeable and qualified Clinical Psychologist with a proven track record of success in conducting comprehensive psychological evaluations, developing custom treatment plans, and providing professional individual and group psychotherapy.",
     experience: [
       {
-        id: 1, // Added ID for reliable handling
+        id: 1,
         role: "Head Clinical Psychologist",
         company: "BORCELLE HOSPITAL",
         years: "1997 - 2020",
@@ -23,13 +23,13 @@ const initialData = {
     ],
     education: [
       {
-        id: 1, // Added ID
+        id: 1,
         degree: "Doctorate - Clinical Psychology",
         school: "UNIVERSITY OF GINYARD",
         years: "1997 - 2020",
       },
     ],
-    skills: [ // This is the array that needs careful handling
+    skills: [
       "Counseling", "Psychotherapy", "Evidence-Based Therapy", 
       "Behavior Modification", "Coaching", "Communication", 
       "Interpersonal", "Active Listening", "Writing Reports",
@@ -41,7 +41,7 @@ const initialData = {
     },
 };
 
-// --- Reusable Editable Component (To prevent typing bug) ---
+// --- Reusable Editable Component ---
 const EditableText = React.forwardRef(({ value, onUpdate, className = "", tagName = 'span', ...props }, ref) => {
     const Tag = tagName;
     
@@ -64,17 +64,31 @@ const EditableText = React.forwardRef(({ value, onUpdate, className = "", tagNam
 });
 EditableText.displayName = 'EditableText';
 
+// --- Editable Header Component ---
+const EditableHeader = ({ children, className = "" }) => {
+    return (
+        <h2 
+            contentEditable 
+            suppressContentEditableWarning
+            className={`text-yellow-600 font-semibold tracking-widest text-base sm:text-lg ${className}`}
+        >
+            {children}
+        </h2>
+    );
+};
+
 // --- Main Component ---
 export default function Template18() {
     const [resume, setResume] = useState(initialData);
     const [photo, setPhoto] = useState("/profile.jpg");
+    const [aiLoading, setAiLoading] = useState(false);
     
     const fileInputRef = useRef(null);
     const editorContainerRef = useRef(null);
     const cvRef = useRef(null);
-    const profileTextareaRef = useRef(null); 
+    const profileTextareaRef = useRef(null);
 
-    // ADD AI GENERATION FUNCTION FOR PROFILE AND SKILLS
+    // FIXED AI GENERATION FUNCTION - No DOM manipulation
     const handleAIGenerate = async (section, keywords) => {
         if (!geminiService.genAI) {
             const apiKey = prompt('Please enter your Gemini API key:');
@@ -82,51 +96,45 @@ export default function Template18() {
             geminiService.initialize(apiKey);
         }
 
+        setAiLoading(true);
         try {
             const generatedContent = await geminiService.generateContent(section, keywords);
 
             switch (section.toLowerCase()) {
                 case 'profile':
-                    const profileElement = document.querySelector('[data-section="profile"] [contenteditable]');
-                    if (profileElement) {
-                        let cleanedContent = generatedContent
-                            .replace(/^#{1,6}\s+.+$/gm, '')
-                            .replace(/\*\*(.+?)\*\*/g, '$1')
-                            .replace(/\*(.+?)\*/g, '$1')
-                            .trim();
+                    let cleanedContent = generatedContent
+                        .replace(/^#{1,6}\s+.+$/gm, '')
+                        .replace(/\*\*(.+?)\*\*/g, '$1')
+                        .replace(/\*(.+?)\*/g, '$1')
+                        .trim();
 
-                        const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
-                        const actualProfile = paragraphs.find(p =>
-                            !p.toLowerCase().includes('here are') &&
-                            !p.toLowerCase().includes('of course') &&
-                            !p.toLowerCase().includes('choose the option') &&
-                            !p.toLowerCase().includes('pro-tip') &&
-                            p.length > 100
-                        );
+                    const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
+                    const actualProfile = paragraphs.find(p =>
+                        !p.toLowerCase().includes('here are') &&
+                        !p.toLowerCase().includes('of course') &&
+                        !p.toLowerCase().includes('choose the option') &&
+                        !p.toLowerCase().includes('pro-tip') &&
+                        p.length > 100
+                    );
 
-                        const finalContent = actualProfile?.trim() || paragraphs[0]?.trim() || cleanedContent;
-                        profileElement.textContent = finalContent;
-                        
-                        // Update state
-                        setResume(prev => ({
-                            ...prev,
-                            profile: finalContent
-                        }));
-                    }
+                    const finalContent = actualProfile?.trim() || paragraphs[0]?.trim() || cleanedContent;
+                    
+                    // Update state only - no DOM manipulation
+                    setResume(prev => ({
+                        ...prev,
+                        profile: finalContent
+                    }));
                     break;
 
                 case 'skills':
-                    const skillsContainer = document.querySelector('[data-section="skills"] ul');
-                    if (skillsContainer) {
-                        const skills = generatedContent.split('\n').filter(skill => skill.trim());
-                        const newSkills = skills.slice(0, 10); // Limit to 10 skills
-                        
-                        // Update state
-                        setResume(prev => ({
-                            ...prev,
-                            skills: newSkills.map(skill => skill.trim())
-                        }));
-                    }
+                    const skills = generatedContent.split('\n').filter(skill => skill.trim());
+                    const newSkills = skills.slice(0, 10).map(skill => skill.trim());
+                    
+                    // Update state only - no DOM manipulation
+                    setResume(prev => ({
+                        ...prev,
+                        skills: newSkills
+                    }));
                     break;
 
                 default:
@@ -134,6 +142,8 @@ export default function Template18() {
             }
         } catch (error) {
             alert('Failed to generate content. Please check your API key and try again.');
+        } finally {
+            setAiLoading(false);
         }
     };
 
@@ -144,13 +154,10 @@ export default function Template18() {
             let newData = { ...prev };
             
             if (keys.length === 1) {
-                // Handles direct array mutation (e.g., skill list item update)
                 newData[keys[0]] = value;
             } else if (keys.length === 2) {
-                // Handles resume.contact.address or simple top-level fields
                 newData = { ...prev, [keys[0]]: { ...prev[keys[0]], [keys[1]]: value } };
             } else if (keys.length === 3) {
-                // Handles list updates: resume.experience[i].role
                 const section = keys[0];
                 const index = parseInt(keys[1], 10);
                 const field = keys[2];
@@ -179,9 +186,8 @@ export default function Template18() {
         });
     };
     
-    // --- SKILL HANDLERS (Simple array manipulation) ---
+    // --- SKILL HANDLERS ---
     const updateSkill = (index, value) => {
-        // This is the array that needs careful handling to keep it an array!
         setResume(prev => {
             const newSkills = [...prev.skills];
             newSkills[index] = value;
@@ -204,8 +210,6 @@ export default function Template18() {
             return { ...prev, skills: newSkills };
         });
     };
-    // --- END SKILL HANDLERS ---
-
 
     // ---- image upload ----
     const handleImageUpload = (e) => {
@@ -219,16 +223,22 @@ export default function Template18() {
         }
     };
 
-    // Initialize textarea height on component mount and when profile changes
+    // Initialize textarea height
     useEffect(() => {
         if (profileTextareaRef.current) {
-            // Using a height calculation fallback 
             profileTextareaRef.current.style.height = profileTextareaRef.current.scrollHeight + 'px';
         }
     }, [resume.profile]);
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">
+            {/* AI Loading Indicator */}
+            {aiLoading && (
+                <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
+                    Generating content with AI...
+                </div>
+            )}
+            
             <div
                 ref={editorContainerRef}
                 data-editor-container
@@ -295,11 +305,9 @@ export default function Template18() {
                                 {/* PROFILE with AI */}
                                 <section className="relative group" data-section="profile">
                                     <div className="flex items-center justify-between mb-2 sm:mb-3">
-                                        <h2 className="text-yellow-600 font-semibold tracking-widest text-base sm:text-lg" contentEditable suppressContentEditableWarning>
-                                            PROFILE
-                                        </h2>
+                                        <EditableHeader>PROFILE</EditableHeader>
                                         <div className="absolute left-0 -top-5 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <AISparkle section="Profile" onGenerate={handleAIGenerate} />
+                                            <AISparkle section="Profile" onGenerate={handleAIGenerate} disabled={aiLoading} />
                                         </div>
                                     </div>
                                     <div className="min-h-[80px] sm:min-h-[100px]">
@@ -317,9 +325,7 @@ export default function Template18() {
 
                                 {/* EXPERIENCE */}
                                 <section>
-                                    <h2 className="text-yellow-600 font-semibold tracking-widest mb-2 sm:mb-3 text-base sm:text-lg" contentEditable suppressContentEditableWarning>
-                                        EXPERIENCE
-                                    </h2>
+                                    <EditableHeader className="mb-2 sm:mb-3">EXPERIENCE</EditableHeader>
                                     <div className="space-y-3 sm:space-y-4">
                                         {resume.experience.map((exp, i) => (
                                             <div
@@ -365,9 +371,7 @@ export default function Template18() {
 
                                 {/* EDUCATION */}
                                 <section>
-                                    <h2 className="text-yellow-600 font-semibold tracking-widest mb-2 sm:mb-3 text-base sm:text-lg" contentEditable suppressContentEditableWarning>
-                                        EDUCATION
-                                    </h2>
+                                    <EditableHeader className="mb-2 sm:mb-3">EDUCATION</EditableHeader>
                                     <div className="space-y-3 sm:space-y-4">
                                         {resume.education.map((edu, i) => (
                                             <div
@@ -417,11 +421,9 @@ export default function Template18() {
                                 {/* SKILLS with AI */}
                                 <section className="relative group" data-section="skills">
                                     <div className="flex items-center justify-between mb-2 sm:mb-3">
-                                        <h2 className="text-yellow-600 font-semibold tracking-widest text-base sm:text-lg" contentEditable suppressContentEditableWarning>
-                                            SKILLS
-                                        </h2>
+                                        <EditableHeader>SKILLS</EditableHeader>
                                         <div className="absolute left-0 -top-5 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <AISparkle section="Skills" onGenerate={handleAIGenerate} />
+                                            <AISparkle section="Skills" onGenerate={handleAIGenerate} disabled={aiLoading} />
                                         </div>
                                     </div>
                                     <ul className="space-y-1 sm:space-y-2">
@@ -457,9 +459,7 @@ export default function Template18() {
 
                                 {/* CONTACT */}
                                 <section>
-                                    <h2 className="text-yellow-600 font-semibold tracking-widest mb-2 sm:mb-3 text-base sm:text-lg" contentEditable suppressContentEditableWarning>
-                                        CONTACT
-                                    </h2>
+                                    <EditableHeader className="mb-2 sm:mb-3">CONTACT</EditableHeader>
                                     <div className="space-y-1 sm:space-y-2 text-black">
                                         {/* Address */}
                                         <div className="p-1 sm:p-2 rounded border border-transparent hover:border-gray-200 hover:bg-gray-50 transition-colors">
@@ -488,7 +488,7 @@ export default function Template18() {
                                                 placeholder="Email"
                                             />
                                         </div>
-                                        {/* Globe Example (Retained structural alignment) */}
+                                        {/* Globe Example */}
                                         <div className="p-1 sm:p-2 rounded border border-transparent hover:border-gray-200 hover:bg-gray-50 transition-colors">
                                             <div className="flex items-center gap-2 text-sm sm:text-base text-gray-500">
                                                 <Globe className="w-4 h-4" />

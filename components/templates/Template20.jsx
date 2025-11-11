@@ -1,10 +1,10 @@
 "use client";
-import React, { useState, useCallback, useRef, useMemo } from 'react';
+import React, { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { Phone, Mail, MapPin, CopyPlus, Trash2, Menu, Upload, Monitor } from 'lucide-react';
-import AISparkle from '../AISparkle'; // ADD THIS IMPORT
-import { geminiService } from '../../lib/gemini'; // ADD THIS IMPORT
+import { Phone, Mail, MapPin, CopyPlus, Trash2, Menu, Upload, Monitor, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, Palette } from 'lucide-react';
+import AISparkle from '../AISparkle';
+import { geminiService } from '../../lib/gemini';
 
 // --- UTILITY FUNCTIONS & INITIAL DATA ---
 
@@ -22,7 +22,7 @@ const INITIAL_RESUME_DATA = {
     name: "DANIEL GALLEGO",
     role: "DEVELOPER",
     summary: "I am a developer interested in mobile applications. I have a systematic working style and a creative process that I created by myself.",
-    image: null, // Added image field
+    image: null,
   },
   contact: {
     phone: "+123-456-7890",
@@ -53,17 +53,139 @@ const INITIAL_RESUME_DATA = {
   ],
 };
 
+// --- GLOBAL FORMATTING SYSTEM ---
+
+// Global formatting functions that can be applied to any element
+const globalFormatting = {
+  // Text formatting
+  bold: (element) => {
+    if (element) {
+      const isBold = element.style.fontWeight === 'bold';
+      element.style.fontWeight = isBold ? 'normal' : 'bold';
+    }
+  },
+  
+  italic: (element) => {
+    if (element) {
+      const isItalic = element.style.fontStyle === 'italic';
+      element.style.fontStyle = isItalic ? 'normal' : 'italic';
+    }
+  },
+  
+  underline: (element) => {
+    if (element) {
+      const isUnderlined = element.style.textDecoration === 'underline';
+      element.style.textDecoration = isUnderlined ? 'none' : 'underline';
+    }
+  },
+  
+  // Text alignment
+  alignLeft: (element) => {
+    if (element) element.style.textAlign = 'left';
+  },
+  
+  alignCenter: (element) => {
+    if (element) element.style.textAlign = 'center';
+  },
+  
+  alignRight: (element) => {
+    if (element) element.style.textAlign = 'right';
+  },
+  
+  // Color formatting
+  setColor: (element, color) => {
+    if (element) element.style.color = color;
+  },
+  
+  setBackgroundColor: (element, color) => {
+    if (element) element.style.backgroundColor = color;
+  },
+  
+  // Font size
+  setFontSize: (element, size) => {
+    if (element) element.style.fontSize = size;
+  },
+  
+  // Font family
+  setFontFamily: (element, fontFamily) => {
+    if (element) element.style.fontFamily = fontFamily;
+  },
+  
+  // Reset formatting
+  reset: (element) => {
+    if (element) {
+      element.style.fontWeight = '';
+      element.style.fontStyle = '';
+      element.style.textDecoration = '';
+      element.style.textAlign = '';
+      element.style.color = '';
+      element.style.backgroundColor = '';
+      element.style.fontSize = '';
+      element.style.fontFamily = '';
+    }
+  }
+};
+
+// Hook to manage global formatting
+const useGlobalFormatting = () => {
+  const [activeElement, setActiveElement] = useState(null);
+  
+  const applyFormatting = useCallback((formatFunction, ...args) => {
+    if (activeElement) {
+      formatFunction(activeElement, ...args);
+    }
+  }, [activeElement]);
+  
+  return {
+    activeElement,
+    setActiveElement,
+    applyFormatting
+  };
+};
+
 // --- CORE UTILITY COMPONENTS ---
 
 /**
- * Reusable component for in-place editing. Updates state on blur.
+ * Enhanced EditableText component with formatting support
  */
-const EditableText = ({ tag: Tag, value, onUpdate, className, ...props }) => {
+const EditableText = ({ 
+  tag: Tag, 
+  value, 
+  onUpdate, 
+  className, 
+  formattingEnabled = true,
+  onFocus,
+  ...props 
+}) => {
+  const ref = useRef(null);
+  const { setActiveElement } = useGlobalFormatting();
+
+  const handleFocus = (e) => {
+    if (formattingEnabled) {
+      setActiveElement(e.currentTarget);
+    }
+    if (onFocus) onFocus(e);
+  };
+
+  const handleBlur = (e) => {
+    onUpdate(e.currentTarget.textContent || '');
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      e.currentTarget.blur();
+    }
+  };
+
   return (
     <Tag
+      ref={ref}
       contentEditable
       suppressContentEditableWarning
-      onBlur={(e) => onUpdate(e.currentTarget.textContent || '')}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      onKeyDown={handleKeyDown}
       className={`focus:outline-none focus:ring-1 focus:ring-gray-400/50 rounded-sm cursor-text ${className}`}
       {...props}
     >
@@ -73,19 +195,153 @@ const EditableText = ({ tag: Tag, value, onUpdate, className, ...props }) => {
 };
 
 /**
+ * Floating Formatting Toolbar
+ */
+const FormattingToolbar = () => {
+  const { activeElement, applyFormatting } = useGlobalFormatting();
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [showFontSize, setShowFontSize] = useState(false);
+
+  if (!activeElement) return null;
+
+  return (
+    <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg p-2 flex items-center space-x-1 z-50 border border-gray-200">
+      {/* Text Formatting */}
+      <button
+        onClick={() => applyFormatting(globalFormatting.bold)}
+        className="p-2 hover:bg-gray-100 rounded transition"
+        title="Bold"
+      >
+        <Bold className="w-4 h-4" />
+      </button>
+      
+      <button
+        onClick={() => applyFormatting(globalFormatting.italic)}
+        className="p-2 hover:bg-gray-100 rounded transition"
+        title="Italic"
+      >
+        <Italic className="w-4 h-4" />
+      </button>
+      
+      <button
+        onClick={() => applyFormatting(globalFormatting.underline)}
+        className="p-2 hover:bg-gray-100 rounded transition"
+        title="Underline"
+      >
+        <Underline className="w-4 h-4" />
+      </button>
+      
+      <div className="w-px h-6 bg-gray-300 mx-1"></div>
+      
+      {/* Alignment */}
+      <button
+        onClick={() => applyFormatting(globalFormatting.alignLeft)}
+        className="p-2 hover:bg-gray-100 rounded transition"
+        title="Align Left"
+      >
+        <AlignLeft className="w-4 h-4" />
+      </button>
+      
+      <button
+        onClick={() => applyFormatting(globalFormatting.alignCenter)}
+        className="p-2 hover:bg-gray-100 rounded transition"
+        title="Align Center"
+      >
+        <AlignCenter className="w-4 h-4" />
+      </button>
+      
+      <button
+        onClick={() => applyFormatting(globalFormatting.alignRight)}
+        className="p-2 hover:bg-gray-100 rounded transition"
+        title="Align Right"
+      >
+        <AlignRight className="w-4 h-4" />
+      </button>
+      
+      <div className="w-px h-6 bg-gray-300 mx-1"></div>
+      
+      {/* Color Picker */}
+      <div className="relative">
+        <button
+          onClick={() => setShowColorPicker(!showColorPicker)}
+          className="p-2 hover:bg-gray-100 rounded transition"
+          title="Text Color"
+        >
+          <Palette className="w-4 h-4" />
+        </button>
+        
+        {showColorPicker && (
+          <div className="absolute top-full left-0 mt-1 bg-white shadow-lg rounded-lg p-2 grid grid-cols-4 gap-1 z-50">
+            {['#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFFFFF'].map(color => (
+              <button
+                key={color}
+                onClick={() => applyFormatting(globalFormatting.setColor, color)}
+                className="w-6 h-6 rounded border border-gray-300"
+                style={{ backgroundColor: color }}
+                title={color}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+      
+      {/* Font Size */}
+      <div className="relative">
+        <button
+          onClick={() => setShowFontSize(!showFontSize)}
+          className="p-2 hover:bg-gray-100 rounded transition text-sm font-medium"
+          title="Font Size"
+        >
+          Aa
+        </button>
+        
+        {showFontSize && (
+          <div className="absolute top-full left-0 mt-1 bg-white shadow-lg rounded-lg p-2 grid grid-cols-2 gap-1 z-50">
+            {['12px', '14px', '16px', '18px', '20px', '24px', '32px', '48px'].map(size => (
+              <button
+                key={size}
+                onClick={() => applyFormatting(globalFormatting.setFontSize, size)}
+                className="px-2 py-1 hover:bg-gray-100 rounded text-sm"
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+      
+      <div className="w-px h-6 bg-gray-300 mx-1"></div>
+      
+      {/* Reset */}
+      <button
+        onClick={() => applyFormatting(globalFormatting.reset)}
+        className="p-2 hover:bg-gray-100 rounded transition text-sm font-medium"
+        title="Reset Formatting"
+      >
+        Reset
+      </button>
+    </div>
+  );
+};
+
+/**
  * Renders the controls (drag handle, delete, duplicate) for a list item.
  */
 const ItemControls = ({ onDelete, onDuplicate, dragRef, handleStyle = "w-6 h-6", orientation = "horizontal" }) => (
-  // Controls are hidden when printing using 'print:hidden'
-  <div className={`absolute p-1 flex opacity-0 group-hover:opacity-100 transition-opacity bg-white/70 backdrop-blur-sm shadow-md z-10 print:hidden ${
-    orientation === "horizontal" 
-      ? "top-0 right-0 space-x-1 rounded-bl-lg" 
-      : "right-0 flex-col space-y-1 rounded-l-lg"
-  }`}>
+  <div 
+    className={`absolute p-1 flex opacity-0 group-hover:opacity-100 transition-opacity bg-white/70 backdrop-blur-sm shadow-md z-10 print:hidden ${
+      orientation === "horizontal" 
+        ? "top-0 right-0 space-x-1 rounded-bl-lg" 
+        : "right-0 flex-col space-y-1 rounded-l-lg"
+    }`}
+    role="toolbar"
+    aria-label="Item controls"
+  >
     <button
       onClick={onDuplicate}
       title="Duplicate"
       className="text-gray-600 hover:text-blue-600 p-0.5 rounded-full hover:bg-blue-50 transition"
+      aria-label="Duplicate item"
     >
       <CopyPlus className="w-4 h-4" />
     </button>
@@ -93,6 +349,7 @@ const ItemControls = ({ onDelete, onDuplicate, dragRef, handleStyle = "w-6 h-6",
       onClick={onDelete}
       title="Delete"
       className="text-gray-600 hover:text-red-600 p-0.5 rounded-full hover:bg-red-50 transition"
+      aria-label="Delete item"
     >
       <Trash2 className="w-4 h-4" />
     </button>
@@ -100,6 +357,9 @@ const ItemControls = ({ onDelete, onDuplicate, dragRef, handleStyle = "w-6 h-6",
       ref={dragRef}
       title="Drag to Reorder"
       className={`text-gray-600 cursor-grab active:cursor-grabbing p-0.5 rounded-full hover:bg-gray-100 transition ${handleStyle}`}
+      aria-label="Drag handle"
+      role="button"
+      tabIndex={0}
     >
       <Menu className="w-4 h-4" />
     </div>
@@ -121,9 +381,24 @@ const ImageUpload = ({ image, onImageChange }) => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select a valid image file (JPEG, PNG, etc.)');
+        return;
+      }
+
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image size should be less than 5MB');
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = (e) => {
         onImageChange(e.target.result);
+      };
+      reader.onerror = () => {
+        alert('Error reading file. Please try again.');
       };
       reader.readAsDataURL(file);
     }
@@ -134,11 +409,22 @@ const ImageUpload = ({ image, onImageChange }) => {
     onImageChange(null);
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleImageClick();
+    }
+  };
+
   return (
     <div className="relative group">
       <div
         className="w-32 h-32 mr-8 flex-shrink-0 cursor-pointer relative"
         onClick={handleImageClick}
+        onKeyDown={handleKeyDown}
+        role="button"
+        tabIndex={0}
+        aria-label="Upload profile image"
       >
         {/* Display uploaded image or fallback */}
         {image ? (
@@ -164,6 +450,7 @@ const ImageUpload = ({ image, onImageChange }) => {
             onClick={handleRemoveImage}
             className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20"
             title="Remove image"
+            aria-label="Remove profile image"
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -177,6 +464,7 @@ const ImageUpload = ({ image, onImageChange }) => {
         onChange={handleFileChange}
         accept="image/*"
         className="hidden"
+        aria-label="Profile image upload"
       />
     </div>
   );
@@ -185,11 +473,11 @@ const ImageUpload = ({ image, onImageChange }) => {
 // --- DYNAMIC LIST COMPONENTS ---
 
 /**
- * Draggable component for a single skill or language bar. (Vertical Drag/Drop and Bar Adjustment)
+ * Draggable component for a single skill or language bar.
  */
 const DraggableChartItem = ({ item, section, index, updateItem, moveItem, deleteItem, duplicateItem }) => {
-  const ref = useRef(null); // Ref for the main item container (for DND reordering)
-  const barRef = useRef(null); // Ref for the bar adjustment container
+  const ref = useRef(null);
+  const barRef = useRef(null);
   const type = section === 'skills' ? DND_ITEM_TYPE.SKILL : DND_ITEM_TYPE.LANGUAGE;
 
   // --- DND for Reordering (Vertical) ---
@@ -226,39 +514,29 @@ const DraggableChartItem = ({ item, section, index, updateItem, moveItem, delete
   drag(drop(ref));
   
   // --- Drag Logic for Adjusting Value ---
-
   const handleAdjust = useCallback((e) => {
-    // Determine client X based on mouse or touch event
     const x = e.clientX || (e.touches?.[0]?.clientX);
     if (!x || !barRef.current) return;
 
-    // Get the bounding box of the bar container
     const rect = barRef.current.getBoundingClientRect();
-    
-    // Calculate the distance from the start of the bar
     const offsetX = x - rect.left;
-    
-    // Calculate the percentage (min 0, max 100)
     let percentage = (offsetX / rect.width) * 100;
     percentage = Math.max(0, Math.min(100, Math.round(percentage)));
 
-    // Update the item value immediately
     updateItem(item.id, 'value', percentage);
-    e.preventDefault(); // Prevent text selection/scrolling during adjustment
+    e.preventDefault();
   }, [item.id, updateItem]);
 
   const handleDragStart = useCallback((e) => {
-    // Start drag: Attach move/end listeners globally
     document.addEventListener('mousemove', handleAdjust);
     document.addEventListener('mouseup', handleDragEnd);
     document.addEventListener('touchmove', handleAdjust, { passive: false });
     document.addEventListener('touchend', handleDragEnd);
-    document.body.style.userSelect = 'none'; // Prevent text selection during drag
-    handleAdjust(e); // Update value immediately on click/touch start
+    document.body.style.userSelect = 'none';
+    handleAdjust(e);
   }, [handleAdjust]);
 
   const handleDragEnd = useCallback(() => {
-    // End drag: Remove global listeners
     document.removeEventListener('mousemove', handleAdjust);
     document.removeEventListener('mouseup', handleDragEnd);
     document.removeEventListener('touchmove', handleAdjust);
@@ -270,7 +548,6 @@ const DraggableChartItem = ({ item, section, index, updateItem, moveItem, delete
     <div
       ref={ref}
       className={`group relative py-2 ${isDragging ? 'opacity-50' : 'opacity-100'}`}
-      style={{ opacity: isDragging ? 0.5 : 1 }}
     >
       {/* Dynamic Controls (Reordering) */}
       <ItemControls
@@ -288,32 +565,43 @@ const DraggableChartItem = ({ item, section, index, updateItem, moveItem, delete
           onUpdate={(newValue) => updateItem(item.id, 'label', newValue)}
           className="w-24 text-sm font-semibold text-black"
         />
-        {/* Percentage display removed permanently from here */}
       </div>
 
-      {/* Chart Bar Container (Made draggable over its entire area) */}
+      {/* Chart Bar Container */}
       <div
         ref={barRef}
         className="h-2.5 w-full bg-gray-200 rounded-full overflow-visible relative cursor-ew-resize print:hidden"
-        onMouseDown={handleDragStart} // Mouse down starts drag on the bar area
-        onTouchStart={handleDragStart} // Touch start starts drag on the bar area
+        onMouseDown={handleDragStart}
+        onTouchStart={handleDragStart}
+        role="slider"
+        aria-label={`Adjust ${item.label} value`}
+        aria-valuenow={item.value}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            const newValue = Math.min(100, item.value + 5);
+            updateItem(item.id, 'value', newValue);
+          } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            const newValue = Math.max(0, item.value - 5);
+            updateItem(item.id, 'value', newValue);
+          }
+        }}
       >
         <div
-          // Bar color changed to dark gray/black to match the original design's aesthetic
           className="h-full bg-black rounded-full transition-all duration-300 relative pointer-events-none"
           style={{ width: `${item.value}%` }}
-        >
-          {/* REMOVED: The red dot visual indicator */}
-        </div>
+        />
       </div>
-
-       {/* REMOVED: The temporary visual percentage display */}
     </div>
   );
 };
 
 /**
- * Draggable component for a single timeline event. (Horizontal Drag/Drop)
+ * Draggable component for a single timeline event.
  */
 const DraggableTimelineItem = ({ item, index, updateItem, moveItem, deleteItem, duplicateItem, itemWidth }) => {
   const ref = useRef(null);
@@ -351,25 +639,29 @@ const DraggableTimelineItem = ({ item, index, updateItem, moveItem, deleteItem, 
 
   drag(drop(ref));
 
-  // Tailwind classes for the position relative to the main line (now horizontal)
   const dotClasses = "absolute w-3 h-3 bg-black rounded-full border-2 border-white transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 z-20";
   const contentClasses = "absolute w-full px-2 text-center";
 
-  // Applied calculated itemWidth to ensure horizontal fit
   return (
-    // FIX: Increased height from h-40 to h-48 to provide ample space for wrapping text without clipping.
-    <div ref={ref} className="relative flex-shrink-0 h-48 group" style={{ opacity: isDragging ? 0.5 : 1, width: itemWidth }}>
-
-      {/* Timeline Dot (always centered vertically within the h-48 container) */}
+    <div 
+      ref={ref} 
+      className={`relative flex-shrink-0 h-48 group ${isDragging ? 'opacity-50' : 'opacity-100'}`} 
+      style={{ width: itemWidth }}
+    >
+      {/* Timeline Dot */}
       <div className={dotClasses}></div>
 
-      {/* Content Container - Group for visibility of controls */}
+      {/* Content Container */}
       <div className={`${contentClasses} ${item.isAbove ? 'top-0 pt-2' : 'bottom-0 pb-4'}`}> 
-        {/* Content - FIX: All text colors are now text-black for maximum contrast */}
         <EditableText
           tag="div"
           value={item.year.toString()}
-          onUpdate={(newValue) => updateItem(item.id, 'year', parseInt(newValue) || 0)}
+          onUpdate={(newValue) => {
+            const parsedYear = parseInt(newValue);
+            if (!isNaN(parsedYear) && parsedYear >= 1900 && parsedYear <= 2100) {
+              updateItem(item.id, 'year', parsedYear);
+            }
+          }}
           className="text-sm font-bold text-black"
         />
         <EditableText
@@ -386,7 +678,7 @@ const DraggableTimelineItem = ({ item, index, updateItem, moveItem, deleteItem, 
         />
       </div>
 
-      {/* FIX: Controls moved to appear on the SIDE instead of on top */}
+      {/* Controls */}
       <ItemControls
         onDelete={() => deleteItem(item.id)}
         onDuplicate={() => duplicateItem(item)}
@@ -399,16 +691,37 @@ const DraggableTimelineItem = ({ item, index, updateItem, moveItem, deleteItem, 
 };
 
 /**
- * Main Application Component (equivalent to Next.js page)
+ * Main Application Component
  */
 const App = () => {
   const [resumeData, setResumeData] = useState(INITIAL_RESUME_DATA);
+  const [aiLoading, setAiLoading] = useState(false);
   const editorContainerRef = useRef(null);
   const cvRef = useRef(null);
   
-  // FIX: Calculate the dynamic width for timeline items to ensure non-scrollable fit
+  const { activeElement, setActiveElement, applyFormatting } = useGlobalFormatting();
   const timelineItemCount = resumeData.timeline.length;
   const itemWidth = `${100 / timelineItemCount}%`;
+
+  // Global formatting function that can be called from anywhere
+  const globalFormat = (formatType, ...args) => {
+    if (activeElement) {
+      globalFormatting[formatType]?.(activeElement, ...args);
+    }
+  };
+
+  // Expose global formatting to window for external access
+  useEffect(() => {
+    window.globalFormat = globalFormat;
+    window.globalFormatting = globalFormatting;
+    window.setActiveElement = setActiveElement;
+    
+    return () => {
+      delete window.globalFormat;
+      delete window.globalFormatting;
+      delete window.setActiveElement;
+    };
+  }, [activeElement]);
 
   // ADD AI GENERATION FUNCTION
   const handleAIGenerate = async (section, keywords) => {
@@ -418,40 +731,36 @@ const App = () => {
       geminiService.initialize(apiKey);
     }
 
+    setAiLoading(true);
     try {
       const generatedContent = await geminiService.generateContent(section, keywords);
 
       switch (section.toLowerCase()) {
         case 'profile':
-          const profileElement = document.querySelector('[data-section="profile"] [contenteditable]');
-          if (profileElement) {
-            let cleanedContent = generatedContent
-              .replace(/^#{1,6}\s+.+$/gm, '')
-              .replace(/\*\*(.+?)\*\*/g, '$1')
-              .replace(/\*(.+?)\*/g, '$1')
-              .trim();
+          let cleanedContent = generatedContent
+            .replace(/^#{1,6}\s+.+$/gm, '')
+            .replace(/\*\*(.+?)\*\*/g, '$1')
+            .replace(/\*(.+?)\*/g, '$1')
+            .trim();
 
-            const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
-            const actualProfile = paragraphs.find(p =>
-              !p.toLowerCase().includes('here are') &&
-              !p.toLowerCase().includes('of course') &&
-              !p.toLowerCase().includes('choose the option') &&
-              !p.toLowerCase().includes('pro-tip') &&
-              p.length > 100
-            );
+          const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
+          const actualProfile = paragraphs.find(p =>
+            !p.toLowerCase().includes('here are') &&
+            !p.toLowerCase().includes('of course') &&
+            !p.toLowerCase().includes('choose the option') &&
+            !p.toLowerCase().includes('pro-tip') &&
+            p.length > 100
+          );
 
-            const finalContent = actualProfile?.trim() || paragraphs[0]?.trim() || cleanedContent;
-            profileElement.textContent = finalContent;
-            
-            // Update state
-            setResumeData(prev => ({
-              ...prev,
-              profile: {
-                ...prev.profile,
-                summary: finalContent
-              }
-            }));
-          }
+          const finalContent = actualProfile?.trim() || paragraphs[0]?.trim() || cleanedContent;
+          
+          setResumeData(prev => ({
+            ...prev,
+            profile: {
+              ...prev.profile,
+              summary: finalContent
+            }
+          }));
           break;
 
         case 'skills':
@@ -459,10 +768,9 @@ const App = () => {
           const newSkills = skills.slice(0, 6).map((skill, index) => ({
             id: generateId(),
             label: skill.trim(),
-            value: Math.floor(Math.random() * 100) + 1 // Random value between 1-100
+            value: Math.floor(Math.random() * 100) + 1
           }));
           
-          // Update state
           setResumeData(prev => ({
             ...prev,
             skills: newSkills
@@ -474,10 +782,9 @@ const App = () => {
           const newLanguages = languages.slice(0, 4).map((lang, index) => ({
             id: generateId(),
             label: lang.trim(),
-            value: Math.floor(Math.random() * 100) + 1 // Random value between 1-100
+            value: Math.floor(Math.random() * 100) + 1
           }));
           
-          // Update state
           setResumeData(prev => ({
             ...prev,
             languages: newLanguages
@@ -485,10 +792,15 @@ const App = () => {
           break;
 
         default:
-          console.log('Generated content:', generatedContent);
+          if (process.env.NODE_ENV === 'development') {
+            console.log('Generated content:', generatedContent);
+          }
       }
     } catch (error) {
+      console.error('AI Generation error:', error);
       alert('Failed to generate content. Please check your API key and try again.');
+    } finally {
+      setAiLoading(false);
     }
   };
 
@@ -526,7 +838,6 @@ const App = () => {
       const index = arr.findIndex(i => i.id === item.id);
       if (index === -1) return prev;
 
-      // Create a new item with a new unique ID
       const newItem = { ...item, id: generateId() };
 
       return {
@@ -541,7 +852,6 @@ const App = () => {
       const arr = [...prev[section]];
       const dragItem = arr[dragIndex];
 
-      // Array manipulation to move the item
       arr.splice(dragIndex, 1);
       arr.splice(hoverIndex, 0, dragItem);
 
@@ -557,7 +867,7 @@ const App = () => {
     updateStaticField('profile', 'image', imageData);
   }, [updateStaticField]);
 
-  // Memoized action wrappers for specific sections to pass down to Draggable components
+  // Memoized action wrappers
   const timelineActions = useMemo(() => ({
     update: (id, key, value) => updateListItem('timeline', id, key, value),
     delete: (id) => deleteListItem('timeline', id),
@@ -612,9 +922,14 @@ const App = () => {
         {/* Profile Section with AI */}
         <div className="p-8 md:col-span-2 bg-gray-50/50 relative group" data-section="profile">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold tracking-widest border-b-2 border-black pb-1 text-black">Profile</h2>
+            <EditableText
+              tag="h2"
+              value="Profile"
+              onUpdate={(v) => {}}
+              className="text-xl font-bold tracking-widest border-b-2 border-black pb-1 text-black"
+            />
             <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-              <AISparkle section="Profile" onGenerate={handleAIGenerate} />
+              <AISparkle section="Profile" onGenerate={handleAIGenerate} disabled={aiLoading} />
             </div>
           </div>
           <EditableText
@@ -627,7 +942,12 @@ const App = () => {
 
         {/* Contact Section */}
         <div className="p-8">
-          <h2 className="text-xl font-bold tracking-widest mb-4 border-b-2 border-black pb-1 text-black">Contact</h2>
+          <EditableText
+            tag="h2"
+            value="Contact"
+            onUpdate={(v) => {}}
+            className="text-xl font-bold tracking-widest mb-4 border-b-2 border-black pb-1 text-black"
+          />
           <ul className="space-y-3 text-sm text-black">
             <li className="flex items-start space-x-2">
               <Phone className="w-4 h-4 text-black mt-1 flex-shrink-0" />
@@ -660,17 +980,20 @@ const App = () => {
         </div>
       </div>
 
-      {/* Timeline Section - Horizontal Layout, Dynamically Scaled (FIXED) */}
+      {/* Timeline Section */}
       <div className="p-8 border-b border-gray-200">
-        <h2 className="text-2xl font-bold tracking-widest mb-4 border-b-2 border-black pb-1 text-black">Timeline</h2>
+        <EditableText
+          tag="h2"
+          value="Timeline"
+          onUpdate={(v) => {}}
+          className="text-2xl font-bold tracking-widest mb-4 border-b-2 border-black pb-1 text-black"
+        />
         
-        {/* Timeline container is NOT scrollable (no overflow-x-auto) */}
         <div className="relative w-full pb-4">
-          
           {/* Central Horizontal Line */}
           <div className="absolute top-1/2 transform -translate-y-1/2 h-px bg-gray-400 w-full z-0"></div>
           
-          {/* Timeline Items - Flex container ensures horizontal layout and equal distribution */}
+          {/* Timeline Items */}
           <div className="flex items-center relative z-10 w-full">
             {resumeData.timeline.map((item, index) => (
               <DraggableTimelineItem
@@ -693,9 +1016,14 @@ const App = () => {
         {/* Skills with AI */}
         <div className="p-8 relative group" data-section="skills">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold tracking-widest border-b-2 border-black pb-1 text-black">Skills</h2>
+            <EditableText
+              tag="h2"
+              value="Skills"
+              onUpdate={(v) => {}}
+              className="text-2xl font-bold tracking-widest border-b-2 border-black pb-1 text-black"
+            />
             <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-              <AISparkle section="Skills" onGenerate={handleAIGenerate} />
+              <AISparkle section="Skills" onGenerate={handleAIGenerate} disabled={aiLoading} />
             </div>
           </div>
           <div className="space-y-4">
@@ -717,9 +1045,14 @@ const App = () => {
         {/* Languages with AI */}
         <div className="p-8 relative group" data-section="languages">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold tracking-widest border-b-2 border-black pb-1 text-black">Languages</h2>
+            <EditableText
+              tag="h2"
+              value="Languages"
+              onUpdate={(v) => {}}
+              className="text-2xl font-bold tracking-widest border-b-2 border-black pb-1 text-black"
+            />
             <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-              <AISparkle section="Languages" onGenerate={handleAIGenerate} />
+              <AISparkle section="Languages" onGenerate={handleAIGenerate} disabled={aiLoading} />
             </div>
           </div>
           <div className="space-y-4">
@@ -742,14 +1075,22 @@ const App = () => {
   );
 
   return (
-    // A4 paper size container with proper scaling
     <DndProvider backend={HTML5Backend}>
-      <div className="min-h-screen flex items-center justify-center bg-gray-200 overflow-auto cursor-pointer">
+      <div 
+        className="min-h-screen flex items-center justify-center bg-gray-200 overflow-auto cursor-pointer"
+        onClick={() => setActiveElement(null)} // Clear active element when clicking outside
+      >
+        <FormattingToolbar />
         <div
           ref={editorContainerRef}
           data-editor-container
           className="flex flex-col items-center scale-[0.55] origin-top transition-transform duration-500 pt-16"
         >
+          {aiLoading && (
+            <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
+              Generating content with AI...
+            </div>
+          )}
           <div ref={cvRef} data-cv-page>
             <CVPage />
           </div>
@@ -760,3 +1101,4 @@ const App = () => {
 };
 
 export default App;
+export { globalFormatting, globalFormat };

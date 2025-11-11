@@ -1,12 +1,12 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { Copy, Trash2, Mail, Phone, MapPin, Upload } from "lucide-react";
-import AISparkle from '../AISparkle'; // ADD THIS IMPORT
-import { geminiService } from '../../lib/gemini'; // ADD THIS IMPORT
+import AISparkle from '../AISparkle';
+import { geminiService } from '../../lib/gemini';
 
 // --- Resume Data Structure ---
 const initialResumeData = {
-  name: 'NEIL TRAN',
+  name: 'ABHIRAMI M',
   title: 'SENIOR EDUCATOR',
   summary: 'Transforms education with extensive experience in technology automation. Guidelines for fostering inclusive learning environments and implementing innovative technology methodologies to maximize student potential and achievement.',
   contact: {
@@ -78,42 +78,6 @@ const initialResumeData = {
     'Social-Emotional Learning Conference (2021)'
   ]
 };
-
-// --- EditableText Component ---
-const EditableText = React.forwardRef(({ value, onUpdate, className = "", tagName = 'span', placeholder = "", ...props }, ref) => {
-    const Tag = tagName;
-    
-    return (
-        <Tag
-            ref={ref}
-            contentEditable
-            suppressContentEditableWarning
-            onBlur={(e) => {
-                if (onUpdate) {
-                    const sanitizedText = e.target.innerHTML.replace(/<br\s*\/?>/gi, '\n').replace(/&nbsp;/gi, ' ').trim();
-                    onUpdate(sanitizedText);
-                }
-            }}
-            onKeyDown={(e) => {
-                if (e.key === 'Enter' && tagName !== 'div' && tagName !== 'p') {
-                    e.preventDefault();
-                    e.target.blur();
-                }
-            }}
-            dangerouslySetInnerHTML={{ __html: value?.replace(/\n/g, '<br/>') || (placeholder ? `<span class="text-gray-400">${placeholder}</span>` : '') }}
-            className={`focus:outline-none focus:ring-2 focus:ring-blue-300 rounded px-1 ${className}`}
-            style={{ 
-                minHeight: '1.2em',
-                WebkitUserSelect: 'text',
-                MozUserSelect: 'text',
-                msUserSelect: 'text',
-                userSelect: 'text'
-            }}
-            {...props}
-        />
-    );
-});
-EditableText.displayName = 'EditableText';
 
 // --- Main Application Component ---
 const App = () => {
@@ -472,20 +436,22 @@ const App = () => {
                   />
                 </div>
                 
-                <EditableText 
-                  tagName="h1"
-                  value={data.name} 
-                  onUpdate={(val) => handleEdit('name', val)} 
+                <h1
                   className="text-lg font-bold mb-1 text-center uppercase tracking-wide"
-                  placeholder="Full Name"
-                />
-                <EditableText 
-                  tagName="h2"
-                  value={data.title} 
-                  onUpdate={(val) => handleEdit('title', val)} 
+                  contentEditable
+                  suppressContentEditableWarning
+                  onBlur={(e) => handleEdit('name', e.target.textContent)}
+                >
+                  {data.name}
+                </h1>
+                <h2
                   className="text-xs text-blue-200 font-medium text-center"
-                  placeholder="Professional Title"
-                />
+                  contentEditable
+                  suppressContentEditableWarning
+                  onBlur={(e) => handleEdit('title', e.target.textContent)}
+                >
+                  {data.title}
+                </h2>
               </div>
 
               {/* Contact Information - Compact */}
@@ -494,30 +460,36 @@ const App = () => {
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 group">
                     <Phone className="w-3 h-3 text-blue-300 flex-shrink-0" />
-                    <EditableText
-                      value={data.contact.phone}
-                      onUpdate={(val) => handleEdit('contact.phone', val)}
+                    <span
                       className="text-xs flex-1"
-                      placeholder="Phone Number"
-                    />
+                      contentEditable
+                      suppressContentEditableWarning
+                      onBlur={(e) => handleEdit('contact.phone', e.target.textContent)}
+                    >
+                      {data.contact.phone}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2 group">
                     <Mail className="w-3 h-3 text-blue-300 flex-shrink-0" />
-                    <EditableText
-                      value={data.contact.email}
-                      onUpdate={(val) => handleEdit('contact.email', val)}
+                    <span
                       className="text-xs flex-1"
-                      placeholder="Email Address"
-                    />
+                      contentEditable
+                      suppressContentEditableWarning
+                      onBlur={(e) => handleEdit('contact.email', e.target.textContent)}
+                    >
+                      {data.contact.email}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2 group">
                     <MapPin className="w-3 h-3 text-blue-300 flex-shrink-0" />
-                    <EditableText
-                      value={data.contact.location}
-                      onUpdate={(val) => handleEdit('contact.location', val)}
+                    <span
                       className="text-xs flex-1"
-                      placeholder="Location"
-                    />
+                      contentEditable
+                      suppressContentEditableWarning
+                      onBlur={(e) => handleEdit('contact.location', e.target.textContent)}
+                    >
+                      {data.contact.location}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -535,12 +507,14 @@ const App = () => {
                     <div key={index} className="group flex items-center justify-between">
                       <div className="flex items-center gap-1">
                         <div className="w-1.5 h-1.5 bg-blue-300 rounded-full"></div>
-                        <EditableText
-                          value={skill}
-                          onUpdate={(val) => handleEdit(`coreCompetencies.${index}`, val)}
+                        <span
                           className="text-xs flex-1"
-                          placeholder="Skill"
-                        />
+                          contentEditable
+                          suppressContentEditableWarning
+                          onBlur={(e) => handleEdit(`coreCompetencies.${index}`, e.target.textContent)}
+                        >
+                          {skill}
+                        </span>
                       </div>
                       <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button 
@@ -573,12 +547,14 @@ const App = () => {
                     <div key={index} className="group flex items-center justify-between">
                       <div className="flex items-center gap-1">
                         <div className="w-1 h-1 bg-blue-300 rounded-full flex-shrink-0"></div>
-                        <EditableText
-                          value={item}
-                          onUpdate={(val) => handleEdit(`professionalDevelopment.${index}`, val)}
+                        <span
                           className="text-xs flex-1"
-                          placeholder="Development Activity"
-                        />
+                          contentEditable
+                          suppressContentEditableWarning
+                          onBlur={(e) => handleEdit(`professionalDevelopment.${index}`, e.target.textContent)}
+                        >
+                          {item}
+                        </span>
                       </div>
                       <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
                         <button 
@@ -610,13 +586,14 @@ const App = () => {
               {/* Professional Summary - Fixed with AI */}
               <div className="mb-4" data-section="professional-summary">
                 <SectionHeader title="Professional Summary" icon={null} onGenerate={handleAIGenerate} />
-                <EditableText 
-                  tagName="div"
-                  value={data.summary} 
-                  onUpdate={(val) => handleEdit('summary', val)} 
+                <div
                   className="text-gray-700 leading-relaxed text-justify text-xs min-h-[60px] mt-1"
-                  placeholder="Brief professional summary highlighting your experience and key strengths..."
-                />
+                  contentEditable
+                  suppressContentEditableWarning
+                  onBlur={(e) => handleEdit('summary', e.target.textContent)}
+                >
+                  {data.summary}
+                </div>
               </div>
 
               {/* Education - Compact with AI */}
@@ -627,43 +604,52 @@ const App = () => {
                     <div key={edu.id} className="group relative">
                       <div className="flex justify-between items-start mb-1">
                         <div className="flex-1">
-                          <EditableText
-                            tagName="h3"
-                            value={edu.degree}
-                            onUpdate={(val) => handleEdit(`education.${index}.degree`, val)}
+                          <h3
                             className="font-bold text-gray-900 text-sm mb-0.5"
-                            placeholder="Degree"
-                          />
-                          <EditableText
-                            value={edu.major}
-                            onUpdate={(val) => handleEdit(`education.${index}.major`, val)}
+                            contentEditable
+                            suppressContentEditableWarning
+                            onBlur={(e) => handleEdit(`education.${index}.degree`, e.target.textContent)}
+                          >
+                            {edu.degree}
+                          </h3>
+                          <span
                             className="text-blue-600 font-medium text-xs mb-0.5"
-                            placeholder="Major/Concentration"
-                          />
-                          <EditableText
-                            value={edu.institution}
-                            onUpdate={(val) => handleEdit(`education.${index}.institution`, val)}
+                            contentEditable
+                            suppressContentEditableWarning
+                            onBlur={(e) => handleEdit(`education.${index}.major`, e.target.textContent)}
+                          >
+                            {edu.major}
+                          </span>
+                          <span
                             className="text-gray-700 text-xs mb-0.5"
-                            placeholder="Institution"
-                          />
+                            contentEditable
+                            suppressContentEditableWarning
+                            onBlur={(e) => handleEdit(`education.${index}.institution`, e.target.textContent)}
+                          >
+                            {edu.institution}
+                          </span>
                         </div>
-                        <EditableText
-                          value={edu.year}
-                          onUpdate={(val) => handleEdit(`education.${index}.year`, val)}
+                        <span
                           className="text-xs text-gray-500 bg-blue-50 px-1.5 py-0.5 rounded font-medium flex-shrink-0"
-                          placeholder="Year"
-                        />
+                          contentEditable
+                          suppressContentEditableWarning
+                          onBlur={(e) => handleEdit(`education.${index}.year`, e.target.textContent)}
+                        >
+                          {edu.year}
+                        </span>
                       </div>
                       <div className="space-y-0.5">
                         {edu.highlights.map((highlight, hIndex) => (
                           <div key={hIndex} className="flex items-center gap-1 group/highlight">
                             <div className="w-1 h-1 bg-blue-400 rounded-full flex-shrink-0"></div>
-                            <EditableText
-                              value={highlight}
-                              onUpdate={(val) => handleEdit(`education.${index}.highlights.${hIndex}`, val)}
+                            <span
                               className="text-xs text-gray-600 flex-1"
-                              placeholder="Achievement or highlight"
-                            />
+                              contentEditable
+                              suppressContentEditableWarning
+                              onBlur={(e) => handleEdit(`education.${index}.highlights.${hIndex}`, e.target.textContent)}
+                            >
+                              {highlight}
+                            </span>
                           </div>
                         ))}
                       </div>
@@ -698,38 +684,44 @@ const App = () => {
                     <div key={exp.id} className="group relative">
                       <div className="flex justify-between items-start mb-1">
                         <div className="flex-1">
-                          <EditableText
-                            tagName="h3"
-                            value={exp.position}
-                            onUpdate={(val) => handleEdit(`experience.${index}.position`, val)}
+                          <h3
                             className="font-bold text-gray-900 text-sm mb-0.5"
-                            placeholder="Position Title"
-                          />
-                          <EditableText
-                            value={exp.institution}
-                            onUpdate={(val) => handleEdit(`experience.${index}.institution`, val)}
+                            contentEditable
+                            suppressContentEditableWarning
+                            onBlur={(e) => handleEdit(`experience.${index}.position`, e.target.textContent)}
+                          >
+                            {exp.position}
+                          </h3>
+                          <span
                             className="text-blue-600 font-medium text-xs mb-0.5"
-                            placeholder="Institution/Company"
-                          />
+                            contentEditable
+                            suppressContentEditableWarning
+                            onBlur={(e) => handleEdit(`experience.${index}.institution`, e.target.textContent)}
+                          >
+                            {exp.institution}
+                          </span>
                         </div>
-                        <EditableText
-                          value={exp.period}
-                          onUpdate={(val) => handleEdit(`experience.${index}.period`, val)}
+                        <span
                           className="text-xs text-gray-500 bg-blue-50 px-1.5 py-0.5 rounded font-medium flex-shrink-0"
-                          placeholder="Time Period"
-                        />
+                          contentEditable
+                          suppressContentEditableWarning
+                          onBlur={(e) => handleEdit(`experience.${index}.period`, e.target.textContent)}
+                        >
+                          {exp.period}
+                        </span>
                       </div>
                       <div className="space-y-1">
                         {exp.achievements.map((achievement, aIndex) => (
                           <div key={aIndex} className="flex items-start gap-2 group/achievement">
                             <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-0.5 flex-shrink-0"></div>
-                            <EditableText
-                              tagName="div"
-                              value={achievement}
-                              onUpdate={(val) => handleEdit(`experience.${index}.achievements.${aIndex}`, val)}
+                            <div
                               className="text-gray-700 text-xs flex-1 leading-relaxed"
-                              placeholder="Key achievement or responsibility"
-                            />
+                              contentEditable
+                              suppressContentEditableWarning
+                              onBlur={(e) => handleEdit(`experience.${index}.achievements.${aIndex}`, e.target.textContent)}
+                            >
+                              {achievement}
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -763,26 +755,32 @@ const App = () => {
                   {data.certifications.map((cert, index) => (
                     <div key={cert.id} className="group flex items-center justify-between">
                       <div className="flex-1">
-                        <EditableText
-                          value={cert.name}
-                          onUpdate={(val) => handleEdit(`certifications.${index}.name`, val)}
+                        <span
                           className="font-medium text-gray-900 text-xs"
-                          placeholder="Certification Name"
-                        />
-                        <EditableText
-                          value={cert.credential}
-                          onUpdate={(val) => handleEdit(`certifications.${index}.credential`, val)}
+                          contentEditable
+                          suppressContentEditableWarning
+                          onBlur={(e) => handleEdit(`certifications.${index}.name`, e.target.textContent)}
+                        >
+                          {cert.name}
+                        </span>
+                        <span
                           className="text-xs text-gray-600"
-                          placeholder="Credential Details"
-                        />
+                          contentEditable
+                          suppressContentEditableWarning
+                          onBlur={(e) => handleEdit(`certifications.${index}.credential`, e.target.textContent)}
+                        >
+                          {cert.credential}
+                        </span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <EditableText
-                          value={cert.year}
-                          onUpdate={(val) => handleEdit(`certifications.${index}.year`, val)}
+                        <span
                           className="text-xs text-gray-500 bg-blue-50 px-1.5 py-0.5 rounded flex-shrink-0"
-                          placeholder="Year"
-                        />
+                          contentEditable
+                          suppressContentEditableWarning
+                          onBlur={(e) => handleEdit(`certifications.${index}.year`, e.target.textContent)}
+                        >
+                          {cert.year}
+                        </span>
                         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button 
                             onClick={() => duplicateItem('certifications', index)} 
@@ -812,7 +810,7 @@ const App = () => {
         
         {/* Instructions */}
         <div className="mt-3 text-center text-xs text-gray-600 bg-white/80 backdrop-blur-sm rounded-full px-3 py-1">
-          💡 <strong>Perfect Fit:</strong> All content fits within A4 page • No scrolling needed
+          💡 <strong>Perfect Fit:</strong> All content fits within A4 page • Click any text to edit
         </div>
       </div>
     </div>

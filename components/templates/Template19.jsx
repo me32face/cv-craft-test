@@ -46,51 +46,74 @@ const initialData = {
   ],
 };
 
-// --- Fixed Reusable Editable Text Component ---
+// --- FIXED Reusable Editable Text Component ---
 const EditableText = React.forwardRef(({ 
   tag: Tag = 'div', 
   children, 
   className = '', 
   onSave, 
   placeholder = '',
+  autoResize = false,
   ...props 
 }, ref) => {
   const [content, setContent] = useState(children);
+  const internalRef = useRef(null);
+  const actualRef = ref || internalRef;
 
-  // Ensure content is always a string for dangerouslySetInnerHTML
-  const safeContent = typeof content === 'string' ? content : String(content || '');
-  
-  const handleBlur = (e) => {
-    const sanitizedText = e.target.innerHTML
-      .replace(/<br\s*\/?>/gi, '\n')
-      .replace(/&nbsp;/gi, ' ')
-      .trim();
+  // Update content when children prop changes
+  useEffect(() => {
+    setContent(children);
+  }, [children]);
+
+  const handleInput = (e) => {
+    const newContent = e.currentTarget.textContent || '';
+    setContent(newContent);
     
-    if (sanitizedText !== safeContent) {
-      setContent(sanitizedText);
-      onSave(sanitizedText);
+    // Auto-resize logic
+    if (autoResize && actualRef.current) {
+      const element = actualRef.current;
+      element.style.height = 'auto';
+      element.style.height = element.scrollHeight + 'px';
+    }
+  };
+
+  const handleBlur = (e) => {
+    const newContent = e.currentTarget.textContent || '';
+    if (newContent !== children) {
+      onSave(newContent);
     }
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && Tag !== 'p' && Tag !== 'div' && Tag !== 'ul') {
+    if (e.key === 'Enter' && !e.shiftKey && Tag !== 'p' && Tag !== 'div') {
       e.preventDefault();
       e.currentTarget.blur();
     }
   };
 
+  const handleFocus = (e) => {
+    // Select all text on focus for better UX
+    const range = document.createRange();
+    range.selectNodeContents(e.currentTarget);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  };
+
   return (
     <Tag
-      ref={ref}
+      ref={actualRef}
       contentEditable={true}
       suppressContentEditableWarning={true}
-      onInput={(e) => setContent(e.currentTarget.textContent)}
+      onInput={handleInput}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
-      dangerouslySetInnerHTML={{ __html: safeContent.replace(/\n/g, '<br/>') }}
-      className={`${className} focus:outline-none focus:ring-1 focus:ring-blue-300 rounded block resize-none focus:bg-gray-100 focus:pb-0.5 cursor-text transition-all duration-100`}
+      onFocus={handleFocus}
+      className={`${className} focus:outline-none focus:ring-1 focus:ring-blue-300 rounded block cursor-text transition-all duration-100 editable-text`}
       {...props}
-    />
+    >
+      {content}
+    </Tag>
   );
 });
 EditableText.displayName = 'EditableText';
@@ -108,15 +131,15 @@ const ItemActions = ({ onDuplicate, onDelete }) => (
 );
 
 // --- Section Header Component with AI ---
-const SectionHeader = ({ title, onGenerate }) => (
+const SectionHeader = ({ title, onGenerate, onTitleChange }) => (
   <div className="relative group flex items-center gap-2">
-    <h2 
-      contentEditable 
-      suppressContentEditableWarning
+    <EditableText
+      tag="h2"
+      onSave={onTitleChange}
       className="text-xl font-bold uppercase tracking-widest text-gray-800 pt-4 pb-1 border-b-2 border-gray-800 mb-3 focus:outline-none focus:ring-1 focus:ring-blue-300 rounded px-1"
     >
       {title}
-    </h2>
+    </EditableText>
     {onGenerate && (
       <div className="opacity-0 group-hover:opacity-100 transition-opacity">
         <AISparkle section={title} onGenerate={onGenerate} />
@@ -180,16 +203,22 @@ const PhotoUploader = ({ photoUrl, onPhotoChange }) => {
 // --- Resume Component (Main App) ---
 const App = () => {
   const [resume, setResume] = useState(initialData);
+  const [sectionTitles, setSectionTitles] = useState({
+    CONTACT: 'CONTACT',
+    'MY SKILLS': 'MY SKILLS',
+    PROFILE: 'PROFILE',
+    EXPERIENCE: 'EXPERIENCE',
+    EDUCATION: 'EDUCATION'
+  });
   const editorContainerRef = useRef(null);
   const cvRef = useRef(null);
-  const profileTextareaRef = useRef(null);
 
-  // Initialize textarea height on component mount and when profile changes
-  useEffect(() => {
-    if (profileTextareaRef.current) {
-      profileTextareaRef.current.style.height = profileTextareaRef.current.scrollHeight + 'px';
-    }
-  }, [resume.profile]);
+  // Force re-render when content changes to fix layout issues
+  const [contentVersion, setContentVersion] = useState(0);
+
+  const forceUpdate = useCallback(() => {
+    setContentVersion(prev => prev + 1);
+  }, []);
 
   // AI GENERATION FUNCTION
   const handleAIGenerate = async (section, keywords) => {
@@ -245,6 +274,9 @@ const App = () => {
         default:
           console.log('Generated content:', generatedContent);
       }
+      
+      // Force update to fix layout
+      setTimeout(forceUpdate, 100);
     } catch (error) {
       alert('Failed to generate content. Please check your API key and try again.');
     }
@@ -256,7 +288,17 @@ const App = () => {
       ...prev,
       [key]: value,
     }));
-  }, []);
+    forceUpdate();
+  }, [forceUpdate]);
+
+  // Handler for section title changes
+  const handleSectionTitleChange = useCallback((section, newTitle) => {
+    setSectionTitles(prev => ({
+      ...prev,
+      [section]: newTitle
+    }));
+    forceUpdate();
+  }, [forceUpdate]);
 
   // Handler for photo change
   const handlePhotoChange = useCallback((newPhotoUrl) => {
@@ -274,7 +316,8 @@ const App = () => {
         item.id === id ? { ...item, [field]: value } : item
       ),
     }));
-  }, []);
+    forceUpdate();
+  }, [forceUpdate]);
 
   // Action Handler: Duplicate an item
   const handleDuplicate = useCallback((section, item) => {
@@ -287,7 +330,8 @@ const App = () => {
         [section]: [...array.slice(0, index + 1), newItem, ...array.slice(index + 1)],
       };
     });
-  }, []);
+    setTimeout(forceUpdate, 50);
+  }, [forceUpdate]);
 
   // Action Handler: Delete an item
   const handleDelete = useCallback((section, id) => {
@@ -295,7 +339,18 @@ const App = () => {
       ...prev,
       [section]: prev[section].filter(item => item.id !== id),
     }));
-  }, []);
+    setTimeout(forceUpdate, 50);
+  }, [forceUpdate]);
+
+  // Fix layout on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      forceUpdate();
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [forceUpdate]);
 
   // --- Enhanced Components for specific sections ---
 
@@ -307,7 +362,7 @@ const App = () => {
         <EditableText
           tag="span"
           onSave={(value) => updateListItem('contact', item.id, 'value', value)}
-          className="text-m flex-grow text-gray-700"
+          className="text-m flex-grow text-gray-700 min-w-[120px]"
           placeholder={item.type === 'phone' ? 'Phone number' : item.type === 'email' ? 'Email address' : 'Contact information'}
         >
           {item.value}
@@ -330,7 +385,7 @@ const App = () => {
         <EditableText
           tag="p"
           onSave={(value) => updateListItem('skills', item.id, 'name', value)}
-          className="text-lg font-semibold mb-0.5 text-gray-800"
+          className="text-lg font-semibold mb-0.5 text-gray-800 min-w-[100px]"
           placeholder="Skill name"
         >
           {item.name}
@@ -358,7 +413,7 @@ const App = () => {
       <EditableText
         tag="h4"
         onSave={(value) => updateListItem('experience', item.id, 'company', value)}
-        className="font-bold text-sm text-gray-800"
+        className="font-bold text-sm text-gray-800 min-w-[100px]"
         placeholder="Company name"
       >
         {item.company}
@@ -366,7 +421,7 @@ const App = () => {
       <EditableText
         tag="p"
         onSave={(value) => updateListItem('experience', item.id, 'role', value)}
-        className="text-lg font-semibold text-gray-700 mt-0.5"
+        className="text-lg font-semibold text-gray-700 mt-0.5 min-w-[100px]"
         placeholder="Job title"
       >
         {item.role}
@@ -374,25 +429,28 @@ const App = () => {
       <EditableText
         tag="p"
         onSave={(value) => updateListItem('experience', item.id, 'period', value)}
-        className="text-lg italic text-gray-500 mb-1"
+        className="text-lg italic text-gray-500 mb-1 min-w-[100px]"
         placeholder="Employment period"
       >
         {item.period}
       </EditableText>
-      <EditableText
-        tag="ul"
-        onSave={(value) => {
-          const details = value.split('\n').filter(detail => detail.trim());
-          updateListItem('experience', item.id, 'details', details);
-        }}
-        className="list-disc pl-4 text-m space-y-0.5"
-      >
-        {Array.isArray(item.details) ? item.details.map((detail, index) => (
-          <li key={index} className="text-gray-700">
-            {detail}
-          </li>
-        )) : null}
-      </EditableText>
+      <div className="mt-1">
+        <EditableText
+          tag="div"
+          onSave={(value) => {
+            const details = value.split('\n').filter(detail => detail.trim());
+            updateListItem('experience', item.id, 'details', details);
+          }}
+          className="text-m space-y-0.5 min-w-[150px] min-h-[40px]"
+          placeholder="• Enter job responsibilities&#10;• One per line"
+        >
+          {Array.isArray(item.details) ? item.details.map((detail, index) => (
+            <div key={index} className="text-gray-700">
+              • {detail}
+            </div>
+          )) : null}
+        </EditableText>
+      </div>
       <ItemActions
         onDuplicate={() => handleDuplicate('experience', item)}
         onDelete={() => handleDelete('experience', item.id)}
@@ -402,11 +460,11 @@ const App = () => {
 
   const EducationItem = useMemo(() => ({ item }) => (
     <div className="group relative py-1 border-b border-gray-200 last:border-b-0 rounded border border-transparent hover:border-gray-200 hover:bg-gray-50 transition-colors px-2">
-      <div className="flex justify-between items-start">
+      <div className="flex justify-between items-start gap-2">
         <EditableText
           tag="h4"
           onSave={(value) => updateListItem('education', item.id, 'institution', value)}
-          className="font-bold text-lg flex-grow text-gray-800"
+          className="font-bold text-lg flex-grow text-gray-800 min-w-[100px]"
           placeholder="Institution name"
         >
           {item.institution}
@@ -414,7 +472,7 @@ const App = () => {
         <EditableText
           tag="span"
           onSave={(value) => updateListItem('education', item.id, 'year', value)}
-          className="text-m font-bold ml-3 flex-shrink-0 text-gray-800"
+          className="text-m font-bold flex-shrink-0 text-gray-800 min-w-[40px] text-right"
           placeholder="Year"
         >
           {item.year}
@@ -423,7 +481,7 @@ const App = () => {
       <EditableText
         tag="p"
         onSave={(value) => updateListItem('education', item.id, 'degree', value)}
-        className="text-m text-gray-600 italic"
+        className="text-m text-gray-600 italic min-w-[150px] mt-1"
         placeholder="Degree or qualification"
       >
         {item.degree}
@@ -437,7 +495,10 @@ const App = () => {
 
   // CV Page Component
   const CVPage = () => (
-    <div className="w-[210mm] h-[297mm] bg-white shadow-2xl rounded-lg border border-gray-300 overflow-hidden">
+    <div 
+      key={contentVersion}
+      className="w-[210mm] h-[297mm] bg-white shadow-2xl rounded-lg border border-gray-300 overflow-hidden"
+    >
       <div className="grid grid-cols-3 h-full">
         {/* LEFT COLUMN (Sidebar) */}
         <div className="col-span-1 bg-gray-50 p-6 border-r border-gray-200 h-full overflow-hidden">
@@ -447,14 +508,21 @@ const App = () => {
           />
           
           <div className="pt-1">
-            <SectionHeader title="CONTACT" />
+            <SectionHeader 
+              title={sectionTitles.CONTACT} 
+              onTitleChange={(value) => handleSectionTitleChange('CONTACT', value)}
+            />
             <div className="mt-2 space-y-1">
               {resume.contact.map(item => <ContactItem key={item.id} item={item} />)}
             </div>
           </div>
           
           <div className="pt-1">
-            <SectionHeader title="MY SKILLS" onGenerate={handleAIGenerate} />
+            <SectionHeader 
+              title={sectionTitles['MY SKILLS']} 
+              onGenerate={handleAIGenerate}
+              onTitleChange={(value) => handleSectionTitleChange('MY SKILLS', value)}
+            />
             <div className="mt-2 space-y-2">
               {resume.skills.map(item => <SkillItem key={item.id} item={item} />)}
             </div>
@@ -467,7 +535,7 @@ const App = () => {
             <EditableText
               tag="h1"
               onSave={(value) => updateGeneralField('personal', { ...resume.personal, name: value })}
-              className="text-3xl font-extrabold tracking-wider text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-300 rounded px-1"
+              className="text-3xl font-extrabold tracking-wider text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-300 rounded px-1 min-w-[200px]"
               placeholder="Your full name"
             >
               {resume.personal.name}
@@ -475,7 +543,7 @@ const App = () => {
             <EditableText
               tag="p"
               onSave={(value) => updateGeneralField('personal', { ...resume.personal, title: value })}
-              className="inline-block px-2 py-0.5 mt-1 text-lg font-medium uppercase tracking-wider bg-gray-200 rounded-full text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-300"
+              className="inline-block px-2 py-0.5 mt-1 text-lg font-medium uppercase tracking-wider bg-gray-200 rounded-full text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-300 min-w-[150px]"
               placeholder="Your professional title"
             >
               {resume.personal.title}
@@ -483,26 +551,36 @@ const App = () => {
           </div>
 
           <div data-section="profile">
-            <SectionHeader title="PROFILE" onGenerate={handleAIGenerate} />
+            <SectionHeader 
+              title={sectionTitles.PROFILE} 
+              onGenerate={handleAIGenerate}
+              onTitleChange={(value) => handleSectionTitleChange('PROFILE', value)}
+            />
             <div className="mt-2">
               <EditableText
-                ref={profileTextareaRef}
                 tag="p"
                 onSave={(value) => updateGeneralField('profile', value)}
-                className="text-gray-700 text-m leading-relaxed min-h-[80px] border border-transparent hover:border-gray-200 rounded p-2 transition-colors"
+                className="text-gray-700 text-m leading-relaxed min-h-[80px] border border-transparent hover:border-gray-200 rounded p-2 transition-colors w-full"
                 placeholder="Enter your professional profile summary..."
+                autoResize={true}
               >
                 {resume.profile}
               </EditableText>
             </div>
           </div>
 
-          <SectionHeader title="EXPERIENCE" />
+          <SectionHeader 
+            title={sectionTitles.EXPERIENCE} 
+            onTitleChange={(value) => handleSectionTitleChange('EXPERIENCE', value)}
+          />
           <div className="mt-2 space-y-2">
             {resume.experience.map(item => <ExperienceItem key={item.id} item={item} />)}
           </div>
 
-          <SectionHeader title="EDUCATION" />
+          <SectionHeader 
+            title={sectionTitles.EDUCATION} 
+            onTitleChange={(value) => handleSectionTitleChange('EDUCATION', value)}
+          />
           <div className="mt-2 space-y-2">
             {resume.education.map(item => <EducationItem key={item.id} item={item} />)}
           </div>
