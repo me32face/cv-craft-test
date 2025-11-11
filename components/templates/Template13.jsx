@@ -68,6 +68,8 @@ export default function Template13() {
   ]);
   const [editingExperience, setEditingExperience] = useState(null);
   const [editExperience, setEditExperience] = useState({});
+  
+  const [profile, setProfile] = useState('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sit amet sollicitudin nulla. Duis fermentum dapibus nec ullamcorper. Quisque molestae et orci vitae scelerisque. Aliquam volutpat malesuada purus, vitae accumsan ante. Phasellus tristique pulvinar rutrum. Duis tellus erat, consequat vitae consetetur adipiscing sed enim. Aenean molestie massa rutro, at eleifend nisl dignissim hendrerit.');
 
   // Skills functions
   const addSkill = () => {
@@ -232,23 +234,20 @@ export default function Template13() {
 
       switch (section.toLowerCase()) {
         case 'profile':
-          const profileElement = document.querySelector('[data-section="profile"] p');
-          if (profileElement) {
-            let cleanedContent = generatedContent
-              .replace(/^#{1,6}\s+.+$/gm, '')
-              .replace(/\*\*(.+?)\*\*/g, '$1')
-              .replace(/\*(.+?)\*/g, '$1')
-              .trim();
-            const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
-            const actualSummary = paragraphs.find(p =>
-              !p.toLowerCase().includes('here are') &&
-              !p.toLowerCase().includes('of course') &&
-              !p.toLowerCase().includes('choose the option') &&
-              !p.toLowerCase().includes('pro-tip') &&
-              p.length > 100
-            );
-            profileElement.textContent = actualSummary?.trim() || paragraphs[0]?.trim() || cleanedContent;
-          }
+          let cleanedContent = generatedContent
+            .replace(/^#{1,6}\s+.+$/gm, '')
+            .replace(/\*\*(.+?)\*\*/g, '$1')
+            .replace(/\*(.+?)\*/g, '$1')
+            .trim();
+          const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
+          const actualSummary = paragraphs.find(p =>
+            !p.toLowerCase().includes('here are') &&
+            !p.toLowerCase().includes('of course') &&
+            !p.toLowerCase().includes('choose the option') &&
+            !p.toLowerCase().includes('pro-tip') &&
+            p.length > 100
+          );
+          setProfile(actualSummary?.trim() || paragraphs[0]?.trim() || cleanedContent);
           break;
         case 'skills':
           const skillsGenerated = generatedContent.split('\n').filter(skill => skill.trim());
@@ -267,10 +266,10 @@ export default function Template13() {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      saveState({ skills, education, references, experiences });
+      saveState({ skills, education, references, experiences, profile });
     }, 1000);
     return () => clearTimeout(timeoutId);
-  }, [skills, education, references, experiences, saveState]);
+  }, [skills, education, references, experiences, profile, saveState]);
 
   useEffect(() => {
     const handleUndoRedo = (event) => {
@@ -280,6 +279,7 @@ export default function Template13() {
         setEducation(state.education || []);
         setReferences(state.references || []);
         setExperiences(state.experiences || []);
+        setProfile(state.profile || '');
       }
     };
     window.addEventListener('undoRedo', handleUndoRedo);
@@ -287,7 +287,7 @@ export default function Template13() {
   }, []);
 
   useEffect(() => {
-    saveState({ skills, education, references, experiences });
+    saveState({ skills, education, references, experiences, profile });
   }, []);
 
   const CVPage = () => (
@@ -600,8 +600,13 @@ export default function Template13() {
                   <AISparkle section="Profile" onGenerate={handleAIGenerate} />
                 </div>
               </div>
-              <p className="text-xs text-gray-600 leading-relaxed" contentEditable suppressContentEditableWarning>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sit amet sollicitudin nulla. Duis fermentum dapibus nec ullamcorper. Quisque molestae et orci vitae scelerisque. Aliquam volutpat malesuada purus, vitae accumsan ante. Phasellus tristique pulvinar rutrum. Duis tellus erat, consequat vitae consetetur adipiscing sed enim. Aenean molestie massa rutro, at eleifend nisl dignissim hendrerit.
+              <p 
+                className="text-xs text-gray-600 leading-relaxed" 
+                contentEditable 
+                suppressContentEditableWarning
+                onBlur={(e) => setProfile(e.target.textContent)}
+              >
+                {profile}
               </p>
             </section>
 
