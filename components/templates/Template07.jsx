@@ -1,23 +1,11 @@
 'use client';
 import React, { useState, useRef } from "react";
 import { Plus, Trash2 } from "lucide-react";
+import AISparkle from "../AISparkle";
+import { useAIGeneration } from "../../lib/useAIGeneration";
 
-// Mock AISparkle component (replace with your actual import)
-const AISparkle = ({ section, onGenerate }) => (
-  <button
-    onClick={() => onGenerate && onGenerate(section, "")}
-    className="text-purple-500 hover:text-purple-700 text-xs"
-  >
-    ✨ AI
-  </button>
-);
 
-// Mock useAIGeneration hook (replace with your actual import)
-const useAIGeneration = () => ({
-  handleAIGenerate: async (section, keywords) => {
-    return "AI generated content for " + section;
-  }
-});
+
 
 const CVPage = ({
   profileImage,
@@ -47,7 +35,9 @@ const CVPage = ({
   removeSkill,
   addSkill,
   handleImageUpload,
-  handleAIGenerateWithUpdate
+  handleAIGenerateWithUpdate,
+  languages,
+  setLanguages,
 }) => {
   return (
     <div
@@ -80,22 +70,23 @@ const CVPage = ({
         {/* About Me */}
         <div className="w-full mb-8">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-gray-700 border-b border-gray-400 tracking-widest">
+            <h2 className="text-lg font-bold text-gray-700 border-b border-gray-400 pb-1 tracking-widest">
               ABOUT ME
             </h2>
             <AISparkle section="profile" onGenerate={handleAIGenerateWithUpdate} />
+
           </div>
           <div
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) => setAbout(e.currentTarget.textContent)}
-            className="mt-4 w-full bg-transparent text-[11px] text-gray-700 overflow-hidden min-h-[150px] focus:outline-none"
+            className="mt-4 w-full bg-transparent text-[11px] text-gray-700 min-h-[150px] focus:outline-none leading-relaxed"
             dangerouslySetInnerHTML={{ __html: about }}
           />
         </div>
 
         {/* Contact */}
-        <div className="w-full my-10">
+        <div className="w-full ">
           <h2 className="text-lg font-bold text-gray-700 border-b border-gray-400 pb-1 tracking-widest">
             CONTACT
           </h2>
@@ -121,7 +112,7 @@ const CVPage = ({
               />
             </div>
             <div>
-              <p className="text-gray-500 font-semibold text-[10px]">WEB</p>
+              <p className="text-gray-500 font-semibold text-[12px]">Place</p>
               <div
                 contentEditable
                 suppressContentEditableWarning
@@ -131,6 +122,47 @@ const CVPage = ({
               />
             </div>
           </div>
+        </div>
+
+        <div className="w-full my-10">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-gray-700 border-b border-gray-400 pb-1 tracking-widest">
+              LANGUAGES
+            </h2>
+            <button
+              onClick={() => setLanguages((prev) => [...prev, "New Language"])}
+              className="text-gray-500 text-xs hover:text-gray-700"
+            >
+              +
+            </button>
+          </div>
+          <ul className="mt-4 text-[11px] text-gray-700 space-y-2">
+            {languages.map((lang, index) => (
+              <li key={index} className="flex items-center justify-between">
+                <div
+                  contentEditable
+                  suppressContentEditableWarning
+                  onBlur={(e) => {
+                    const newLang = e.currentTarget.textContent;
+                    setLanguages((prev) =>
+                      prev.map((l, i) => (i === index ? newLang : l))
+                    );
+                  }}
+                  className="bg-transparent focus:outline-none flex-1"
+                >
+                  {lang}
+                </div>
+                <button
+                  onClick={() =>
+                    setLanguages((prev) => prev.filter((_, i) => i !== index))
+                  }
+                  className="text-gray-500 hover:text-red-600 text-xs ml-2"
+                >
+                  ✕
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 
@@ -142,7 +174,7 @@ const CVPage = ({
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) => setName(e.currentTarget.textContent)}
-            className="text-5xl font-bold text-gray-900 max-w-[400px] break-words focus:outline-none"
+            className="text-5xl font-bold text-gray-900 max-w-[400px] break-words focus:outline-none mb-3"
             dangerouslySetInnerHTML={{ __html: name }}
           />
           <div
@@ -152,11 +184,11 @@ const CVPage = ({
             className="block text-lg text-gray-800 tracking-[1px] focus:outline-none"
             dangerouslySetInnerHTML={{ __html: title }}
           />
-          <div className="border-t-2 border-gray-400 mt-4 mb-10 w-20"></div>
+          <div className="border-t-2 border-gray-400 mt-4  w-20"></div>
         </div>
 
         {/* Experience */}
-        <div className="my-20">
+        <div className="mt-20">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-bold text-gray-700 border-b border-gray-400 pb-1 tracking-widest">
               EXPERIENCE
@@ -197,8 +229,8 @@ const CVPage = ({
         </div>
 
         {/* Education */}
-        <div className="mb-12">
-          <div className="flex justify-between items-center mb-2">
+        <div className="mt-10">
+          <div className="flex justify-between items-center mb-4 ">
             <h2 className="text-lg font-bold text-gray-700 border-b border-gray-400 pb-1 tracking-widest">
               EDUCATION
             </h2>
@@ -206,26 +238,40 @@ const CVPage = ({
               <Plus className="w-4 h-4" />
             </button>
           </div>
+
           <div className="space-y-3">
             {education.map((edu) => (
               <div key={edu.id} className="flex items-start group">
-                <div className="w-1 bg-gray-800 mr-3 mt-2 h-10"></div>
-                <div className="flex justify-between w-full">
+                <div className="w-1 bg-gray-800 mr-3 mt-1 h-10"></div>
+                <div className="flex-1">
+                  {/* Main heading — Degree */}
                   <div
                     contentEditable
                     suppressContentEditableWarning
                     onBlur={(e) => updateEducation(edu.id, "degree", e.currentTarget.textContent)}
-                    className="font-semibold text-[12px] text-gray-800 focus:outline-none flex-1 mt-2"
+                    className="font-semibold text-[12px] text-gray-800 focus:outline-none w-full"
                     dangerouslySetInnerHTML={{ __html: edu.degree }}
                   />
+
+                  {/* Sub heading — Institution */}
                   <div
                     contentEditable
                     suppressContentEditableWarning
-                    onBlur={(e) => updateEducation(edu.id, "duration", e.currentTarget.textContent)}
-                    className="text-[11px] text-gray-600 text-right focus:outline-none w-24"
-                    dangerouslySetInnerHTML={{ __html: edu.duration }}
+                    onBlur={(e) => updateEducation(edu.id, "institution", e.currentTarget.textContent)}
+                    className="block text-[11px] text-gray-600 focus:outline-none w-full"
+                    dangerouslySetInnerHTML={{ __html: edu.institution }}
+                  />
+
+                  {/* Additional dummy subcontent — description or grade */}
+                  <div
+                    contentEditable
+                    suppressContentEditableWarning
+                    onBlur={(e) => updateEducation(edu.id, "details", e.currentTarget.textContent)}
+                    className="text-[10px] text-gray-500 mt-1 focus:outline-none w-full"
+                    dangerouslySetInnerHTML={{ __html: edu.details || "Graduated with First Class, specialized in Marketing & Business." }}
                   />
                 </div>
+
                 <button
                   onClick={() => removeEducation(edu.id)}
                   className="text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition ml-2"
@@ -239,8 +285,8 @@ const CVPage = ({
 
         {/* Skills */}
         <div>
-          <div className="flex justify-between items-center mt-6">
-            <h2 className="text-lg font-bold text-gray-700 border-b border-gray-400 pb-1 tracking-widest">
+          <div className="flex justify-between items-center ">
+            <h2 className="text-lg font-bold text-gray-700 border-b border-gray-400 pb-1 tracking-widest mt-5">
               SKILL
             </h2>
             <button onClick={addSkill} className="text-blue-500 hover:text-blue-700 my-4">
@@ -248,10 +294,10 @@ const CVPage = ({
             </button>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-4 mt-3">
             {skills.map((s) => (
               <div key={s.id} className="group">
-                <div className="flex justify-between items-center mb-1">
+                <div className="flex justify-between items-center mb-2">
                   <div
                     contentEditable
                     suppressContentEditableWarning
@@ -308,6 +354,29 @@ export default function Template07() {
   const editorContainerRef = useRef(null);
   const cvRef = useRef(null);
 
+  const cleanGeneratedContent = (text) => {
+    if (!text) return '';
+
+    // Remove markdown headers (### ...)
+    let cleaned = text.replace(/^#+\s+/gm, '');
+
+    // Remove "Option 1", "Option 2", etc.
+    cleaned = cleaned.replace(/Option \d+[:.]?\s*/g, '');
+
+    // Remove any brackets like [] or ()
+    cleaned = cleaned.replace(/\[.*?\]|\(.*?\)/g, '');
+
+    // Remove extra line breaks and trim
+    cleaned = cleaned
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line.length > 0)
+      .join(' ');
+
+    return cleaned;
+  };
+
+
   const [profileImage, setProfileImage] = useState(null);
   const [name, setName] = useState("OLIVIA WILSON");
   const [title, setTitle] = useState("MARKETING MANAGER");
@@ -316,14 +385,58 @@ export default function Template07() {
   );
   const [phone, setPhone] = useState("+123-456-7890");
   const [email, setEmail] = useState("hello@reallygreatsite.com");
-  const [web, setWeb] = useState("hello@reallygreatsite.com");
+  const [web, setWeb] = useState("Newyork, USA");
+  const [languages, setLanguages] = useState(["Malayalam", "English", "Hindi"]);
+
 
   const uniqueId = () => Math.random().toString(36).substr(2, 9);
 
   const handleAIGenerateWithUpdate = async (section, keywords) => {
     const generated = await handleAIGenerate(section, keywords);
-    if (generated) setAbout(generated);
+    if (!generated) return;
+
+    const cleaned = cleanGeneratedContent(generated);
+
+    switch (section.toLowerCase()) {
+      case 'profile':
+      case 'summary':
+        setAbout(cleaned);
+        break;
+
+      case 'skills':
+        // Split AI output into lines and create new skills array
+        const skillsFromAI = cleaned
+          .split('\n')
+          .map((skill) => skill.trim())
+          .filter((skill) => skill.length > 0)
+          .map((skill) => ({ id: Math.random().toString(36).substr(2, 9), name: skill, level: 60 }));
+
+        if (skillsFromAI.length > 0) setSkills(skillsFromAI);
+        break;
+
+      case 'work experience':
+        // Split AI output by entries (--- or double line breaks)
+        const experiencesFromAI = cleaned
+          .split('---')
+          .map((exp) => exp.trim())
+          .filter((exp) => exp.length > 0)
+          .map((exp) => {
+            const lines = exp.split('\n').map((l) => l.trim()).filter(Boolean);
+            return {
+              id: Math.random().toString(36).substr(2, 9),
+              company: lines[0] || 'Company Name',
+              role: lines[1] || 'Position',
+            };
+          });
+
+        if (experiencesFromAI.length > 0) setExperience(experiencesFromAI);
+        break;
+
+      default:
+        console.log('AI generated content for section:', section, cleaned);
+    }
   };
+
 
   const [experience, setExperience] = useState([
     { id: uniqueId(), company: "Inqoude Company", role: "Senior Marketing Manager" },
@@ -331,8 +444,8 @@ export default function Template07() {
   ]);
 
   const [education, setEducation] = useState([
-    { id: uniqueId(), degree: "Bachelor of Marketing", duration: "2012 - 2014" },
-    { id: uniqueId(), degree: "Bachelor Degree of Marketing and Business", duration: "yyyy - yyyy" },
+    { id: uniqueId(), degree: "Bachelor of Marketing", institution: "St. Thomas College, Thrissur", details: "Graduated with Distinction, 2024" },
+    { id: uniqueId(), degree: "Higher Secondary Education", institution: "St. Joseph’s HSS", details: "Major in Commerce, 2019 - 2021" },
   ]);
 
   const [skills, setSkills] = useState([
@@ -348,9 +461,10 @@ export default function Template07() {
   const removeExperience = (id) => setExperience(prev => prev.filter(x => x.id !== id));
   const updateExperience = (id, field, val) => setExperience(prev => prev.map(x => x.id === id ? { ...x, [field]: val } : x));
 
-  const addEducation = () => setEducation(prev => [...prev, { id: uniqueId(), degree: "New Degree", duration: "yyyy - yyyy" }]);
+  const addEducation = () => setEducation(prev => [...prev, { id: uniqueId(), degree: "New Degree", institution: "Institution Name", details: "Details / Year Range", },]);
   const removeEducation = (id) => setEducation(prev => prev.filter(x => x.id !== id));
-  const updateEducation = (id, field, val) => setEducation(prev => prev.map(x => x.id === id ? { ...x, [field]: val } : x));
+  const updateEducation = (id, field, val) => setEducation(prev => prev.map(x => (x.id === id ? { ...x, [field]: val } : x)));
+
 
   const addSkill = () => setSkills(prev => [...prev, { id: uniqueId(), name: "New Skill", level: 60 }]);
   const removeSkill = (id) => setSkills(prev => prev.filter(s => s.id !== id));
@@ -402,6 +516,8 @@ export default function Template07() {
             addSkill={addSkill}
             handleImageUpload={handleImageUpload}
             handleAIGenerateWithUpdate={handleAIGenerateWithUpdate}
+            languages={languages}
+            setLanguages={setLanguages}
           />
         </div>
       </div>

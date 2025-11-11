@@ -12,15 +12,39 @@ export default function PrintToPdf({ rootId = 'resume-root', fileName = 'resume.
       return;
     }
 
-    const canvas = await html2canvas(el, { scale: 2, useCORS: true });
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF({
-      unit: 'px',
-      format: [canvas.width, canvas.height],
+    // Temporarily remove scaling if any
+    const prevTransform = el.style.transform;
+    el.style.transform = 'scale(1)';
+    el.style.transformOrigin = 'top left';
+
+    const canvas = await html2canvas(el, {
+      scale: 2,           // higher scale for crisp output
+      useCORS: true,
+      allowTaint: true,
+      scrollY: -window.scrollY
     });
 
-    pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+    const imgData = canvas.toDataURL('image/png');
+
+    // A4 page size in pixels at 72 DPI
+    const pdf = new jsPDF({
+      unit: 'px',
+      format: 'a4',
+    });
+
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+
+    // Fit canvas image to A4
+    const ratio = Math.min(pdfWidth / canvas.width, pdfHeight / canvas.height);
+    const imgWidth = canvas.width * ratio;
+    const imgHeight = canvas.height * ratio;
+
+    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
     pdf.save(fileName);
+
+    // Restore original transform
+    el.style.transform = prevTransform;
   };
 
   return (

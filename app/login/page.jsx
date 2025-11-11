@@ -5,6 +5,8 @@ import Image from "next/image";
 import axios from "axios";
 import Toast from '@/components/Toast.jsx';
 import ClipLoader from "react-spinners/ClipLoader";
+import { GoogleLogin } from '@react-oauth/google';
+
 
 export default function Login() {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -174,47 +176,46 @@ export default function Login() {
               </h2>
 
               <div className="flex flex-col sm:flex-row gap-3 mb-6">
-                {/* <button
-                  onClick={() => handleSocialLogin('LinkedIn')}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition"
-                >
-                  <Image
-                    src="/LinkedinLogo.jpeg"
-                    alt="Achievement icon"
-                    width={40}
-                    height={40}
-                    className="rounded-lg"
-                  />
 
-                  <span className="font-medium text-gray-700">LinkedIn</span>
-                </button> */}
-                <button
-                  onClick={() => handleSocialLogin('Google')}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-1 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition"
-                >
-                  <Image
-                    src="/Googlelogo.jpeg"
-                    alt="Achievement icon"
-                    width={40}
-                    height={20}
-                    className=" rounded-lg"
-                    unoptimized
+                <div className="w-full flex justify-center">
+                  <GoogleLogin
+                    onSuccess={(credentialResponse) => {
+                      setLoading(true);
+
+                      axios.post(`${API_URL}/api/auth/google`, {
+                        token: credentialResponse.credential,
+                      })
+                        .then((res) => {
+                          setLoading(false);
+                          const data = res.data;
+
+                          if (data.token) {
+                            localStorage.setItem("token", data.token);
+                            setToastMessage("Logged in with Google!");
+                            setShowToast(true);
+                            window.location.href = "/";
+                          } else {
+                            setToastMessage(data.message || "Google login failed");
+                            setShowToast(true);
+                          }
+                        })
+                        .catch((error) => {
+                          setLoading(false);
+                          console.error("Google login error:", error);
+                          setToastMessage(
+                            error.response?.data?.message || "Something went wrong with Google login"
+                          );
+                          setShowToast(true);
+                        });
+                    }}
+                    onError={() => {
+                      setToastMessage("Google login failed. Try again.");
+                      setShowToast(true);
+                    }}
+                    useOneTap
+                    width="100%"
                   />
-                  <span className="font-medium text-gray-700">Google</span>
-                </button>
-                {/* <button
-                  onClick={() => handleSocialLogin('Google')}
-                  className="flex-1 flex items-center justify-center gap-2 px-5 py-2 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition"
-                >
-                  <Image
-                    src="/FacebookLogo.jpeg"
-                    alt="Achievement icon"
-                    width={40}
-                    height={40}
-                    className=""
-                  />
-                  <span className="font-medium text-gray-700">Facebook</span>
-                </button> */}
+                </div>
               </div>
 
               <div className="relative mb-6">

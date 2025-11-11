@@ -13,9 +13,8 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
 
-  // Check if user is logged in
   useEffect(() => {
-    const token = localStorage.getItem("token"); // replace with your auth token logic
+    const token = localStorage.getItem("token"); 
     setIsLoggedIn(!!token);
   }, []);
 

@@ -31,7 +31,14 @@ export default function DreamJob() {
 
         {/* CTA Button */}
         <div className="flex justify-center animate-fadeIn">
-          <button className="group bg-white text-[#342D4C] font-semibold px-8 py-4 rounded-2xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-2">
+          <button
+            onClick={() => {
+              const section = document.getElementById("template");
+              if (section) {
+                section.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
+            className="group bg-white text-[#342D4C] font-semibold px-8 py-4 rounded-2xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center gap-2">
             <span>Build My Resume Now</span>
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </button>
