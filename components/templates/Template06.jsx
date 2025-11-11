@@ -83,14 +83,14 @@ export default function Template06() {
             hardSkillsList.innerHTML = hardSkills.map(skill => {
               const cleanSkill = skill.replace(/["'`]/g, '');
               return `<li class="flex items-start gap-2">
-                <span class="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
+                <span class="mr-2">•</span>
                 <span contentEditable suppressContentEditableWarning>${cleanSkill}</span>
               </li>`;
             }).join('');
             techSkillsList.innerHTML = techSkills.map(skill => {
               const cleanSkill = skill.replace(/["'`]/g, '');
               return `<li class="flex items-start gap-2">
-                <span class="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
+                <span class="mr-2">•</span>
                 <span contentEditable suppressContentEditableWarning>${cleanSkill}</span>
               </li>`;
             }).join('');
@@ -168,15 +168,15 @@ export default function Template06() {
           
           <div className="text-right text-xs text-gray-700 space-y-1">
             <div className="flex items-center justify-end gap-2">
-              <MapPin className="w-3 h-3" />
+              {/* <MapPin className="w-3 h-3" /> */}
               <span contentEditable suppressContentEditableWarning>123 Anywhere St., Any City, ST 12345</span>
             </div>
             <div className="flex items-center justify-end gap-2">
-              <Phone className="w-3 h-3" />
+              {/* <Phone className="w-3 h-3" /> */}
               <span contentEditable suppressContentEditableWarning>123-456-7890</span>
             </div>
             <div className="flex items-center justify-end gap-2">
-              <Mail className="w-3 h-3" />
+              {/* <Mail className="w-3 h-3" /> */}
               <span contentEditable suppressContentEditableWarning>hello@reallygreatsite</span>
             </div>
           </div>
@@ -214,7 +214,7 @@ export default function Template06() {
           {/* Job 1 */}
           <div className="mb-4 relative group">
             <div className="flex items-start gap-2 mb-2">
-              <div className="w-2 h-2 bg-gray-800 rounded-full mt-1.5 flex-shrink-0"></div>
+              <span className="mr-2 text-gray-800">•</span>
               <div className="flex-1">
                 <div className="flex justify-between items-start">
                   <h3 className="text-sm font-bold text-gray-800" contentEditable suppressContentEditableWarning>
@@ -224,15 +224,18 @@ export default function Template06() {
                     Jan 2022 – Present
                   </span>
                 </div>
-                <ul className="list-disc list-inside text-xs text-gray-700 space-y-1 mt-2">
-                  <li contentEditable suppressContentEditableWarning>
-                    Led the design and implementation of advanced mechanical systems for multiple projects, improving system efficiency by 18%.
+                <ul className="text-xs text-gray-700 space-y-1 mt-2">
+                  <li className="flex items-start gap-2" contentEditable suppressContentEditableWarning>
+                    <span className="mr-2">•</span>
+                    <span>Led the design and implementation of advanced mechanical systems for multiple projects, improving system efficiency by 18%.</span>
                   </li>
-                  <li contentEditable suppressContentEditableWarning>
-                    Supervised and mentored a team of junior engineers, fostering skills development and technical growth.
+                  <li className="flex items-start gap-2" contentEditable suppressContentEditableWarning>
+                    <span className="mr-2">•</span>
+                    <span>Supervised and mentored a team of junior engineers, fostering skills development and technical growth.</span>
                   </li>
-                  <li contentEditable suppressContentEditableWarning>
-                    Coordinated product testing, troubleshooting, and implemented quality control measures to ensure compliance with industry standards.
+                  <li className="flex items-start gap-2" contentEditable suppressContentEditableWarning>
+                    <span className="mr-2">•</span>
+                    <span>Coordinated product testing, troubleshooting, and implemented quality control measures to ensure compliance with industry standards.</span>
                   </li>
                 </ul>
               </div>
@@ -250,7 +253,7 @@ export default function Template06() {
           {/* Job 2 */}
           <div className="mb-4 relative group">
             <div className="flex items-start gap-2">
-              <div className="w-2 h-2 bg-gray-800 rounded-full mt-1.5 flex-shrink-0"></div>
+              <span className="mr-2 text-gray-800">•</span>
               <div className="flex-1">
                 <div className="flex justify-between items-start">
                   <h3 className="text-sm font-bold text-gray-800" contentEditable suppressContentEditableWarning>
@@ -260,15 +263,18 @@ export default function Template06() {
                     Jul 2019 – Dec 2021
                   </span>
                 </div>
-                <ul className="list-disc list-inside text-xs text-gray-700 space-y-1 mt-2">
-                  <li contentEditable suppressContentEditableWarning>
-                    Managed projects from concept to completion, focusing on manufacturability and durability.
+                <ul className="text-xs text-gray-700 space-y-1 mt-2">
+                  <li className="flex items-start gap-2" contentEditable suppressContentEditableWarning>
+                    <span className="mr-2">•</span>
+                    <span>Managed projects from concept to completion, focusing on manufacturability and durability.</span>
                   </li>
-                  <li contentEditable suppressContentEditableWarning>
-                    Conducted root cause analysis for mechanical failures and implemented corrective actions.
+                  <li className="flex items-start gap-2" contentEditable suppressContentEditableWarning>
+                    <span className="mr-2">•</span>
+                    <span>Conducted root cause analysis for mechanical failures and implemented corrective actions.</span>
                   </li>
-                  <li contentEditable suppressContentEditableWarning>
-                    Collaborated with cross-functional teams to resolve technical challenges and optimize designs.
+                  <li className="flex items-start gap-2" contentEditable suppressContentEditableWarning>
+                    <span className="mr-2">•</span>
+                    <span>Collaborated with cross-functional teams to resolve technical challenges and optimize designs.</span>
                   </li>
                 </ul>
               </div>
@@ -300,19 +306,19 @@ export default function Template06() {
               <h3 className="text-sm font-semibold text-gray-800 mb-2">Hard Skills</h3>
               <ul className="hard-skills-list space-y-1 text-xs text-gray-700">
                 <li className="flex items-start gap-2">
-                  <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
+                  <span className="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>3D Modeling</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
+                  <span className="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>Finite Element Analysis</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
+                  <span className="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>Thermal System Design & Simulation</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
+                  <span className="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>Mechanical Component Design & Assembly</span>
                 </li>
               </ul>
@@ -333,19 +339,19 @@ export default function Template06() {
               <h3 className="text-sm font-semibold text-gray-800 mb-2">Technical Skills</h3>
               <ul className="tech-skills-list space-y-1 text-xs text-gray-700">
                 <li className="flex items-start gap-2">
-                  <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
+                  <span className="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>Root Cause Analysis & Troubleshooting</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
+                  <span className="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>Project Management & Scheduling</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
+                  <span className="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>Design Optimization & Value Engineering</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
+                  <span className="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>Quality Control & Assurance</span>
                 </li>
               </ul>
@@ -426,11 +432,11 @@ export default function Template06() {
               <h3 className="text-sm font-semibold text-gray-800 mb-2">Language</h3>
               <ul className="space-y-1 text-xs text-gray-700">
                 <li className="flex items-start gap-2">
-                  <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
+                  <span className="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>English</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
+                  <span className="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>Malayalam</span>
                 </li>
               </ul>
@@ -451,11 +457,11 @@ export default function Template06() {
               <h3 className="text-sm font-semibold text-gray-800 mb-2">Certifications & Memberships</h3>
               <ul className="space-y-1 text-xs text-gray-700">
                 <li className="flex items-start gap-2">
-                  <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
+                  <span className="mr-2">•</span>
                   <span><span className="font-semibold">Certified:</span> <span contentEditable suppressContentEditableWarning>Professional Engineer</span></span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span>
+                  <span className="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>Member of Mechanical Engineering Association</span>
                 </li>
               </ul>

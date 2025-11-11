@@ -438,11 +438,11 @@ export default function Template14() {
                   <h3 className="font-bold text-sm mb-1" contentEditable suppressContentEditableWarning>Alexander Aronowitz</h3>
                   <p className="text-xs text-gray-600 mb-2" contentEditable suppressContentEditableWarning>Rimberio University</p>
                   <div className="flex items-center mb-1">
-                    <Phone className="w-3 h-3 mr-2" />
+                    {/* <Phone className="w-3 h-3 mr-2" /> */}
                     <span className="text-xs" contentEditable suppressContentEditableWarning>+123-456-7890</span>
                   </div>
                   <div className="flex items-center">
-                    <Globe className="w-3 h-3 mr-2" />
+                    {/* <Globe className="w-3 h-3 mr-2" /> */}
                     <span className="text-xs" contentEditable suppressContentEditableWarning>www.reallygreatstite.com</span>
                   </div>
                   <div className="absolute -right-4 -top-6 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
@@ -459,11 +459,11 @@ export default function Template14() {
                   <h3 className="font-bold text-sm mb-1" contentEditable suppressContentEditableWarning>Korina Villanueva</h3>
                   <p className="text-xs text-gray-600 mb-2" contentEditable suppressContentEditableWarning>Rimberio University</p>
                   <div className="flex items-center mb-1">
-                    <Phone className="w-3 h-3 mr-2" />
+                    {/* <Phone className="w-3 h-3 mr-2" /> */}
                     <span className="text-xs" contentEditable suppressContentEditableWarning>+123-456-7890</span>
                   </div>
                   <div className="flex items-center">
-                    <Globe className="w-3 h-3 mr-2" />
+                    {/* <Globe className="w-3 h-3 mr-2" /> */}
                     <span className="text-xs" contentEditable suppressContentEditableWarning>www.reallygreatstite.com</span>
                   </div>
                   <div className="absolute -right-4 -top-6 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">

@@ -35,21 +35,42 @@ export default function Template04() {
     if (!section) return;
 
     if (action === 'duplicate') {
-      const draggableParent = section.parentElement;
-      if (draggableParent && draggableParent.classList.contains('react-draggable')) {
-        const outerDraggable = draggableParent.parentElement;
-        const clone = outerDraggable.cloneNode(true);
-        outerDraggable.parentNode.insertBefore(clone, outerDraggable.nextSibling);
-      } else {
-        const clone = section.cloneNode(true);
-        section.parentNode.insertBefore(clone, section.nextSibling);
+      try {
+        const draggableParent = section.parentElement;
+        if (draggableParent && draggableParent.classList.contains('react-draggable')) {
+          const outerDraggable = draggableParent.parentElement;
+          if (outerDraggable && outerDraggable.parentNode && document.contains(outerDraggable)) {
+            const clone = outerDraggable.cloneNode(true);
+            if (outerDraggable.nextSibling) {
+              outerDraggable.parentNode.insertBefore(clone, outerDraggable.nextSibling);
+            } else {
+              outerDraggable.parentNode.appendChild(clone);
+            }
+          }
+        } else if (section.parentNode && document.contains(section)) {
+          const clone = section.cloneNode(true);
+          if (section.nextSibling) {
+            section.parentNode.insertBefore(clone, section.nextSibling);
+          } else {
+            section.parentNode.appendChild(clone);
+          }
+        }
+      } catch (error) {
+        // Duplication failed, ignore
       }
     } else if (action === 'delete') {
-      const draggableParent = section.parentElement;
-      if (draggableParent && draggableParent.classList.contains('react-draggable')) {
-        draggableParent.parentElement.remove();
-      } else {
-        section.remove();
+      try {
+        const draggableParent = section.parentElement;
+        if (draggableParent && draggableParent.classList.contains('react-draggable')) {
+          const grandParent = draggableParent.parentElement;
+          if (grandParent && document.contains(grandParent)) {
+            grandParent.remove();
+          }
+        } else if (document.contains(section)) {
+          section.remove();
+        }
+      } catch (error) {
+        // Element already removed
       }
     }
   }, []);
@@ -98,9 +119,17 @@ export default function Template04() {
               .filter(s => s && !s.toLowerCase().includes('here') && !s.toLowerCase().includes('of course') && s.length < 100);
             expertiseElement.innerHTML = skills.map(skill => {
               const cleanSkill = skill.replace(/["'`]/g, '');
-              return `<li class="flex items-center gap-2">
-                <svg class="w-2 h-2 fill-white" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+              return `<li class="flex items-start gap-2 relative group">
+                <span class="mr-2">•</span>
                 <span contentEditable suppressContentEditableWarning>${cleanSkill}</span>
+                <div class="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                  <button data-action="duplicate" class="text-white rounded p-1 shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  </button>
+                  <button data-action="delete" class="text-white rounded p-1 shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                  </button>
+                </div>
               </li>`;
             }).join('');
           }
@@ -268,66 +297,80 @@ export default function Template04() {
                 <AISparkle className='-mt-2 ml-1' section="Skills" onGenerate={handleAIGenerate} />
                 </div>
               </div>
-              <Draggable nodeRef={expertiseRef}>
-                <ul 
-                  ref={expertiseRef} 
-                  data-section-item 
-                  className="space-y-2 text-xs relative group"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      const newLi = document.createElement('li');
-                      newLi.className = 'flex items-center gap-2';
-                      newLi.innerHTML = `<svg class="w-2 h-2 fill-white" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg><span contentEditable suppressContentEditableWarning></span>`;
-                      const target = e.target.closest('li');
-                      if (target) {
-                        target.parentNode.insertBefore(newLi, target.nextSibling);
-                        newLi.querySelector('span').focus();
-                      }
-                    } else if (e.key === 'Backspace') {
-                      const target = e.target;
-                      if (target.tagName === 'SPAN' && !target.textContent.trim()) {
-                        e.preventDefault();
-                        const li = target.closest('li');
-                        if (li) li.remove();
-                      }
-                    }
-                  }}
-                >
-                  <li className="flex items-center gap-2">
-                    <Circle className="w-2 h-2 fill-white" />
-                    <span contentEditable suppressContentEditableWarning>UI/UX</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Circle className="w-2 h-2 fill-white" />
-                    <span contentEditable suppressContentEditableWarning>Visual Design</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Circle className="w-2 h-2 fill-white" />
-                    <span contentEditable suppressContentEditableWarning>Wireframes</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Circle className="w-2 h-2 fill-white" />
-                    <span contentEditable suppressContentEditableWarning>Storyboards</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Circle className="w-2 h-2 fill-white" />
-                    <span contentEditable suppressContentEditableWarning>User Flows</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Circle className="w-2 h-2 fill-white" />
-                    <span contentEditable suppressContentEditableWarning>Process Flows</span>
-                  </li>
-                  <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                    <button data-action="duplicate" className="text-white rounded p-1.5 shadow-md">
-                      <CopyPlus className="w-4 h-4" />
+              <ul className="space-y-2 text-xs">
+                <li className="flex items-start gap-2 relative group">
+                  <span className="mr-2">•</span>
+                  <span contentEditable suppressContentEditableWarning>UI/UX</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-white rounded p-1 shadow-md">
+                      <CopyPlus className="w-3 h-3" />
                     </button>
-                    <button data-action="delete" className="text-white rounded p-1.5 shadow-md">
-                      <Trash2 className="w-4 h-4" />
+                    <button data-action="delete" className="text-white rounded p-1 shadow-md">
+                      <Trash2 className="w-3 h-3" />
                     </button>
                   </div>
-                </ul>
-              </Draggable>
+                </li>
+                <li className="flex items-start gap-2 relative group">
+                  <span className="mr-2">•</span>
+                  <span contentEditable suppressContentEditableWarning>Visual Design</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-white rounded p-1 shadow-md">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-white rounded p-1 shadow-md">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2 relative group">
+                  <span className="mr-2">•</span>
+                  <span contentEditable suppressContentEditableWarning>Wireframes</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-white rounded p-1 shadow-md">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-white rounded p-1 shadow-md">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2 relative group">
+                  <span className="mr-2">•</span>
+                  <span contentEditable suppressContentEditableWarning>Storyboards</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-white rounded p-1 shadow-md">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-white rounded p-1 shadow-md">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2 relative group">
+                  <span className="mr-2">•</span>
+                  <span contentEditable suppressContentEditableWarning>User Flows</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-white rounded p-1 shadow-md">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-white rounded p-1 shadow-md">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2 relative group">
+                  <span className="mr-2">•</span>
+                  <span contentEditable suppressContentEditableWarning>Process Flows</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-white rounded p-1 shadow-md">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-white rounded p-1 shadow-md">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                </li>
+              </ul>
             </div>
 
             {/* Language Section */}
@@ -392,7 +435,7 @@ export default function Template04() {
                 <Draggable nodeRef={job1Ref}>
                   <div ref={job1Ref} data-section-item className="flex gap-3 relative group">
                     <div className="flex-shrink-0 mt-1">
-                      <Circle className="w-3 h-3 fill-gray-800" />
+                      <span className="text-gray-800">•</span>
                     </div>
                     <div className="flex-1">
                       <div className="flex justify-between items-start mb-2">
@@ -425,7 +468,7 @@ export default function Template04() {
                 <Draggable nodeRef={job2Ref}>
                   <div ref={job2Ref} data-section-item className="flex gap-3 relative group">
                     <div className="flex-shrink-0 mt-1">
-                      <Circle className="w-3 h-3 fill-gray-800" />
+                      <span className="text-gray-800">•</span>
                     </div>
                     <div className="flex-1">
                       <div className="flex justify-between items-start mb-2">
@@ -458,7 +501,7 @@ export default function Template04() {
                 <Draggable nodeRef={job3Ref}>
                   <div ref={job3Ref} data-section-item className="flex gap-3 relative group">
                     <div className="flex-shrink-0 mt-1">
-                      <Circle className="w-3 h-3 fill-gray-800" />
+                      <span className="text-gray-800">•</span>
                     </div>
                     <div className="flex-1">
                       <div className="flex justify-between items-start mb-2">
