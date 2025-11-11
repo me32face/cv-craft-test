@@ -400,7 +400,23 @@ export default function Template07() {
     switch (section.toLowerCase()) {
       case 'profile':
       case 'summary':
-        setAbout(cleaned);
+        let cleanedContent = generated
+          .replace(/^#{1,6}\s+.+$/gm, '')
+          .replace(/\*\*(.+?)\*\*/g, '$1')
+          .replace(/\*(.+?)\*/g, '$1')
+          .trim();
+        
+        const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
+        const actualSummary = paragraphs.find(p =>
+          !p.toLowerCase().includes('here are') &&
+          !p.toLowerCase().includes('of course') &&
+          !p.toLowerCase().includes('choose the option') &&
+          !p.toLowerCase().includes('pro-tip') &&
+          p.length > 100
+        );
+        
+        const finalContent = actualSummary?.trim() || paragraphs[0]?.trim() || cleanedContent;
+        setAbout(finalContent);
         break;
 
       case 'skills':
