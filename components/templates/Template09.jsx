@@ -184,56 +184,7 @@ export default function Template09() {
     saveState({ profileImage: null, contentState: {} });
   }, []);
 
-  const downloadPDF = useCallback(async () => {
-    const cvElement = cvRef.current;
-    if (!cvElement) return;
 
-    const parentContainer = editorContainerRef.current;
-    if (!parentContainer) return;
-
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
-
-    let oldTransform, oldTransition;
-
-    try {
-      oldTransform = parentContainer.style.transform;
-      oldTransition = parentContainer.style.transition;
-      parentContainer.style.transform = "scale(1)";
-      parentContainer.style.transition = "none";
-      await new Promise(resolve => setTimeout(resolve, 200));
-
-      const canvas = await html2canvas(cvElement, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: "#ffffff",
-        logging: false,
-        ignoreElements: (el) => el.tagName === "BUTTON"
-      });
-
-      const imgData = canvas.toDataURL("image/png");
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-      const imgX = (pdfWidth - imgWidth * ratio) / 2;
-      const imgY = 0;
-
-      pdf.addImage(imgData, "PNG", imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-      pdf.save("CV.pdf");
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-      alert("Error generating PDF. Please try again.");
-    } finally {
-      parentContainer.style.transform = oldTransform;
-      parentContainer.style.transition = oldTransition;
-    }
-  }, []);
-
-  useEffect(() => {
-    registerPDFFunction(downloadPDF);
-  }, [downloadPDF, registerPDFFunction]);
 
   const CVPage = () => {
     const contactRef = useRef(null);
@@ -249,22 +200,28 @@ export default function Template09() {
     return (
 
       <div className="min-h-screen bg-gray-50  flex justify-center items-center" onClick={handleButtonClick}>
-        <div className="w-[210mm]  bg-white shadow-2xl overflow-hidden relative">
+        <div className="w-[210mm]  bg-white shadow-2xl overflow-hidden ">
           {/* Header Section */}
-          <div className="bg-blue-900 text-white  relative">
-            <div className="flex items-center gap-8 p-10 ">
+          <div className="bg-blue-900 text-white p-7 relative">
+
+            {/* Top Section: Image + Name */}
+            <div className="flex items-center gap-8">
+
               {/* Profile Image */}
               <div className="relative">
-                <div className="w-44 h-48 rounded-2xl  border-8 border-blue-100 bg-gray-300 overflow-hidden"
-                  onClick={() => document.getElementById('profileImageInput').click()}>
+                <div
+                  className="w-44 h-48 rounded-2xl border-8 border-blue-100 bg-gray-300 overflow-hidden cursor-pointer hover:scale-105 transition"
+                  onClick={() => document.getElementById('profileImageInput').click()}
+                >
                   {profileImage ? (
                     <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
+                    <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center text-4xl font-bold text-gray-700">
                       RS
                     </div>
                   )}
                 </div>
+
                 <input
                   id="profileImageInput"
                   type="file"
@@ -274,38 +231,58 @@ export default function Template09() {
                 />
               </div>
 
-              {/* Name and Title */}
-              <div className="flex-1">
-                <h1 className="text-4xl font-bold mb-2" contentEditable suppressContentEditableWarning>OLIVIA WILSON</h1>
-                <p className="text-lg text-blue-200" contentEditable suppressContentEditableWarning>Marketing Manager</p>
+              {/* Name + Title + Contact */}
+              <div className="flex flex-col gap-4">
+
+                {/* Name + Title */}
+                <div>
+                  <h1
+                    className="text-4xl font-bold tracking-wide"
+                    contentEditable
+                    suppressContentEditableWarning
+                  >
+                    OLIVIA WILSON
+                  </h1>
+
+                  <p
+                    className="text-lg text-blue-200"
+                    contentEditable
+                    suppressContentEditableWarning
+                  >
+                    Marketing Manager
+                  </p>
+                </div>
+
+                {/* Contact Info */}
+                <div>
+                  <Draggable nodeRef={contactRef}>
+                    <div
+                      ref={contactRef}
+                      data-section-item
+                      className="grid grid-cols-2 gap-y-3 gap-x-6"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Phone size={16} />
+                        <span className="text-sm">+123-456-7890</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Mail size={16} />
+                        <span className="text-sm">hello@reallygreatsite.com</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Globe size={16} />
+                        <span className="text-sm">www.reallygreatsite.com</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <MapPin size={16} />
+                        <span className="text-sm">123 Anywhere St., Any City</span>
+                      </div>
+                    </div>
+                  </Draggable>
+                </div>
               </div>
             </div>
-
-            {/* Contact Info */}
-            <div className="pb-5 mt-0 ml-40 group">
-              <Draggable nodeRef={contactRef}>
-                <div ref={contactRef} data-section-item className="grid grid-cols-2 gap-4 relative group">
-                  <div className="flex items-center gap-2">
-                    <Phone size={16} />
-                    <span className="text-sm">+123-456-7890</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Mail size={16} />
-                    <span className="text-sm">hello@reallygreatsite.com</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Globe size={16} />
-                    <span className="text-sm">www.reallygreatsite.com</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin size={16} />
-                    <span className="text-sm">123 Anywhere St., Any City</span>
-                  </div>
-                </div>
-              </Draggable>
-            </div>
           </div>
-
           {/* Main Content */}
           <div className="grid grid-cols-3 gap-8 p-8">
             {/* Left Column */}

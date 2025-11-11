@@ -94,14 +94,14 @@ export default function Template08() {
           if (skillsElement) {
             const skills = generatedContent.split('\n').filter(skill => skill.trim());
             skillsElement.innerHTML = skills.map(skill =>
-              `<li class="text-xs flex items-start relative group text-gray-700">
+              `<li class="text-xs flex items-start relative group text-amber-900">
                   <span class="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>${skill.trim()}</span>
                   <div class="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                    <button data-action="duplicate" class="text-gray-600 rounded p-1 shadow-md">
+                    <button data-action="duplicate" class="text-amber-900 rounded p-1 shadow-md">
                       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
                     </button>
-                    <button data-action="delete" class="text-gray-600 rounded p-1 shadow-md">
+                    <button data-action="delete" class="text-amber-900 rounded p-1 shadow-md">
                       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
                     </button>
                   </div>
@@ -155,12 +155,11 @@ export default function Template08() {
     const job1Ref = useRef(null);
     const job2Ref = useRef(null);
     const job3Ref = useRef(null);
-    const ref1Ref = useRef(null);
-    const ref2Ref = useRef(null);
+    const job4Ref = useRef(null);
 
     return (
  <div className="min-h-screen bg-gray-50  flex justify-center items-center" onClick={handleButtonClick}>
-        <div className="w-[210mm]  bg-white shadow-2xl overflow-hidden relative">
+        <div className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-hidden relative">
                  <div className="flex min-h-screen ">
           {/* Left Sidebar - Beige */}
           <div className="w-2/5 bg-amber-50 p-10">
@@ -340,6 +339,9 @@ export default function Template08() {
                   <li>Hindi</li>
                   <li>Marathi</li>
                   <li>English</li>
+                  <li>Marathi</li>
+                  <li>English</li>
+
 
                   {/* hover buttons */}
                   <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
@@ -355,29 +357,64 @@ export default function Template08() {
             </div>
 
             {/* education Section */}
-            <div>
-              <h3 className="text-lg font-bold text-amber-900 mb-4 tracking-wide"
-                contentEditable suppressContentEditableWarning>EDUCATION</h3>
-              <Draggable nodeRef={educationRef}>
-                <ul ref={educationRef} data-section-item className="list-disc list-inside marker:text-amber-700 space-y-3 text-xs text-amber-900 group relative"
-                  contentEditable suppressContentEditableWarning >
-                  <li>
-                    <p className="font-semibold">Innovation in Data</p>
-                    <p className="ml-4 mt-1">Analytics Award</p>
-                    <p className="ml-4 text-amber-700">(2023)</p>
-                  </li>
+<div>
+  {/* Section Title */}
+  <h3
+    className="text-lg font-bold text-amber-900 mb-4 tracking-wide"
+    contentEditable
+    suppressContentEditableWarning
+  >
+    EDUCATION
+  </h3>
 
-                  <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                    <button data-action="duplicate" className="text-amber-700 rounded p-1.5 shadow-md">
-                      <CopyPlus className="w-4 h-4" />
-                    </button>
-                    <button data-action="delete" className="text-amber-700 rounded p-1.5 shadow-md">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </ul>
-              </Draggable>
-            </div>
+  <div className="relative group">
+    <Draggable nodeRef={educationRef}>
+      <ul
+        ref={educationRef}
+        data-section-item
+        className="list-disc list-inside marker:text-amber-700 space-y-4 text-xs text-amber-900 pl-2"
+        contentEditable
+        suppressContentEditableWarning
+      >
+        <li>
+          <p className="font-semibold">Innovation in Data</p>
+          <p className="ml-4 mt-1">Analytics Award</p>
+          <p className="ml-4 text-amber-700">(2023)</p>
+        </li>
+
+        <li>
+          <p className="font-semibold">Innovation in Data</p>
+          <p className="ml-4 mt-1">Analytics Award</p>
+          <p className="ml-4 text-amber-700">(2023)</p>
+        </li>
+
+        <li>
+          <p className="font-semibold">Innovation in Data</p>
+          <p className="ml-4 mt-1">Analytics Award</p>
+          <p className="ml-4 text-amber-700">(2023)</p>
+        </li>
+      </ul>
+    </Draggable>
+
+    {/* Action Buttons */}
+    <div className="absolute -right-4 -top-6 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+      <button
+        data-action="duplicate"
+        className="text-amber-900 rounded p-1.5 shadow-md"
+      >
+        <CopyPlus className="w-4 h-4" />
+      </button>
+
+      <button
+        data-action="delete"
+        className="text-amber-900 rounded p-1.5 shadow-md"
+      >
+        <Trash2 className="w-4 h-4" />
+      </button>
+    </div>
+  </div>
+</div>
+
           </div>
 
           {/* Right Content - Light Beige/Cream */}
@@ -418,13 +455,13 @@ export default function Template08() {
                     <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                       <button
                         data-action="duplicate"
-                        className="text-amber-700 bg-white rounded p-1 shadow-md hover:scale-110 transition-transform"
+                        className="text-amber-900 bg-white rounded p-1 shadow-md hover:scale-110 transition-transform"
                       >
                         <CopyPlus className="w-3 h-3" />
                       </button>
                       <button
                         data-action="delete"
-                        className="text-amber-700 bg-white rounded p-1 shadow-md hover:scale-110 transition-transform"
+                        className="text-amber-900 bg-white rounded p-1 shadow-md hover:scale-110 transition-transform"
                       >
                         <Trash2 className="w-3 h-3" />
                       </button>
@@ -454,10 +491,10 @@ export default function Template08() {
                         fugiat nulla. Hendrerit id quam augis, facilisis sollicitudin metus.
                       </p>
                       <div className="absolute -right-2 top-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button data-action="duplicate" className="text-amber-700 rounded p-1.5 shadow-md">
+                        <button data-action="duplicate" className="text-amber-900 rounded p-1.5 shadow-md">
                           <CopyPlus className="w-4 h-4" />
                         </button>
-                        <button data-action="delete" className="text-amber-700 rounded p-1.5 shadow-md">
+                        <button data-action="delete" className="text-amber-900 rounded p-1.5 shadow-md">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -479,10 +516,10 @@ export default function Template08() {
                         fugiat nulla. Hendrerit id quam augis, facilisis sollicitudin metus.
                       </p>
                       <div className="absolute -right-2 top-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button data-action="duplicate" className="text-amber-700 rounded p-1.5 shadow-md">
+                        <button data-action="duplicate" className="text-amber-900 rounded p-1.5 shadow-md">
                           <CopyPlus className="w-4 h-4" />
                         </button>
-                        <button data-action="delete" className="text-amber-700 rounded p-1.5 shadow-md">
+                        <button data-action="delete" className="text-amber-900 rounded p-1.5 shadow-md">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -503,10 +540,31 @@ export default function Template08() {
                         fugiat nulla. Hendrerit id quam augis, facilisis sollicitudin metus.
                       </p>
                       <div className="absolute -right-2 top-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button data-action="duplicate" className="text-amber-700 rounded p-1.5 shadow-md">
+                        <button data-action="duplicate" className="text-amber-900 rounded p-1.5 shadow-md">
                           <CopyPlus className="w-4 h-4" />
                         </button>
-                        <button data-action="delete" className="text-amber-700 rounded p-1.5 shadow-md">
+                        <button data-action="delete" className="text-amber-900 rounded p-1.5 shadow-md">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </Draggable>
+                  <Draggable nodeRef={job4Ref}>
+                    <div ref={job4Ref} data-section-item className='relative group '>
+                      <div className="flex justify-between items-start mb-1">
+                        <h4 className="font-bold text-amber-900 text-sm" contentEditable suppressContentEditableWarning>Bachelor of IT Management</h4>
+                        <span className="text-xs text-amber-800" contentEditable suppressContentEditableWarning>2016 - 2020</span>
+                      </div>
+                      <p className="text-xs text-amber-800 italic mb-1" contentEditable suppressContentEditableWarning>Wardiere University</p>
+                      <p className="text-xs text-amber-900 leading-relaxed" contentEditable suppressContentEditableWarning>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute
+                        irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                      </p>
+                      <div className="absolute -right-2 top-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                        <button data-action="duplicate" className="text-amber-900 rounded p-1.5 shadow-md">
+                          <CopyPlus className="w-4 h-4" />
+                        </button>
+                        <button data-action="delete" className="text-amber-900 rounded p-1.5 shadow-md">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -536,10 +594,10 @@ export default function Template08() {
                       fugiat nulla pariatur.
                     </p>
                     <div className="absolute -right-2 top-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button data-action="duplicate" className="text-amber-700 rounded p-1.5 shadow-md">
+                      <button data-action="duplicate" className="text-amber-900 rounded p-1.5 shadow-md">
                         <CopyPlus className="w-4 h-4" />
                       </button>
-                      <button data-action="delete" className="text-amber-700 rounded p-1.5 shadow-md">
+                      <button data-action="delete" className="text-amber-900 rounded p-1.5 shadow-md">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -547,52 +605,7 @@ export default function Template08() {
                 </Draggable>
               </div>
 
-              {/* References Section */}
-              <div>
-                <h3 className="text-lg font-bold text-amber-900 mb-3 tracking-wide" contentEditable suppressContentEditableWarning>REFERENCES</h3>
-                <div className="w-full h-px bg-amber-900 mb-4"></div>
-
-                <div className="grid grid-cols-2 gap-6 ">
-                  {/* Reference 1 */}
-                  <Draggable nodeRef={ref1Ref}>
-                    <div ref={ref1Ref} data-section-item className="text-xs relative group" contentEditable suppressContentEditableWarning>
-                      <h4 className="font-bold text-amber-900 text-sm mb-1">Fatma Hasan</h4>
-                      <p className="text-amber-800 mb-2">Wardiere Inc. / CTO</p>
-                      <div className="text-amber-900 space-y-0.5">
-                        <p><span className="font-semibold">Phone:</span><br />+31 - 456 - 7890</p>
-                        <p><span className="font-semibold">Email:</span> hello@reallygreatsite.com</p>
-                      </div>
-                      <div className="absolute -right-4 -top-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button data-action="duplicate" className="text-amber-700 rounded p-1.5 shadow-md">
-                          <CopyPlus className="w-4 h-4" />
-                        </button>
-                        <button data-action="delete" className="text-amber-700 rounded p-1.5 shadow-md">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  </Draggable>
-
-                  {/* Reference 2 */}
-                  <Draggable nodeRef={ref2Ref}>
-                    <div ref={ref2Ref} data-section-item className="text-xs relative group" contentEditable suppressContentEditableWarning>
-                      <h4 className="font-bold text-amber-900 text-sm mb-1">Ronan Olandiwar</h4>
-                      <p className="text-amber-800 mb-2">Wardiere Inc. / CEO</p>
-                      <div className="text-amber-900 space-y-0.5">
-                        <p><span className="font-semibold">Phone:</span><br /> +123 - 456 - 7890</p>
-                        <p><span className="font-semibold">Email:</span> hello@reallygreatsite.com</p>
-                      </div><div className="absolute -right-4 -top-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button data-action="duplicate" className="text-amber-700 rounded p-1.5 shadow-md">
-                          <CopyPlus className="w-4 h-4" />
-                        </button>
-                        <button data-action="delete" className="text-amber-700 rounded p-1.5 shadow-md">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  </Draggable>
-                </div>
-              </div>
+             
             </div>
           </div>
         </div>

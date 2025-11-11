@@ -269,8 +269,6 @@ export default function Template01() {
     const job2Ref = useRef(null);
     const job3Ref = useRef(null);
     const contactContentRef = useRef(null);
-    const skillsContentRef = useRef(null);
-    const languagesContentRef = useRef(null);
     const referenceContentRef = useRef(null);
     const certificateContentRef = useRef(null);
     return (
