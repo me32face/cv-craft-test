@@ -101,6 +101,10 @@ const templateComponents = {
     ssr: false,
     loading: () => <TemplateLoader />,
   }),
+  Template24: dynamic(() => import('@/components/templates/Template24'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />,
+  }),
 };
 
 function TemplateLoader() {

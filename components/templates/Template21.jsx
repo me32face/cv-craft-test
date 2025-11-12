@@ -127,75 +127,46 @@ const App = () => {
 
         case 'core competencies':
         case 'skills':
-          const skillsContainer = document.querySelector('[data-section="core-competencies"]');
-          if (skillsContainer) {
-            const skills = generatedContent.split('\n').filter(skill => skill.trim());
-            const skillsList = skillsContainer.querySelector('.space-y-1');
-            if (skillsList) {
-              const newSkills = skills.slice(0, 8); // Limit to 8 skills
-              setData(prev => ({
-                ...prev,
-                coreCompetencies: newSkills.map(skill => skill.trim())
-              }));
-            }
-          }
+          const skills = generatedContent.split('\n').filter(skill => skill.trim());
+          const newSkills = skills.slice(0, 8); // Limit to 8 skills
+          setData(prev => ({
+            ...prev,
+            coreCompetencies: newSkills.map(skill => skill.trim())
+          }));
           break;
 
-        case 'professional experience':
-        case 'experience':
-          const experienceContainer = document.querySelector('[data-section="professional-experience"] .space-y-3');
-          if (experienceContainer) {
-            const experiences = generatedContent.split('---').filter(exp => exp.trim());
-            const newExperiences = experiences.slice(0, 2).map((exp, index) => {
-              const lines = exp.trim().split('\n').filter(line => line.trim());
-              const position = lines[0] || 'Position Title';
-              const institution = lines[1] || 'Institution/Company';
-              const period = lines[2] || '2020 - Present';
-              const achievements = lines.slice(3).filter(achievement => achievement.trim()).slice(0, 3);
-
-              return {
-                id: Date.now() + index,
-                position,
-                institution,
-                period,
-                achievements
-              };
-            });
-
-            setData(prev => ({
-              ...prev,
-              experience: newExperiences
-            }));
-          }
+        case 'professional development':
+          const items = generatedContent.split('\n').map(item => item.trim()).filter(item => item).slice(0, 5);
+          setData(prev => ({
+            ...prev,
+            professionalDevelopment: items
+          }));
           break;
 
         case 'education':
-          const educationContainer = document.querySelector('[data-section="education"] .space-y-3');
-          if (educationContainer) {
-            const educations = generatedContent.split('---').filter(edu => edu.trim());
-            const newEducation = educations.slice(0, 2).map((edu, index) => {
-              const lines = edu.trim().split('\n').filter(line => line.trim());
-              const degree = lines[0] || 'Degree';
-              const major = lines[1] || 'Major/Concentration';
-              const institution = lines[2] || 'Institution';
-              const year = lines[3] || 'Year';
-              const highlights = lines.slice(4).filter(highlight => highlight.trim()).slice(0, 2);
+          const educations = generatedContent.split('---').filter(edu => edu.trim());
+          const newEducation = educations.slice(0, 2).map((edu, index) => {
+            const lines = edu.trim().split('\n').filter(line => line.trim());
+            const degree = lines[0] || 'Degree';
+            const major = lines[1] || 'Major/Concentration';
+            const institution = lines[2] || 'Institution';
+            const year = lines[3] || 'Year';
+            const highlights = lines.slice(4).filter(highlight => highlight.trim()).slice(0, 2);
 
-              return {
-                id: Date.now() + index,
-                degree,
-                major,
-                institution,
-                year,
-                highlights
-              };
-            });
+            return {
+              id: Date.now() + index,
+              degree,
+              major,
+              institution,
+              year,
+              highlights
+            };
+          });
 
-            setData(prev => ({
-              ...prev,
-              education: newEducation
-            }));
-          }
+          setData(prev => ({
+            ...prev,
+            education: newEducation
+          }));
           break;
 
         default:
@@ -240,65 +211,100 @@ const App = () => {
     };
   }, []);
 
-  // State management functions
+  // Fixed handleEdit function
   const handleEdit = (path, value) => {
     setData((prev) => {
       const keys = path.split(".");
-      let newData = { ...prev };
       
-      try {
-        if (keys.length === 1) {
-          newData[keys[0]] = value;
-        } else if (keys.length === 2) {
-          if (newData[keys[0]] && typeof newData[keys[0]] === 'object') {
-            newData = { 
-              ...prev, 
-              [keys[0]]: { ...prev[keys[0]], [keys[1]]: value } 
-            };
-          }
-        } else if (keys.length === 3) {
-          const section = keys[0];
-          const index = parseInt(keys[1], 10);
-          const field = keys[2];
-          
-          if (Array.isArray(newData[section]) && 
-              !isNaN(index) && 
-              index >= 0 && 
-              index < newData[section].length) {
-            const newArr = [...newData[section]];
-            newArr[index] = { ...newArr[index], [field]: value };
-            newData[section] = newArr;
-          }
-        } else if (keys.length === 4) {
-          const section = keys[0];
-          const index = parseInt(keys[1], 10);
-          const subSection = keys[2];
-          const subIndex = parseInt(keys[3], 10);
-          
-          if (Array.isArray(newData[section]) && 
-              !isNaN(index) && index >= 0 && index < newData[section].length &&
-              newData[section][index] &&
-              Array.isArray(newData[section][index][subSection]) &&
-              !isNaN(subIndex) && subIndex >= 0 && subIndex < newData[section][index][subSection].length) {
-            const newArr = [...newData[section]];
-            const newSubArr = [...newArr[index][subSection]];
-            newSubArr[subIndex] = value;
-            newArr[index] = { ...newArr[index], [subSection]: newSubArr };
-            newData[section] = newArr;
-          }
-        }
-      } catch (error) {
-        console.error('Error updating state:', error, { path, value });
-        return prev;
+      // Handle simple top-level properties
+      if (keys.length === 1) {
+        return {
+          ...prev,
+          [keys[0]]: value
+        };
       }
       
-      return newData;
+      // Handle nested objects (like contact)
+      if (keys.length === 2 && keys[0] === 'contact') {
+        return {
+          ...prev,
+          contact: {
+            ...prev.contact,
+            [keys[1]]: value
+          }
+        };
+      }
+      
+      // Handle array items (like coreCompetencies.0, professionalDevelopment.1, etc.)
+      if (keys.length === 2 && Array.isArray(prev[keys[0]])) {
+        const arrayName = keys[0];
+        const index = parseInt(keys[1], 10);
+        
+        if (!isNaN(index) && index >= 0 && index < prev[arrayName].length) {
+          const newArray = [...prev[arrayName]];
+          newArray[index] = value;
+          return {
+            ...prev,
+            [arrayName]: newArray
+          };
+        }
+      }
+      
+      // Handle nested objects in arrays (like education.0.degree, experience.1.position, etc.)
+      if (keys.length === 3 && Array.isArray(prev[keys[0]])) {
+        const arrayName = keys[0];
+        const index = parseInt(keys[1], 10);
+        const fieldName = keys[2];
+        
+        if (!isNaN(index) && index >= 0 && index < prev[arrayName].length) {
+          const newArray = [...prev[arrayName]];
+          newArray[index] = {
+            ...newArray[index],
+            [fieldName]: value
+          };
+          return {
+            ...prev,
+            [arrayName]: newArray
+          };
+        }
+      }
+      
+      // Handle deeply nested arrays (like education.0.highlights.1, experience.1.achievements.0, etc.)
+      if (keys.length === 4 && Array.isArray(prev[keys[0]])) {
+        const arrayName = keys[0];
+        const index = parseInt(keys[1], 10);
+        const subArrayName = keys[2];
+        const subIndex = parseInt(keys[3], 10);
+        
+        if (!isNaN(index) && index >= 0 && index < prev[arrayName].length &&
+            !isNaN(subIndex) && prev[arrayName][index] && 
+            Array.isArray(prev[arrayName][index][subArrayName]) &&
+            subIndex >= 0 && subIndex < prev[arrayName][index][subArrayName].length) {
+          
+          const newArray = [...prev[arrayName]];
+          const newSubArray = [...newArray[index][subArrayName]];
+          newSubArray[subIndex] = value;
+          
+          newArray[index] = {
+            ...newArray[index],
+            [subArrayName]: newSubArray
+          };
+          
+          return {
+            ...prev,
+            [arrayName]: newArray
+          };
+        }
+      }
+      
+      console.warn('Invalid edit path:', path);
+      return prev;
     });
   };
 
   const duplicateItem = (section, index) => {
     setData((prev) => {
-      if (!Array.isArray(prev[section]) || 
+      if (!prev[section] || !Array.isArray(prev[section]) || 
           isNaN(index) || 
           index < 0 || 
           index >= prev[section].length) {
@@ -307,7 +313,8 @@ const App = () => {
       }
       
       const newArr = [...prev[section]];
-      const newItem = { ...newArr[index], id: Date.now() };
+      const newItem = JSON.parse(JSON.stringify(newArr[index]));
+      newItem.id = Date.now();
       newArr.splice(index + 1, 0, newItem);
       return { ...prev, [section]: newArr };
     });
@@ -315,7 +322,7 @@ const App = () => {
 
   const deleteItem = (section, index) => {
     setData((prev) => {
-      if (!Array.isArray(prev[section]) || 
+      if (!prev[section] || !Array.isArray(prev[section]) || 
           prev[section].length <= 1 ||
           isNaN(index) || 
           index < 0 || 
@@ -346,7 +353,10 @@ const App = () => {
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      handleEdit('photoUrl', reader.result);
+      setData(prev => ({
+        ...prev,
+        photoUrl: reader.result
+      }));
     };
     reader.onerror = () => {
       alert('Error reading file. Please try again.');
@@ -376,6 +386,14 @@ const App = () => {
       </div>
     </div>
   );
+
+  // Safe array access for mapping
+  const safeMap = (array, callback) => {
+    if (!array || !Array.isArray(array)) {
+      return [];
+    }
+    return array.map(callback);
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 overflow-auto p-4">
@@ -440,7 +458,7 @@ const App = () => {
                   className="text-lg font-bold mb-1 text-center uppercase tracking-wide"
                   contentEditable
                   suppressContentEditableWarning
-                  onBlur={(e) => handleEdit('name', e.target.textContent)}
+                  onBlur={(e) => handleEdit('name', e.target.textContent || data.name)}
                 >
                   {data.name}
                 </h1>
@@ -448,7 +466,7 @@ const App = () => {
                   className="text-xs text-blue-200 font-medium text-center"
                   contentEditable
                   suppressContentEditableWarning
-                  onBlur={(e) => handleEdit('title', e.target.textContent)}
+                  onBlur={(e) => handleEdit('title', e.target.textContent || data.title)}
                 >
                   {data.title}
                 </h2>
@@ -464,7 +482,7 @@ const App = () => {
                       className="text-xs flex-1"
                       contentEditable
                       suppressContentEditableWarning
-                      onBlur={(e) => handleEdit('contact.phone', e.target.textContent)}
+                      onBlur={(e) => handleEdit('contact.phone', e.target.textContent || data.contact.phone)}
                     >
                       {data.contact.phone}
                     </span>
@@ -475,7 +493,7 @@ const App = () => {
                       className="text-xs flex-1"
                       contentEditable
                       suppressContentEditableWarning
-                      onBlur={(e) => handleEdit('contact.email', e.target.textContent)}
+                      onBlur={(e) => handleEdit('contact.email', e.target.textContent || data.contact.email)}
                     >
                       {data.contact.email}
                     </span>
@@ -486,7 +504,7 @@ const App = () => {
                       className="text-xs flex-1"
                       contentEditable
                       suppressContentEditableWarning
-                      onBlur={(e) => handleEdit('contact.location', e.target.textContent)}
+                      onBlur={(e) => handleEdit('contact.location', e.target.textContent || data.contact.location)}
                     >
                       {data.contact.location}
                     </span>
@@ -503,7 +521,7 @@ const App = () => {
                   onGenerate={handleAIGenerate}
                 />
                 <div className="space-y-1">
-                  {data.coreCompetencies.map((skill, index) => (
+                  {safeMap(data.coreCompetencies, (skill, index) => (
                     <div key={index} className="group flex items-center justify-between">
                       <div className="flex items-center gap-1">
                         <div className="w-1.5 h-1.5 bg-blue-300 rounded-full"></div>
@@ -511,7 +529,7 @@ const App = () => {
                           className="text-xs flex-1"
                           contentEditable
                           suppressContentEditableWarning
-                          onBlur={(e) => handleEdit(`coreCompetencies.${index}`, e.target.textContent)}
+                          onBlur={(e) => handleEdit(`coreCompetencies.${index}`, e.target.textContent || skill)}
                         >
                           {skill}
                         </span>
@@ -543,7 +561,7 @@ const App = () => {
               <div className="flex-1">
                 <SectionHeader title="Professional Development" icon={null} className="!text-white !border-blue-300" />
                 <div className="space-y-1">
-                  {data.professionalDevelopment.map((item, index) => (
+                  {safeMap(data.professionalDevelopment, (item, index) => (
                     <div key={index} className="group flex items-center justify-between">
                       <div className="flex items-center gap-1">
                         <div className="w-1 h-1 bg-blue-300 rounded-full flex-shrink-0"></div>
@@ -551,7 +569,7 @@ const App = () => {
                           className="text-xs flex-1"
                           contentEditable
                           suppressContentEditableWarning
-                          onBlur={(e) => handleEdit(`professionalDevelopment.${index}`, e.target.textContent)}
+                          onBlur={(e) => handleEdit(`professionalDevelopment.${index}`, e.target.textContent || item)}
                         >
                           {item}
                         </span>
@@ -590,7 +608,7 @@ const App = () => {
                   className="text-gray-700 leading-relaxed text-justify text-xs min-h-[60px] mt-1"
                   contentEditable
                   suppressContentEditableWarning
-                  onBlur={(e) => handleEdit('summary', e.target.textContent)}
+                  onBlur={(e) => handleEdit('summary', e.target.textContent || data.summary)}
                 >
                   {data.summary}
                 </div>
@@ -600,7 +618,7 @@ const App = () => {
               <div className="mb-4" data-section="education">
                 <SectionHeader title="Education"/>
                 <div className="space-y-3">
-                  {data.education.map((edu, index) => (
+                  {safeMap(data.education, (edu, index) => (
                     <div key={edu.id} className="group relative">
                       <div className="flex justify-between items-start mb-1">
                         <div className="flex-1">
@@ -608,7 +626,7 @@ const App = () => {
                             className="font-bold text-gray-900 text-sm mb-0.5"
                             contentEditable
                             suppressContentEditableWarning
-                            onBlur={(e) => handleEdit(`education.${index}.degree`, e.target.textContent)}
+                            onBlur={(e) => handleEdit(`education.${index}.degree`, e.target.textContent || edu.degree)}
                           >
                             {edu.degree}
                           </h3>
@@ -616,7 +634,7 @@ const App = () => {
                             className="text-blue-600 font-medium text-xs mb-0.5"
                             contentEditable
                             suppressContentEditableWarning
-                            onBlur={(e) => handleEdit(`education.${index}.major`, e.target.textContent)}
+                            onBlur={(e) => handleEdit(`education.${index}.major`, e.target.textContent || edu.major)}
                           >
                             {edu.major}
                           </span>
@@ -624,7 +642,7 @@ const App = () => {
                             className="text-gray-700 text-xs mb-0.5"
                             contentEditable
                             suppressContentEditableWarning
-                            onBlur={(e) => handleEdit(`education.${index}.institution`, e.target.textContent)}
+                            onBlur={(e) => handleEdit(`education.${index}.institution`, e.target.textContent || edu.institution)}
                           >
                             {edu.institution}
                           </span>
@@ -633,20 +651,20 @@ const App = () => {
                           className="text-xs text-gray-500 bg-blue-50 px-1.5 py-0.5 rounded font-medium flex-shrink-0"
                           contentEditable
                           suppressContentEditableWarning
-                          onBlur={(e) => handleEdit(`education.${index}.year`, e.target.textContent)}
+                          onBlur={(e) => handleEdit(`education.${index}.year`, e.target.textContent || edu.year)}
                         >
                           {edu.year}
                         </span>
                       </div>
                       <div className="space-y-0.5">
-                        {edu.highlights.map((highlight, hIndex) => (
+                        {safeMap(edu.highlights, (highlight, hIndex) => (
                           <div key={hIndex} className="flex items-center gap-1 group/highlight">
                             <div className="w-1 h-1 bg-blue-400 rounded-full flex-shrink-0"></div>
                             <span
                               className="text-xs text-gray-600 flex-1"
                               contentEditable
                               suppressContentEditableWarning
-                              onBlur={(e) => handleEdit(`education.${index}.highlights.${hIndex}`, e.target.textContent)}
+                              onBlur={(e) => handleEdit(`education.${index}.highlights.${hIndex}`, e.target.textContent || highlight)}
                             >
                               {highlight}
                             </span>
@@ -680,7 +698,7 @@ const App = () => {
               <div className="mb-4" data-section="professional-experience">
                 <SectionHeader title="Professional Experience"/>
                 <div className="space-y-3">
-                  {data.experience.map((exp, index) => (
+                  {safeMap(data.experience, (exp, index) => (
                     <div key={exp.id} className="group relative">
                       <div className="flex justify-between items-start mb-1">
                         <div className="flex-1">
@@ -688,7 +706,7 @@ const App = () => {
                             className="font-bold text-gray-900 text-sm mb-0.5"
                             contentEditable
                             suppressContentEditableWarning
-                            onBlur={(e) => handleEdit(`experience.${index}.position`, e.target.textContent)}
+                            onBlur={(e) => handleEdit(`experience.${index}.position`, e.target.textContent || exp.position)}
                           >
                             {exp.position}
                           </h3>
@@ -696,7 +714,7 @@ const App = () => {
                             className="text-blue-600 font-medium text-xs mb-0.5"
                             contentEditable
                             suppressContentEditableWarning
-                            onBlur={(e) => handleEdit(`experience.${index}.institution`, e.target.textContent)}
+                            onBlur={(e) => handleEdit(`experience.${index}.institution`, e.target.textContent || exp.institution)}
                           >
                             {exp.institution}
                           </span>
@@ -705,20 +723,20 @@ const App = () => {
                           className="text-xs text-gray-500 bg-blue-50 px-1.5 py-0.5 rounded font-medium flex-shrink-0"
                           contentEditable
                           suppressContentEditableWarning
-                          onBlur={(e) => handleEdit(`experience.${index}.period`, e.target.textContent)}
+                          onBlur={(e) => handleEdit(`experience.${index}.period`, e.target.textContent || exp.period)}
                         >
                           {exp.period}
                         </span>
                       </div>
                       <div className="space-y-1">
-                        {exp.achievements.map((achievement, aIndex) => (
+                        {safeMap(exp.achievements, (achievement, aIndex) => (
                           <div key={aIndex} className="flex items-start gap-2 group/achievement">
                             <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-0.5 flex-shrink-0"></div>
                             <div
                               className="text-gray-700 text-xs flex-1 leading-relaxed"
                               contentEditable
                               suppressContentEditableWarning
-                              onBlur={(e) => handleEdit(`experience.${index}.achievements.${aIndex}`, e.target.textContent)}
+                              onBlur={(e) => handleEdit(`experience.${index}.achievements.${aIndex}`, e.target.textContent || achievement)}
                             >
                               {achievement}
                             </div>
@@ -752,14 +770,14 @@ const App = () => {
               <div>
                 <SectionHeader title="Certifications & Licenses" icon={null} />
                 <div className="grid grid-cols-1 gap-1">
-                  {data.certifications.map((cert, index) => (
+                  {safeMap(data.certifications, (cert, index) => (
                     <div key={cert.id} className="group flex items-center justify-between">
                       <div className="flex-1">
                         <span
                           className="font-medium text-gray-900 text-xs"
                           contentEditable
                           suppressContentEditableWarning
-                          onBlur={(e) => handleEdit(`certifications.${index}.name`, e.target.textContent)}
+                          onBlur={(e) => handleEdit(`certifications.${index}.name`, e.target.textContent || cert.name)}
                         >
                           {cert.name}
                         </span>
@@ -767,7 +785,7 @@ const App = () => {
                           className="text-xs text-gray-600"
                           contentEditable
                           suppressContentEditableWarning
-                          onBlur={(e) => handleEdit(`certifications.${index}.credential`, e.target.textContent)}
+                          onBlur={(e) => handleEdit(`certifications.${index}.credential`, e.target.textContent || cert.credential)}
                         >
                           {cert.credential}
                         </span>
@@ -777,7 +795,7 @@ const App = () => {
                           className="text-xs text-gray-500 bg-blue-50 px-1.5 py-0.5 rounded flex-shrink-0"
                           contentEditable
                           suppressContentEditableWarning
-                          onBlur={(e) => handleEdit(`certifications.${index}.year`, e.target.textContent)}
+                          onBlur={(e) => handleEdit(`certifications.${index}.year`, e.target.textContent || cert.year)}
                         >
                           {cert.year}
                         </span>
