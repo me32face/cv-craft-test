@@ -18,6 +18,7 @@ export default function Template05() {
 
 
   const handleButtonClick = useCallback((e) => {
+    e.stopPropagation();
     const button = e.target.closest('button');
     if (!button) return;
 
@@ -209,7 +210,7 @@ export default function Template05() {
     return (
 
       <div data-editor-container className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-hidden flex" onClick={handleButtonClick}>
-        <div className="min-h-screen bg-gray-50   flex justify-center items-start" onClick={handleButtonClick}>
+        <div className="min-h-screen bg-gray-50   flex justify-center items-start">
           {/* <div className="w-[210mm] min-h-[297mm] bg-white shadow-2xl overflow-hidden"> */}
           {/* Left Sidebar */}
           <div data-cv-page className="w-1/3 h-[297mm] bg-slate-600 text-white p-7 pb-12 ">

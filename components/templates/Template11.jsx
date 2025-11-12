@@ -867,6 +867,8 @@ export default function Template11() {
         setEducation(state.education || education);
         setExperiences(state.experiences || experiences);
         setProjects(state.projects || projects);
+        setLeftSections(state.leftSections || leftSections);
+        setRightSections(state.rightSections || rightSections);
       }
     };
     window.addEventListener('undoRedo', handleUndoRedo);
@@ -874,15 +876,15 @@ export default function Template11() {
   }, []);
 
   useEffect(() => {
-    saveState({ skills, languages, education, experiences, projects });
+    saveState({ skills, languages, education, experiences, projects, leftSections, rightSections });
   }, []);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      saveState({ skills, languages, education, experiences, projects });
+      saveState({ skills, languages, education, experiences, projects, leftSections, rightSections });
     }, 1000);
     return () => clearTimeout(timeoutId);
-  }, [skills, languages, education, experiences, projects, saveState]);
+  }, [skills, languages, education, experiences, projects, leftSections, rightSections, saveState]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto">
