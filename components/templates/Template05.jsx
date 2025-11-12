@@ -210,31 +210,6 @@ export default function Template05() {
     return (
 
       <div data-editor-container className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-hidden flex" onClick={handleButtonClick}>
-<<<<<<< Updated upstream
-        <div className="min-h-screen bg-gray-50   flex justify-center items-start">
-          {/* <div className="w-[210mm] min-h-[297mm] bg-white shadow-2xl overflow-hidden"> */}
-          {/* Left Sidebar */}
-          <div data-cv-page className="w-1/3 h-[297mm] bg-slate-600 text-white p-7 pb-12 ">
-            {/* Profile Image */}
-            <div className="mb-10">
-              <div className="w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-white shadow-xl bg-gray-200"
-                onClick={() => document.getElementById('profileImageInput').click()}>
-                {profileImage ? (
-                  <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
-                    RS
-                  </div>
-                )}
-              </div>
-              <input
-                id="profileImageInput"
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-              />
-=======
           <div className="min-h-screen bg-gray-50   flex justify-center items-start" onClick={handleButtonClick}>
         {/* <div className="w-[210mm] min-h-[297mm] bg-white shadow-2xl overflow-hidden"> */}
      {/* Left Sidebar */}
@@ -250,7 +225,6 @@ export default function Template05() {
                   RS
                 </div>
               )}
->>>>>>> Stashed changes
             </div>
 
 
