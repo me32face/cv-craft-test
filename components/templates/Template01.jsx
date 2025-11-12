@@ -316,7 +316,7 @@ export default function Template01() {
                 }}
               >
                 <div className="flex items-start gap-2">
-                  <Phone className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" />
+                  {/* <Phone className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" /> */}
                   <span
                     className="text-xs text-gray-700"
                     contentEditable
@@ -324,7 +324,7 @@ export default function Template01() {
                   >+123-456-7890</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <Mail className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" />
+                  {/* <Mail className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" /> */}
                   <span
                     className="text-xs text-gray-700 break-all"
                     contentEditable
@@ -333,7 +333,7 @@ export default function Template01() {
                   >hello@reallygreatsite.com</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <MapPin className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" />
+                  {/* <MapPin className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" /> */}
                   <span
                     className="text-xs text-gray-700"
                     contentEditable
@@ -341,7 +341,7 @@ export default function Template01() {
                   >123 Anywhere St., Any City</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <Globe className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" />
+                  {/* <Globe className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" /> */}
                   <span
                     className="text-xs text-gray-700 break-all"
                     contentEditable

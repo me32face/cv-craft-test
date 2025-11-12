@@ -23,8 +23,19 @@ export default function Template05() {
     if (!button) return;
 
     const action = button.getAttribute('data-action');
-    const section = button.closest('.relative.group');
+    const listItem = button.closest('li');
+    
+    if (listItem) {
+      if (action === 'duplicate') {
+        const clone = listItem.cloneNode(true);
+        listItem.parentNode.insertBefore(clone, listItem.nextSibling);
+      } else if (action === 'delete') {
+        listItem.remove();
+      }
+      return;
+    }
 
+    const section = button.closest('.relative.group');
     if (!section) return;
 
     if (action === 'duplicate') {
@@ -98,10 +109,17 @@ export default function Template05() {
           if (skillsElement) {
             const skills = generatedContent.split('\n').filter(skill => skill.trim());
             skillsElement.innerHTML = skills.map(skill =>
-              `<li class="text-xs flex items-start relative group text-white">
+              `<li class="text-sm flex items-start relative group text-white">
                   <span class="mr-2">•</span>
-                  <span contentEditable suppressContentEditableWarning>${skill.trim()}</span>
-                 
+                  <span contentEditable suppressContentEditableWarning>${skill.trim().replace(/^[•\-*]\s*/, '')}</span>
+                  <div class="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" class="text-white rounded p-1 shadow-md">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                    </button>
+                    <button data-action="delete" class="text-white rounded p-1 shadow-md">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                    </button>
+                  </div>
                 </li>`
             ).join('');
           }
@@ -117,16 +135,16 @@ export default function Template05() {
               const period = lines[2] || '2020 - Present';
               const duties = lines.slice(3).filter(duty => duty.trim());
 
-              return `<div>
+              return `<div class="relative group">
                   <div class="flex justify-between items-start mt-4">
                     <div>
-                      <h3 class="text-sm font-bold text-gray-50">${company}</h3>
-                      <p class="text-xs text-gray-50">${position}</p>
+                      <h3 class="text-sm font-bold text-gray-50" contentEditable suppressContentEditableWarning>${company}</h3>
+                      <p class="text-xs text-gray-50" contentEditable suppressContentEditableWarning>${position}</p>
                     </div>
-                    <span class="text-xs text-gray-50 whitespace-nowrap">${period}</span>
+                    <span class="text-xs text-gray-50 whitespace-nowrap" contentEditable suppressContentEditableWarning>${period}</span>
                   </div>
-                  <ul class="list-disc list-outside ml-4 text-xs text-gray-700 space-y-0.5 mt-1">
-                    ${duties.map(duty => `<li>${duty.trim()}</li>`).join('')}
+                  <ul class="list-disc list-outside ml-4 text-xs text-gray-50 space-y-0.5 mt-1">
+                    ${duties.map(duty => `<li contentEditable suppressContentEditableWarning>${duty.trim()}</li>`).join('')}
                   </ul>
                 </div>`;
             }).join('');
@@ -239,9 +257,9 @@ export default function Template05() {
 
     return (
 
-      <div data-editor-container className="w-[210mm] bg-white shadow-2xl overflow-hidden flex" onClick={handleButtonClick}>
+      <div data-editor-container className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-hidden flex" onClick={handleButtonClick}>
         {/* Left Sidebar */}
-        <div data-cv-page className="w-1/3 bg-slate-600 text-white p-8 pb-12 ">
+        <div data-cv-page className="w-1/3 bg-slate-600 text-white p-8 pb-12">
           {/* Profile Image */}
           <div className="mb-10">
             <div className="w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-white shadow-xl bg-gray-200"

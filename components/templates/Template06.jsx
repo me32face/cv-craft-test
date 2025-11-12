@@ -26,6 +26,18 @@ export default function Template06() {
     const button = e.target.closest('button');
     if (!button) return;
     const action = button.getAttribute('data-action');
+    
+    const listItem = button.closest('li');
+    if (listItem) {
+      if (action === 'duplicate') {
+        const clone = listItem.cloneNode(true);
+        listItem.parentNode.insertBefore(clone, listItem.nextSibling);
+      } else if (action === 'delete') {
+        listItem.remove();
+      }
+      return;
+    }
+    
     const section = button.closest('.relative.group');
     if (!section) return;
     if (action === 'duplicate') {
@@ -82,16 +94,32 @@ export default function Template06() {
             const techSkills = skills.slice(half);
             hardSkillsList.innerHTML = hardSkills.map(skill => {
               const cleanSkill = skill.replace(/["'`]/g, '');
-              return `<li class="flex items-start gap-2">
+              return `<li class="flex items-start gap-2 relative group">
                 <span class="mr-2">•</span>
                 <span contentEditable suppressContentEditableWarning>${cleanSkill}</span>
+                <div class="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                  <button data-action="duplicate" class="text-gray-600 rounded p-1 shadow-md bg-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  </button>
+                  <button data-action="delete" class="text-gray-600 rounded p-1 shadow-md bg-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                  </button>
+                </div>
               </li>`;
             }).join('');
             techSkillsList.innerHTML = techSkills.map(skill => {
               const cleanSkill = skill.replace(/["'`]/g, '');
-              return `<li class="flex items-start gap-2">
+              return `<li class="flex items-start gap-2 relative group">
                 <span class="mr-2">•</span>
                 <span contentEditable suppressContentEditableWarning>${cleanSkill}</span>
+                <div class="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                  <button data-action="duplicate" class="text-gray-600 rounded p-1 shadow-md bg-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  </button>
+                  <button data-action="delete" class="text-gray-600 rounded p-1 shadow-md bg-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                  </button>
+                </div>
               </li>`;
             }).join('');
           }
@@ -305,21 +333,53 @@ export default function Template06() {
             <div ref={hardSkillsRef} className="relative group cursor-move">
               <h3 className="text-sm font-semibold text-gray-800 mb-2">Hard Skills</h3>
               <ul className="hard-skills-list space-y-1 text-xs text-gray-700">
-                <li className="flex items-start gap-2">
+                <li className="flex items-start gap-2 relative group">
                   <span className="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>3D Modeling</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md bg-white">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md bg-white">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
                 </li>
-                <li className="flex items-start gap-2">
+                <li className="flex items-start gap-2 relative group">
                   <span className="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>Finite Element Analysis</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md bg-white">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md bg-white">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
                 </li>
-                <li className="flex items-start gap-2">
+                <li className="flex items-start gap-2 relative group">
                   <span className="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>Thermal System Design & Simulation</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md bg-white">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md bg-white">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
                 </li>
-                <li className="flex items-start gap-2">
+                <li className="flex items-start gap-2 relative group">
                   <span className="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>Mechanical Component Design & Assembly</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md bg-white">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md bg-white">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
                 </li>
               </ul>
               <div className="absolute -right-4 -top-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
@@ -338,21 +398,53 @@ export default function Template06() {
             <div ref={techSkillsRef} className="relative group cursor-move">
               <h3 className="text-sm font-semibold text-gray-800 mb-2">Technical Skills</h3>
               <ul className="tech-skills-list space-y-1 text-xs text-gray-700">
-                <li className="flex items-start gap-2">
+                <li className="flex items-start gap-2 relative group">
                   <span className="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>Root Cause Analysis & Troubleshooting</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md bg-white">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md bg-white">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
                 </li>
-                <li className="flex items-start gap-2">
+                <li className="flex items-start gap-2 relative group">
                   <span className="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>Project Management & Scheduling</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md bg-white">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md bg-white">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
                 </li>
-                <li className="flex items-start gap-2">
+                <li className="flex items-start gap-2 relative group">
                   <span className="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>Design Optimization & Value Engineering</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md bg-white">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md bg-white">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
                 </li>
-                <li className="flex items-start gap-2">
+                <li className="flex items-start gap-2 relative group">
                   <span className="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>Quality Control & Assurance</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md bg-white">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md bg-white">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
                 </li>
               </ul>
               <div className="absolute -right-4 -top-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
@@ -431,13 +523,29 @@ export default function Template06() {
             <div ref={langRef} className="relative group">
               <h3 className="text-sm font-semibold text-gray-800 mb-2">Language</h3>
               <ul className="space-y-1 text-xs text-gray-700">
-                <li className="flex items-start gap-2">
+                <li className="flex items-start gap-2 relative group">
                   <span className="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>English</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md bg-white">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md bg-white">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
                 </li>
-                <li className="flex items-start gap-2">
+                <li className="flex items-start gap-2 relative group">
                   <span className="mr-2">•</span>
                   <span contentEditable suppressContentEditableWarning>Malayalam</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md bg-white">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md bg-white">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
                 </li>
               </ul>
               <div className="absolute -right-4 -top-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
