@@ -377,124 +377,123 @@ export default function Template02() {
                 </Draggable>
                 {/* Skills */}
                 <div className="mb-6 section-container" data-section="skills">
-                  <div className="relative flex gap-2  group">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Skills</h2>
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity ">
-                      <AISparkle className='mt-1' section="Skills" onGenerate={handleAIGenerate} />
-                    </div>
+            <div className="relative flex gap-2  group">
+              <Draggable nodeRef={skillsRef}>
+                <h3 ref={skillsRef} className="text-2xl font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Skills</h3>
+              </Draggable>
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity ">
+                <AISparkle className='mt-1' section="Skills" onGenerate={handleAIGenerate} />
+              </div>
+            </div>
+            <ul className="space-y-1.5 text-gray-700" onKeyDown={(e) => {
+              if (e.key === 'Backspace') {
+                const lis = e.currentTarget.querySelectorAll('li');
+                lis.forEach(li => {
+                  const span = li.querySelector('span[contenteditable]');
+                  if (span && !span.textContent.trim()) {
+                    li.remove();
+                  }
+                });
+              }
+            }}>
+                <li className="text-xs flex items-start relative group">
+                  <span className="mr-2">•</span>
+                  <span contentEditable suppressContentEditableWarning>Project Management</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
                   </div>
-                  <Draggable nodeRef={skillsRef} >
-                  <ul ref={skillsRef} className="space-y-1.5 text-gray-700" onKeyDown={(e) => {
-                    if (e.key === 'Backspace') {
-                      const lis = e.currentTarget.querySelectorAll('li');
-                      lis.forEach(li => {
-                        const span = li.querySelector('span[contenteditable]');
-                        if (span && !span.textContent.trim()) {
-                          li.remove();
-                        }
-                      });
-                    }
-                  }}>
-                    
-                    <li className="text-sm flex items-start relative group">
-                      <span className="mr-2">•</span>
-                      <span contentEditable suppressContentEditableWarning>Project Management</span>
-                      <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                          <CopyPlus className="w-3 h-3" />
-                        </button>
-                        <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                          <Trash2 className="w-3 h-3" />
-                        </button>
-                      </div>
-                    </li>
-                    <li className="text-xs flex items-start relative group">
-                      <span className="mr-2">•</span>
-                      <span contentEditable suppressContentEditableWarning>Public Relations</span>
-                      <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                          <CopyPlus className="w-3 h-3" />
-                        </button>
-                        <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                          <Trash2 className="w-3 h-3" />
-                        </button>
-                      </div>
-                    </li>
-                    <li className="text-xs flex items-start relative group">
-                      <span className="mr-2">•</span>
-                      <span contentEditable suppressContentEditableWarning>Teamwork</span>
-                      <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                          <CopyPlus className="w-3 h-3" />
-                        </button>
-                        <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                          <Trash2 className="w-3 h-3" />
-                        </button>
-                      </div>
-                    </li>
-                    <li className="text-xs flex items-start relative group">
-                      <span className="mr-2">•</span>
-                      <span contentEditable suppressContentEditableWarning>Time Management</span>
-                      <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                          <CopyPlus className="w-3 h-3" />
-                        </button>
-                        <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                          <Trash2 className="w-3 h-3" />
-                        </button>
-                      </div>
-                    </li>
-                    <li className="text-xs flex items-start relative group">
-                      <span className="mr-2">•</span>
-                      <span contentEditable suppressContentEditableWarning>Leadership</span>
-                      <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                          <CopyPlus className="w-3 h-3" />
-                        </button>
-                        <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                          <Trash2 className="w-3 h-3" />
-                        </button>
-                      </div>
-                    </li>
-                    <li className="text-xs flex items-start relative group">
-                      <span className="mr-2">•</span>
-                      <span contentEditable suppressContentEditableWarning>Effective Communication</span>
-                      <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                          <CopyPlus className="w-3 h-3" />
-                        </button>
-                        <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                          <Trash2 className="w-3 h-3" />
-                        </button>
-                      </div>
-                    </li>
-                    <li className="text-xs flex items-start relative group">
-                      <span className="mr-2">•</span>
-                      <span contentEditable suppressContentEditableWarning>Critical Thinking</span>
-                      <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                          <CopyPlus className="w-3 h-3" />
-                        </button>
-                        <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                          <Trash2 className="w-3 h-3" />
-                        </button>
-                      </div>
-                    </li>
-                    <li className="text-xs flex items-start relative group">
-                      <span className="mr-2">•</span>
-                      <span contentEditable suppressContentEditableWarning>Digital Marketing</span>
-                      <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                          <CopyPlus className="w-3 h-3" />
-                        </button>
-                        <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                          <Trash2 className="w-3 h-3" />
-                        </button>
-                      </div>
-                    </li>
-                  </ul>
-                  </Draggable>
-                </div>
+                </li>
+                <li className="text-xs flex items-start relative group">
+                  <span className="mr-2">•</span>
+                  <span contentEditable suppressContentEditableWarning>Public Relations</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                </li>
+                <li className="text-xs flex items-start relative group">
+                  <span className="mr-2">•</span>
+                  <span contentEditable suppressContentEditableWarning>Teamwork</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                </li>
+                <li className="text-xs flex items-start relative group">
+                  <span className="mr-2">•</span>
+                  <span contentEditable suppressContentEditableWarning>Time Management</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                </li>
+                <li className="text-xs flex items-start relative group">
+                  <span className="mr-2">•</span>
+                  <span contentEditable suppressContentEditableWarning>Leadership</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                </li>
+                <li className="text-xs flex items-start relative group">
+                  <span className="mr-2">•</span>
+                  <span contentEditable suppressContentEditableWarning>Effective Communication</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                </li>
+                <li className="text-xs flex items-start relative group">
+                  <span className="mr-2">•</span>
+                  <span contentEditable suppressContentEditableWarning>Critical Thinking</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                </li>
+                <li className="text-xs flex items-start relative group">
+                  <span className="mr-2">•</span>
+                  <span contentEditable suppressContentEditableWarning>Digital Marketing</span>
+                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                </li>
+              </ul>
+          </div>
 
                 {/* Languages */}
                 <div className="mb-4">

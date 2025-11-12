@@ -268,9 +268,7 @@ export default function Template03() {
 
     return (
       <div className="min-h-screen bg-gray-50  flex justify-center items-center" onClick={handleButtonClick}>
-        <div className="w-[210mm]  bg-white shadow-2xl overflow-hidden relative">
-
-
+        <div className="w-[210mm] h-[297mm]   bg-white shadow-2xl overflow-hidden relative">
           <div className="flex h-full">
             {/* Left Sidebar */}
             <div className="w-[35%] bg-white relative">
