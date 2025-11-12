@@ -10,10 +10,11 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
   origin: [
-    "https://cvcraft.in",       
+    "https://cvcraft.in",
     "http://localhost:3000",
-    "http://localhost:3001"     
+    "http://localhost:3001"
   ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 })
 );

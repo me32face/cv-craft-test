@@ -271,7 +271,6 @@ export default function Template02() {
                       }}
                     >
                       <div className="flex items-start gap-2">
-                        <Phone className="w-3 h-3 text-gray-700 flex-shrink-0" />
                         <span
                           className="text-sm text-gray-700 leading-snug"
                           contentEditable
@@ -282,7 +281,6 @@ export default function Template02() {
                       </div>
 
                       <div className="flex items-start gap-2">
-                        <Mail className="w-3 h-3 text-gray-700  flex-shrink-0" />
                         <span
                           className="text-sm text-gray-700 break-all leading-snug"
                           contentEditable
@@ -293,7 +291,6 @@ export default function Template02() {
                       </div>
 
                       <div className="flex items-start gap-2">
-                        <MapPin className="w-3 h-3 text-gray-700  flex-shrink-0" />
                         <span
                           className="text-sm text-gray-700 leading-snug"
                           contentEditable
@@ -304,7 +301,6 @@ export default function Template02() {
                       </div>
 
                       <div className="flex items-start gap-2">
-                        <Globe className="w-3 h-3 text-gray-700  flex-shrink-0" />
                         <span
                           className="text-sm text-gray-700 break-all leading-snug"
                           contentEditable

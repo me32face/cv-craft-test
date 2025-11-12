@@ -97,6 +97,17 @@ const templateComponents = {
   Template21: dynamic(() => import('@/components/templates/Template21'), {
     ssr: false,
     loading: () => <TemplateLoader />,
+  }),Template23: dynamic(() => import('@/components/templates/Template23'), {
+    ssr: false,
+    loading: () => <TemplateLoader />,
+  }),
+  Template25: dynamic(() => import('@/components/templates/Template25'), {
+    ssr: false,
+    loading: () => <TemplateLoader />,
+  }),
+  Template24: dynamic(() => import('@/components/templates/Template24'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />,
   }),
   Template22: dynamic(() => import('@/components/templates/Template22'), { 
     ssr: false,

@@ -200,7 +200,7 @@ export default function Template09() {
     return (
 
       <div className="min-h-screen bg-gray-50  flex justify-center items-center" onClick={handleButtonClick}>
-        <div className="w-[210mm]  bg-white shadow-2xl overflow-hidden ">
+        <div className="w-[210mm]  min-h-[297mm] bg-white shadow-2xl overflow-hidden ">
           {/* Header Section */}
           <div className="bg-blue-900 text-white p-7 relative">
 
@@ -262,19 +262,15 @@ export default function Template09() {
                       className="grid grid-cols-2 gap-y-3 gap-x-6"
                     >
                       <div className="flex items-center gap-2">
-                        <Phone size={16} />
                         <span className="text-sm">+123-456-7890</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Mail size={16} />
                         <span className="text-sm">hello@reallygreatsite.com</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Globe size={16} />
                         <span className="text-sm">www.reallygreatsite.com</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <MapPin size={16} />
                         <span className="text-sm">123 Anywhere St., Any City</span>
                       </div>
                     </div>
@@ -459,35 +455,71 @@ export default function Template09() {
               </div>
 
               {/* Language Section */}
-              <section>
-                <h2 className="text-2xl font-bold text-gray-800 mb-4" contentEditable suppressContentEditableWarning>Language</h2>
+              <div className="mb-4">
                 <Draggable nodeRef={languagesRef}>
-                  <div ref={languagesRef} data-section-item className='relative group'>
-                    <ul className="space-y-2">
-                      <li className="text-sm text-gray-700 flex items-center gap-2" contentEditable suppressContentEditableWarning>
-                        <span className="w-1.5 h-1.5 bg-gray-800 rounded-full"></span>
-                        English
-                      </li>
-                      <li className="text-sm text-gray-700 flex items-center gap-2" contentEditable suppressContentEditableWarning>
-                        <span className="w-1.5 h-1.5 bg-gray-800 rounded-full"></span>
-                        Spain
-                      </li>
-                      <li className="text-sm text-gray-700 flex items-center gap-2" contentEditable suppressContentEditableWarning>
-                        <span className="w-1.5 h-1.5 bg-gray-800 rounded-full"></span>
-                        Arabic
-                      </li>
-                      <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button data-action="duplicate" className="text-black rounded p-1.5 shadow-md">
-                          <CopyPlus className="w-4 h-4" />
-                        </button>
-                        <button data-action="delete" className="text-black rounded p-1.5 shadow-md">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </ul>
-                  </div>
+                  <h2 ref={languagesRef} className="text-2xl font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Languages</h2>
                 </Draggable>
-              </section>
+                <ul className="space-y-1.5 text-gray-700" onKeyDown={(e) => {
+                  if (e.key === 'Backspace') {
+                    const lis = e.currentTarget.querySelectorAll('li');
+                    lis.forEach(li => {
+                      const span = li.querySelector('span[contenteditable]');
+                      if (span && !span.textContent.trim()) {
+                        li.remove();
+                      }
+                    });
+                  }
+                }}>
+                  <li className="text-sm flex items-start relative group">
+                    <span className="mr-2">•</span>
+                    <span contentEditable suppressContentEditableWarning>English (Fluent)</span>
+                    <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                      <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
+                        <CopyPlus className="w-3 h-3" />
+                      </button>
+                      <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </li>
+                  <li className="text-sm flex items-start relative group">
+                    <span className="mr-2">•</span>
+                    <span contentEditable suppressContentEditableWarning>French (Fluent)</span>
+                    <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                      <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
+                        <CopyPlus className="w-3 h-3" />
+                      </button>
+                      <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </li>
+                  <li className="text-sm flex items-start relative group">
+                    <span className="mr-2">•</span>
+                    <span contentEditable suppressContentEditableWarning>German (Basic)</span>
+                    <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                      <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
+                        <CopyPlus className="w-3 h-3" />
+                      </button>
+                      <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </li>
+                  <li className="text-sm flex items-start relative group">
+                    <span className="mr-2">•</span>
+                    <span contentEditable suppressContentEditableWarning>Spanish (Intermediate)</span>
+                    <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                      <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
+                        <CopyPlus className="w-3 h-3" />
+                      </button>
+                      <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </li>
+                </ul>
+              </div>
 
               {/* Awards Section */}
               <section>
@@ -523,7 +555,7 @@ export default function Template09() {
                       <div ref={job1Ref} data-section-item className='relative group' >
                         <div className="flex justify-between items-start mb-2">
                           <div>
-                            <h3 className="font-bold text-gray-800" contentEditable suppressContentEditableWarning>Marketing Manager</h3>
+                            <h3 className="font-semibold text-gray-700" contentEditable suppressContentEditableWarning>Marketing Manager</h3>
                             <p className="text-sm text-gray-600" contentEditable suppressContentEditableWarning>Acework Industries</p>
                           </div>
                           <span className="text-sm text-gray-500" contentEditable suppressContentEditableWarning>2020 - 2023</span>
@@ -549,7 +581,7 @@ export default function Template09() {
                       <div ref={job2Ref} data-section-item className='relative group'>
                         <div className="flex justify-between items-start mb-2">
                           <div>
-                            <h3 className="font-bold text-gray-800" contentEditable suppressContentEditableWarning>Marketing Manager</h3>
+                            <h3 className="font-semibold text-gray-700" contentEditable suppressContentEditableWarning>Marketing Manager</h3>
                             <p className="text-sm text-gray-600" contentEditable suppressContentEditableWarning>Salford & Co.</p>
                           </div>
                           <span className="text-sm text-gray-500" contentEditable suppressContentEditableWarning>2019 - 2020</span>
@@ -575,7 +607,7 @@ export default function Template09() {
                       <div ref={job3Ref} data-section-item className='relative group'>
                         <div className="flex justify-between items-start mb-2">
                           <div>
-                            <h3 className="font-bold text-gray-800" contentEditable suppressContentEditableWarning>Marketing Manager</h3>
+                            <h3 className="font-semibold text-gray-700" contentEditable suppressContentEditableWarning>Marketing Manager</h3>
                             <p className="text-sm text-gray-600" contentEditable suppressContentEditableWarning>Ginyard Commercial Co.</p>
                           </div>
                           <span className="text-sm text-gray-500" contentEditable suppressContentEditableWarning>2017 - 2019</span>
@@ -598,28 +630,85 @@ export default function Template09() {
               </section>
 
               {/* Education Section */}
+              <div className="mb-8  relative group  ">
+                              <h3 className="text-2xl font-bold text-gray-900 mb-3 tracking-wide" contentEditable suppressContentEditableWarning>EDUCATION</h3>
+                              <Draggable nodeRef={educationRef} bounds={false}>
+                                <div ref={educationRef} className='mt-6 ' >
+                                  <div className=" space-y-3">
+                                    {/* Degree 1 */}
+                                    <div className="relative group">
+                                      <div className="absolute -right-0 top-5 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                                        <button data-action="duplicate" className="text-gray-800 rounded p-1.5 shadow-md">
+                                          <CopyPlus className="w-4 h-4" />
+                                        </button>
+                                        <button data-action="delete" className="text-gray-800 rounded p-1.5 shadow-md">
+                                          <Trash2 className="w-4 h-4" />
+                                        </button>
+                                      </div>
+                                      <div className="flex justify-between items-start mb-0.5">
+                                        <div>
+                                          <h3 className="text-ms font-bold text-gray-700" contentEditable suppressContentEditableWarning>Master of Business Management</h3>
+                                          <p className="text-sm text-gray-600" contentEditable suppressContentEditableWarning>School of business | Wardiere University</p>
+                                          <p className="text-sm  text-gray-600" contentEditable suppressContentEditableWarning>GPA: 3.8 / 4.0</p>
+                                        </div>
+                                        <span className="text-xs text-gray-600 whitespace-nowrap" contentEditable suppressContentEditableWarning>2029 - 2031</span>
+                                      </div>
+                                    </div>
+                                    {/* Degree 2 */}
+                                    <div className="relative group">
+                                      <div className="absolute -right-0 top-5 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                                        <button data-action="duplicate" className="text-gray-900 rounded p-1.5 shadow-md">
+                                          <CopyPlus className="w-4 h-4" />
+                                        </button>
+                                        <button data-action="delete" className="text-gray-900 rounded p-1.5 shadow-md">
+                                          <Trash2 className="w-4 h-4" />
+                                        </button>
+                                      </div>
+                                      <div className="flex justify-between items-start mb-0.5">
+                                        <div>
+                                          <h3 className="text-ms font-bold text-gray-700" contentEditable suppressContentEditableWarning>Master of Business Management</h3>
+                                          <p className="text-sm text-gray-600" contentEditable suppressContentEditableWarning>School of business | Wardiere University</p>
+                                          <p className="text-sm  text-gray-600" contentEditable suppressContentEditableWarning>GPA: 3.8 / 4.0</p>
+                                        </div>
+                                        <span className="text-xs text-gray-600 whitespace-nowrap" contentEditable suppressContentEditableWarning>2029 - 2031</span>
+                                      </div>
+                                    </div>
+                                    
+                                  </div>
+                                </div>
+                              </Draggable>
+                            </div>
+
+              {/* References Section */}
               <section>
-                <h2 className="text-2xl font-bold text-gray-800 mb-4" contentEditable suppressContentEditableWarning>Education</h2>
-
-                <div className="space-y-4 group">
-                  <Draggable nodeRef={educationRef}>
-                    <div ref={educationRef} data-section-item className='relative group'>
-                      <div className="flex justify-between items-start pb-5">
-                        <div>
-                          <h3 className="font-bold text-gray-800" contentEditable suppressContentEditableWarning>Bachelor of Business Management</h3>
-                          <p className="text-sm text-gray-600" contentEditable suppressContentEditableWarning>Wardiere University</p>
+                <h2 className="text-2xl font-bold text-gray-800 mb-4" contentEditable suppressContentEditableWarning>References</h2>
+                <div className="grid grid-cols-2 gap-6 relative">
+                  <div>
+                    <Draggable nodeRef={ref1Ref}>
+                      <div ref={ref1Ref} data-section-item className='relative group'>
+                        <h3 className="font-bold text-gray-700" contentEditable suppressContentEditableWarning>Harumi Kobayashi</h3>
+                        <p className="text-sm text-gray-600 mb-2" contentEditable suppressContentEditableWarning>Wardiere Inc. / CEO</p>
+                        <p className="text-xs text-gray-600" contentEditable suppressContentEditableWarning><strong>Phone:</strong> 123-456-7890</p>
+                        <p className="text-xs text-gray-600" contentEditable suppressContentEditableWarning><strong>Email:</strong> hello@reallygreatsite.com</p>
+                        <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                          <button data-action="duplicate" className="text-gray-800 rounded p-1.5 shadow-md">
+                            <CopyPlus className="w-4 h-4" />
+                          </button>
+                          <button data-action="delete" className="text-gray-800 rounded p-1.5 shadow-md">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </div>
-                        <span className="text-sm text-gray-500" contentEditable suppressContentEditableWarning>2012-2016</span>
                       </div>
-
-                      <div className="flex justify-between items-start ">
-                        <div>
-                          <h3 className="font-bold text-gray-800" contentEditable suppressContentEditableWarning>Bachelor of Business Management</h3>
-                          <p className="text-sm text-gray-600" contentEditable suppressContentEditableWarning>Wardiere University</p>
-                        </div>
-                        <span className="text-sm text-gray-500" contentEditable suppressContentEditableWarning>2016-2020</span>
-                      </div>
-                      <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    </Draggable>
+                  </div>
+                  <div className=''>
+                    <Draggable nodeRef={ref2Ref}>
+                      <div ref={ref2Ref} data-section-item className='relative group'>
+                        <h3 className="font-bold text-gray-700" contentEditable suppressContentEditableWarning>Harumi Kobayashi</h3>
+                        <p className="text-sm text-gray-600 mb-2" contentEditable suppressContentEditableWarning>Wardiere Inc. / CEO</p>
+                        <p className="text-xs text-gray-600" contentEditable suppressContentEditableWarning><strong>Phone:</strong> 123-456-7890</p>
+                        <p className="text-xs text-gray-600" contentEditable suppressContentEditableWarning><strong>Email:</strong> hello@reallygreatsite.com</p>
+                     <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                         <button data-action="duplicate" className="text-black rounded p-1.5 shadow-md">
                           <CopyPlus className="w-4 h-4" />
                         </button>
@@ -627,33 +716,6 @@ export default function Template09() {
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
-                    </div>
-                  </Draggable>
-                </div>
-              </section>
-
-              {/* References Section */}
-              <section>
-                <h2 className="text-2xl font-bold text-gray-800 mb-4" contentEditable suppressContentEditableWarning>References</h2>
-                <div className="grid grid-cols-2 gap-6 group">
-                  <div>
-                    <Draggable nodeRef={ref1Ref}>
-                      <div ref={ref1Ref} data-section-item className='relative group'>
-                        <h3 className="font-bold text-gray-800" contentEditable suppressContentEditableWarning>Harumi Kobayashi</h3>
-                        <p className="text-sm text-gray-600 mb-2" contentEditable suppressContentEditableWarning>Wardiere Inc. / CEO</p>
-                        <p className="text-xs text-gray-600" contentEditable suppressContentEditableWarning><strong>Phone:</strong> 123-456-7890</p>
-                        <p className="text-xs text-gray-600" contentEditable suppressContentEditableWarning><strong>Email:</strong> hello@reallygreatsite.com</p>
-
-                      </div>
-                    </Draggable>
-                  </div>
-                  <div>
-                    <Draggable nodeRef={ref2Ref}>
-                      <div ref={ref2Ref}>
-                        <h3 className="font-bold text-gray-800" contentEditable suppressContentEditableWarning>Harumi Kobayashi</h3>
-                        <p className="text-sm text-gray-600 mb-2" contentEditable suppressContentEditableWarning>Wardiere Inc. / CEO</p>
-                        <p className="text-xs text-gray-600" contentEditable suppressContentEditableWarning><strong>Phone:</strong> 123-456-7890</p>
-                        <p className="text-xs text-gray-600" contentEditable suppressContentEditableWarning><strong>Email:</strong> hello@reallygreatsite.com</p>
                       </div>
                     </Draggable>
                   </div>
