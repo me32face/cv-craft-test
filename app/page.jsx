@@ -30,6 +30,7 @@ export default function Home() {
     { id: 'Template04', name: 'Executive Style', key: 'Mariana Anderson', image: '/template/template04n.png', category: 'creative' },
     { id: 'Template14', name: 'Clean Layout', key: 'Deepal Surve', image: '/template/template14.png', category: 'proffessional' },
     { id: 'Template13', name: 'Clean Layout', key: 'Jonathan Patterson', image: '/template/template13.png', category: 'proffessional' },
+    { id: 'Template23', name: 'simple Layout', key: 'lorna alvarado', image: '/template/template23.png', category: 'proffessional' },
     { id: 'Template02', name: 'Modern Minimal', key: 'Olivia Wilson', image: '/template/template02.png', category: 'simple' },
     { id: 'Template03', name: 'Creative Bold', key: 'Lorna Alvarado', image: '/template/template03.png', category: 'proffessional' },
     { id: 'Template08', name: 'Beige Whait', key: 'Olivia Wilson', image: '/template/template08.png', category: 'modern' },
@@ -47,6 +48,7 @@ export default function Home() {
     { id: 'Template19', name: 'Modest Layout', key: 'isabel mercado', image: '/template/template19.png', category: 'proffessional' },
     { id: 'Template20', name: 'Infographic Developer Template', key: 'daniel Gallego', image: '/template/template20.png', category: 'creative' },
     { id: 'Template21', name: 'Creative Layout', key: 'laura martinez', image: '/template/template21.png', category: 'creative' },
+
 
   ];
 

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Plus, X, Edit2, Check } from 'lucide-react';
 import { useUndoRedo } from '../../contexts/UndoRedoContext';
+import AISparkle from '../AISparkle';
+import { geminiService } from '../../lib/gemini';
 
 export default function Template11() {
   const { saveState } = useUndoRedo();
@@ -320,6 +322,50 @@ export default function Template11() {
     setDraggedFrom(null);
   };
 
+  const handleAIGenerate = async (section, keywords) => {
+    if (!geminiService.genAI) {
+      const apiKey = prompt('Please enter your Gemini API key:');
+      if (!apiKey) return;
+      geminiService.initialize(apiKey);
+    }
+
+    try {
+      const generatedContent = await geminiService.generateContent(section, keywords);
+
+      switch (section.toLowerCase()) {
+        case 'skills':
+          const skillsList = generatedContent.split('\n').filter(skill => skill.trim());
+          setSkills(skillsList.map(skill => skill.replace(/^[•\-*]\s*/, '').trim()));
+          break;
+        case 'summary':
+        case 'profile':
+          let cleanedContent = generatedContent
+            .replace(/^#{1,6}\s+.+$/gm, '')
+            .replace(/\*\*(.+?)\*\*/g, '$1')
+            .replace(/\*(.+?)\*/g, '$1')
+            .trim();
+          const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
+          const actualSummary = paragraphs.find(p =>
+            !p.toLowerCase().includes('here are') &&
+            !p.toLowerCase().includes('of course') &&
+            !p.toLowerCase().includes('choose the option') &&
+            !p.toLowerCase().includes('pro-tip') &&
+            p.length > 100
+          );
+          const finalContent = actualSummary?.trim() || paragraphs[0]?.trim() || cleanedContent;
+          const summaryElement = document.querySelector('[data-section="summary"] p');
+          if (summaryElement) {
+            summaryElement.textContent = finalContent;
+          }
+          break;
+        default:
+          console.log('Generated content:', generatedContent);
+      }
+    } catch (error) {
+      alert('Failed to generate content. Please check your API key and try again.');
+    }
+  };
+
   // Render section content
   const renderSection = (sectionType, column) => {
     switch(sectionType) {
@@ -444,7 +490,7 @@ export default function Template11() {
       case 'skills':
         return (
           <section 
-            className="mb-8 group"
+            className="mb-8 group relative z-50"
             draggable
             onDragStart={(e) => handleDragStart(e, 'skills', column)}
             onDragOver={handleDragOver}
@@ -452,8 +498,11 @@ export default function Template11() {
             onDragEnd={handleDragEnd}
           >
             <div className="flex justify-between items-center mb-4 cursor-move">
-              <div>
+              <div className="flex items-center gap-2">
                 <h2 className="text-xs font-bold tracking-widest text-gray-700">SKILLS</h2>
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  <AISparkle section="Skills" onGenerate={handleAIGenerate} />
+                </div>
               </div>
               <button
                 onClick={addSkill}
@@ -608,15 +657,19 @@ export default function Template11() {
       case 'summary':
         return (
           <section 
-            className="mb-8"
+            className="mb-8 group relative z-50"
             draggable
             onDragStart={(e) => handleDragStart(e, 'summary', column)}
             onDragOver={handleDragOver}
             onDrop={(e) => handleDrop(e, 'summary', column)}
             onDragEnd={handleDragEnd}
+            data-section="summary"
           >
-            <div className="mb-3 cursor-move">
+            <div className="mb-3 cursor-move flex items-center gap-2">
               <h2 className="text-xs font-bold tracking-widest text-gray-700">SUMMARY</h2>
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                <AISparkle section="Summary" onGenerate={handleAIGenerate} />
+              </div>
             </div>
             <p className="text-xs text-gray-600 leading-relaxed" contentEditable suppressContentEditableWarning>
               I am a qualified and professional web developer with five years of experience in database administration and website design. Strong creative and analytical skills. Team player with an eye for detail.
@@ -893,11 +946,11 @@ export default function Template11() {
         data-editor-container
         className="flex flex-col items-center scale-[0.5] origin-top transition-transform duration-500 pt-24"
       >
-        <div ref={cvRef} data-cv-page className="bg-white shadow-2xl relative overflow-hidden" style={{ width: '210mm', height: '297mm' }}>
+        <div ref={cvRef} data-cv-page className="bg-white shadow-2xl relative" style={{ width: '210mm', height: '297mm' }}>
         {/* Large background initials */}
-        <div className="absolute top-8 left-1/2 transform -translate-x-1/2 text-pink-100 font-bold opacity-40 pointer-events-none" style={{ fontSize: '120px', lineHeight: '1' }}>
+        {/* <div className="absolute top-8 left-1/2 transform -translate-x-1/2 text-pink-100 font-bold opacity-40 pointer-events-none" style={{ fontSize: '120px', lineHeight: '1' }}>
           SA
-        </div>
+        </div> */}
 
         {/* Header */}
         <div className="relative z-10 text-center pt-12 pb-8">
@@ -908,12 +961,12 @@ export default function Template11() {
         {/* Main Content */}
         <div className="flex relative z-10 h-full">
           {/* Left Column */}
-          <div className="w-2/5 bg-pink-50 p-8 pt-0 overflow-y-auto" style={{ maxHeight: 'calc(297mm - 120px)' }}>
+          <div className="w-2/5 bg-pink-50 p-8 pt-0" style={{ maxHeight: 'calc(297mm - 120px)' }}>
             {leftSections.map((section) => renderSection(section, 'left'))}
           </div>
 
           {/* Right Column */}
-          <div className="w-3/5 p-8 pt-0 overflow-y-auto" style={{ maxHeight: 'calc(297mm - 120px)' }}>
+          <div className="w-3/5 p-8 pt-0" style={{ maxHeight: 'calc(297mm - 120px)' }}>
             {rightSections.map((section) => renderSection(section, 'right'))}
           </div>
         </div>
