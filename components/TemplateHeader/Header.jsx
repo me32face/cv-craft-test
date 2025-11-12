@@ -1,9 +1,8 @@
 import React, { useCallback, useState } from "react";
-import { Download, Undo2, Redo2, Loader2, ArrowLeft } from "lucide-react";
+import { Download, Loader2, ArrowLeft } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { usePDF } from "../../contexts/PDFContext";
-import { useUndoRedo } from "../../contexts/UndoRedoContext";
 import FormatToolbar from "../formatToolBar/FormatToolbar";
 import { SelectedElementProvider } from "@/contexts/SelectedElementContext";
 import { useRouter } from "next/navigation";
@@ -11,7 +10,6 @@ import { useRouter } from "next/navigation";
 const Header = () => {
   const { triggerPDF } = usePDF();
   const [isDownloading, setIsDownloading] = useState(false);
-  const { undo, redo, canUndo, canRedo } = useUndoRedo();
   const router = useRouter();
 
   const downloadPDF = useCallback(async () => {
@@ -74,25 +72,14 @@ const Header = () => {
     <div className="flex flex-col w-full">
       {/* Header Bar */}
       <div className="w-full bg-gradient-to-r from-[#4F8DF9] to-[#8A3FFC] flex flex-col sm:flex-row items-center justify-between gap-2 px-4 py-2">
-        {/* Undo / Redo */}
+        {/* Back Button */}
         <div className="flex items-center gap-4">
           <button
-            onClick={undo}
-            disabled={!canUndo}
-            className={`p-2 rounded-full transition-colors ${canUndo ? "hover:bg-white/20" : "opacity-50 cursor-not-allowed"
-              }`}
-            title="Undo"
+            onClick={() => router.push("/#template")}
+            className="p-2 rounded-full hover:bg-white/40 transition-colors bg-white/20"
+            title="Back to Home"
           >
-            <Undo2 className="w-5 h-5 text-white" />
-          </button>
-          <button
-            onClick={redo}
-            disabled={!canRedo}
-            className={`p-2 rounded-full transition-colors ${canRedo ? "hover:bg-white/20" : "opacity-50 cursor-not-allowed"
-              }`}
-            title="Redo"
-          >
-            <Redo2 className="w-5 h-5 text-white" />
+            <ArrowLeft className="w-5 h-5 text-white" />
           </button>
         </div>
 
@@ -113,17 +100,6 @@ const Header = () => {
             <Download className="w-4 h-4" />
           )}
           {isDownloading ? "Downloading..." : "Download"}
-        </button>
-      </div>
-
-      {/* ✅ Simple Back Button */}
-      <div className="flex bg-[#F3F4F6] p-4">
-        <button
-          onClick={() => router.push("/#template")}
-          className="ml-5 p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors shadow-md"
-          title="Back to Home"
-        >
-          <ArrowLeft className="w-6 h-6 text-gray-700" />
         </button>
       </div>
     </div>

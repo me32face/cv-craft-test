@@ -260,7 +260,7 @@ export default function Login() {
                   {loading ? (
                     <ClipLoader size={22} color="#ffffff" />
                   ) : (
-                    "LOGIN TO YOUR ACCOUNT"
+                    "LOGIN"
                   )}
                 </button>
               </div>

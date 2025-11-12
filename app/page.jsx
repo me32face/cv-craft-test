@@ -41,6 +41,9 @@ export default function Home() {
     { id: 'Template06', name: 'Sample Layout', key: 'Sharya Singh', image: '/template/template06.png', category: 'simple' },
     { id: 'Template07', name: 'Professional Classic', key: 'Olivia Wilson', image: '/template/template07.png', category: 'creative' },
     { id: 'Template11', name: 'Elegant Layout', key: 'Sahib Khan', image: '/template/template11.png', category: 'creative' },
+    { id: 'Template25', name: 'Modern Professional', key: 'Alex Johnson', image: '/template/template25.png', category: 'proffessional' },
+    { id: 'Template08', name: 'Beige Whait', key: 'Olivia Wilson', image: '/template/template09.png', category: 'modern' },
+    { id: 'Template10', name: 'Elegant Layout', key: 'Sahib Khan', image: '/template/template10.png', category: 'creative' },
     { id: 'Template15', name: 'Sample Layout', key: 'Richard Sanchez', image: '/template/template15.png', category: 'proffessional' },
     { id: 'Template16', name: 'Classic Layout', key: 'Hanson johnson', image: '/template/template16.png', category: 'creative' },
     { id: 'Template17', name: 'Elegant Layout', key: 'Hanna Morales', image: '/template/template17.png', category: 'creative' },
@@ -107,7 +110,7 @@ export default function Home() {
       <Navbar />
       <BuildSection />
       <HowItWorks />
-      <main  id='template'  className="min-h-screen   from-gray-50 to-white mt-10 py-5 px-4 sm:px-6 lg:px-8">
+      <main id='template' className="min-h-screen   from-gray-50 to-white mt-10 py-5 px-4 sm:px-6 lg:px-8">
         <div className="max-w-8xl mx-auto">
           <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-5xl xl:text-5xl font-bold mb-5 text-center text-gray-500">
             Professional Resume Templates
