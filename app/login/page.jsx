@@ -58,17 +58,18 @@ export default function Login() {
         setToastMessage("Login successful!");
         setShowToast(true);
 
-        // Store token in localStorage
-
+        // Store token in localStorage and cookie
         localStorage.setItem("token", data.token);
+        document.cookie = `token=${data.token}; path=/; max-age=86400`;
 
-        // ✅ Check if there's a redirect target
-        const redirectPath = localStorage.getItem("redirectAfterLogin");
+        // Check redirect from URL params
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectPath = urlParams.get('redirect') || localStorage.getItem("redirectAfterLogin");
         if (redirectPath) {
           localStorage.removeItem("redirectAfterLogin");
-          window.location.href = redirectPath; // Go to the template user wanted to edit
+          window.location.href = redirectPath;
         } else {
-          window.location.href = "/"; // Default dashboard
+          window.location.href = "/";
         }
       } else {
         setToastMessage(data.message);
@@ -191,9 +192,12 @@ export default function Login() {
 
                           if (data.token) {
                             localStorage.setItem("token", data.token);
+                            document.cookie = `token=${data.token}; path=/; max-age=86400`;
                             setToastMessage("Logged in with Google!");
                             setShowToast(true);
-                            window.location.href = "/";
+                            const urlParams = new URLSearchParams(window.location.search);
+                            const redirectPath = urlParams.get('redirect');
+                            window.location.href = redirectPath || "/";
                           } else {
                             setToastMessage(data.message || "Google login failed");
                             setShowToast(true);
