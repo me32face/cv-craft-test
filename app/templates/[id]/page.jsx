@@ -98,6 +98,11 @@ const templateComponents = {
     ssr: false,
     loading: () => <TemplateLoader />,
   }),
+  Template22: dynamic(() => import('@/components/templates/Template22'), { 
+    ssr: false,
+    loading: () => <TemplateLoader />,
+  }),
+  
 };
 
 function TemplateLoader() {
