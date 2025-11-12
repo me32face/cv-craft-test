@@ -51,6 +51,7 @@ export default function Home() {
     { id: 'Template19', name: 'Modest Layout', key: 'isabel mercado', image: '/template/template19.png', category: 'proffessional' },
     { id: 'Template20', name: 'Infographic Developer Template', key: 'daniel Gallego', image: '/template/template20.png', category: 'creative' },
     { id: 'Template21', name: 'Creative Layout', key: 'laura martinez', image: '/template/template21.png', category: 'creative' },
+    { id: 'Template24', name: 'Professional Layout', key: 'carlos ruiz', image: '/template/template24.png', category: 'proffessional' },
 
 
   ];
