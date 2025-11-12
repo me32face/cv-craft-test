@@ -46,76 +46,96 @@ const initialData = {
   ],
 };
 
-// --- FIXED Reusable Editable Text Component ---
-const EditableText = React.forwardRef(({ 
-  tag: Tag = 'div', 
-  children, 
-  className = '', 
-  onSave, 
-  placeholder = '',
-  autoResize = false,
-  ...props 
-}, ref) => {
-  const [content, setContent] = useState(children);
-  const internalRef = useRef(null);
-  const actualRef = ref || internalRef;
+// --- Editable Text Component ---
+const EditableText = React.forwardRef(
+  (
+    {
+      tag: Tag = 'div',
+      children,
+      className = '',
+      onSave,
+      placeholder = '',
+      autoResize = false,
+      ...props
+    },
+    ref
+  ) => {
+    const internalRef = useRef(null);
+    const actualRef = ref || internalRef;
+    const [isEditing, setIsEditing] = useState(false);
+    const [content, setContent] = useState(children || '');
 
-  // Update content when children prop changes
-  useEffect(() => {
-    setContent(children);
-  }, [children]);
+    // Populate once on mount and whenever external children truly change
+    useEffect(() => {
+      if (!isEditing && actualRef.current && children !== content) {
+        actualRef.current.textContent = children || '';
+        setContent(children || '');
+      }
+    }, [children, isEditing]);
 
-  const handleInput = (e) => {
-    const newContent = e.currentTarget.textContent || '';
-    setContent(newContent);
-    
-    // Auto-resize logic
-    if (autoResize && actualRef.current) {
-      const element = actualRef.current;
-      element.style.height = 'auto';
-      element.style.height = element.scrollHeight + 'px';
-    }
-  };
+    const handleInput = (e) => {
+      setContent(e.currentTarget.textContent);
 
-  const handleBlur = (e) => {
-    const newContent = e.currentTarget.textContent || '';
-    if (newContent !== children) {
-      onSave(newContent);
-    }
-  };
+      if (autoResize && actualRef.current) {
+        const el = actualRef.current;
+        requestAnimationFrame(() => {
+          el.style.height = 'auto';
+          el.style.height = `${el.scrollHeight}px`;
+        });
+      }
+    };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey && Tag !== 'p' && Tag !== 'div') {
+    const handleFocus = () => setIsEditing(true);
+
+    const handleBlur = (e) => {
+      setIsEditing(false);
+      const newContent = e.currentTarget.innerText.trim();
+      if (newContent !== children && onSave) onSave(newContent);
+    };
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter' && !e.shiftKey && Tag !== 'p' && Tag !== 'div') {
+        e.preventDefault();
+        e.currentTarget.blur();
+      }
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        if (actualRef.current) actualRef.current.textContent = children || '';
+        setContent(children || '');
+        e.currentTarget.blur();
+      }
+    };
+
+    const handlePaste = (e) => {
       e.preventDefault();
-      e.currentTarget.blur();
-    }
-  };
+      const text = e.clipboardData.getData('text/plain');
+      const selection = window.getSelection();
+      if (!selection.rangeCount) return;
+      selection.deleteFromDocument();
+      selection.getRangeAt(0).insertNode(document.createTextNode(text));
+      selection.collapseToEnd();
+    };
 
-  const handleFocus = (e) => {
-    // Select all text on focus for better UX
-    const range = document.createRange();
-    range.selectNodeContents(e.currentTarget);
-    const selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
-  };
-
-  return (
-    <Tag
-      ref={actualRef}
-      contentEditable={true}
-      suppressContentEditableWarning={true}
-      onInput={handleInput}
-      onBlur={handleBlur}
-      onKeyDown={handleKeyDown}
-      onFocus={handleFocus}
-      className={`${className} focus:outline-none focus:ring-1 focus:ring-blue-300 rounded block cursor-text transition-all duration-100 editable-text`}
-      {...props}
-    >
-      {content}
-    </Tag>
-  );
-});
+    return (
+      <Tag
+        ref={actualRef}
+        contentEditable
+        suppressContentEditableWarning
+        onInput={handleInput}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
+        onPaste={handlePaste}
+        className={`${className} focus:outline-none focus:ring-1 focus:ring-blue-300 rounded block cursor-text transition-all duration-100`}
+        data-placeholder={placeholder}
+        {...props}
+      >
+        {/* ✅ Show initial content or placeholder once (not updated each keystroke) */}
+        {children || placeholder}
+      </Tag>
+    );
+  }
+);
 EditableText.displayName = 'EditableText';
 
 // --- Item Actions Component ---
@@ -130,19 +150,28 @@ const ItemActions = ({ onDuplicate, onDelete }) => (
   </div>
 );
 
-// --- Section Header Component with AI ---
+// --- UPDATED Section Header Component with AI that pops up to top ---
 const SectionHeader = ({ title, onGenerate, onTitleChange }) => (
-  <div className="relative group flex items-center gap-2">
+  <div className="relative group flex items-center gap-2 mb-3 overflow-visible">
     <EditableText
       tag="h2"
       onSave={onTitleChange}
-      className="text-xl font-bold uppercase tracking-widest text-gray-800 pt-4 pb-1 border-b-2 border-gray-800 mb-3 focus:outline-none focus:ring-1 focus:ring-blue-300 rounded px-1"
+      className="text-xl font-bold uppercase tracking-widest text-gray-800 pt-4 pb-1 border-b-2 border-gray-800 focus:outline-none focus:ring-1 focus:ring-blue-300 rounded px-1 flex-grow"
     >
       {title}
     </EditableText>
     {onGenerate && (
-      <div className="opacity-0 group-hover:opacity-100 transition-opacity print:hidden">
-        <AISparkle section={title} onGenerate={onGenerate} />
+      <div className="opacity-0 group-hover:opacity-100 transition-opacity print:hidden relative z-30 overflow-visible">
+        <AISparkle 
+          section={title} 
+          onGenerate={onGenerate}
+          className="transform hover:scale-110 transition-transform duration-200"
+        />
+        {/* Tooltip that appears on top - high z-index and pointer-events none */}
+        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50 min-w-max whitespace-nowrap">
+          Generate AI content for {title}
+          <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+        </div>
       </div>
     )}
   </div>
@@ -157,6 +186,7 @@ const PhotoUploader = ({ photoUrl, onPhotoChange }) => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
+        // <-- fixed stray 'A' here
         onPhotoChange(reader.result);
       };
       reader.readAsDataURL(file);
@@ -256,20 +286,52 @@ const App = () => {
           }));
           break;
 
-        case 'my skills':
-        case 'skills':
-          const skills = generatedContent.split('\n').filter(skill => skill.trim());
-          const newSkills = skills.slice(0, 8).map((skill, index) => ({
-            id: crypto.randomUUID(),
-            name: skill.trim(),
-            level: Math.floor(Math.random() * 5) + 1
-          }));
-          
-          setResume(prev => ({
-            ...prev,
-            skills: newSkills
-          }));
-          break;
+          case 'my skills':
+          case 'skills': {
+            // Enforce clean skill-only output
+            const strictPrompt = `
+              You are a professional resume content generator.
+              Generate ONLY a plain list of concise skill names related to "${keywords || 'this section'}".
+              No explanations, no markdown, no bullet points, no categories.
+              Example output:
+              JavaScript
+              React
+              Node.js
+              UI/UX Design
+              Project Management
+            `;
+
+            const generatedContent = await geminiService.generateContent(strictPrompt);
+
+            // Clean and sanitize AI output
+            const sanitizeAIText = (text) =>
+              text
+                .replace(/\*/g, '')       // remove markdown asterisks
+                .replace(/#+/g, '')       // remove markdown headers
+                .replace(/[-•]/g, '')     // remove bullet symbols
+                .replace(/\r/g, '')       // remove carriage returns
+                .trim();
+
+            const cleaned = sanitizeAIText(generatedContent);
+
+            const skills = cleaned
+              .split('\n')
+              .map(skill => skill.trim())
+              .filter(skill => skill.length > 1 && skill.length < 50); // Avoid junk lines
+
+            const newSkills = skills.slice(0, 8).map(skill => ({
+              id: crypto.randomUUID(),
+              name: skill,
+              level: Math.floor(Math.random() * 5) + 1,
+            }));
+
+            setResume(prev => ({
+              ...prev,
+              skills: newSkills,
+            }));
+
+            break;
+          }
 
         default:
           console.log('Generated content:', generatedContent);
@@ -391,14 +453,15 @@ const App = () => {
           {item.name}
         </EditableText>
         
-        {/* FIXED: Static skill bars for printing + Interactive for editing */}
+        {/* FIXED: Single skill bar display that works for both editing and printing */}
         <div className="flex items-center space-x-2">
-          {/* Static skill level display (always visible, including in print) */}
-          <div className="flex space-x-0.5 print:flex pt-4">
+          <div className="flex space-x-0.5">
             {[...Array(5)].map((_, i) => (
-              <div
+              <button
                 key={i}
-                className={`w-2.5 h-2.5 rounded-full ${i < item.level ? 'bg-gray-800' : 'bg-gray-300'} print:bg-gray-800 print:opacity-${i < item.level ? '100' : '30'}`}
+                onClick={() => handleLevelClick(i + 1)}
+                className={`w-2.5 h-2.5 rounded-full transition-colors duration-150 cursor-pointer print:cursor-default ${i < item.level ? 'bg-gray-800' : 'bg-gray-300'} print:bg-gray-800 print:opacity-${i < item.level ? '100' : '30'}`}
+                aria-label={`Set skill level to ${i + 1} for ${item.name}`}
               />
             ))}
           </div>
@@ -412,55 +475,74 @@ const App = () => {
     );
   }, [updateListItem, handleDuplicate, handleDelete]);
 
-  const ExperienceItem = useMemo(() => ({ item }) => (
-    <div className="group relative py-2 border-b border-gray-200 last:border-b-0 rounded border border-transparent hover:border-gray-200 hover:bg-gray-50 transition-colors px-2 print:border-none print:hover:bg-transparent"> 
-      <EditableText
-        tag="h4"
-        onSave={(value) => updateListItem('experience', item.id, 'company', value)}
-        className="font-bold text-sm text-gray-800 min-w-[100px]"
-        placeholder="Company name"
-      >
-        {item.company}
-      </EditableText>
-      <EditableText
-        tag="p"
-        onSave={(value) => updateListItem('experience', item.id, 'role', value)}
-        className="text-lg font-semibold text-gray-700 mt-0.5 min-w-[100px]"
-        placeholder="Job title"
-      >
-        {item.role}
-      </EditableText>
-      <EditableText
-        tag="p"
-        onSave={(value) => updateListItem('experience', item.id, 'period', value)}
-        className="text-lg italic text-gray-500 mb-1 min-w-[100px]"
-        placeholder="Employment period"
-      >
-        {item.period}
-      </EditableText>
-      <div className="mt-1">
-        <EditableText
-          tag="div"
-          onSave={(value) => {
-            const details = value.split('\n').filter(detail => detail.trim());
-            updateListItem('experience', item.id, 'details', details);
-          }}
-          className="text-m space-y-0.5 min-w-[150px] min-h-[40px]"
-          placeholder="• Enter job responsibilities&#10;• One per line"
-        >
-          {Array.isArray(item.details) ? item.details.map((detail, index) => (
-            <div key={index} className="text-gray-700">
-              • {detail}
-            </div>
-          )) : null}
-        </EditableText>
-      </div>
-      <ItemActions
-        onDuplicate={() => handleDuplicate('experience', item)}
-        onDelete={() => handleDelete('experience', item.id)}
-      />
-    </div>
-  ), [updateListItem, handleDuplicate, handleDelete]);
+  const ExperienceItem = useMemo(
+    () =>
+      ({ item }) => (
+        <div className="group relative py-2 border-b border-gray-200 last:border-b-0 rounded border border-transparent hover:border-gray-200 hover:bg-gray-50 transition-colors px-2 print:border-none print:hover:bg-transparent">
+          {/* Company Name */}
+          <EditableText
+            tag="h4"
+            onSave={(value) => updateListItem('experience', item.id, 'company', value)}
+            className="font-bold text-sm text-gray-800 min-w-[100px]"
+            placeholder="Company name"
+          >
+            {item.company}
+          </EditableText>
+
+          {/* Job Role */}
+          <EditableText
+            tag="p"
+            onSave={(value) => updateListItem('experience', item.id, 'role', value)}
+            className="text-lg font-semibold text-gray-700 mt-0.5 min-w-[100px]"
+            placeholder="Job title"
+          >
+            {item.role}
+          </EditableText>
+
+          {/* Employment Period */}
+          <EditableText
+            tag="p"
+            onSave={(value) => updateListItem('experience', item.id, 'period', value)}
+            className="text-lg italic text-gray-500 mb-1 min-w-[100px]"
+            placeholder="Employment period"
+          >
+            {item.period}
+          </EditableText>
+
+          {/* Job Details (Bullet points with multiline typing support) */}
+          <div className="mt-1">
+            <EditableText
+              tag="div"
+              onSave={(value) => {
+                // Preserve multiple lines
+                const details = value
+                  .split(/\n+/)
+                  .map((d) => d.trim())
+                  .filter(Boolean);
+                updateListItem('experience', item.id, 'details', details);
+              }}
+              className="text-m min-w-[150px] min-h-[40px] whitespace-pre-wrap leading-relaxed"
+              placeholder="• Enter job responsibilities&#10;• One per line"
+            >
+            {Array.isArray(item.details)
+              ? item.details.map((detail, index) => (
+                  <div key={index} className="text-gray-700">
+                    • {detail.replace(/^•+\s*/, '')}
+                  </div>
+                ))
+              : null}
+            </EditableText>
+          </div>
+
+          {/* ✅ Duplicate / Delete Buttons */}
+          <ItemActions
+            onDuplicate={() => handleDuplicate('experience', item)}
+            onDelete={() => handleDelete('experience', item.id)}
+          />
+        </div>
+      ),
+    [updateListItem, handleDuplicate, handleDelete]
+  );
 
   const EducationItem = useMemo(() => ({ item }) => (
     <div className="group relative py-1 border-b border-gray-200 last:border-b-0 rounded border border-transparent hover:border-gray-200 hover:bg-gray-50 transition-colors px-2 print:border-none print:hover:bg-transparent">
@@ -501,11 +583,11 @@ const App = () => {
   const CVPage = () => (
     <div 
       key={contentVersion}
-      className="w-[210mm] h-[297mm] bg-white shadow-2xl rounded-lg border border-gray-300 overflow-hidden print:shadow-none print:border-0"
+      className="w-[210mm] h-[297mm] bg-white shadow-2xl rounded-lg border border-gray-300 overflow-visible print:shadow-none print:border-0"
     >
       <div className="grid grid-cols-3 h-full">
         {/* LEFT COLUMN (Sidebar) */}
-        <div className="col-span-1 bg-gray-50 p-6 border-r border-gray-200 h-full overflow-hidden print:bg-white">
+        <div className="col-span-1 bg-gray-50 p-6 border-r border-gray-200 h-full overflow-visible print:bg-white">
           <PhotoUploader 
             photoUrl={resume.personal.photoUrl} 
             onPhotoChange={handlePhotoChange}
@@ -521,7 +603,7 @@ const App = () => {
             </div>
           </div>
           
-          <div className="pt-1">
+          <div className="pt-2">
             <SectionHeader 
               title={sectionTitles['MY SKILLS']} 
               onGenerate={handleAIGenerate}
