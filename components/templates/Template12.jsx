@@ -215,23 +215,23 @@ const handleAIGenerate = async (section, keywords) => {
           {/* Decorative Dots - Top Left */}
           <div className="absolute top-4 left-4 grid grid-cols-6 gap-2">
             {[...Array(24)].map((_, i) => (
-              <div key={i} className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+              <div key={i} className="w-3 h-3 bg-[#a680c9] rounded-full"></div>
             ))}
           </div>
 
           {/* Decorative Dots - Bottom Right */}
           <div className="absolute bottom-4 right-4 grid grid-cols-6 gap-2">
             {[...Array(24)].map((_, i) => (
-              <div key={i} className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+              <div key={i} className="w-3 h-3 bg-[#a680c9] rounded-full"></div>
             ))}
           </div>
 
           {/* Header Section */}
           <div className="grid grid-cols-3 gap-5">
             {/* Left - Yellow Section with Name */}
-            <div className="col-span-1 pt-20 pl-28 flex items-center">
+            <div className="col-span-1 pt-20 pl-24 flex items-center">
               <div>
-                <h1 className="text-4xl font-bold text-gray-800 leading-tight" contentEditable suppressContentEditableWarning>Andry</h1>
+                <h1 className="text-5xl font-bold text-gray-800 leading-tight" contentEditable suppressContentEditableWarning>Andry</h1>
                 <h1 className="text-4xl font-bold text-gray-800 leading-tight" contentEditable suppressContentEditableWarning>Gordon</h1>
               </div>
             </div>
@@ -261,7 +261,7 @@ const handleAIGenerate = async (section, keywords) => {
 
               {/* Profile Photo */}
               <div className="relative">
-                <div className="w-36 h-36 rounded-2xl  border-8 border-blue-100 bg-gray-300 overflow-hidden"
+                <div className="w-36 h-36 rounded-2xl  border-8 border-[#dec9f1] bg-gray-300 overflow-hidden"
                   onClick={() => document.getElementById('profileImageInput').click()}>
                   {profileImage ? (
                     <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
@@ -285,7 +285,7 @@ const handleAIGenerate = async (section, keywords) => {
           {/* Main Content */}
           <div className="grid grid-cols-3 gap-0 p-10">
             {/* Left Sidebar - Yellow */}
-            <div className="col-span-1 bg-yellow-300 p-8 space-y-8">
+            <div className="col-span-1 bg-[#dec9f1] p-8 space-y-8">
               {/* Contact */}
               <div>
                 <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2" contentEditable suppressContentEditableWarning>
