@@ -262,19 +262,15 @@ export default function Template09() {
                       className="grid grid-cols-2 gap-y-3 gap-x-6"
                     >
                       <div className="flex items-center gap-2">
-                        <Phone size={16} />
                         <span className="text-sm">+123-456-7890</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Mail size={16} />
                         <span className="text-sm">hello@reallygreatsite.com</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Globe size={16} />
                         <span className="text-sm">www.reallygreatsite.com</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <MapPin size={16} />
                         <span className="text-sm">123 Anywhere St., Any City</span>
                       </div>
                     </div>
@@ -459,35 +455,71 @@ export default function Template09() {
               </div>
 
               {/* Language Section */}
-              <section>
-                <h2 className="text-2xl font-bold text-gray-800 mb-4" contentEditable suppressContentEditableWarning>Language</h2>
-                <Draggable nodeRef={languagesRef}>
-                  <div ref={languagesRef} data-section-item className='relative group'>
-                    <ul className="space-y-2">
-                      <li className="text-sm text-gray-700 flex items-center gap-2" contentEditable suppressContentEditableWarning>
-                        <span className="w-1.5 h-1.5 bg-gray-800 rounded-full"></span>
-                        English
-                      </li>
-                      <li className="text-sm text-gray-700 flex items-center gap-2" contentEditable suppressContentEditableWarning>
-                        <span className="w-1.5 h-1.5 bg-gray-800 rounded-full"></span>
-                        Spain
-                      </li>
-                      <li className="text-sm text-gray-700 flex items-center gap-2" contentEditable suppressContentEditableWarning>
-                        <span className="w-1.5 h-1.5 bg-gray-800 rounded-full"></span>
-                        Arabic
-                      </li>
-                      <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button data-action="duplicate" className="text-black rounded p-1.5 shadow-md">
-                          <CopyPlus className="w-4 h-4" />
+                              <div className="mb-4">
+                  <Draggable nodeRef={languagesRef}>
+                    <h2 ref={languagesRef} className="text-2xl font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Languages</h2>
+                  </Draggable>
+                  <ul className="space-y-1.5 text-gray-700" onKeyDown={(e) => {
+                    if (e.key === 'Backspace') {
+                      const lis = e.currentTarget.querySelectorAll('li');
+                      lis.forEach(li => {
+                        const span = li.querySelector('span[contenteditable]');
+                        if (span && !span.textContent.trim()) {
+                          li.remove();
+                        }
+                      });
+                    }
+                  }}>
+                    <li className="text-sm flex items-start relative group">
+                      <span className="mr-2">•</span>
+                      <span contentEditable suppressContentEditableWarning>English (Fluent)</span>
+                      <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                        <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
+                          <CopyPlus className="w-3 h-3" />
                         </button>
-                        <button data-action="delete" className="text-black rounded p-1.5 shadow-md">
-                          <Trash2 className="w-4 h-4" />
+                        <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
+                          <Trash2 className="w-3 h-3" />
                         </button>
                       </div>
-                    </ul>
-                  </div>
-                </Draggable>
-              </section>
+                    </li>
+                    <li className="text-sm flex items-start relative group">
+                      <span className="mr-2">•</span>
+                      <span contentEditable suppressContentEditableWarning>French (Fluent)</span>
+                      <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                        <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
+                          <CopyPlus className="w-3 h-3" />
+                        </button>
+                        <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
+                    </li>
+                    <li className="text-sm flex items-start relative group">
+                      <span className="mr-2">•</span>
+                      <span contentEditable suppressContentEditableWarning>German (Basic)</span>
+                      <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                        <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
+                          <CopyPlus className="w-3 h-3" />
+                        </button>
+                        <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
+                    </li>
+                    <li className="text-sm flex items-start relative group">
+                      <span className="mr-2">•</span>
+                      <span contentEditable suppressContentEditableWarning>Spanish (Intermediate)</span>
+                      <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                        <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
+                          <CopyPlus className="w-3 h-3" />
+                        </button>
+                        <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
 
               {/* Awards Section */}
               <section>
