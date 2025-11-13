@@ -2,9 +2,6 @@
 "use client";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
-  Phone,
-  Mail,
-  MapPin,
   CopyPlus,
   Trash2,
   User,
@@ -38,7 +35,6 @@ export default function Template22() {
     if (cvRef.current) await downloadPDF(cvRef.current, "Salesman_CV.pdf");
   }
 
-  // ---------------- Image upload ----------------
   const handleImageUpload = (event) => {
     const file = event?.target?.files?.[0];
     if (!file) return;
@@ -299,7 +295,7 @@ export default function Template22() {
     // Backspace cleanup handled by autosave / duplicate-delete logic as well
   };
 
-  // ---------------- Render ----------------
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">
       <div
@@ -329,7 +325,7 @@ export default function Template22() {
                 }
               >
                 <img
-                  src={profileImage || "/templateprofile/template01profile.jpg"}
+                  src={ "/templateprofile/template22profile.jpg"}
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />
@@ -362,9 +358,9 @@ export default function Template22() {
           </div>
 
           {/* Content */}
-          <div className="grid grid-cols-[30%_70%] gap-6 text-gray-800">
+          <div className="grid grid-cols-[35%_65%] gap-6 text-gray-800 ">
             {/* Left Sidebar */}
-            <div className="bg-[#f3f6fa] rounded-2xl p-5 flex flex-col justify-start ">
+            <div className="bg-[#f3f6fa] rounded-2xl p-5 flex flex-col justify-start  ">
               {/* Contact */}
               <section className="mb-6">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b border-gray-300 pb-1 mb-2">
@@ -372,13 +368,13 @@ export default function Template22() {
                 </h3>
                 <div className="space-y-2" data-section-item>
                   <div className="flex items-center gap-2">
-                    <Phone className="w-4 h-4 text-gray-500" />
+                  
                     <span contentEditable suppressContentEditableWarning>
                       +1 234 567 890
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Mail className="w-4 h-4 text-gray-500" />
+                    
                     <span
                       contentEditable
                       suppressContentEditableWarning
@@ -388,7 +384,7 @@ export default function Template22() {
                     </span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <MapPin className="w-4 h-4 text-gray-500 mt-0.5" />
+                   
                     <span contentEditable suppressContentEditableWarning>
                       789 Elm Street, Springfield, USA
                     </span>
@@ -463,6 +459,33 @@ export default function Template22() {
                 </ul>
               </section>
 
+
+              <section>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b border-gray-300 pb-1 mb-2">
+                  Language
+                </h3>
+               <ul className="text-sm space-y-1">
+  <li className="relative group" contentEditable suppressContentEditableWarning>
+    English
+    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
+      <button data-action="duplicate" className="p-1"><CopyPlus className="w-3 h-3" /></button>
+      <button data-action="delete" className="p-1"><Trash2 className="w-3 h-3" /></button>
+    </div>
+  </li>
+
+  <li className="relative group" contentEditable suppressContentEditableWarning>
+    Hindi
+    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
+      <button data-action="duplicate" className="p-1"><CopyPlus className="w-3 h-3" /></button>
+      <button data-action="delete" className="p-1"><Trash2 className="w-3 h-3" /></button>
+    </div>
+  </li>
+</ul>
+
+              </section>
+
+              
+
             
 
               {/* Certifications */}
@@ -470,14 +493,24 @@ export default function Template22() {
                 <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b border-gray-300 pb-1 mb-2">
                   Certifications
                 </h3>
-                <ul className="text-sm space-y-1">
-                  <li contentEditable suppressContentEditableWarning>
-                    Certified Sales Expert (CSE) — 2021
-                  </li>
-                  <li contentEditable suppressContentEditableWarning>
-                    CRM Professional — 2020
-                  </li>
-                </ul>
+               <ul className="text-sm space-y-1">
+  <li className="relative group" contentEditable suppressContentEditableWarning>
+    Certified Sales Expert (CSE) — 2021
+    <div className="absolute right-0 opacity-0 group-hover:opacity-100 flex gap-1">
+      <button data-action="duplicate" className="p-1"><CopyPlus className="w-3 h-3" /></button>
+      <button data-action="delete" className="p-1"><Trash2 className="w-3 h-3" /></button>
+    </div>
+  </li>
+
+  <li className="relative group" contentEditable suppressContentEditableWarning>
+    CRM Professional — 2020
+    <div className="absolute right-0 opacity-0 group-hover:opacity-100 flex gap-1">
+      <button data-action="duplicate" className="p-1"><CopyPlus className="w-3 h-3" /></button>
+      <button data-action="delete" className="p-1"><Trash2 className="w-3 h-3" /></button>
+    </div>
+  </li>
+</ul>
+
               </section>
             </div>
 
@@ -529,6 +562,10 @@ export default function Template22() {
       <span contentEditable suppressContentEditableWarning className="inline-block align-top">
         Achieved 120% of quarterly sales targets across the region.
       </span>
+        <div className="absolute right-0 opacity-0 group-hover:opacity-100 flex gap-1">
+    <button data-action="duplicate" className="p-1"><CopyPlus className="w-3 h-3" /></button>
+    <button data-action="delete" className="p-1"><Trash2 className="w-3 h-3" /></button>
+  </div>
     </li>
 
     <li className="flex items-baseline gap-2 leading-snug relative group">
@@ -536,6 +573,10 @@ export default function Template22() {
       <span contentEditable suppressContentEditableWarning className="inline-block align-top">
         Developed B2B partnerships increasing revenue by $1.2M.
       </span>
+          <div className="absolute right-0 opacity-0 group-hover:opacity-100 flex gap-1">
+    <button data-action="duplicate" className="p-1"><CopyPlus className="w-3 h-3" /></button>
+    <button data-action="delete" className="p-1"><Trash2 className="w-3 h-3" /></button>
+  </div>
     </li>
 
     <li className="flex items-baseline gap-2 leading-snug relative group">
@@ -543,6 +584,10 @@ export default function Template22() {
       <span contentEditable suppressContentEditableWarning className="inline-block align-top">
         Implemented CRM strategies improving retention by 35%.
       </span>
+          <div className="absolute right-0 opacity-0 group-hover:opacity-100 flex gap-1">
+    <button data-action="duplicate" className="p-1"><CopyPlus className="w-3 h-3" /></button>
+    <button data-action="delete" className="p-1"><Trash2 className="w-3 h-3" /></button>
+  </div>``
     </li>
   </ul>
 </div>
