@@ -489,11 +489,11 @@ export default function Template22() {
               </section>
 
               {/* Certifications */}
-              <section>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b border-gray-300 pb-1 mb-2">
+              <section className="mt-4">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b border-gray-300 pb-2 mb-3">
                   Certifications
                 </h3>
-                <ul className="text-sm space-y-1">
+                <ul className="text-sm space-y-5">
                   <li
                     className="relative group"
                     contentEditable
