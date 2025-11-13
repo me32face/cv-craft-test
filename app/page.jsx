@@ -50,7 +50,7 @@ export default function Home() {
     { id: 'Template21', name: 'Creative Layout', key: 'laura martinez', image: '/template/template21.png', category: 'creative' },
     { id: 'Template24', name: 'Professional Layout', key: 'carlos ruiz', image: '/template/template24.png', category: 'proffessional' },
 
-    {id: 'Template22', name: 'Modern Layout', key: 'emily clark', image: '/template/template22.png', category: 'modern' },
+    {id: 'Template22', name: 'Modern Layout', key: 'emily clark', image: '/template/template22.jpg', category: 'modern' },
   ];
 
   const filteredTemplates = activeFilter === 'All'
