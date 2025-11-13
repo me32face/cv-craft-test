@@ -30,6 +30,7 @@ const Navbar = () => {
     if (confirmed) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      document.cookie = "token=; path=/; max-age=0";
       setIsLoggedIn(false);
       router.push("/");
     }
