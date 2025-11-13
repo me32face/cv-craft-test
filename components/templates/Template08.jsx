@@ -227,26 +227,21 @@ const [profileImage, setProfileImage] = useState(null);
               </h1>
               <p className="text-sm text-amber-800 mt-2 tracking-wide" contentEditable suppressContentEditableWarning>Data Analyst</p>
             </div>
-
             {/* Contact Section */}
             <div className="mb-10 group space-y-3 text-xs text-amber-900" >
               <h2 className="text-2xl font-bold mb-4 pb-2 uppercase">Contact</h2>
               <Draggable nodeRef={contactRef}>
                 <div ref={contactRef} data-section-item className="space-y-3 relative group" >
                   <div className="flex items-start gap-2">
-                    <Phone size={14} className="mt-0.5 flex-shrink-0 text-amber-900" />
                     <span contentEditable suppressContentEditableWarning>+123 - 456 - 7890</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <Mail size={14} className="mt-0.5 flex-shrink-0 text-amber-900" />
                     <span contentEditable suppressContentEditableWarning className="break-all">hello@reallygreatsite.com</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <MapPin size={14} className="mt-0.5 flex-shrink-0 text-amber-900" />
                     <span contentEditable suppressContentEditableWarning>123 Anywhere St., Any City</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <Globe size={14} className="mt-0.5 flex-shrink-0 text-amber-900" />
                     <span contentEditable suppressContentEditableWarning className="break-all">www.reallygreatsite.com</span>
                   </div>
                   <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
