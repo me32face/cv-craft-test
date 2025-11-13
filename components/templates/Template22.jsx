@@ -1,13 +1,7 @@
 // Template22.jsx
 "use client";
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import {
-  CopyPlus,
-  Trash2,
-  User,
-  Briefcase,
-  GraduationCap,
-} from "lucide-react";
+import { CopyPlus, Trash2, User, Briefcase, GraduationCap } from "lucide-react";
 import Draggable from "react-draggable";
 
 import { usePDF } from "@/contexts/PDFContext";
@@ -295,7 +289,6 @@ export default function Template22() {
     // Backspace cleanup handled by autosave / duplicate-delete logic as well
   };
 
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">
       <div
@@ -325,7 +318,7 @@ export default function Template22() {
                 }
               >
                 <img
-                  src={ "/templateprofile/template22profile.jpg"}
+                  src={"/templateprofile/template22profile.jpg"}
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />
@@ -358,7 +351,7 @@ export default function Template22() {
           </div>
 
           {/* Content */}
-          <div className="grid grid-cols-[35%_65%] gap-6 text-gray-800 ">
+          <div className="grid grid-cols-[45%_55%] gap-6 text-gray-800 ">
             {/* Left Sidebar */}
             <div className="bg-[#f3f6fa] rounded-2xl p-5 flex flex-col justify-start  ">
               {/* Contact */}
@@ -368,13 +361,11 @@ export default function Template22() {
                 </h3>
                 <div className="space-y-2" data-section-item>
                   <div className="flex items-center gap-2">
-                  
                     <span contentEditable suppressContentEditableWarning>
                       +1 234 567 890
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    
                     <span
                       contentEditable
                       suppressContentEditableWarning
@@ -384,7 +375,6 @@ export default function Template22() {
                     </span>
                   </div>
                   <div className="flex items-start gap-2">
-                   
                     <span contentEditable suppressContentEditableWarning>
                       789 Elm Street, Springfield, USA
                     </span>
@@ -416,7 +406,7 @@ export default function Template22() {
                     }
                   }}
                 >
-                 <li className="text-sm relative group flex items-baseline gap-2 leading-snug">
+                  <li className="text-sm relative group flex items-baseline gap-2 leading-snug">
                     <span className="mr-2">•</span>
                     <span contentEditable suppressContentEditableWarning>
                       Client Relationship Building
@@ -426,7 +416,7 @@ export default function Template22() {
                         data-action="duplicate"
                         className="text-gray-600 rounded p-1 shadow-md"
                       >
-                        <CopyPlus className="w-3 h-3" />
+                        <CopyPlus className="w-3 h-3 " />
                       </button>
                       <button
                         data-action="delete"
@@ -459,58 +449,83 @@ export default function Template22() {
                 </ul>
               </section>
 
-
               <section>
                 <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b border-gray-300 pb-1 mb-2">
                   Language
                 </h3>
-               <ul className="text-sm space-y-1">
-  <li className="relative group" contentEditable suppressContentEditableWarning>
-    English
-    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
-      <button data-action="duplicate" className="p-1"><CopyPlus className="w-3 h-3" /></button>
-      <button data-action="delete" className="p-1"><Trash2 className="w-3 h-3" /></button>
-    </div>
-  </li>
+                <ul className="text-sm space-y-1">
+                  <li
+                    className="relative group"
+                    contentEditable
+                    suppressContentEditableWarning
+                  >
+                    English
+                    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
+                      <button data-action="duplicate" className="p-1">
+                        <CopyPlus className="w-3 h-3" />
+                      </button>
+                      <button data-action="delete" className="p-1">
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </li>
 
-  <li className="relative group" contentEditable suppressContentEditableWarning>
-    Hindi
-    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
-      <button data-action="duplicate" className="p-1"><CopyPlus className="w-3 h-3" /></button>
-      <button data-action="delete" className="p-1"><Trash2 className="w-3 h-3" /></button>
-    </div>
-  </li>
-</ul>
-
+                  <li
+                    className="relative group"
+                    contentEditable
+                    suppressContentEditableWarning
+                  >
+                    Hindi
+                    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
+                      <button data-action="duplicate" className="p-1">
+                        <CopyPlus className="w-3 h-3" />
+                      </button>
+                      <button data-action="delete" className="p-1">
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </li>
+                </ul>
               </section>
-
-              
-
-            
 
               {/* Certifications */}
               <section>
                 <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b border-gray-300 pb-1 mb-2">
                   Certifications
                 </h3>
-               <ul className="text-sm space-y-1">
-  <li className="relative group" contentEditable suppressContentEditableWarning>
-    Certified Sales Expert (CSE) — 2021
-    <div className="absolute right-0 opacity-0 group-hover:opacity-100 flex gap-1">
-      <button data-action="duplicate" className="p-1"><CopyPlus className="w-3 h-3" /></button>
-      <button data-action="delete" className="p-1"><Trash2 className="w-3 h-3" /></button>
-    </div>
-  </li>
+                <ul className="text-sm space-y-1">
+                  <li
+                    className="relative group"
+                    contentEditable
+                    suppressContentEditableWarning
+                  >
+                    Certified Sales Expert (CSE) — 2021
+                    <div className="absolute right-0 opacity-0 group-hover:opacity-100 flex gap-1">
+                      <button data-action="duplicate" className="p-1">
+                        <CopyPlus className="w-3 h-3" />
+                      </button>
+                      <button data-action="delete" className="p-1">
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </li>
 
-  <li className="relative group" contentEditable suppressContentEditableWarning>
-    CRM Professional — 2020
-    <div className="absolute right-0 opacity-0 group-hover:opacity-100 flex gap-1">
-      <button data-action="duplicate" className="p-1"><CopyPlus className="w-3 h-3" /></button>
-      <button data-action="delete" className="p-1"><Trash2 className="w-3 h-3" /></button>
-    </div>
-  </li>
-</ul>
-
+                  <li
+                    className="relative group"
+                    contentEditable
+                    suppressContentEditableWarning
+                  >
+                    CRM Professional — 2020
+                    <div className="absolute right-0 opacity-0 group-hover:opacity-100 flex gap-1">
+                      <button data-action="duplicate" className="p-1">
+                        <CopyPlus className="w-3 h-3" />
+                      </button>
+                      <button data-action="delete" className="p-1">
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </li>
+                </ul>
               </section>
             </div>
 
@@ -525,8 +540,7 @@ export default function Template22() {
                   <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b border-gray-300 pb-1">
                     Profile
                   </h3>
-                 <AISparkle section="profile" onGenerate={handleAIGenerate} />
-
+                  <AISparkle section="profile" onGenerate={handleAIGenerate} />
                 </div>
                 <p
                   id="profile-text"
@@ -549,83 +563,106 @@ export default function Template22() {
                   <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b border-gray-300 pb-1">
                     Work Experience
                   </h3>
-                
                 </div>
 
-              <div className="ml-2 mt-3 space-y-2 border-l-2 border-gray-300 pl-5">
-  <ul
-    id="exp-list"
-    className="text-sm space-y-2"
-  >
-    <li className="flex items-baseline gap-2 leading-snug relative group">
-      <span className="text-base">•</span>
-      <span contentEditable suppressContentEditableWarning className="inline-block align-top">
-        Achieved 120% of quarterly sales targets across the region.
-      </span>
-        <div className="absolute right-0 opacity-0 group-hover:opacity-100 flex gap-1">
-    <button data-action="duplicate" className="p-1"><CopyPlus className="w-3 h-3" /></button>
-    <button data-action="delete" className="p-1"><Trash2 className="w-3 h-3" /></button>
-  </div>
-    </li>
+                <div className="ml-2 mt-3 space-y-2 border-l-2 border-gray-300 pl-5">
+                  <ul id="exp-list" className="text-sm space-y-2">
+                    <li className="flex items-baseline gap-2 leading-snug relative group">
+                      <span className="text-base">•</span>
+                      <span
+                        contentEditable
+                        suppressContentEditableWarning
+                        className="inline-block align-top"
+                      >
+                        Achieved 120% of quarterly sales targets across the
+                        region.
+                      </span>
+                      <div className="absolute right-0 opacity-0 group-hover:opacity-100 flex gap-1">
+                        <button data-action="duplicate" className="p-8">
+                          <CopyPlus className="w-3 h-3" />
+                        </button>
+                        <button data-action="delete" className="p-8">
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
+                    </li>
 
-    <li className="flex items-baseline gap-2 leading-snug relative group">
-      <span className="text-base">•</span>
-      <span contentEditable suppressContentEditableWarning className="inline-block align-top">
-        Developed B2B partnerships increasing revenue by $1.2M.
-      </span>
-          <div className="absolute right-0 opacity-0 group-hover:opacity-100 flex gap-1">
-    <button data-action="duplicate" className="p-1"><CopyPlus className="w-3 h-3" /></button>
-    <button data-action="delete" className="p-1"><Trash2 className="w-3 h-3" /></button>
-  </div>
-    </li>
+                    <li className="flex items-baseline gap-2 leading-snug relative group">
+                      <span className="text-base">•</span>
+                      <span
+                        contentEditable
+                        suppressContentEditableWarning
+                        className="inline-block align-top"
+                      >
+                        Developed B2B partnerships increasing revenue by $1.2M.
+                      </span>
+                      <div className="absolute right-0 opacity-0 group-hover:opacity-100 flex gap-1">
+                        <button data-action="duplicate" className="p-8">
+                          <CopyPlus className="w-3 h-3" />
+                        </button>
+                        <button data-action="delete" className="p-8">
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
+                    </li>
 
-    <li className="flex items-baseline gap-2 leading-snug relative group">
-      <span className="text-base">•</span>
-      <span contentEditable suppressContentEditableWarning className="inline-block align-top">
-        Implemented CRM strategies improving retention by 35%.
-      </span>
-          <div className="absolute right-0 opacity-0 group-hover:opacity-100 flex gap-1">
-    <button data-action="duplicate" className="p-1"><CopyPlus className="w-3 h-3" /></button>
-    <button data-action="delete" className="p-1"><Trash2 className="w-3 h-3" /></button>
-  </div>``
-    </li>
-  </ul>
-</div>
-
+                    <li className="flex items-baseline gap-2 leading-snug relative group">
+                      <span className="text-base">•</span>
+                      <span
+                        contentEditable
+                        suppressContentEditableWarning
+                        className="inline-block align-top"
+                      >
+                        Implemented CRM strategies improving retention by 35%.
+                      </span>
+                      <div className="absolute right-0 opacity-0 group-hover:opacity-100 flex gap-1">
+                        <button data-action="duplicate" className="p-1">
+                          <CopyPlus className="w-3 h-3" />
+                        </button>
+                        <button data-action="delete" className="p-1">
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
+                      ``
+                    </li>
+                  </ul>
+                </div>
               </section>
 
-
-                {/* Education */}
+              {/* Education */}
               <section className="mb-6">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b border-gray-300 pb-1 mb-2">
                   Education
                 </h3>
-               <div className="relative group p-1">
-    <p
-      contentEditable
-      suppressContentEditableWarning
-      className="font-semibold"
-    >
-      Bachelor of Commerce (B.Com)
-    </p>
-    <p
-      className="text-xs text-gray-600"
-      contentEditable
-      suppressContentEditableWarning
-    >
-      Wardiere University — 2015–2018
-    </p>
+                <div className="relative group p-1">
+                  <p
+                    contentEditable
+                    suppressContentEditableWarning
+                    className="font-semibold"
+                  >
+                    Bachelor of Commerce (B.Com)
+                  </p>
+                  <p
+                    className="text-xs text-gray-600"
+                    contentEditable
+                    suppressContentEditableWarning
+                  >
+                    Wardiere University — 2015–2018
+                  </p>
 
-    {/* Duplicate / Delete Buttons */}
-    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
-      <button data-action="duplicate" className="p-1 text-gray-600">
-        <CopyPlus className="w-3 h-3" />
-      </button>
-      <button data-action="delete" className="p-1 text-gray-600">
-        <Trash2 className="w-3 h-3" />
-      </button>
-    </div>
-  </div>
+                  {/* Duplicate / Delete Buttons */}
+              <div className="absolute -right-6 top-1 opacity-0 group-hover:opacity-100 flex gap-1">
+                    <button
+                      data-action="duplicate"
+                      className="p-1 text-gray-600"
+                    >
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button data-action="delete" className="p-1 text-gray-600">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
               </section>
 
               {/* References */}
@@ -634,65 +671,74 @@ export default function Template22() {
                   References
                 </h3>
                 <div className="text-sm space-y-4">
+                  {/* Reference 1 */}
+                  <div className="relative group p-1">
+                    <p
+                      className="font-semibold"
+                      contentEditable
+                      suppressContentEditableWarning
+                    >
+                      John Smith — Sales Director, Timmerman Industries
+                    </p>
+                    <p
+                      className="text-xs text-gray-600"
+                      contentEditable
+                      suppressContentEditableWarning
+                    >
+                      john.smith@company.com | +1 222 333 4444
+                    </p>
 
-  {/* Reference 1 */}
-  <div className="relative group p-1">
-    <p
-      className="font-semibold"
-      contentEditable
-      suppressContentEditableWarning
-    >
-      John Smith — Sales Director, Timmerman Industries
-    </p>
-    <p
-      className="text-xs text-gray-600"
-      contentEditable
-      suppressContentEditableWarning
-    >
-      john.smith@company.com | +1 222 333 4444
-    </p>
+                    {/* Duplicate / Delete Buttons */}
+                    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
+                      <button
+                        data-action="duplicate"
+                        className="p-1 text-gray-600"
+                      >
+                        <CopyPlus className="w-3 h-3" />
+                      </button>
+                      <button
+                        data-action="delete"
+                        className="p-1 text-gray-600"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </div>
 
-    {/* Duplicate / Delete Buttons */}
-    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
-      <button data-action="duplicate" className="p-1 text-gray-600">
-        <CopyPlus className="w-3 h-3" />
-      </button>
-      <button data-action="delete" className="p-1 text-gray-600">
-        <Trash2 className="w-3 h-3" />
-      </button>
-    </div>
-  </div>
+                  {/* Reference 2 */}
+                  <div className="relative group p-1">
+                    <p
+                      className="font-semibold"
+                      contentEditable
+                      suppressContentEditableWarning
+                    >
+                      Sarah Johnson — Marketing Head, Borcelle Co.
+                    </p>
+                    <p
+                      className="text-xs text-gray-600"
+                      contentEditable
+                      suppressContentEditableWarning
+                    >
+                      sarah.j@borcelle.com | +1 999 888 7777
+                    </p>
 
-  {/* Reference 2 */}
-  <div className="relative group p-1">
-    <p
-      className="font-semibold"
-      contentEditable
-      suppressContentEditableWarning
-    >
-      Sarah Johnson — Marketing Head, Borcelle Co.
-    </p>
-    <p
-      className="text-xs text-gray-600"
-      contentEditable
-      suppressContentEditableWarning
-    >
-      sarah.j@borcelle.com | +1 999 888 7777
-    </p>
-
-    {/* Duplicate / Delete Buttons */}
-    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
-      <button data-action="duplicate" className="p-1 text-gray-600">
-        <CopyPlus className="w-3 h-3" />
-      </button>
-      <button data-action="delete" className="p-1 text-gray-600">
-        <Trash2 className="w-3 h-3" />
-      </button>
-    </div>
-  </div>
-
-</div>
-
+                    {/* Duplicate / Delete Buttons */}
+                    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
+                      <button
+                        data-action="duplicate"
+                        className="p-1 text-gray-600"
+                      >
+                        <CopyPlus className="w-3 h-3" />
+                      </button>
+                      <button
+                        data-action="delete"
+                        className="p-1 text-gray-600"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </section>
             </div>
           </div>
