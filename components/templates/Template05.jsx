@@ -234,8 +234,6 @@ export default function Template05() {
                 className="hidden"
               />
             </div>
-
-
             {/* Contact Section */}
             <div className="pb-8">
               <h2 className="text-lg font-bold mb-4 pb-2 border-b border-slate-600" contentEditable suppressContentEditableWarning>CONTACT</h2>
@@ -661,7 +659,6 @@ export default function Template05() {
                     </ul>
                   </div>
                 </Draggable>
-
                 {/* Job 3 */}
                 <Draggable nodeRef={job3Ref} >
                   <div ref={job3Ref} className="relative group">

@@ -190,7 +190,7 @@ export default function Template10() {
     const certificateRef = useRef(null);
     const skillsRef = useRef(null);
     const languagesRef = useRef(null);
-    const summaryRef = useRef(null);
+    const profileRef = useRef(null);
     const job1Ref = useRef(null);
     const job2Ref = useRef(null);
     const job3Ref = useRef(null);
@@ -486,31 +486,55 @@ export default function Template10() {
             {/* Right Content Area - FIXED: Adjusted padding */}
             <div className="w-2/3 p-8 space-y-6">
               {/* Career Objective */}
-              <div className='group'>
-                <div className='flex items-center gap-2'>
-                  <h3 className="text-xl font-bold text-slate-700 mb-3 border-b-2 border-slate-300 pb-2" contentEditable suppressContentEditableWarning>
-                    PROFILE
-                  </h3>
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    <AISparkle className='mb-4' section="Summary" onGenerate={handleAIGenerate} />
+              <div className="mb-5 section-container relative group" data-section="profile">
+              <div className="flex items-center gap-2 mb-2 relative">
+                <h2
+                  contentEditable
+                  suppressContentEditableWarning
+                  className="text-2xl font-bold text-gray-800 uppercase tracking-wide"
+                >
+                  Profile
+                </h2>
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  <AISparkle section="Profile" onGenerate={handleAIGenerate} />
+                </div>
+              </div>
+
+              {/* Make this section draggable */}
+              <Draggable nodeRef={profileRef}>
+                <div ref={profileRef} className="relative group">
+                  <div>
+                    <p
+                      id="profile-text"
+                      className="text-xs text-gray-700 leading-relaxed"
+                      contentEditable
+                      suppressContentEditableWarning
+                    >
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                      labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation. Lorem ipsum
+                      dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+                      magna aliqua. Ut enim ad minim veniam laboris.
+                    </p>
+                  </div>
+
+                  {/* Hover buttons */}
+                  <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button
+                      data-action="duplicate"
+                      className="text-gray-600 bg-white rounded p-1 shadow-md hover:scale-110 transition-transform"
+                    >
+                      <CopyPlus className="w-3 h-3" />
+                    </button>
+                    <button
+                      data-action="delete"
+                      className="text-gray-600 bg-white rounded p-1 shadow-md hover:scale-110 transition-transform"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
                   </div>
                 </div>
-                <Draggable nodeRef={summaryRef}>
-                  <div ref={summaryRef} data-section-item className="relative group">
-                    <p id='summary-text' className="text-sm text-slate-700 leading-relaxed" contentEditable suppressContentEditableWarning>
-                      I am an ambitious and eager to learning graphic designer. I am seeking a position where I can develop existing design skills, learn new techniques and contribute positively to future and gain valuable professional experience.
-                    </p>
-                    <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button data-action="duplicate" className="text-gray-600 bg-white rounded p-1.5 shadow-md">
-                        <CopyPlus className="w-4 h-4" />
-                      </button>
-                      <button data-action="delete" className="text-gray-600 bg-white rounded p-1.5 shadow-md">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </Draggable>
-              </div>
+              </Draggable>
+            </div>
 
               {/* Experience */}
               <div className="pt-4 section-container" data-section="work-experience">
