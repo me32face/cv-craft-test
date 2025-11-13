@@ -17,7 +17,6 @@ const initialResumeData = {
         { icon: Phone, value: '123-456-7890', label: 'P', breakAll: false },
         { icon: MapPin, value: '123 Anywhere St., Any City', label: 'A', breakAll: false },
     ],
-    welcome: "WELCOME TO MY RESUME",
     profile: "Assists the department head in carrying out digital marketing companies works closely with the marketing head for digital promotions and others. My skills are excellent, and I have a strong commitment to research.",
     objective: "5+ years of experience as a Creative Director. A dynamic and strategic leader known for developing and executing inventive and creative brand-building experiences. Successful in devising and applying new ideas and innovation to build a client's company competitive advantage.",
     workExperience: [
@@ -329,9 +328,6 @@ export default function Template02() {
                     <div ref={headerRef} className="bg-red-50/70 border-b border-gray-300 relative group p-4 -m-4 mb-4">
                         <div className="flex justify-between items-start">
                             <div className='max-w-[70%]'>
-                                <h4 className="text-[10px] font-semibold tracking-widest text-gray-600 mb-1">
-                                    RESUME
-                                </h4>
                                 <h1
                                     className="text-3xl font-bold mb-1 text-gray-800"
                                     contentEditable
@@ -366,15 +362,6 @@ export default function Template02() {
                 {/* 2. WELCOME / PROFILE / OBJECTIVE (Full Width) */}
                 <Draggable nodeRef={welcomeRef} bounds={false}>
                     <div ref={welcomeRef} className="relative group mb-5">
-                        <div className="border-b border-gray-400 pb-1 mb-4">
-                            <h3 className="text-lg font-normal tracking-normal text-gray-800">
-                                <EditableText
-                                    value={contentState.welcome}
-                                    className="font-normal"
-                                    type="span"
-                                />
-                            </h3>
-                        </div>
 
                         {/* Profile Section with AI */}
                         <SectionHeader title="PROFILE" onGenerate={handleAIGenerate} />

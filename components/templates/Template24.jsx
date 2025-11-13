@@ -236,11 +236,11 @@ export default function ProfessionalATSTemplate() {
                 </h3>
               </Draggable>
 
-              <div className="space-y-2 text-xs text-gray-700">
+              <div className="space-y-2 text-xs text-gray-700 mt-4">
                 <div className="flex items-center gap-2 relative">
                   <Phone className="w-3 h-3 text-blue-600" />
-                  <span contentEditable suppressContentEditableWarning>+123-456-7890</span>
-                  <div className="absolute right-0 opacity-0 group-hover:opacity-100 flex gap-1">
+                  <span contentEditable suppressContentEditableWarning className='pb-4'>+123-456-7890</span>
+                  <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
                     <button data-action="duplicate" className="text-gray-600 rounded p-1 bg-white"><CopyPlus className="w-4 h-4" /></button>
                     <button data-action="delete" className="text-gray-600 rounded p-1 bg-white"><Trash2 className="w-4 h-4" /></button>
                   </div>
@@ -248,7 +248,7 @@ export default function ProfessionalATSTemplate() {
 
                 <div className="flex items-center gap-2 relative">
                   <Mail className="w-3 h-3 text-blue-600" />
-                  <span className="break-all" contentEditable suppressContentEditableWarning>hello@reallygreatsite.com</span>
+                  <span className="break-all pb-4" contentEditable suppressContentEditableWarning>hello@reallygreatsite.com</span>
                   <div className="absolute right-0 opacity-0 group-hover:opacity-100 flex gap-1">
                     <button data-action="duplicate" className="text-gray-600 rounded p-1 bg-white"><CopyPlus className="w-4 h-4" /></button>
                     <button data-action="delete" className="text-gray-600 rounded p-1 bg-white"><Trash2 className="w-4 h-4" /></button>
@@ -257,7 +257,7 @@ export default function ProfessionalATSTemplate() {
 
                 <div className="flex items-center gap-2 relative">
                   <MapPin className="w-3 h-3 text-blue-600" />
-                  <span contentEditable suppressContentEditableWarning>123 Anywhere St., Any City</span>
+                  <span contentEditable suppressContentEditableWarning className='pb-4'>123 Anywhere St., Any City</span>
                   <div className="absolute right-0 opacity-0 group-hover:opacity-100 flex gap-1">
                     <button data-action="duplicate" className="text-gray-600 rounded p-1 bg-white"><CopyPlus className="w-4 h-4" /></button>
                     <button data-action="delete" className="text-gray-600 rounded p-1 bg-white"><Trash2 className="w-4 h-4" /></button>
@@ -266,7 +266,7 @@ export default function ProfessionalATSTemplate() {
 
                 <div className="flex items-center gap-2 relative">
                   <Globe className="w-3 h-3 text-blue-600" />
-                  <span className="break-all" contentEditable suppressContentEditableWarning>www.reallygreatsite.com</span>
+                  <span className="break-all pb-4" contentEditable suppressContentEditableWarning>www.reallygreatsite.com</span>
                   <div className="absolute right-0 opacity-0 group-hover:opacity-100 flex gap-1">
                     <button data-action="duplicate" className="text-gray-600 rounded p-1 bg-white"><CopyPlus className="w-4 h-4" /></button>
                     <button data-action="delete" className="text-gray-600 rounded p-1 bg-white"><Trash2 className="w-4 h-4" /></button>
@@ -284,10 +284,10 @@ export default function ProfessionalATSTemplate() {
                   <AISparkle section="Profile" onGenerate={handleAIGenerate} />
                 </div>
               </div>
-              <p id="profile-text" className="text-xs text-gray-700 pt-1 leading-tight bg-white p-3 rounded border border-gray-200" contentEditable suppressContentEditableWarning>
+              <p id="profile-text" className="text-xs text-gray-700 pt-1 leading-tight bg-white p-3 rounded border border-gray-200 pb-4" contentEditable suppressContentEditableWarning>
                 Results-driven Marketing Manager with 8+ years of experience developing and executing successful marketing strategies. Proven track record in driving brand growth and leading high-performing teams.
               </p>
-              <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
+              <div className="absolute right-0 -top-2 opacity-0 group-hover:opacity-100 flex gap-1">
                 <button data-action="duplicate" className="text-gray-600 rounded p-1 bg-white"><CopyPlus className="w-4 h-4" /></button>
                 <button data-action="delete" className="text-gray-600 rounded p-1 bg-white"><Trash2 className="w-4 h-4" /></button>
               </div>
@@ -307,8 +307,8 @@ export default function ProfessionalATSTemplate() {
               <ul className="space-y-2 text-xs">
                 <li className="flex items-center justify-between gap-2 bg-white p-2 rounded border-gray-200 skill-item group">
                   <div className="flex items-center gap-2">
-                    <span className="text-blue-600">•</span>
-                    <span contentEditable suppressContentEditableWarning>Strategic Marketing Planning</span>
+                    <span className="text-blue-600 pb-3.5">•</span>
+                    <span contentEditable suppressContentEditableWarning className='pb-3.5'>Strategic Marketing Planning</span>
                   </div>
                   <div className="opacity-0 group-hover:opacity-100 flex gap-1">
                     <button data-action="duplicate" className="text-gray-600 rounded p-1 bg-white"><CopyPlus className="w-4 h-4" /></button>
@@ -317,8 +317,8 @@ export default function ProfessionalATSTemplate() {
                 </li>
                 <li className="flex items-center justify-between gap-2 bg-white p-2 rounded border border-gray-200 skill-item group">
                   <div className="flex items-center gap-2">
-                    <span className="text-blue-600">•</span>
-                    <span contentEditable suppressContentEditableWarning>Digital Marketing & SEO</span>
+                    <span className="text-blue-600 pb-3.5">•</span>
+                    <span contentEditable suppressContentEditableWarning className='pb-3.5'>Digital Marketing & SEO</span>
                   </div>
                   <div className="opacity-0 group-hover:opacity-100 flex gap-1">
                     <button data-action="duplicate" className="text-gray-600 rounded p-1 bg-white"><CopyPlus className="w-4 h-4" /></button>
@@ -327,8 +327,8 @@ export default function ProfessionalATSTemplate() {
                 </li>
                 <li className="flex items-center justify-between gap-2 bg-white p-2 rounded border border-gray-200 skill-item group">
                   <div className="flex items-center gap-2">
-                    <span className="text-blue-600">•</span>
-                    <span contentEditable suppressContentEditableWarning>Team Leadership</span>
+                    <span className="text-blue-600 pb-3.5">•</span>
+                    <span contentEditable suppressContentEditableWarning className='pb-3.5'>Team Leadership</span>
                   </div>
                   <div className="opacity-0 group-hover:opacity-100 flex gap-1">
                     <button data-action="duplicate" className="text-gray-600 rounded p-1 bg-white"><CopyPlus className="w-4 h-4" /></button>
@@ -341,13 +341,13 @@ export default function ProfessionalATSTemplate() {
             {/* Languages */}
             <div className="mb-2">
               <Draggable nodeRef={languagesRef}>
-                <h4 ref={languagesRef} className="text-sm font-semibold text-blue-800 mb-2 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Languages</h4>
+                <h4 ref={languagesRef} className="text-sm font-semibold text-blue-800 mb-4 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Languages</h4>
               </Draggable>
               <div className="space-y-1 text-xs">
                 <div className="flex justify-between items-center bg-white p-2 rounded border border-gray-200 lang-item group relative">
-                  <span contentEditable suppressContentEditableWarning>English</span>
+                  <span contentEditable suppressContentEditableWarning className='pb-4'>English</span>
                   <div className="flex items-center gap-2">
-                    <span className="text-blue-600" contentEditable suppressContentEditableWarning>Native</span>
+                    <span className="text-blue-600 pb-4" contentEditable suppressContentEditableWarning>Native</span>
                     <div className="opacity-0 group-hover:opacity-100 flex gap-1">
                       <button data-action="duplicate" className="text-gray-600 rounded p-1 bg-white"><CopyPlus className="w-4 h-4" /></button>
                       <button data-action="delete" className="text-gray-600 rounded p-1 bg-white"><Trash2 className="w-4 h-4" /></button>
@@ -356,9 +356,9 @@ export default function ProfessionalATSTemplate() {
                 </div>
 
                 <div className="flex justify-between items-center bg-white p-2 rounded border border-gray-200 lang-item group relative">
-                  <span contentEditable suppressContentEditableWarning>Spanish</span>
+                  <span contentEditable suppressContentEditableWarning className='pb-4'>Spanish</span>
                   <div className="flex items-center gap-2">
-                    <span className="text-blue-600" contentEditable suppressContentEditableWarning>Fluent</span>
+                    <span className="text-blue-600 pb-4" contentEditable suppressContentEditableWarning>Fluent</span>
                     <div className="opacity-0 group-hover:opacity-100 flex gap-1">
                       <button data-action="duplicate" className="text-gray-600 rounded p-1 bg-white"><CopyPlus className="w-4 h-4" /></button>
                       <button data-action="delete" className="text-gray-600 rounded p-1 bg-white"><Trash2 className="w-4 h-4" /></button>
@@ -375,27 +375,27 @@ export default function ProfessionalATSTemplate() {
               <Draggable nodeRef={workExpRef}>
                 <div ref={workExpRef} className="flex items-center gap-2 mb-2">
                   <Briefcase className="w-5 h-5 text-blue-600" />
-                  <h3 className="text-lg font-semibold text-gray-800 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Professional Experience</h3>
+                  <h3 className="text-lg font-semibold text-gray-800 uppercase tracking-wide mb-4" contentEditable suppressContentEditableWarning>Professional Experience</h3>
                 </div>
               </Draggable>
 
               <div className="space-y-4">
                 {/* Job 1 */}
                 <Draggable nodeRef={job1Ref}>
-                  <div ref={job1Ref} className="relative group bg-white p-4 rounded border border-gray-200">
+                  <div ref={job1Ref} className="relative group bg-white p-4 rounded border border-gray-200 pb-7">
                     <div className="flex justify-between items-start mb-2">
                       <div>
                         <h4 className="text-base font-semibold text-gray-800" contentEditable suppressContentEditableWarning>Borcelle Studio</h4>
                         <p className="text-sm text-blue-600" contentEditable suppressContentEditableWarning>Senior Marketing Manager</p>
                       </div>
-                      <span className="text-xs text-gray-500 bg-blue-50 px-2 py-0.5 rounded-full" contentEditable suppressContentEditableWarning>2030 - Present</span>
+                      <span className="text-xs text-gray-500 bg-blue-50 px-2 py-0.5 rounded-full pb-4 mt-4" contentEditable suppressContentEditableWarning>2030 - Present</span>
                     </div>
                     <ul className="space-y-1 text-sm text-gray-700">
                       <li className="flex items-start"><span className="mr-2 text-blue-600">•</span><span contentEditable suppressContentEditableWarning>Develop and execute marketing strategies that increased brand awareness by 45%.</span></li>
                       <li className="flex items-start"><span className="mr-2 text-blue-600">•</span><span contentEditable suppressContentEditableWarning>Lead and mentor a team of 12 marketing professionals.</span></li>
                       <li className="flex items-start"><span className="mr-2 text-blue-600">•</span><span contentEditable suppressContentEditableWarning>Manage annual marketing budget of $2.5M achieving strong ROI.</span></li>
                     </ul>
-                    <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 flex gap-1">
+                    <div className="absolute right-2 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
                       <button data-action="duplicate" className="text-gray-600 rounded p-1 bg-white"><CopyPlus className="w-4 h-4" /></button>
                       <button data-action="delete" className="text-gray-600 rounded p-1 bg-white"><Trash2 className="w-4 h-4" /></button>
                     </div>
@@ -404,19 +404,19 @@ export default function ProfessionalATSTemplate() {
 
                 {/* Job 2 */}
                 <Draggable nodeRef={job2Ref}>
-                  <div ref={job2Ref} className="relative group bg-white p-4 rounded border border-gray-200">
+                  <div ref={job2Ref} className="relative group bg-white p-4 rounded border border-gray-200 pb-7">
                     <div className="flex justify-between items-start mb-2">
                       <div>
                         <h4 className="text-base font-semibold text-gray-800" contentEditable suppressContentEditableWarning>Fauget Studio</h4>
                         <p className="text-sm text-blue-600" contentEditable suppressContentEditableWarning>Marketing Manager</p>
                       </div>
-                      <span className="text-xs text-gray-500 bg-blue-50 px-2 py-0.5 rounded-full" contentEditable suppressContentEditableWarning>2025 - 2029</span>
+                      <span className="text-xs text-gray-500 bg-blue-50 px-2 py-0.5 rounded-full pb-3.5 mt-4" contentEditable suppressContentEditableWarning>2025 - 2029</span>
                     </div>
                     <ul className="space-y-1 text-sm text-gray-700">
                       <li className="flex items-start"><span className="mr-2 text-blue-600">•</span><span contentEditable suppressContentEditableWarning>Implemented data-driven marketing campaigns generating major revenue lifts.</span></li>
                       <li className="flex items-start"><span className="mr-2 text-blue-600">•</span><span contentEditable suppressContentEditableWarning>Improved website traffic and conversion rates through focused strategies.</span></li>
                     </ul>
-                    <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 flex gap-1">
+                    <div className="absolute right-2 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
                       <button data-action="duplicate" className="text-gray-600 rounded p-1 bg-white"><CopyPlus className="w-4 h-4" /></button>
                       <button data-action="delete" className="text-gray-600 rounded p-1 bg-white"><Trash2 className="w-4 h-4" /></button>
                     </div>
@@ -432,7 +432,7 @@ export default function ProfessionalATSTemplate() {
               </Draggable>
 
               <div className="space-y-2 text-sm">
-                <div className="bg-white p-3 rounded border border-gray-200 edu-item group relative">
+                <div className="bg-white p-3 rounded border border-gray-200 edu-item group relative pb-6">
                   <div className="flex justify-between items-start">
                     <div>
                       <p className="font-semibold" contentEditable suppressContentEditableWarning>Master of Business Administration (MBA)</p>
@@ -441,13 +441,13 @@ export default function ProfessionalATSTemplate() {
                     <span className="text-xs text-gray-500" contentEditable suppressContentEditableWarning>2029 - 2031</span>
                   </div>
                   <p className="text-xs text-gray-600 mt-1" contentEditable suppressContentEditableWarning>GPA: 3.8/4.0</p>
-                  <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 flex gap-1">
+                  <div className="absolute right-2 top-8 opacity-0 group-hover:opacity-100 flex gap-1">
                     <button data-action="duplicate" className="text-gray-600 rounded p-1 bg-white"><CopyPlus className="w-4 h-4" /></button>
                     <button data-action="delete" className="text-gray-600 rounded p-1 bg-white"><Trash2 className="w-4 h-4" /></button>
                   </div>
                 </div>
 
-                <div className="bg-white p-3 rounded border border-gray-200 edu-item group relative">
+                <div className="bg-white p-3 rounded border border-gray-200 edu-item group relative pb-6">
                   <div className="flex justify-between items-start">
                     <div>
                       <p className="font-semibold" contentEditable suppressContentEditableWarning>Bachelor of Business Management</p>
@@ -456,7 +456,7 @@ export default function ProfessionalATSTemplate() {
                     <span className="text-xs text-gray-500" contentEditable suppressContentEditableWarning>2025 - 2029</span>
                   </div>
                   <p className="text-xs text-gray-600 mt-1" contentEditable suppressContentEditableWarning>GPA: 3.9/4.0</p>
-                  <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 flex gap-1">
+                  <div className="absolute right-2 top-8 opacity-0 group-hover:opacity-100 flex gap-1">
                     <button data-action="duplicate" className="text-gray-600 rounded p-1 bg-white"><CopyPlus className="w-4 h-4" /></button>
                     <button data-action="delete" className="text-gray-600 rounded p-1 bg-white"><Trash2 className="w-4 h-4" /></button>
                   </div>
@@ -469,8 +469,8 @@ export default function ProfessionalATSTemplate() {
                   <h4 ref={certificateRef} className="text-sm font-semibold text-gray-800 mb-1 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Certifications</h4>
                 </Draggable>
 
-                <div className="space-y-2 text-sm">
-                  <div className="bg-white p-3 rounded border border-gray-200 cert-item group relative">
+                <div className="space-y-2 text-sm pt-4">
+                  <div className="bg-white p-3 rounded border border-gray-200 cert-item group relative pb-6">
                     <div className="flex justify-between items-start">
                       <div>
                         <p className="font-semibold" contentEditable suppressContentEditableWarning>Google Analytics Professional</p>
@@ -478,13 +478,13 @@ export default function ProfessionalATSTemplate() {
                       </div>
                       <span className="text-xs text-blue-600" contentEditable suppressContentEditableWarning>2028</span>
                     </div>
-                    <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 flex gap-1">
+                    <div className="absolute right-2 top-8 opacity-0 group-hover:opacity-100 flex gap-1">
                       <button data-action="duplicate" className="text-gray-600 rounded p-1 bg-white"><CopyPlus className="w-4 h-4" /></button>
                       <button data-action="delete" className="text-gray-600 rounded p-1 bg-white"><Trash2 className="w-4 h-4" /></button>
                     </div>
                   </div>
 
-                  <div className="bg-white p-3 rounded border border-gray-200 cert-item group relative">
+                  <div className="bg-white p-3 rounded border border-gray-200 cert-item group relative pb-6">
                     <div className="flex justify-between items-start">
                       <div>
                         <p className="font-semibold" contentEditable suppressContentEditableWarning>Project Management Professional (PMP)</p>
@@ -492,7 +492,7 @@ export default function ProfessionalATSTemplate() {
                       </div>
                       <span className="text-xs text-blue-600" contentEditable suppressContentEditableWarning>2027</span>
                     </div>
-                    <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 flex gap-1">
+                    <div className="absolute right-2 top-8 opacity-0 group-hover:opacity-100 flex gap-1">
                       <button data-action="duplicate" className="text-gray-600 rounded p-1 bg-white"><CopyPlus className="w-4 h-4" /></button>
                       <button data-action="delete" className="text-gray-600 rounded p-1 bg-white"><Trash2 className="w-4 h-4" /></button>
                     </div>

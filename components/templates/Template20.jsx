@@ -1099,6 +1099,6 @@ const App = () => {
     </DndProvider>
   );
 };
-
+  
 export default App;
 export { globalFormatting, globalFormat };
