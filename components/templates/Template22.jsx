@@ -600,22 +600,32 @@ export default function Template22() {
                 <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b border-gray-300 pb-1 mb-2">
                   Education
                 </h3>
-                <div className="text-sm space-y-1">
-                  <p
-                    contentEditable
-                    suppressContentEditableWarning
-                    className="font-semibold"
-                  >
-                    Bachelor of Commerce (B.Com)
-                  </p>
-                  <p
-                    className="text-xs text-gray-600"
-                    contentEditable
-                    suppressContentEditableWarning
-                  >
-                    Wardiere University — 2015–2018
-                  </p>
-                </div>
+               <div className="relative group p-1">
+    <p
+      contentEditable
+      suppressContentEditableWarning
+      className="font-semibold"
+    >
+      Bachelor of Commerce (B.Com)
+    </p>
+    <p
+      className="text-xs text-gray-600"
+      contentEditable
+      suppressContentEditableWarning
+    >
+      Wardiere University — 2015–2018
+    </p>
+
+    {/* Duplicate / Delete Buttons */}
+    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
+      <button data-action="duplicate" className="p-1 text-gray-600">
+        <CopyPlus className="w-3 h-3" />
+      </button>
+      <button data-action="delete" className="p-1 text-gray-600">
+        <Trash2 className="w-3 h-3" />
+      </button>
+    </div>
+  </div>
               </section>
 
               {/* References */}
@@ -623,40 +633,66 @@ export default function Template22() {
                 <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b border-gray-300 pb-1 mb-2">
                   References
                 </h3>
-                <div className="text-sm space-y-3">
-                  <div>
-                    <p
-                      className="font-semibold"
-                      contentEditable
-                      suppressContentEditableWarning
-                    >
-                      John Smith — Sales Director, Timmerman Industries
-                    </p>
-                    <p
-                      className="text-xs text-gray-600"
-                      contentEditable
-                      suppressContentEditableWarning
-                    >
-                      john.smith@company.com | +1 222 333 4444
-                    </p>
-                  </div>
-                  <div>
-                    <p
-                      className="font-semibold"
-                      contentEditable
-                      suppressContentEditableWarning
-                    >
-                      Sarah Johnson — Marketing Head, Borcelle Co.
-                    </p>
-                    <p
-                      className="text-xs text-gray-600"
-                      contentEditable
-                      suppressContentEditableWarning
-                    >
-                      sarah.j@borcelle.com | +1 999 888 7777
-                    </p>
-                  </div>
-                </div>
+                <div className="text-sm space-y-4">
+
+  {/* Reference 1 */}
+  <div className="relative group p-1">
+    <p
+      className="font-semibold"
+      contentEditable
+      suppressContentEditableWarning
+    >
+      John Smith — Sales Director, Timmerman Industries
+    </p>
+    <p
+      className="text-xs text-gray-600"
+      contentEditable
+      suppressContentEditableWarning
+    >
+      john.smith@company.com | +1 222 333 4444
+    </p>
+
+    {/* Duplicate / Delete Buttons */}
+    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
+      <button data-action="duplicate" className="p-1 text-gray-600">
+        <CopyPlus className="w-3 h-3" />
+      </button>
+      <button data-action="delete" className="p-1 text-gray-600">
+        <Trash2 className="w-3 h-3" />
+      </button>
+    </div>
+  </div>
+
+  {/* Reference 2 */}
+  <div className="relative group p-1">
+    <p
+      className="font-semibold"
+      contentEditable
+      suppressContentEditableWarning
+    >
+      Sarah Johnson — Marketing Head, Borcelle Co.
+    </p>
+    <p
+      className="text-xs text-gray-600"
+      contentEditable
+      suppressContentEditableWarning
+    >
+      sarah.j@borcelle.com | +1 999 888 7777
+    </p>
+
+    {/* Duplicate / Delete Buttons */}
+    <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
+      <button data-action="duplicate" className="p-1 text-gray-600">
+        <CopyPlus className="w-3 h-3" />
+      </button>
+      <button data-action="delete" className="p-1 text-gray-600">
+        <Trash2 className="w-3 h-3" />
+      </button>
+    </div>
+  </div>
+
+</div>
+
               </section>
             </div>
           </div>
