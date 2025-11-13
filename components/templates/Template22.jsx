@@ -385,19 +385,25 @@ export default function Template22() {
               </section>
 
               {/* Skills */}
-              <section className="mb-6 section-container" data-section="skills">
+              <section
+                className="mb-6 section-container group"
+                data-section="skills"
+              >
                 <div className="flex justify-between items-center">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b border-gray-300 pb-1">
                     Skills
                   </h3>
-                  <AISparkle section="skills" onGenerate={handleAIGenerate} />
+
+                  {/* AI Sparkle - only visible on hover */}
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                    <AISparkle section="skills" onGenerate={handleAIGenerate} />
+                  </div>
                 </div>
 
                 <ul
                   id="skills-list"
                   className="text-sm mt-2 list-disc pl-4 space-y-1"
                   onKeyDown={(e) => {
-                    // cleanup empty lis on backspace
                     if (e.key === "Backspace") {
                       const lis = e.currentTarget.querySelectorAll("li");
                       lis.forEach((li) => {
@@ -407,7 +413,7 @@ export default function Template22() {
                   }}
                 >
                   <li className="text-sm relative group flex items-baseline gap-2 leading-snug">
-                    <span className="mr-2">•</span>
+                    <span>•</span>
                     <span contentEditable suppressContentEditableWarning>
                       Client Relationship Building
                     </span>
@@ -416,7 +422,7 @@ export default function Template22() {
                         data-action="duplicate"
                         className="text-gray-600 rounded p-1 shadow-md"
                       >
-                        <CopyPlus className="w-3 h-3 " />
+                        <CopyPlus className="w-3 h-3" />
                       </button>
                       <button
                         data-action="delete"
@@ -426,10 +432,74 @@ export default function Template22() {
                       </button>
                     </div>
                   </li>
+
                   <li className="text-sm flex items-start relative group">
                     <span className="mr-2">•</span>
                     <span contentEditable suppressContentEditableWarning>
                       Target Achievement
+                    </span>
+                    <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                      <button
+                        data-action="duplicate"
+                        className="text-gray-600 rounded p-1 shadow-md"
+                      >
+                        <CopyPlus className="w-3 h-3" />
+                      </button>
+                      <button
+                        data-action="delete"
+                        className="text-gray-600 rounded p-1 shadow-md"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </li>
+
+                  <li className="text-sm flex items-start relative group">
+                    <span className="mr-2">•</span>
+                    <span contentEditable suppressContentEditableWarning>
+                      Negotiation Skills
+                    </span>
+                    <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                      <button
+                        data-action="duplicate"
+                        className="text-gray-600 rounded p-1 shadow-md"
+                      >
+                        <CopyPlus className="w-3 h-3" />
+                      </button>
+                      <button
+                        data-action="delete"
+                        className="text-gray-600 rounded p-1 shadow-md"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </li>
+
+                  <li className="text-sm flex items-start relative group">
+                    <span className="mr-2">•</span>
+                    <span contentEditable suppressContentEditableWarning>
+                      CRM Software Proficiency
+                    </span>
+                    <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                      <button
+                        data-action="duplicate"
+                        className="text-gray-600 rounded p-1 shadow-md"
+                      >
+                        <CopyPlus className="w-3 h-3" />
+                      </button>
+                      <button
+                        data-action="delete"
+                        className="text-gray-600 rounded p-1 shadow-md"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </li>
+
+                  <li className="text-sm flex items-start relative group">
+                    <span className="mr-2">•</span>
+                    <span contentEditable suppressContentEditableWarning>
+                      Market Analysis
                     </span>
                     <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                       <button
@@ -525,6 +595,22 @@ export default function Template22() {
                       </button>
                     </div>
                   </li>
+
+                  <li
+                    className="relative group"
+                    contentEditable
+                    suppressContentEditableWarning
+                  >
+                    Advanced Negotiation Skills — 2019
+                    <div className="absolute right-0 opacity-0 group-hover:opacity-100 flex gap-1">
+                      <button data-action="duplicate" className="p-1">
+                        <CopyPlus className="w-3 h-3" />
+                      </button>
+                      <button data-action="delete" className="p-1">
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </li>
                 </ul>
               </section>
             </div>
@@ -540,7 +626,12 @@ export default function Template22() {
                   <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b border-gray-300 pb-1">
                     Profile
                   </h3>
-                  <AISparkle section="profile" onGenerate={handleAIGenerate} />
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                    <AISparkle
+                      section="profile"
+                      onGenerate={handleAIGenerate}
+                    />
+                  </div>
                 </div>
                 <p
                   id="profile-text"
@@ -623,47 +714,87 @@ export default function Template22() {
                           <Trash2 className="w-3 h-3" />
                         </button>
                       </div>
-                      ``
+                    </li>
+
+                    <li className="flex items-baseline gap-2 leading-snug relative group">
+                      <span className="text-base">•</span>
+                      <span
+                        contentEditable
+                        suppressContentEditableWarning
+                        className="inline-block align-top"
+                      >
+                        Led product presentations and negotiations with clients.
+                      </span>
+                      <div className="absolute right-0 opacity-0 group-hover:opacity-100 flex gap-1">
+                        <button data-action="duplicate" className="p-1">
+                          <CopyPlus className="w-3 h-3" />
+                        </button>
+                        <button data-action="delete" className="p-1">
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
                     </li>
                   </ul>
                 </div>
               </section>
 
               {/* Education */}
-              <section className="mb-6">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b border-gray-300 pb-1 mb-2">
-                  Education
-                </h3>
-                <div className="relative group p-1">
-                  <p
-                    contentEditable
-                    suppressContentEditableWarning
-                    className="font-semibold"
-                  >
-                    Bachelor of Commerce (B.Com)
-                  </p>
-                  <p
-                    className="text-xs text-gray-600"
-                    contentEditable
-                    suppressContentEditableWarning
-                  >
-                    Wardiere University — 2015–2018
-                  </p>
+            <section className="mb-6">
+  <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b border-gray-300 pb-1 mb-2">
+    Education
+  </h3>
 
-                  {/* Duplicate / Delete Buttons */}
-              <div className="absolute -right-6 top-1 opacity-0 group-hover:opacity-100 flex gap-1">
-                    <button
-                      data-action="duplicate"
-                      className="p-1 text-gray-600"
-                    >
-                      <CopyPlus className="w-3 h-3" />
-                    </button>
-                    <button data-action="delete" className="p-1 text-gray-600">
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </div>
-                </div>
-              </section>
+  {/* --- Education Item 1 --- */}
+  <div className="relative group p-1 mb-3">
+    <p contentEditable suppressContentEditableWarning className="font-semibold">
+      Bachelor of Commerce (B.Com)
+    </p>
+
+    <p
+      className="text-xs text-gray-600"
+      contentEditable
+      suppressContentEditableWarning
+    >
+      Wardiere University — 2015–2018
+    </p>
+
+    {/* Duplicate / Delete Buttons */}
+    <div className="absolute -right-6 top-1 opacity-0 group-hover:opacity-100 flex gap-1 transition-opacity">
+      <button data-action="duplicate" className="p-1 text-gray-600">
+        <CopyPlus className="w-3 h-3" />
+      </button>
+      <button data-action="delete" className="p-1 text-gray-600">
+        <Trash2 className="w-3 h-3" />
+      </button>
+    </div>
+  </div>
+
+  {/* --- Education Item 2 --- */}
+  <div className="relative group p-1">
+    <p contentEditable suppressContentEditableWarning className="font-semibold">
+      Diploma in Sales Management
+    </p>
+
+    <p
+      className="text-xs text-gray-600"
+      contentEditable
+      suppressContentEditableWarning
+    >
+      Springfield College — 2019
+    </p>
+
+    {/* Duplicate / Delete Buttons */}
+    <div className="absolute -right-6 top-1 opacity-0 group-hover:opacity-100 flex gap-1 transition-opacity">
+      <button data-action="duplicate" className="p-1 text-gray-600">
+        <CopyPlus className="w-3 h-3" />
+      </button>
+      <button data-action="delete" className="p-1 text-gray-600">
+        <Trash2 className="w-3 h-3" />
+      </button>
+    </div>
+  </div>
+</section>
+
 
               {/* References */}
               <section>
