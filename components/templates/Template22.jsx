@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { CopyPlus, Trash2, User, Briefcase, GraduationCap } from "lucide-react";
 import Draggable from "react-draggable";
 
+
 import { usePDF } from "@/contexts/PDFContext";
 import AISparkle from "../AISparkle";
 import { geminiService } from "../../lib/gemini";
@@ -11,9 +12,11 @@ import { useUndoRedo } from "../../contexts/UndoRedoContext";
 
 export default function Template22() {
   // --- State ---
-  const [profileImage, setProfileImage] = useState(null);
+const [profileImage, setProfileImage] = useState("/templateprofile/template22profile.jpg");
   const [contentState, setContentState] = useState({});
   const { saveState } = useUndoRedo();
+  
+
 
   // Refs
   const cvRef = useRef(null);
@@ -29,23 +32,13 @@ export default function Template22() {
     if (cvRef.current) await downloadPDF(cvRef.current, "Salesman_CV.pdf");
   }
 
-  const handleImageUpload = (event) => {
-    const file = event?.target?.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      // save previous state, then update
-      saveState({ profileImage, contentState });
-      setProfileImage(e.target.result);
-      // also save new state
-      if (cvRef.current) {
-        const html = cvRef.current.innerHTML;
-        setContentState({ html });
-        saveState({ profileImage: e.target.result, contentState: { html } });
-      }
-    };
-    reader.readAsDataURL(file);
-  };
+ const handleImageUpload = (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  const imageUrl = URL.createObjectURL(file);
+  setProfileImage(imageUrl);
+};
 
   // ---------------- Button actions (duplicate/delete) ----------------
   const handleButtonClick = useCallback(
@@ -309,46 +302,46 @@ export default function Template22() {
           onKeyDown={handleListKeyDown}
         >
           {/* Header */}
-          <div className="relative mb-8">
-            <div className="flex items-center bg-[#e8eef4] rounded-r-full p-6 w-[620px] shadow-sm">
-              <div
-                className="relative w-32 h-32 rounded-full overflow-hidden -ml-16 bg-white border-4 border-white shadow-md cursor-pointer"
-                onClick={() =>
-                  document.getElementById("profileImageInput").click()
-                }
-              >
-                <img
-                  src={"/templateprofile/template22profile.jpg"}
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                />
-                <input
-                  id="profileImageInput"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                />
-              </div>
+         <div className="relative mb-8">
+  <div className="flex items-center bg-[#e8eef4] rounded-r-full p-6 w-[620px] shadow-sm">
 
-              <div className="ml-8">
-                <h1
-                  className="text-4xl font-bold text-gray-800 tracking-wide"
-                  contentEditable
-                  suppressContentEditableWarning
-                >
-                  DONNA STROUPE
-                </h1>
-                <p
-                  className="text-lg text-gray-600 font-medium mt-1"
-                  contentEditable
-                  suppressContentEditableWarning
-                >
-                  Professional Sales Executive
-                </p>
-              </div>
-            </div>
-          </div>
+    <div
+      className="relative w-32 h-32 rounded-full overflow-hidden -ml-16 bg-white border-4 border-white shadow-md cursor-pointer"
+      onClick={() => document.getElementById("profileImageInput").click()}
+    >
+      <img
+        src={profileImage}
+        alt="Profile"
+        className="w-full h-full object-cover"
+      />
+
+      <input
+        id="profileImageInput"
+        type="file"
+        accept="image/*"
+        onChange={handleImageUpload}
+        className="hidden"
+      />
+    </div>
+
+    <div className="ml-8">
+      <h1
+        className="text-4xl font-bold text-gray-800 tracking-wide"
+        contentEditable
+        suppressContentEditableWarning
+      >
+        DONNA STROUPE
+      </h1>
+      <p
+        className="text-lg text-gray-600 font-medium mt-1"
+        contentEditable
+        suppressContentEditableWarning
+      >
+        Professional Sales Executive
+      </p>
+    </div>
+  </div>
+</div>
 
           {/* Content */}
           <div className="grid grid-cols-[45%_55%] gap-6 text-gray-800 ">
