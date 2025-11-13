@@ -83,10 +83,10 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
         // If backend returns token, store it
         if (data.token) {
           localStorage.setItem("token", data.token);
-          // localStorage.setItem("user", JSON.stringify(data.user));
+          document.cookie = `token=${data.token}; path=/; max-age=86400`;
         }
 
-        // Redirect to login page or dashboard
+        // Redirect to home
         window.location.href = "/"
       } else {
         setToastMessage(data.message);
@@ -211,6 +211,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
                           if (data.token) {
                             localStorage.setItem("token", data.token);
+                            document.cookie = `token=${data.token}; path=/; max-age=86400`;
                             setToastMessage("Logged in with Google!");
                             setShowToast(true);
                             window.location.href = "/";
