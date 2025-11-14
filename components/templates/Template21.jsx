@@ -1085,11 +1085,6 @@ const App = () => {
             </div>
           </div>
         </div>
-        
-        {/* Instructions */}
-        <div className="mt-3 text-center text-xs text-gray-600 bg-white/80 backdrop-blur-sm rounded-full px-3 py-1">
-          💡 <strong>Perfect Fit:</strong> All content fits within A4 page • Click any text to edit
-        </div>
       </div>
     </div>
   );
