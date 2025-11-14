@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Phone, Mail, MapPin, Circle, CopyPlus, Trash2 } from 'lucide-react';
-import Draggable from "react-draggable";
 
 import { useUndoRedo } from '../../contexts/UndoRedoContext';
 import AISparkle from '../AISparkle';
@@ -14,16 +13,6 @@ export default function Template04() {
 
   const cvRef = useRef(null);
   const editorContainerRef = useRef(null);
-  const summaryRef = useRef(null);
-  const expertiseRef = useRef(null);
-  const contactRef = useRef(null);
-  const educationRef = useRef(null);
-  const languageRef = useRef(null);
-  const job1Ref = useRef(null);
-  const job2Ref = useRef(null);
-  const job3Ref = useRef(null);
-  const ref1Ref = useRef(null);
-  const ref2Ref = useRef(null);
 
   const handleButtonClick = useCallback((e) => {
     const button = e.target.closest('button');
@@ -35,43 +24,10 @@ export default function Template04() {
     if (!section) return;
 
     if (action === 'duplicate') {
-      try {
-        const draggableParent = section.parentElement;
-        if (draggableParent && draggableParent.classList.contains('react-draggable')) {
-          const outerDraggable = draggableParent.parentElement;
-          if (outerDraggable && outerDraggable.parentNode && document.contains(outerDraggable)) {
-            const clone = outerDraggable.cloneNode(true);
-            if (outerDraggable.nextSibling) {
-              outerDraggable.parentNode.insertBefore(clone, outerDraggable.nextSibling);
-            } else {
-              outerDraggable.parentNode.appendChild(clone);
-            }
-          }
-        } else if (section.parentNode && document.contains(section)) {
-          const clone = section.cloneNode(true);
-          if (section.nextSibling) {
-            section.parentNode.insertBefore(clone, section.nextSibling);
-          } else {
-            section.parentNode.appendChild(clone);
-          }
-        }
-      } catch (error) {
-        // Duplication failed, ignore
-      }
+      const clone = section.cloneNode(true);
+      section.parentNode.insertBefore(clone, section.nextSibling);
     } else if (action === 'delete') {
-      try {
-        const draggableParent = section.parentElement;
-        if (draggableParent && draggableParent.classList.contains('react-draggable')) {
-          const grandParent = draggableParent.parentElement;
-          if (grandParent && document.contains(grandParent)) {
-            grandParent.remove();
-          }
-        } else if (document.contains(section)) {
-          section.remove();
-        }
-      } catch (error) {
-        // Element already removed
-      }
+      section.remove();
     }
   }, []);
 
@@ -232,8 +188,7 @@ export default function Template04() {
             {/* Contact Section */}
             <div className="mb-8">
               <h2 className="text-xl font-bold mb-4 pb-2 border-b border-gray-500">Contact</h2>
-              <Draggable nodeRef={contactRef}>
-                <div ref={contactRef} data-section-item className="space-y-3 relative group">
+                <div data-section-item className="space-y-3 relative group">
                   <div>
                     <h3 className="text-xs font-bold mb-1">Phone</h3>
                     <p className="text-xs" contentEditable suppressContentEditableWarning>123-456-7890</p>
@@ -255,14 +210,12 @@ export default function Template04() {
                     </button>
                   </div>
                 </div>
-              </Draggable>
             </div>
 
             {/* Education Section */}
             <div className="mb-8">
               <h2 className="text-xl font-bold mb-4 pb-2 border-b border-gray-500">Education</h2>
-              <Draggable nodeRef={educationRef}>
-                <div ref={educationRef} data-section-item className="space-y-4 relative group">
+                <div data-section-item className="space-y-4 relative group">
                   <div>
                     <p className="text-xs font-bold mb-1" contentEditable suppressContentEditableWarning>2020 - 2023</p>
                     <p className="text-xs mb-2" contentEditable suppressContentEditableWarning>
@@ -286,7 +239,6 @@ export default function Template04() {
                     </button>
                   </div>
                 </div>
-              </Draggable>
             </div>
 
             {/* Expertise Section */}
@@ -376,8 +328,7 @@ export default function Template04() {
             {/* Language Section */}
             <div>
               <h2 className="text-xl font-bold mb-4 pb-2 border-b border-gray-500">Language</h2>
-              <Draggable nodeRef={languageRef}>
-                <div ref={languageRef} data-section-item className="space-y-2 text-xs relative group">
+                <div data-section-item className="space-y-2 text-xs relative group">
                   <p contentEditable suppressContentEditableWarning>English</p>
                   <p contentEditable suppressContentEditableWarning>Spanish</p>
                   <div className="absolute -right-4 -top-12 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
@@ -389,7 +340,6 @@ export default function Template04() {
                     </button>
                   </div>
                 </div>
-              </Draggable>
             </div>
           </div>
 
@@ -409,8 +359,7 @@ export default function Template04() {
                 </div>
 
               </div>
-              <Draggable nodeRef={summaryRef}>
-                <div ref={summaryRef} data-section-item className="relative group">
+                <div data-section-item className="relative group">
                   <p id="summary-text" className="text-xs text-gray-700 leading-relaxed" contentEditable suppressContentEditableWarning>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et amet varius nec, rhon pharetra leo. Etiam nec molestie magna. Cras, molestie libero leo, Bibendum
                   </p>
@@ -424,7 +373,6 @@ export default function Template04() {
                     </button>
                   </div>
                 </div>
-              </Draggable>
             </div>
 
             {/* Experience Section */}
@@ -432,8 +380,7 @@ export default function Template04() {
               <h2 className="text-2xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-gray-300">Experience</h2>
               <div className="space-y-6">
                 {/* Job 1 */}
-                <Draggable nodeRef={job1Ref}>
-                  <div ref={job1Ref} data-section-item className="flex gap-3 relative group">
+                  <div data-section-item className="flex gap-3 relative group">
                     <div className="flex-shrink-0 mt-1">
                       <span className="text-gray-800">•</span>
                     </div>
@@ -462,11 +409,9 @@ export default function Template04() {
                       </button>
                     </div>
                   </div>
-                </Draggable>
 
                 {/* Job 2 */}
-                <Draggable nodeRef={job2Ref}>
-                  <div ref={job2Ref} data-section-item className="flex gap-3 relative group">
+                  <div data-section-item className="flex gap-3 relative group">
                     <div className="flex-shrink-0 mt-1">
                       <span className="text-gray-800">•</span>
                     </div>
@@ -495,11 +440,9 @@ export default function Template04() {
                       </button>
                     </div>
                   </div>
-                </Draggable>
 
                 {/* Job 3 */}
-                <Draggable nodeRef={job3Ref}>
-                  <div ref={job3Ref} data-section-item className="flex gap-3 relative group">
+                  <div data-section-item className="flex gap-3 relative group">
                     <div className="flex-shrink-0 mt-1">
                       <span className="text-gray-800">•</span>
                     </div>
@@ -528,7 +471,6 @@ export default function Template04() {
                       </button>
                     </div>
                   </div>
-                </Draggable>
               </div>
             </div>
 
@@ -537,8 +479,7 @@ export default function Template04() {
               <h2 className="text-2xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-gray-300">Reference</h2>
               <div className="grid grid-cols-2 gap-6">
                 {/* Reference 1 */}
-                <Draggable nodeRef={ref1Ref}>
-                  <div ref={ref1Ref} data-section-item className="relative group">
+                  <div data-section-item className="relative group">
                     <h3 className="text-sm font-bold text-gray-800 mb-1" contentEditable suppressContentEditableWarning>Harumi Kobayashi</h3>
                     <p className="text-xs text-gray-600 mb-2" contentEditable suppressContentEditableWarning>Wardiere Inc. / CEO</p>
                     <div className="text-xs text-gray-600 space-y-1">
@@ -558,11 +499,9 @@ export default function Template04() {
                       </button>
                     </div>
                   </div>
-                </Draggable>
 
                 {/* Reference 2 */}
-                <Draggable nodeRef={ref2Ref}>
-                  <div ref={ref2Ref} data-section-item className="relative group">
+                  <div data-section-item className="relative group">
                     <h3 className="text-sm font-bold text-gray-800 mb-1" contentEditable suppressContentEditableWarning>Bailey Dupont</h3>
                     <p className="text-xs text-gray-600 mb-2" contentEditable suppressContentEditableWarning>Wardiere Inc. / CEO</p>
                     <div className="text-xs text-gray-600 space-y-1">
@@ -582,7 +521,6 @@ export default function Template04() {
                       </button>
                     </div>
                   </div>
-                </Draggable>
               </div>
             </div>
           </div>

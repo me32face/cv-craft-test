@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Phone, Mail, MapPin, Globe, Briefcase,User, GraduationCap, CopyPlus, Trash2 } from 'lucide-react';
-import Draggable from "react-draggable";
 
 import { useUndoRedo } from '../../contexts/UndoRedoContext';
 import AISparkle from '../AISparkle';
@@ -107,22 +106,10 @@ export default function Template01() {
     if (!section) return;
 
     if (action === 'duplicate') {
-      const draggableParent = section.parentElement;
-      if (draggableParent && draggableParent.classList.contains('react-draggable')) {
-        const outerDraggable = draggableParent.parentElement;
-        const clone = outerDraggable.cloneNode(true);
-        outerDraggable.parentNode.insertBefore(clone, outerDraggable.nextSibling);
-      } else {
-        const clone = section.cloneNode(true);
-        section.parentNode.insertBefore(clone, section.nextSibling);
-      }
+      const clone = section.cloneNode(true);
+      section.parentNode.insertBefore(clone, section.nextSibling);
     } else if (action === 'delete') {
-      const draggableParent = section.parentElement;
-      if (draggableParent && draggableParent.classList.contains('react-draggable')) {
-        draggableParent.parentElement.remove();
-      } else {
-        section.remove();
-      }
+      section.remove();
     }
   }, []);
 
@@ -297,10 +284,9 @@ export default function Template01() {
 
           {/* Contact Section */}
           <div className="mb-6">
-            <Draggable nodeRef={contactRef} >
-              <h3 ref={contactRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Contact</h3>
-            </Draggable>
-            <Draggable nodeRef={contactContentRef} >
+              <h3  className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Contact</h3>
+        
+         
               <div
                 ref={contactContentRef}
                 className="space-y-2 relative group"
@@ -358,15 +344,14 @@ export default function Template01() {
                   </button>
                 </div>
               </div>
-            </Draggable>
+      
           </div>
 
           {/* Skills Section */}
           <div className="mb-6 section-container" data-section="skills">
             <div className="relative flex gap-2  group">
-              <Draggable nodeRef={skillsRef}>
-                <h3 ref={skillsRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Skills</h3>
-              </Draggable>
+                <h3  className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Skills</h3>
+       
               <div className="opacity-0 group-hover:opacity-100 transition-opacity ">
                 <AISparkle className='mt-1' section="Skills" onGenerate={handleAIGenerate} />
               </div>
@@ -483,9 +468,7 @@ export default function Template01() {
 
           {/* Languages Section */}
           <div className="mb-6">
-            <Draggable nodeRef={languagesRef}>
               <h3 ref={languagesRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Languages</h3>
-            </Draggable>
             <ul className="space-y-1.5 text-gray-700" onKeyDown={(e) => {
               if (e.key === 'Backspace') {
                 const lis = e.currentTarget.querySelectorAll('li');
@@ -550,11 +533,8 @@ export default function Template01() {
 
           {/* Reference Section */}
           <div>
-            <Draggable nodeRef={referenceRef} >
-              <h3 ref={referenceRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Reference</h3>
-            </Draggable>
-            <Draggable nodeRef={referenceContentRef} >
-              <div ref={referenceContentRef} className="text-xs text-gray-700 relative group">
+              <h3  className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Reference</h3>
+              <div  className="text-xs text-gray-700 relative group">
                 <p className="font-semibold mb-1" contentEditable suppressContentEditableWarning>Estelle Darcy</p>
                 <p className="text-gray-600 mb-1" contentEditable suppressContentEditableWarning>Wardiere Inc. / CTO</p>
                 <p className="text-gray-600" contentEditable suppressContentEditableWarning>Phone: 123-456-7890</p>
@@ -568,16 +548,12 @@ export default function Template01() {
                   </button>
                 </div>
               </div>
-            </Draggable>
           </div>
 
           {/* Certificate Section */}
           <div className='mt-5'>
-            <Draggable nodeRef={certificateRef} >
-              <h3 ref={certificateRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Certificate</h3>
-            </Draggable>
-            <Draggable nodeRef={certificateContentRef} >
-              <div ref={certificateContentRef} className="text-xs text-gray-700 relative group">
+              <h3  className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Certificate</h3>
+              <div className="text-xs text-gray-700 relative group">
                 <p className="font-semibold mb-1" contentEditable suppressContentEditableWarning>Project mananagement</p>
                 <p className="text-gray-600 mb-1" contentEditable suppressContentEditableWarning>Project mananagement Institute</p>
                 <p className="font-semibold" contentEditable suppressContentEditableWarning>Risk Management and Mitigation | 2028</p>
@@ -591,7 +567,6 @@ export default function Template01() {
                   </button>
                 </div>
               </div>
-            </Draggable>
           </div>
         </div>
 
@@ -637,19 +612,16 @@ export default function Template01() {
 
             {/* Work Experience Section */}
             <div className="pt-4 section-container" data-section="work-experience">
-              <Draggable nodeRef={workExpRef} >
-                <div ref={workExpRef} className="flex items-center gap-2 mb-2 relative">
+                <div  className="flex items-center gap-2 mb-2 relative">
                   <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center flex-shrink-0">
                     <Briefcase className="w-3 h-3 text-white" />
                   </div>
                   <h2 contentEditable suppressContentEditableWarning className="text-sm font-bold text-gray-800 uppercase tracking-wide">Work Experience</h2>
                   {/* <AISparkle section="Work Experience" onGenerate={handleAIGenerate} /> */}
                 </div>
-              </Draggable>
               <div className="pl-8 border-l-2 border-gray-300 ml-3 space-y-4">
                 {/* Job 1 */}
-                <Draggable nodeRef={job1Ref} >
-                  <div ref={job1Ref} className="relative group">
+                  <div  className="relative group">
                     <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                       <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
                         <CopyPlus className="w-4 h-4" />
@@ -704,11 +676,9 @@ export default function Template01() {
                       </li>
                     </ul>
                   </div>
-                </Draggable>
 
                 {/* Job 2 */}
-                <Draggable nodeRef={job2Ref} bounds={false}>
-                  <div ref={job2Ref} className="relative group">
+                  <div className="relative group">
                     <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                       <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
                         <CopyPlus className="w-4 h-4" />
@@ -751,11 +721,9 @@ export default function Template01() {
                       </li>
                     </ul>
                   </div>
-                </Draggable>
 
                 {/* Job 3 */}
-                <Draggable nodeRef={job3Ref} bounds={false}>
-                  <div ref={job3Ref} className="relative group">
+                  <div  className="relative group">
                     <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                       <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
                         <CopyPlus className="w-4 h-4" />
@@ -798,13 +766,11 @@ export default function Template01() {
                       </li>
                     </ul>
                   </div>
-                </Draggable>
               </div>
             </div>
 
             {/* Education Section */}
-            <Draggable nodeRef={educationRef} bounds={false}>
-              <div ref={educationRef} className='mt-8 ' >
+              <div  className='mt-8 ' >
                 <div className="flex items-center gap-2 mb-2 ">
                   <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center flex-shrink-0">
                     <GraduationCap className="w-3 h-3 text-white" />
@@ -872,7 +838,6 @@ export default function Template01() {
                   </div>
                 </div>
               </div>
-            </Draggable>
           </div>
         </div>
       </div>

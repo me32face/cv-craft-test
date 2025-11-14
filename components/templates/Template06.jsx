@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { MapPin, Phone, Mail, CopyPlus, Trash2 } from 'lucide-react';
-import Draggable from "react-draggable";
 import { useUndoRedo } from '../../contexts/UndoRedoContext';
 import AISparkle from '../AISparkle';
 import { geminiService } from '../../lib/gemini';
@@ -14,13 +13,6 @@ export default function Template06() {
 
   const cvRef = useRef(null);
   const editorContainerRef = useRef(null);
-  const profileRef = useRef(null);
-  const hardSkillsRef = useRef(null);
-  const techSkillsRef = useRef(null);
-  const edu1Ref = useRef(null);
-  const edu2Ref = useRef(null);
-  const langRef = useRef(null);
-  const certRef = useRef(null);
 
   const handleButtonClick = useCallback((e) => {
     const button = e.target.closest('button');
@@ -214,8 +206,7 @@ export default function Template06() {
         <div className="w-[50%] h-1 bg-orange-500 mb-6 ml-auto"></div>
 
         {/* Profile Summary */}
-        <Draggable nodeRef={profileRef}>
-        <div ref={profileRef} className="mb-6 relative group">
+        <div className="mb-6 relative group">
           <div className="flex items-center gap-2 mb-2">
             <div className="opacity-0 group-hover:opacity-100 transition-opacity">
               <AISparkle section="Profile" onGenerate={handleAIGenerate} />
@@ -233,7 +224,6 @@ export default function Template06() {
             </button>
           </div>
         </div>
-        </Draggable>
 
         {/* Work Experience Section */}
         <div className="mb-6">
@@ -329,8 +319,7 @@ export default function Template06() {
           
           <div className="grid grid-cols-2 gap-6">
             {/* Hard Skills */}
-            <Draggable nodeRef={hardSkillsRef} cancel="[contentEditable]">
-            <div ref={hardSkillsRef} className="relative group cursor-move">
+            <div className="relative group">
               <h3 className="text-sm font-semibold text-gray-800 mb-2">Hard Skills</h3>
               <ul className="hard-skills-list space-y-1 text-xs text-gray-700">
                 <li className="flex items-start gap-2 relative group">
@@ -391,11 +380,9 @@ export default function Template06() {
                 </button>
               </div>
             </div>
-            </Draggable>
 
             {/* Technical Skills */}
-            <Draggable nodeRef={techSkillsRef} cancel="[contentEditable]">
-            <div ref={techSkillsRef} className="relative group cursor-move">
+            <div className="relative group">
               <h3 className="text-sm font-semibold text-gray-800 mb-2">Technical Skills</h3>
               <ul className="tech-skills-list space-y-1 text-xs text-gray-700">
                 <li className="flex items-start gap-2 relative group">
@@ -456,7 +443,6 @@ export default function Template06() {
                 </button>
               </div>
             </div>
-            </Draggable>
           </div>
         </div>
 
@@ -464,8 +450,7 @@ export default function Template06() {
         <div className="mb-6">
           <h2 className="text-base font-bold text-orange-500 mb-3 uppercase tracking-wide">Education</h2>
           
-          <Draggable nodeRef={edu1Ref}>
-          <div ref={edu1Ref} className="flex justify-between items-start relative group">
+          <div className="flex justify-between items-start relative group">
             <div>
               <h3 className="text-sm font-bold text-gray-800" contentEditable suppressContentEditableWarning>
                 Bachelor of Mechanical Engineering
@@ -486,9 +471,7 @@ export default function Template06() {
               </button>
             </div>
           </div>
-          </Draggable>
-          <Draggable nodeRef={edu2Ref}>
-          <div ref={edu2Ref} className="flex justify-between items-start mt-4 relative group">
+          <div className="flex justify-between items-start mt-4 relative group">
             <div>
               <h3 className="text-sm font-bold text-gray-800" contentEditable suppressContentEditableWarning>
                 Bachelor of Mechanical Engineering
@@ -509,7 +492,6 @@ export default function Template06() {
               </button>
             </div>
           </div>
-          </Draggable>
         </div>
         
 
@@ -519,8 +501,7 @@ export default function Template06() {
           
           <div className="grid grid-cols-2 gap-6">
             {/* Language */}
-            <Draggable nodeRef={langRef}>
-            <div ref={langRef} className="relative group">
+            <div className="relative group">
               <h3 className="text-sm font-semibold text-gray-800 mb-2">Language</h3>
               <ul className="space-y-1 text-xs text-gray-700">
                 <li className="flex items-start gap-2 relative group">
@@ -557,11 +538,9 @@ export default function Template06() {
                 </button>
               </div>
             </div>
-            </Draggable>
 
             {/* Certifications & Memberships */}
-            <Draggable nodeRef={certRef}>
-            <div ref={certRef} className="relative group">
+            <div className="relative group">
               <h3 className="text-sm font-semibold text-gray-800 mb-2">Certifications & Memberships</h3>
               <ul className="space-y-1 text-xs text-gray-700">
                 <li className="flex items-start gap-2">
@@ -582,7 +561,6 @@ export default function Template06() {
                 </button>
               </div>
             </div>
-            </Draggable>
           </div>
         </div>
       </div>
