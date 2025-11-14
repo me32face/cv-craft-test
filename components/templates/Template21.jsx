@@ -79,6 +79,262 @@ const initialResumeData = {
   ]
 };
 
+// helper: clean and normalize tokens
+const cleanToken = (s) => {
+  if (!s || typeof s !== 'string') return '';
+  // remove common bullet/number prefixes like "1.", "1)", "- ", "• ", "* "
+  const cleaned = s
+    .replace(/^#{1,6}\s*/, '')            // remove markdown heading markers
+    .replace(/^\s*[-*•·]+\s*/, '')        // bullets e.g. "- " or "• "
+    .replace(/^\s*\d+[\.\)\-]\s*/, '')    // numbered lists e.g. "1. " or "2) "
+    .replace(/^[A-Za-z]\.[\s]*/, '')      // "a. " etc.
+    .replace(/^[\u2022\u2023\u25E6\u2043\u2219]\s*/, '') // other bullet chars
+    .replace(/\s+/g, ' ')                 // collapse whitespace
+    .trim();
+  return cleaned;
+};
+
+// tiny utility: is this candidate likely a real skill/competency?
+const isLikelySkill = (text) => {
+  if (!text || typeof text !== 'string') return false;
+  const t = text.trim();
+  if (t.length === 0) return false;
+
+  // Too long sentence-ish fragments are not skills
+  if (t.length > 80) return false;
+
+  // token count: prefer short phrases 1..5 words (1-4 is ideal)
+  const words = t.split(/\s+/).filter(Boolean);
+  if (words.length > 5) return false;
+
+  // Reject things that look like intro sentences or contain unwanted keywords
+  const lower = t.toLowerCase();
+  const badKeywords = [
+    'this', 'document', 'outlin', 'expected', 'essential', 'include', 'includes', 'is', 'are',
+    'responsible', 'ability to', 'proficient in', 'experience in', 'years', 'work in', 'this role'
+  ];
+  for (const k of badKeywords) {
+    if (lower.includes(k)) return false;
+  }
+
+  // Reject if it has verb-like words in sentence structure (simple heuristic)
+  const sentenceVerbs = ['is', 'are', 'includes', 'involves', 'developed', 'develop', 'manage', 'manages', 'expected'];
+  for (const v of sentenceVerbs) {
+    if (new RegExp(`\\b${v}\\b`, 'i').test(lower)) return false;
+  }
+
+  // Accept if it looks like a phrase (contains letters, maybe numbers, short)
+  // Also reject if it's basically a single stopword
+  const stopwords = new Set(['and','or','the','a','an','for','of','in','on','to','with']);
+  if (words.length === 1 && stopwords.has(words[0].toLowerCase())) return false;
+
+  // Looks ok
+  return true;
+};
+
+// Cleans AI output intended as a "professional summary".
+function cleanSummaryFromAI(raw) {
+  if (!raw || typeof raw !== 'string') return '';
+
+  // Normalize whitespace
+  let t = raw.replace(/\r\n/g, '\n').replace(/\t/g, ' ').trim();
+
+  // Remove HTML tags if any
+  t = t.replace(/<[^>]+>/g, ' ');
+
+  // Remove markdown headings and list markers
+  t = t.replace(/^#{1,6}\s*/gm, '')
+       .replace(/^\s*[-*•·]+\s*/gm, '')
+       .replace(/^\s*\d+[\.\)\-]\s*/gm, '');
+
+  // Remove common assistant preface/housekeeping lines (case-insensitive)
+  const prefacePatterns = [
+    /^ok(?:ay)?[,!\.\s]*/i,
+    /^sure[,!\.\s]*/i,
+    /^to make it truly effective[,:\s]*/i,
+    /^to help you[,:\s]*/i,
+    /^i need (a little|more) /i,
+    /^(if you|please) (could|can) /i,
+    /^i can provide/i,
+    /^here (are|is)/i,
+    /^below (are|is)/i,
+    /^proposed/i,
+    /^let'?s /i,
+    /^do you want/i,
+    /^what kind of/i
+  ];
+  t = t.split('\n')
+       .map(line => line.trim())
+       .filter(line => {
+         if (!line) return false;
+         for (const re of prefacePatterns) {
+           if (re.test(line)) return false;
+         }
+         return true;
+       })
+       .join('\n');
+
+  // Break into paragraphs (double-newline or single newline blocks)
+  const paragraphs = t.split(/\n{1,2}/).map(p => p.trim()).filter(Boolean);
+
+  // Scoring function for paragraphs: prefer medium-length descriptive paragraphs without questions/asks
+  const scoreParagraph = (p) => {
+    const len = p.length;
+    if (len < 50) return 0;           // too short
+    if (len > 800) return 0;          // too long
+    const lower = p.toLowerCase();
+
+    // penalize paragraphs that clearly are questions or requests
+    const negative = ['what', 'which', 'could you', 'please provide', 'i need', 'do you', 'can you', 'would you', 'more context', 'context about'];
+    for (const n of negative) if (lower.includes(n)) return 0;
+
+    // prefer one that is sentence-like (contains period or commas) and not a list
+    let score = 1;
+    if (/[.?!]/.test(p)) score += 2;
+    if (/,/.test(p)) score += 1;
+    if (/[#:]\s*$/.test(p)) score = 0;
+    if (len >= 80 && len <= 400) score += 2;
+    return score;
+  };
+
+  // choose the best paragraph by score
+  let best = '';
+  let bestScore = -1;
+  for (const p of paragraphs) {
+    const s = scoreParagraph(p);
+    if (s > bestScore) {
+      bestScore = s;
+      best = p;
+    }
+  }
+
+  // If best is empty, try to create a single concise line from first paragraph:
+  if (!best) {
+    const fallback = paragraphs[0] || t;
+    const cleaned = fallback.replace(/^(okay|sure|please|to make it).{0,60}?[,:\-\.\s]*/i, '').trim();
+    best = cleaned.split(/\n/)[0].trim();
+    if (best.length > 450) best = best.slice(0, 447) + '...';
+  }
+
+  // Final polish: remove repeated spaces and trailing stopwords
+  best = best.replace(/\s+/g, ' ').trim();
+  best = best.replace(/^(Summary:|Professional summary:)/i, '').trim();
+
+  return best;
+}
+
+// Parses an AI-generated block into an array of short items (skills)
+const parseSkillsFromAI = (text) => {
+  if (!text || typeof text !== 'string') return [];
+
+  // 1) Normalize line breaks
+  const normalized = text.replace(/\r\n/g, '\n').replace(/\t/g, ' ').trim();
+
+  // 2) Split into lines first
+  let parts = normalized.split('\n').map(p => p.trim()).filter(Boolean);
+
+  // Remove pure header lines or label lines like "Core Competencies" "Skills:"
+  parts = parts.filter(line => {
+    const low = line.toLowerCase();
+    if (/^#{1,6}\s*/.test(line)) return false; // explicit markdown heading
+    if (/^(skills|skillset|core competencies|core competency|core competency for|core competencies for|skills:|core competencies:)\b/i.test(low)) return false;
+    if (low.length < 80 && (low.includes('core competency') || low.includes('core competencies') || low.startsWith('skills') || low.startsWith('skill'))) return false;
+    return true;
+  });
+
+  // If only one line remains, try alternative splits (commas, semicolons, pipes, dashes)
+  if (parts.length === 1) {
+    const single = parts[0].replace(/^[A-Za-z ]{1,40}:(\s*)/i, '').trim();
+    const commaSplit = single.split(/[,;•·|\/]+/).map(p => p.trim()).filter(Boolean);
+    if (commaSplit.length > 1) parts = commaSplit;
+    else {
+      const dashSplit = single.split(/(?:\s-\s)|(?:\s—\s)|(?:\s–\s)/).map(p => p.trim()).filter(Boolean);
+      if (dashSplit.length > 1) parts = dashSplit;
+      else {
+        const sentenceSplit = single.split(/(?:\.\s+)/).map(p => p.trim()).filter(Boolean);
+        if (sentenceSplit.length > 1) parts = sentenceSplit;
+      }
+    }
+  }
+
+  // Clean tokens, remove duplicates, remove overly long fragments
+  const cleaned = parts
+    .map(cleanToken)
+    .map(p => p.replace(/["'“”‘’]+/g, '').trim())
+    .filter(p => p && p.length > 1 && p.length < 120);
+
+  // If everything is still a single long line with commas and we didn't split earlier, split now
+  if (cleaned.length === 1 && /,/.test(cleaned[0])) {
+    const fallback = cleaned[0].split(',').map(c => cleanToken(c)).filter(Boolean);
+    if (fallback.length > 1) {
+      const seen = new Set();
+      const filtered = fallback.filter(i => { 
+        const key = i.toLowerCase(); 
+        if (seen.has(key)) return false; 
+        seen.add(key); 
+        return true; 
+      }).slice(0, 12);
+      // keep only likely skills
+      const likely = filtered.filter(isLikelySkill);
+      return (likely.length ? likely : filtered).slice(0, 8);
+    }
+  }
+
+  // Deduplicate preserving order (case-insensitive)
+  const seen = new Set();
+  let unique = [];
+  cleaned.forEach(item => {
+    const key = item.toLowerCase();
+    if (!seen.has(key)) {
+      seen.add(key);
+      unique.push(item);
+    }
+  });
+
+  // Filter out items that look like intro sentences or headings
+  const filteredUnique = unique.filter(isLikelySkill);
+
+  // If we have some good skill candidates, return them (limit 8)
+  if (filteredUnique.length > 0) return filteredUnique.slice(0, 8);
+
+  // --- SMARTER fallback: build short phrases (2-word preferred) and filter them ---
+  const words = normalized
+    .replace(/[^a-zA-Z0-9\s\-]/g, ' ')
+    .split(/\s+/)
+    .map(w => w.trim())
+    .filter(Boolean);
+
+  if (words.length === 0) return [];
+
+  const groups = [];
+  let i = 0;
+  while (i < words.length && groups.length < 12) {
+    const remain = words.length - i;
+    const size = remain >= 2 ? 2 : 1;
+    const chunk = words.slice(i, i + size).join(' ').trim();
+    groups.push(chunk);
+    i += size;
+  }
+
+  // dedupe and filter groups with isLikelySkill
+  const seen2 = new Set();
+  const finalGroups = groups
+    .map(g => cleanToken(g))
+    .filter(Boolean)
+    .filter(g => {
+      const k = g.toLowerCase();
+      if (seen2.has(k)) return false;
+      seen2.add(k);
+      return isLikelySkill(g);
+    });
+
+  // If we got some final groups, return up to 8
+  if (finalGroups.length > 0) return finalGroups.slice(0, 8);
+
+  // As a last last resort, return first up to 8 unique items (even if imperfect)
+  return unique.slice(0, 8);
+};
+
 // --- Main Application Component ---
 const App = () => {
   const [data, setData] = useState(initialResumeData);
@@ -101,52 +357,54 @@ const App = () => {
       // Update the appropriate section based on the section type
       switch (section.toLowerCase()) {
         case 'professional summary':
-        case 'summary':
-          const summaryElement = document.querySelector('[data-section="professional-summary"] .text-justify');
-          if (summaryElement) {
-            let cleanedContent = generatedContent
-              .replace(/^#{1,6}\s+.+$/gm, '')
-              .replace(/\*\*(.+?)\*\*/g, '$1')
-              .replace(/\*(.+?)\*/g, '$1')
-              .trim();
+        case 'summary': {
+          // find element in DOM (if present)
+          const summaryElement = document.querySelector('[data-section="professional-summary"] .text-justify')
+            || document.querySelector('[data-section="professional-summary"] .text-gray-700')
+            || null;
 
-            const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
-            const actualSummary = paragraphs.find(p =>
-              !p.toLowerCase().includes('here are') &&
-              !p.toLowerCase().includes('of course') &&
-              !p.toLowerCase().includes('choose the option') &&
-              !p.toLowerCase().includes('pro-tip') &&
-              p.length > 100
-            );
+          // Clean the AI output with the new cleaner
+          const cleanedSummary = cleanSummaryFromAI(generatedContent);
 
-            const finalContent = actualSummary?.trim() || paragraphs[0]?.trim() || cleanedContent;
-            summaryElement.textContent = finalContent;
-            handleEdit('summary', finalContent);
-          }
+          // If the cleaned summary is still short or looks like a question, try a shorter fallback:
+          const finalSummary = (cleanedSummary && cleanedSummary.length > 40) ? cleanedSummary : generatedContent.replace(/^.*?(?:\n|$)/, '').trim();
+
+          // Update DOM and state
+          if (summaryElement) summaryElement.textContent = finalSummary;
+          handleEdit('summary', finalSummary);
           break;
+        }
 
         case 'core competencies':
-        case 'skills':
-          const skills = generatedContent.split('\n').filter(skill => skill.trim());
-          const newSkills = skills.slice(0, 8); // Limit to 8 skills
+        case 'skills': {
+          // Use robust parsing to extract individual skills/items
+          const parsed = parseSkillsFromAI(generatedContent);
+          const newSkills = (parsed && parsed.length > 0) ? parsed.slice(0, 8) : [generatedContent.trim()].slice(0, 8);
           setData(prev => ({
             ...prev,
             coreCompetencies: newSkills.map(skill => skill.trim())
           }));
           break;
+        }
 
-        case 'professional development':
-          const items = generatedContent.split('\n').map(item => item.trim()).filter(item => item).slice(0, 5);
+        case 'professional development': {
+          const items = generatedContent
+            .split('\n')
+            .map(item => cleanToken(item))
+            .filter(item => item)
+            .slice(0, 5);
+          const finalItems = items.length ? items : generatedContent.split(/[,;]+/).map(i => cleanToken(i)).filter(Boolean).slice(0, 5);
           setData(prev => ({
             ...prev,
-            professionalDevelopment: items
+            professionalDevelopment: finalItems
           }));
           break;
+        }
 
-        case 'education':
+        case 'education': {
           const educations = generatedContent.split('---').filter(edu => edu.trim());
           const newEducation = educations.slice(0, 2).map((edu, index) => {
-            const lines = edu.trim().split('\n').filter(line => line.trim());
+            const lines = edu.trim().split('\n').map(l => l.trim()).filter(Boolean);
             const degree = lines[0] || 'Degree';
             const major = lines[1] || 'Major/Concentration';
             const institution = lines[2] || 'Institution';
@@ -168,11 +426,13 @@ const App = () => {
             education: newEducation
           }));
           break;
+        }
 
         default:
-          console.log('Generated content:', generatedContent);
+          console.log('Generated content (unhandled section):', generatedContent);
       }
     } catch (error) {
+      console.error(error);
       alert('Failed to generate content. Please check your API key and try again.');
     }
   };
@@ -380,7 +640,7 @@ const App = () => {
       )}
       <div className="flex items-center gap-2">
         {Icon && <Icon className="w-4 h-4 text-blue-600 flex-shrink-0" />}
-        <h2 className="text-base font-bold text-gray-800 uppercase tracking-wide border-b border-blue-600 pb-1">
+        <h2 className="text-base font-bold text-gray-800 uppercase tracking-wide border-b border-blue-600 pb-2">
           {title}
         </h2>
       </div>
@@ -477,7 +737,7 @@ const App = () => {
                 <SectionHeader title="Contact" icon={Mail} className="!text-white !border-blue-300" />
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 group">
-                    <Phone className="w-3 h-3 text-blue-300 flex-shrink-0" />
+                    <Phone className="w-3 h-3 text-blue-300 flex-shrink-0"/>
                     <span
                       className="text-xs flex-1"
                       contentEditable
@@ -586,7 +846,7 @@ const App = () => {
                         <button 
                           onClick={() => deleteItem('professionalDevelopment', index)} 
                           className="text-blue-300 hover:text-red-300 p-0.5 transition-colors"
-                          title="Remove item"
+                          title="Remove ${item}"
                           aria-label={`Remove ${item}`}
                         >
                           <Trash2 className="w-2.5 h-2.5" />

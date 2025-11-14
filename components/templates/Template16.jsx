@@ -13,9 +13,9 @@ const initialResumeData = {
     title: "UI/UX DESIGNER",
     profileImage: '/templateprofile/template01profile.jpg', 
     contact: [
-        { icon: Mail, value: 'hello@reallygreatsite.com', label: 'E', breakAll: true },
-        { icon: Phone, value: '123-456-7890', label: 'P', breakAll: false },
-        { icon: MapPin, value: '123 Anywhere St., Any City', label: 'A', breakAll: false },
+        { icon: Mail, value: 'hello@reallygreatsite.com', breakAll: true },
+        { icon: Phone, value: '123-456-7890', breakAll: false },
+        { icon: MapPin, value: '123 Anywhere St., Any City', breakAll: false },
     ],
     profile: "Assists the department head in carrying out digital marketing companies works closely with the marketing head for digital promotions and others. My skills are excellent, and I have a strong commitment to research.",
     objective: "5+ years of experience as a Creative Director. A dynamic and strategic leader known for developing and executing inventive and creative brand-building experiences. Successful in devising and applying new ideas and innovation to build a client's company competitive advantage.",
@@ -110,17 +110,17 @@ export default function Template02() {
                         const skillsList = skillsContainer.querySelector('.space-y-2');
                         if (skillsList) {
                             skillsList.innerHTML = skills.map(skill => 
-                                `<div class="text-xs group relative p-1 -m-1 draggable-item">
+                                `<div class="text-sm group relative p-1 -m-1 draggable-item">
                                     <div class="flex justify-between items-center mb-0.5">
                                         <span class="font-medium text-gray-700" contentEditable>${skill.trim()}</span>
-                                        <span class="text-xs font-semibold text-gray-500 w-6 text-right" contentEditable>85</span>
+                                        <span class="text-sm font-semibold text-gray-500 w-8 text-right" contentEditable>85</span>
                                     </div>
-                                    <div class="w-full bg-gray-200 rounded-full h-1">
-                                        <div class="bg-gray-700 h-1 rounded-full" style="width: 85%"></div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-gray-700 h-2 rounded-full" style="width: 85%"></div>
                                     </div>
                                     <div class="absolute -right-4 -top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                                        <button data-action="duplicate" class="text-gray-600 rounded p-1.5 shadow-md bg-white"><CopyPlus class="w-4 h-4" /></button>
-                                        <button data-action="delete" class="text-gray-600 rounded p-1.5 shadow-md bg-white"><Trash2 class="w-4 h-4" /></button>
+                                        <button data-action="duplicate" class="text-gray-600 rounded p-1.5 shadow-md bg-white"><svg class="w-4 h-4"/></button>
+                                        <button data-action="delete" class="text-gray-600 rounded p-1.5 shadow-md bg-white"><svg class="w-4 h-4"/></button>
                                     </div>
                                 </div>`
                             ).join('');
@@ -145,18 +145,18 @@ export default function Template02() {
                                     <div class="absolute -left-1 top-3 w-px h-[calc(100%+10px)] bg-gray-400 z-0"></div>
                                     <div class="pl-4 flex w-full justify-between items-start">
                                         <div class="pr-3 w-[45%]">
-                                            <p class="text-xs font-semibold text-gray-800" contentEditable>${position}</p>
-                                            <p class="text-[10px] text-gray-700" contentEditable>${company}</p>
-                                            <p class="text-[10px] text-gray-500 mt-0.5" contentEditable>${period}</p>
+                                            <p class="text-sm font-semibold text-gray-800" contentEditable>${position}</p>
+                                            <p class="text-sm text-gray-700" contentEditable>${company}</p>
+                                            <p class="text-sm text-gray-500 mt-0.5" contentEditable>${period}</p>
                                         </div>
                                         <div class="w-[55%] pl-4 border-l border-gray-300">
-                                            <div class="text-xs text-gray-700 leading-relaxed" contentEditable>
+                                            <div class="text-sm text-gray-700 leading-relaxed" contentEditable>
                                                 ${duties.map(duty => `<p>${duty.trim()}</p>`).join('')}
                                             </div>
                                         </div>
                                         <div class="absolute -right-4 -top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                                            <button data-action="duplicate" class="text-gray-600 rounded p-1.5 shadow-md bg-white"><CopyPlus class="w-4 h-4" /></button>
-                                            <button data-action="delete" class="text-gray-600 rounded p-1.5 shadow-md bg-white"><Trash2 class="w-4 h-4" /></button>
+                                            <button data-action="duplicate" class="text-gray-600 rounded p-1.5 shadow-md bg-white"><svg class="w-4 h-4"/></button>
+                                            <button data-action="delete" class="text-gray-600 rounded p-1.5 shadow-md bg-white"><svg class="w-4 h-4"/></button>
                                         </div>
                                     </div>
                                 </div>
@@ -273,7 +273,7 @@ export default function Template02() {
                 <h2 
                     contentEditable 
                     suppressContentEditableWarning 
-                    className="text-base font-bold tracking-wider text-gray-800 border-b border-gray-400 pb-1 w-full"
+                    className="text-lg font-bold tracking-wider text-gray-800 border-b border-gray-400 pb-3 w-full"
                 >
                     {title}
                 </h2>
@@ -329,23 +329,23 @@ export default function Template02() {
                         <div className="flex justify-between items-start">
                             <div className='max-w-[70%]'>
                                 <h1
-                                    className="text-3xl font-bold mb-1 text-gray-800"
+                                    className="text-4xl font-bold mb-1 text-gray-800"
                                     contentEditable
                                     suppressContentEditableWarning
                                 >{contentState.name}</h1>
                                 <p
-                                    className="text-base font-medium uppercase tracking-widest text-gray-700"
+                                    className="text-lg font-medium uppercase tracking-widest text-gray-700"
                                     contentEditable
                                     suppressContentEditableWarning
                                 >{contentState.title}</p>
                             </div>
-                            <div className="text-xs text-right space-y-1 mt-2">
+                            <div className="text-sm text-right space-y-1 mt-2">
                                 {contentState.contact.map((item, index) => (
                                     <div key={index} className="text-gray-700">
                                         <span className="font-semibold">{item.label}</span>
                                         <EditableText
                                             value={item.value}
-                                            className="inline ml-1 text-xs"
+                                            className="inline ml-1 text-sm"
                                             type="span"
                                         />
                                     </div>
@@ -369,7 +369,7 @@ export default function Template02() {
                             <EditableText
                                 type="div"
                                 value={contentState.profile}
-                                className="text-xs text-gray-700 leading-relaxed text-justify"
+                                className="text-sm text-gray-700 leading-relaxed text-justify"
                                 id="profile-text" // ADDED ID FOR AI TARGETING
                             />
                         </div>
@@ -380,7 +380,7 @@ export default function Template02() {
                             <EditableText
                                 type="div"
                                 value={contentState.objective}
-                                className="text-xs text-gray-700 leading-relaxed text-justify"
+                                className="text-sm text-gray-700 leading-relaxed text-justify"
                             />
                         </div>
                         <div className="absolute -right-4 -top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
@@ -403,20 +403,20 @@ export default function Template02() {
                             return (
                                 <Draggable key={index} nodeRef={jobItemRef} bounds={false}>
                                     <div ref={jobItemRef} className="flex relative group draggable-item">
-                                        <div className="absolute -left-1.5 top-0 w-3 h-3 bg-white border border-gray-800 rounded-full z-10"></div>
+                                        <div className="absolute -left-1.5 top-0 w-3 h-3 bg-white border border-gray-800 rounded-full z-10 mt-2.5"></div>
                                         <div className="absolute -left-1 top-3 w-px h-[calc(100%+10px)] bg-gray-400 z-0"></div>
                                         
                                         <div className="pl-4 flex w-full justify-between items-start">
                                             <div className="pr-3 w-[45%]">
-                                                <EditableText value={job.details} className="text-xs font-semibold text-gray-800" type="p" />
-                                                <EditableText value={job.company} className="text-[10px] text-gray-700" type="p" />
-                                                <EditableText value={job.yearRange} className="text-[10px] text-gray-500 mt-0.5" type="p" />
+                                                <EditableText value={job.details} className="text-sm font-semibold text-gray-800" type="p" />
+                                                <EditableText value={job.company} className="text-sm text-gray-700" type="p" />
+                                                <EditableText value={job.yearRange} className="text-sm text-gray-500 mt-0.5" type="p" />
                                             </div>
 
                                             <div className="w-[55%] pl-4 border-l border-gray-300">
                                                 <EditableText
                                                     value={job.description}
-                                                    className="text-xs text-gray-700 leading-relaxed"
+                                                    className="text-sm text-gray-700 leading-relaxed"
                                                     type="div"
                                                 />
                                             </div>
@@ -449,13 +449,13 @@ export default function Template02() {
                                 return (
                                     <Draggable key={index} nodeRef={eduItemRef} bounds={false}>
                                         <div ref={eduItemRef} className="flex relative group draggable-item">
-                                            <div className="absolute -left-1.5 top-0 w-3 h-3 bg-white border border-gray-800 rounded-full z-10"></div>
+                                            <div className="absolute -left-1.5 top-0 w-3 h-3 bg-white border border-gray-800 rounded-full z-10 mt-2.5"></div>
                                             <div className="absolute -left-1 top-3 w-px h-[calc(100%+10px)] bg-gray-400 z-0"></div>
                                             
                                             <div className="pl-4">
-                                                <EditableText value={edu.yearRange} className="text-xs font-semibold text-gray-800" type="p" />
-                                                <EditableText value={edu.details} className="text-[10px] text-gray-700 mt-0.5" type="p" />
-                                                <EditableText value={edu.university} className="text-[10px] text-gray-500" type="p" />
+                                                <EditableText value={edu.yearRange} className="text-sm font-semibold text-gray-800" type="p" />
+                                                <EditableText value={edu.details} className="text-sm text-gray-700 mt-0.5" type="p" />
+                                                <EditableText value={edu.university} className="text-sm text-gray-500" type="p" />
                                             </div>
 
                                             <div className="absolute -right-4 -top-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
@@ -480,7 +480,7 @@ export default function Template02() {
                             {contentState.skills.map((skill, index) => {
                                 const skillItemRef = useRef(null);
                                 return (
-                                    <div key={index} className="text-xs group relative p-1 -m-1 draggable-item"> 
+                                    <div key={index} className="text-sm group relative p-1 -m-1 draggable-item"> 
                                         <div className="flex justify-between items-center mb-0.5">
                                             <EditableText
                                                 value={skill.name}
@@ -489,13 +489,13 @@ export default function Template02() {
                                             />
                                             <EditableText
                                                 value={String(skill.level)}
-                                                className="text-xs font-semibold text-gray-500 w-6 text-right"
+                                                className="text-sm font-semibold text-gray-500 w-8 text-right"
                                                 type="span"
                                             />
                                         </div>
-                                        <div className="w-full bg-gray-200 rounded-full h-1">
+                                        <div className="w-full bg-gray-200 rounded-full h-2">
                                             <div
-                                                className="bg-gray-700 h-1 rounded-full"
+                                                className="bg-gray-700 h-2 rounded-full mt-3"
                                                 style={{ width: `${skill.level}%` }}
                                             ></div>
                                         </div>
@@ -517,7 +517,7 @@ export default function Template02() {
                                 <SectionHeader title="REFERENCE" />
                             </div>
                         </Draggable>
-                        <div className="space-y-3 pt-1 text-xs"> 
+                        <div className="space-y-3 pt-1 text-sm"> 
                             {contentState.references.map((ref, index) => {
                                 const refItemRef = useRef(null);
                                 return (
