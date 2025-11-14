@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { ZoomOut, ZoomIn, CopyPlus, Trash2, Repeat2 } from 'lucide-react';
 import Draggable from "react-draggable";
 import html2canvas from 'html2canvas';
@@ -27,6 +27,7 @@ export default function Template12() {
 
   const cvRef = useRef(null);
   const editorContainerRef = useRef(null);
+  const imageRef = useRef(null);
 
 
 
@@ -262,15 +263,9 @@ export default function Template12() {
 
                 {/* Profile Photo */}
                 <div className="relative">
-                  <div className="w-36 h-36 rounded-2xl  border-8 border-[#dec9f1] bg-gray-300 overflow-hidden"
+                  <div className="w-36 h-36 rounded-2xl  border-8 border-[#dec9f1] bg-gray-300 overflow-hidden cursor-pointer"
                     onClick={() => document.getElementById('profileImageInput').click()}>
-                    {profileImage ? (
-                      <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center  ">
-                        UPLOAD IMG
-                      </div>
-                    )}
+                    <img ref={imageRef} src={profileImage || '/api/placeholder/160/160'} alt="Profile" className="w-full h-full object-cover" />
                   </div>
                   <input
                     id="profileImageInput"
@@ -740,6 +735,14 @@ export default function Template12() {
     );
   }
 
+  const memoizedCVPage = useMemo(() => <CVPage />, []);
+
+  useEffect(() => {
+    if (imageRef.current && profileImage) {
+      imageRef.current.src = profileImage;
+    }
+  }, [profileImage]);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">
       <div
@@ -748,7 +751,7 @@ export default function Template12() {
         className="flex flex-col items-center scale-[0.5] origin-top transition-transform duration-500 pt-24"
       >
         <div ref={cvRef} data-cv-page>
-          <CVPage />
+          {memoizedCVPage}
         </div>
       </div>
     </div>

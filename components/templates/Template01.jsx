@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Phone, Mail, MapPin, Globe, Briefcase,User, GraduationCap, CopyPlus, Trash2 } from 'lucide-react';
 import Draggable from "react-draggable";
 
@@ -15,6 +15,7 @@ export default function Template01() {
 
   const cvRef = useRef(null);
   const editorContainerRef = useRef(null);
+  const imageRef = useRef(null);
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -283,7 +284,7 @@ export default function Template01() {
               className="w-36 h-36 rounded-full overflow-hidden border-4 border-white shadow-lg mx-auto cursor-pointer hover:opacity-80 transition-opacity"
               onClick={() => document.getElementById('profileImageInput').click()}
             >
-              <img src={profileImage || '/templateprofile/template01profile.jpg'} alt="Profile" className="w-full h-full object-cover" />
+              <img ref={imageRef} src={profileImage || '/templateprofile/template01profile.jpg'} alt="Profile" className="w-full h-full object-cover" />
             </div>
             <input
               id="profileImageInput"
@@ -883,6 +884,13 @@ export default function Template01() {
   //   registerPDFFunction(downloadPDF);
   // }, [downloadPDF, registerPDFFunction]);
 
+  const memoizedCVPage = useMemo(() => <CVPage />, []);
+
+  useEffect(() => {
+    if (imageRef.current && profileImage) {
+      imageRef.current.src = profileImage;
+    }
+  }, [profileImage]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">
@@ -892,7 +900,7 @@ export default function Template01() {
         className="flex flex-col items-center scale-[0.5] origin-top transition-transform duration-500 pt-24"
       >
         <div ref={cvRef} data-cv-page>
-          <CVPage />
+          {memoizedCVPage}
         </div>
       </div>
     </div>
