@@ -185,15 +185,6 @@ const [profileImage, setProfileImage] = useState(null);
 
 
   const CVPage = () => {
-    const profileRef = useRef(null);
-    const expertiseRef = useRef(null);
-    const contactRef = useRef(null);
-    const skillsRef = useRef(null);
-    const educationRef = useRef(null);
-    const languageRef = useRef(null);
-    const job1Ref = useRef(null);
-    const job2Ref = useRef(null);
-    const job3Ref = useRef(null);
 
     return (
       //  <div className="min-h-screen bg-gray-50  flex justify-center items-center">
@@ -208,8 +199,8 @@ const [profileImage, setProfileImage] = useState(null);
               {profileImage ? (
                 <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
-                  RS
+                <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-300 flex items-center justify-center">
+                  UPLOAD IMG
                 </div>
               )}
             </div>
@@ -223,15 +214,14 @@ const [profileImage, setProfileImage] = useState(null);
           </div>
             <div className="mb-10 ">
               <h1 className="text-4xl font-bold text-amber-900 leading-tight" contentEditable suppressContentEditableWarning>
-                RICHARD <br /><span className="font-semibold pl-14" contentEditable suppressContentEditableWarning>SUJITH</span>
+                RICHARD <br /><span className="font-semibold pl-14" contentEditable suppressContentEditableWarning>WILSON</span>
               </h1>
-              <p className="text-sm text-amber-800 mt-2 tracking-wide" contentEditable suppressContentEditableWarning>Data Analyst</p>
+              <p className="text-sm text-amber-800 mt-2 ml-5 tracking-wide" contentEditable suppressContentEditableWarning>Data Analyst  Manager</p>
             </div>
             {/* Contact Section */}
             <div className="mb-10 group space-y-3 text-xs text-amber-900" >
               <h2 className="text-2xl font-bold mb-4 pb-2 uppercase">Contact</h2>
-              <Draggable nodeRef={contactRef}>
-                <div ref={contactRef} data-section-item className="space-y-3 relative group" >
+                 <div data-section-item className="space-y-3 relative group" >
                   <div className="flex items-start gap-2">
                     <span contentEditable suppressContentEditableWarning>+123 - 456 - 7890</span>
                   </div>
@@ -253,15 +243,12 @@ const [profileImage, setProfileImage] = useState(null);
                     </button>
                   </div>
                 </div>
-              </Draggable>
             </div>
 
             {/* Skills Section */}
             <div className="mb-6 section-container" data-section="skills">
             <div className="relative flex gap-2  group">
-              <Draggable nodeRef={skillsRef}>
-                <h3 ref={skillsRef} className="text-2xl font-bold text-amber-900 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Skills</h3>
-              </Draggable>
+                <h3  className="text-2xl font-bold text-amber-900 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Skills</h3>
               <div className="opacity-0 group-hover:opacity-100 transition-opacity ">
                 <AISparkle className='mt-1' section="Skills" onGenerate={handleAIGenerate} />
               </div>
@@ -378,9 +365,7 @@ const [profileImage, setProfileImage] = useState(null);
 
             {/* Language Section */}
             <div className="mb-6">
-              <Draggable nodeRef={languageRef}>
-                <h3 ref={languageRef} className="text-2xl font-bold text-amber-900 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Languages</h3>
-              </Draggable>
+                <h3  className="text-2xl font-bold text-amber-900 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Languages</h3>
               <ul className="space-y-1.5 text-amber-900" onKeyDown={(e) => {
                 if (e.key === 'Backspace') {
                   const lis = e.currentTarget.querySelectorAll('li');
@@ -462,8 +447,7 @@ const [profileImage, setProfileImage] = useState(null);
               </div>
 
               {/* Make this section draggable */}
-              <Draggable nodeRef={profileRef}>
-                <div ref={profileRef} className="relative group">
+                <div  className="relative group">
                   <div>
                     <p
                       id="profile-text"
@@ -494,7 +478,6 @@ const [profileImage, setProfileImage] = useState(null);
                     </button>
                   </div>
                 </div>
-              </Draggable>
             </div>
 
             {/* Education Section */}
@@ -505,8 +488,7 @@ const [profileImage, setProfileImage] = useState(null);
 
                 <div className="space-y-4 ">
                   {/* Education 1 */}
-                  <Draggable nodeRef={job1Ref} >
-                    <div ref={job1Ref} data-section-item className='relative group '>
+                    <div  data-section-item className='relative group '>
                       <div className="flex justify-between items-start mb-1">
                         <h4 className="font-bold text-amber-900 text-sm" contentEditable suppressContentEditableWarning>Master of IT Management</h4>
                         <span className="text-xs text-amber-800" contentEditable suppressContentEditableWarning>2021 - 2023</span>
@@ -526,12 +508,10 @@ const [profileImage, setProfileImage] = useState(null);
                         </button>
                       </div>
                     </div>
-                  </Draggable  >
 
 
                   {/* Education 2 */}
-                  <Draggable nodeRef={job2Ref}>
-                    <div ref={job2Ref} data-section-item className='relative group '>
+                    <div  data-section-item className='relative group '>
                       <div className="flex justify-between items-start mb-1">
                         <h4 className="font-bold text-amber-900 text-sm" contentEditable suppressContentEditableWarning>Bachelor of IT Management</h4>
                         <span className="text-xs text-amber-800" contentEditable suppressContentEditableWarning>2016 - 2020</span>
@@ -551,11 +531,9 @@ const [profileImage, setProfileImage] = useState(null);
                         </button>
                       </div>
                     </div>
-                  </Draggable>
 
                   {/* Education 3 */}
-                  <Draggable nodeRef={job3Ref}>
-                    <div ref={job3Ref} data-section-item className='relative group '>
+                    <div  data-section-item className='relative group '>
                       <div className="flex justify-between items-start mb-1">
                         <h4 className="font-bold text-amber-900 text-sm" contentEditable suppressContentEditableWarning>Master Of Science</h4>
                         <span className="text-xs text-amber-800" contentEditable suppressContentEditableWarning>2012 - 2016</span>
@@ -575,8 +553,6 @@ const [profileImage, setProfileImage] = useState(null);
                         </button>
                       </div>
                     </div>
-                  </Draggable>
-
                 </div>
               </div>
 
@@ -584,10 +560,7 @@ const [profileImage, setProfileImage] = useState(null);
               <div className="mb-8  relative group  ">
                 <h3 className="text-lg font-bold text-amber-900 mb-3 tracking-wide" contentEditable suppressContentEditableWarning>EDUCATION</h3>
                 <div className="w-full h-px bg-amber-900 mb-4"></div>
-                <Draggable nodeRef={educationRef} bounds={false}>
-                  <div ref={educationRef} className='mt-8 ' >
-
-
+                  <div  className='mt-8 ' >
                     <div className=" space-y-3">
                       {/* Degree 1 */}
                       <div className="relative group">
@@ -648,13 +621,11 @@ const [profileImage, setProfileImage] = useState(null);
                       </div>
                     </div>
                   </div>
-                </Draggable>
               </div>
             </div>
           </div>
         </div>
       </div>
-      // </div>
     );
   }
   return (

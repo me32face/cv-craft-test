@@ -379,8 +379,8 @@ export default function Template11() {
             onDrop={(e) => handleDrop(e, 'contact', column)}
             onDragEnd={handleDragEnd}
           >
-            <div className="mb-4 cursor-move">
-              <h2 className="text-xs font-bold tracking-widest text-gray-700">CONTACT</h2>
+            <div className="mb-4 cursor-pointer">
+              <h2 className="text-ms font-bold tracking-widest text-gray-700">CONTACT</h2>
             </div>
             <div className="space-y-3 text-xs text-gray-600">
               <div>
@@ -406,9 +406,9 @@ export default function Template11() {
             onDrop={(e) => handleDrop(e, 'education', column)}
             onDragEnd={handleDragEnd}
           >
-            <div className="flex justify-between items-center mb-4 cursor-move">
+            <div className="flex justify-between items-center mb-4 cursor-pointer">
               <div>
-                <h2 className="text-xs font-bold tracking-widest text-gray-700">EDUCATION</h2>
+                <h2 className="text-ms font-bold tracking-widest text-gray-700">EDUCATION</h2>
               </div>
               <button
                 onClick={addEducation}
@@ -497,9 +497,9 @@ export default function Template11() {
             onDrop={(e) => handleDrop(e, 'skills', column)}
             onDragEnd={handleDragEnd}
           >
-            <div className="flex justify-between items-center mb-4 cursor-move">
+            <div className="flex justify-between items-center mb-4 cursor-pointer">
               <div className="flex items-center gap-2">
-                <h2 className="text-xs font-bold tracking-widest text-gray-700">SKILLS</h2>
+                <h2 className="text-ms font-bold tracking-widest text-gray-700">SKILLS</h2>
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                   <AISparkle section="Skills" onGenerate={handleAIGenerate} />
                 </div>
@@ -575,9 +575,9 @@ export default function Template11() {
             onDrop={(e) => handleDrop(e, 'languages', column)}
             onDragEnd={handleDragEnd}
           >
-            <div className="flex justify-between items-center mb-4 cursor-move">
+            <div className="flex justify-between items-center mb-4 cursor-pointer">
               <div>
-                <h2 className="text-xs font-bold tracking-widest text-gray-700">LANGUAGES</h2>
+                <h2 className="text-ms font-bold tracking-widest text-gray-700">LANGUAGES</h2>
               </div>
               <button
                 onClick={addLanguage}
@@ -665,8 +665,8 @@ export default function Template11() {
             onDragEnd={handleDragEnd}
             data-section="summary"
           >
-            <div className="mb-3 cursor-move flex items-center gap-2">
-              <h2 className="text-xs font-bold tracking-widest text-gray-700">SUMMARY</h2>
+            <div className="mb-3 cursor-pointer flex items-center gap-2">
+              <h2 className="text-ms font-bold tracking-widest text-gray-700">SUMMARY</h2>
               <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                 <AISparkle section="Summary" onGenerate={handleAIGenerate} />
               </div>
@@ -687,9 +687,9 @@ export default function Template11() {
             onDrop={(e) => handleDrop(e, 'experience', column)}
             onDragEnd={handleDragEnd}
           >
-            <div className="flex justify-between items-center mb-4 cursor-move">
+            <div className="flex justify-between items-center mb-4 cursor-pointer">
               <div>
-                <h2 className="text-xs font-bold tracking-widest text-gray-700">EXPERIENCE</h2>
+                <h2 className="text-ms font-bold tracking-widest text-gray-700">EXPERIENCE</h2>
               </div>
               <button
                 onClick={addExperience}
@@ -813,9 +813,9 @@ export default function Template11() {
             onDrop={(e) => handleDrop(e, 'projects', column)}
             onDragEnd={handleDragEnd}
           >
-            <div className="flex justify-between items-center mb-4 cursor-move">
+            <div className="flex justify-between items-center mb-4 cursor-pointer">
               <div>
-                <h2 className="text-xs font-bold tracking-widest text-gray-700">PROJECTS</h2>
+                <h2 className="text-ms font-bold tracking-widest text-gray-700">PROJECTS</h2>
               </div>
               <button
                 onClick={addProject}
@@ -961,12 +961,12 @@ export default function Template11() {
         {/* Main Content */}
         <div className="flex relative z-10 h-full">
           {/* Left Column */}
-          <div className="w-2/5 bg-pink-50 p-8 pt-0" style={{ maxHeight: 'calc(297mm - 120px)' }}>
+          <div className="w-2/5 bg-pink-50 p-8 pt-5" style={{ maxHeight: 'calc(290mm - 120px)' }}>
             {leftSections.map((section) => renderSection(section, 'left'))}
           </div>
 
           {/* Right Column */}
-          <div className="w-3/5 p-8 pt-0" style={{ maxHeight: 'calc(297mm - 120px)' }}>
+          <div className="w-3/5 p-8 pt-5" style={{ maxHeight: 'calc(297mm - 120px)' }}>
             {rightSections.map((section) => renderSection(section, 'right'))}
           </div>
         </div>

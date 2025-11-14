@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { MapPin, Phone, Mail, CopyPlus, Trash2 } from 'lucide-react';
 import Draggable from "react-draggable";
-
 import { useUndoRedo } from '../../contexts/UndoRedoContext';
 import AISparkle from '../AISparkle';
 import { geminiService } from '../../lib/gemini';
+import ZoomControls from '../zoomcontrol/ZoomControls';
 
 export default function Template06() {
   const [profileImage, setProfileImage] = useState(null);

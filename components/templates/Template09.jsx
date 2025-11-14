@@ -187,16 +187,7 @@ export default function Template09() {
 
 
   const CVPage = () => {
-    const contactRef = useRef(null);
-    const educationRef = useRef(null);
-    const skillsRef = useRef(null);
-    const languagesRef = useRef(null);
-    const profileRef = useRef(null);
-    const job1Ref = useRef(null);
-    const job2Ref = useRef(null);
-    const job3Ref = useRef(null);
-    const ref1Ref = useRef(null);
-    const ref2Ref = useRef(null);
+
     return (
 
       <div className="min-h-screen bg-gray-50  flex justify-center items-center" onClick={handleButtonClick}>
@@ -216,8 +207,8 @@ export default function Template09() {
                   {profileImage ? (
                     <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center text-4xl font-bold text-gray-700">
-                      RS
+                    <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-300 flex items-center justify-center text-xl font-bold text-gray-700">
+                      UPLOAD IMG
                     </div>
                   )}
                 </div>
@@ -255,9 +246,7 @@ export default function Template09() {
 
                 {/* Contact Info */}
                 <div>
-                  <Draggable nodeRef={contactRef}>
                     <div
-                      ref={contactRef}
                       data-section-item
                       className="grid grid-cols-2 gap-y-3 gap-x-6"
                     >
@@ -274,7 +263,6 @@ export default function Template09() {
                         <span className="text-sm">123 Anywhere St., Any City</span>
                       </div>
                     </div>
-                  </Draggable>
                 </div>
               </div>
             </div>
@@ -299,8 +287,7 @@ export default function Template09() {
                 </div>
 
                 {/* Make this section draggable */}
-                <Draggable nodeRef={profileRef}>
-                  <div ref={profileRef} className="relative group">
+                  <div  className="relative group">
                     <div>
                       <p
                         id="profile-text"
@@ -331,15 +318,12 @@ export default function Template09() {
                       </button>
                     </div>
                   </div>
-                </Draggable>
               </div>
 
               {/* Skills Section */}
               <div className="mb-6 section-container" data-section="skills">
                 <div className="relative flex gap-2  group">
-                  <Draggable nodeRef={skillsRef}>
-                    <h2 ref={skillsRef} className="text-2xl font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Skills</h2>
-                  </Draggable>
+                    <h2  className="text-2xl font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Skills</h2>
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity ">
                     <AISparkle className='mt-1' section="Skills" onGenerate={handleAIGenerate} />
                   </div>
@@ -456,9 +440,7 @@ export default function Template09() {
 
               {/* Language Section */}
               <div className="mb-4">
-                <Draggable nodeRef={languagesRef}>
-                  <h2 ref={languagesRef} className="text-2xl font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Languages</h2>
-                </Draggable>
+                  <h2  className="text-2xl font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Languages</h2>
                 <ul className="space-y-1.5 text-gray-700" onKeyDown={(e) => {
                   if (e.key === 'Backspace') {
                     const lis = e.currentTarget.querySelectorAll('li');
@@ -524,8 +506,7 @@ export default function Template09() {
               {/* Awards Section */}
               <section>
                 <h2 className="text-2xl font-bold text-gray-800 mb-4" contentEditable suppressContentEditableWarning>Awards</h2>
-                <Draggable nodeRef={ref1Ref}>
-                  <div ref={ref1Ref} data-section-item className='relative group'>
+                  <div  data-section-item className='relative group'>
                     <p className="text-sm text-gray-600" contentEditable suppressContentEditableWarning>2019 | Salford & Co.</p>
                     <p className="text-sm text-gray-800 font-semibold" contentEditable suppressContentEditableWarning>The Best Employee of the Year</p>
                     <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
@@ -537,8 +518,6 @@ export default function Template09() {
                       </button>
                     </div>
                   </div>
-                </Draggable>
-
               </section>
             </div>
 
@@ -551,8 +530,7 @@ export default function Template09() {
                 <div className="space-y-6">
                   {/* Job 1 */}
                   <div className='group'>
-                    <Draggable nodeRef={job1Ref}>
-                      <div ref={job1Ref} data-section-item className='relative group' >
+                      <div  data-section-item className='relative group' >
                         <div className="flex justify-between items-start mb-2">
                           <div>
                             <h3 className="font-semibold text-gray-700" contentEditable suppressContentEditableWarning>Marketing Manager</h3>
@@ -572,13 +550,11 @@ export default function Template09() {
                           </button>
                         </div>
                       </div>
-                    </Draggable>
                   </div>
 
                   {/* Job 2 */}
                   <div className='group'>
-                    <Draggable nodeRef={job2Ref}>
-                      <div ref={job2Ref} data-section-item className='relative group'>
+                      <div  data-section-item className='relative group'>
                         <div className="flex justify-between items-start mb-2">
                           <div>
                             <h3 className="font-semibold text-gray-700" contentEditable suppressContentEditableWarning>Marketing Manager</h3>
@@ -598,13 +574,11 @@ export default function Template09() {
                           </button>
                         </div>
                       </div>
-                    </Draggable>
                   </div>
 
                   {/* Job 3 */}
                   <div className='group'>
-                    <Draggable nodeRef={job3Ref}>
-                      <div ref={job3Ref} data-section-item className='relative group'>
+                      <div  data-section-item className='relative group'>
                         <div className="flex justify-between items-start mb-2">
                           <div>
                             <h3 className="font-semibold text-gray-700" contentEditable suppressContentEditableWarning>Marketing Manager</h3>
@@ -624,7 +598,6 @@ export default function Template09() {
                           </button>
                         </div>
                       </div>
-                    </Draggable>
                   </div>
                 </div>
               </section>
@@ -632,8 +605,7 @@ export default function Template09() {
               {/* Education Section */}
               <div className="mb-8  relative group  ">
                               <h3 className="text-2xl font-bold text-gray-900 mb-3 tracking-wide" contentEditable suppressContentEditableWarning>EDUCATION</h3>
-                              <Draggable nodeRef={educationRef} bounds={false}>
-                                <div ref={educationRef} className='mt-6 ' >
+                                <div  className='mt-6 ' >
                                   <div className=" space-y-3">
                                     {/* Degree 1 */}
                                     <div className="relative group">
@@ -676,7 +648,6 @@ export default function Template09() {
                                     
                                   </div>
                                 </div>
-                              </Draggable>
                             </div>
 
               {/* References Section */}
@@ -684,8 +655,7 @@ export default function Template09() {
                 <h2 className="text-2xl font-bold text-gray-800 mb-4" contentEditable suppressContentEditableWarning>References</h2>
                 <div className="grid grid-cols-2 gap-6 relative">
                   <div>
-                    <Draggable nodeRef={ref1Ref}>
-                      <div ref={ref1Ref} data-section-item className='relative group'>
+                      <div  data-section-item className='relative group'>
                         <h3 className="font-bold text-gray-700" contentEditable suppressContentEditableWarning>Harumi Kobayashi</h3>
                         <p className="text-sm text-gray-600 mb-2" contentEditable suppressContentEditableWarning>Wardiere Inc. / CEO</p>
                         <p className="text-xs text-gray-600" contentEditable suppressContentEditableWarning><strong>Phone:</strong> 123-456-7890</p>
@@ -699,11 +669,9 @@ export default function Template09() {
                           </button>
                         </div>
                       </div>
-                    </Draggable>
                   </div>
                   <div className=''>
-                    <Draggable nodeRef={ref2Ref}>
-                      <div ref={ref2Ref} data-section-item className='relative group'>
+                      <div  data-section-item className='relative group'>
                         <h3 className="font-bold text-gray-700" contentEditable suppressContentEditableWarning>Harumi Kobayashi</h3>
                         <p className="text-sm text-gray-600 mb-2" contentEditable suppressContentEditableWarning>Wardiere Inc. / CEO</p>
                         <p className="text-xs text-gray-600" contentEditable suppressContentEditableWarning><strong>Phone:</strong> 123-456-7890</p>
@@ -717,7 +685,6 @@ export default function Template09() {
                         </button>
                       </div>
                       </div>
-                    </Draggable>
                   </div>
                 </div>
               </section>

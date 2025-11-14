@@ -254,18 +254,6 @@ export default function Template03() {
 
   const CVPage = () => {
 
-    const contactRef = useRef(null);
-    const contactContentRef = useRef(null);
-    const profileRef = useRef(null);
-    const skillsRef = useRef(null);
-    const educationRef = useRef(null);
-    const educationContentRef = useRef(null);
-    const experienceRef = useRef(null);
-    const experienceContentRef = useRef(null);
-    const referencesRef = useRef(null);
-    const referencesContentRef = useRef(null);
-
-
     return (
       <div className="min-h-screen bg-gray-50  flex justify-center items-center" onClick={handleButtonClick}>
         <div className="w-[210mm] h-[297mm]   bg-white shadow-2xl overflow-hidden relative">
@@ -294,8 +282,8 @@ export default function Template03() {
                     {profileImage ? (
                       <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
-                        RS
+                      <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-300 flex items-center justify-center">
+                        UPLOAD IMG
                       </div>
                     )}
                   </div>
@@ -310,10 +298,10 @@ export default function Template03() {
 
                 {/* Name */}
                 <div className="text-center mb-8">
-                  <h1 className="text-4xl font-light text-blue-500 mb-1" contentEditable suppressContentEditableWarning>
+                  <h1 className="text-4xl font-semibold text-blue-500 mb-1" contentEditable suppressContentEditableWarning>
                     Lorna
                   </h1>
-                  <h1 className="text-4xl font-light text-blue-500 mb-3" contentEditable suppressContentEditableWarning>
+                  <h1 className="text-4xl font-semibold text-blue-500 mb-3" contentEditable suppressContentEditableWarning>
                     Alvarado
                   </h1>
                   <p className="text-sm text-gray-600" contentEditable suppressContentEditableWarning>
@@ -322,59 +310,64 @@ export default function Template03() {
                 </div>
 
                 {/* Contact Section */}
-                <div className="mb-8">
-                  <Draggable nodeRef={contactRef} >
-                    <h2 ref={contactRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Contact</h2>
-                  </Draggable>
-                  <Draggable nodeRef={contactContentRef} >
-                    <div
-                      ref={contactContentRef}
-                      className="space-y-2 relative group"
-                      onKeyDown={(e) => {
-                        if (e.key === 'Backspace') {
-                          const contactItems = e.currentTarget.querySelectorAll('div');
-                          contactItems.forEach(item => {
-                            const span = item.querySelector('span');
-                            if (span && !span.textContent.trim()) {
-                              item.remove();
-                            }
-                          });
-                        }
-                      }}
-                    >
-                      <div className="flex items-start gap-2">
-                        <span
-                          className="text-xs text-gray-700"
-                          contentEditable
-                          suppressContentEditableWarning
-                        >+123-456-7890</span>
-                      </div>
-                      <div className="flex items-start gap-2">
-                        <span
-                          className="text-xs text-gray-700 break-all"
-                          contentEditable
-                          suppressContentEditableWarning
-
-                        >hello@reallygreatsite.com</span>
-                      </div>
-                      <div className="flex items-start gap-2">
-                        <span
-                          className="text-xs text-gray-700"
-                          contentEditable
-                          suppressContentEditableWarning
-                        >123 Anywhere St., Any City</span>
-                      </div>
-
-                      <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
-                          <CopyPlus className="w-4 h-4" />
-                        </button>
-                        <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
+                <div className="mb-6">
+                  <h3 className="text-xl font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Contact</h3>
+                  <div
+                    className="space-y-2 relative group"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Backspace') {
+                        const contactItems = e.currentTarget.querySelectorAll('div');
+                        contactItems.forEach(item => {
+                          const span = item.querySelector('span');
+                          if (span && !span.textContent.trim()) {
+                            item.remove();
+                          }
+                        });
+                      }
+                    }}
+                  >
+                    <div className="flex items-start gap-2">
+                      {/* <Phone className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" /> */}
+                      <span
+                        className="text-xs text-gray-700"
+                        contentEditable
+                        suppressContentEditableWarning
+                      >+123-456-7890</span>
                     </div>
-                  </Draggable>
+                    <div className="flex items-start gap-2">
+                      {/* <Mail className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" /> */}
+                      <span
+                        className="text-xs text-gray-700 break-all"
+                        contentEditable
+                        suppressContentEditableWarning
+
+                      >hello@reallygreatsite.com</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      {/* <MapPin className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" /> */}
+                      <span
+                        className="text-xs text-gray-700"
+                        contentEditable
+                        suppressContentEditableWarning
+                      >123 Anywhere St., Any City</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      {/* <Globe className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" /> */}
+                      <span
+                        className="text-xs text-gray-700 break-all"
+                        contentEditable
+                        suppressContentEditableWarning
+                      >www.reallygreatsite.com</span>
+                    </div>
+                    <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                      <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
+                        <CopyPlus className="w-4 h-4" />
+                      </button>
+                      <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
                 {/* About Me Section */}
@@ -383,7 +376,7 @@ export default function Template03() {
                     <h2
                       contentEditable
                       suppressContentEditableWarning
-                      className="text-2xl font-bold text-gray-800 uppercase tracking-wide"
+                      className="text-xl font-bold text-gray-800 uppercase tracking-wide"
                     >
                       Profile
                     </h2>
@@ -392,48 +385,43 @@ export default function Template03() {
                     </div>
                   </div>
 
-                  {/* Make this section draggable */}
-                  <Draggable nodeRef={profileRef}>
-                    <div ref={profileRef} className="relative group">
-                      <div>
-                        <p
-                          id="profile-text"
-                          className="text-xs text-gray-700 leading-relaxed"
-                          contentEditable
-                          suppressContentEditableWarning
-                        >
-                          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                          labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation. Lorem ipsum
-                          dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                          magna aliqua. Ut enim ad minim veniam laboris.
-                        </p>
-                      </div>
-
-                      {/* Hover buttons */}
-                      <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                        <button
-                          data-action="duplicate"
-                          className="text-gray-600 bg-white rounded p-1 shadow-md hover:scale-110 transition-transform"
-                        >
-                          <CopyPlus className="w-3 h-3" />
-                        </button>
-                        <button
-                          data-action="delete"
-                          className="text-gray-600 bg-white rounded p-1 shadow-md hover:scale-110 transition-transform"
-                        >
-                          <Trash2 className="w-3 h-3" />
-                        </button>
-                      </div>
+                  <div className="relative group">
+                    <div className="w-64">
+                      <p
+                        id="profile-text"
+                        className="text-sm text-gray-700 leading-relaxed"
+                        contentEditable
+                        suppressContentEditableWarning
+                      >
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation. Lorem ipsum
+                        dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+                        magna aliqua. Ut enim ad minim veniam laboris.
+                      </p>
                     </div>
-                  </Draggable>
-                </div>
 
+
+                    {/* Hover buttons */}
+                    <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                      <button
+                        data-action="duplicate"
+                        className="text-gray-600 bg-white rounded p-1 shadow-md hover:scale-110 transition-transform"
+                      >
+                        <CopyPlus className="w-3 h-3" />
+                      </button>
+                      <button
+                        data-action="delete"
+                        className="text-gray-600 bg-white rounded p-1 shadow-md hover:scale-110 transition-transform"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
                 {/* Skills Section */}
                 <div className="mb-6 section-container" data-section="skills">
                   <div className="relative flex gap-2  group">
-                    <Draggable nodeRef={skillsRef}>
-                      <h3 ref={skillsRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Skills</h3>
-                    </Draggable>
+                      <h3  className="text-xl font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Skills</h3>
                     <div className="opacity-0 group-hover:opacity-100 transition-opacity ">
                       <AISparkle className='mt-1' section="Skills" onGenerate={handleAIGenerate} />
                     </div>
@@ -554,17 +542,13 @@ export default function Template03() {
             <div className="w-[65%] bg-white p-8 overflow-y-auto">
               {/* Education Section */}
               <div className="mb-8">
-                <Draggable nodeRef={educationRef}>
                   <div className="flex items-center gap-2 mb-2 relative">
-                    <h2 ref={educationRef} className="text-sm font-bold text-gray-800  uppercase tracking-wide" contentEditable suppressContentEditableWarning>Education</h2>
+                    <h2  className="text-xl font-bold text-gray-800  uppercase tracking-wide" contentEditable suppressContentEditableWarning>Education</h2>
                   </div>
-                </Draggable>
 
                 <div className="space-y-4">
                   {/* Education 1 */}
-                  <Draggable nodeRef={educationContentRef}>
                     <div
-                      ref={educationContentRef}
                       className="flex gap-3 group relative  mb-3"
                     >
                       {/* buttons */}
@@ -624,12 +608,9 @@ export default function Template03() {
                         </p>
                       </div>
                     </div>
-                  </Draggable>
 
                   {/* Education 2 */}
-                  <Draggable nodeRef={educationContentRef}>
                     <div
-                      ref={educationContentRef}
                       className="flex gap-3 group relative  mb-3"
                     >
                       {/* buttons */}
@@ -688,28 +669,23 @@ export default function Template03() {
                         </p>
                       </div>
                     </div>
-                  </Draggable>
                 </div>
               </div>
 
               {/* Experience Section */}
               <div className="mb-8">
                 <div className='border-b-2 border-gray-300'>
-                  <Draggable nodeRef={experienceRef}>
                     <div className="flex items-center  relative">
-                      <h2 ref={experienceRef} className="text-base font-bold text-gray-700 mb-4 pb-2  flex items-center gap-2">
+                      <h2  className="text-xl font-bold text-gray-700 mb-2 pb-2  flex items-center gap-2">
                         Experience
                       </h2>
                     </div>
-                  </Draggable>
                 </div>
                 <div className="space-y-4">
                   {/* Job 1 */}
 
                   <div className="relative group">
-                    <Draggable nodeRef={experienceContentRef}>
                       <div
-                        ref={experienceContentRef}
                         className="flex gap-3 relative bg-white rounded-md p-2"
                       >
                         <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
@@ -764,15 +740,12 @@ export default function Template03() {
                           </p>
                         </div>
                       </div>
-                    </Draggable>
                   </div>
 
                   {/* Job 2 */}
 
                   <div className="relative group">
-                    <Draggable nodeRef={experienceContentRef}>
                       <div
-                        ref={experienceContentRef}
                         className="flex gap-3 relative bg-white rounded-md p-2"
                       >
                         <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
@@ -827,14 +800,11 @@ export default function Template03() {
                           </p>
                         </div>
                       </div>
-                    </Draggable>
                   </div>
 
                   {/* Job 3 */}
                   <div className="relative group">
-                    <Draggable nodeRef={experienceContentRef}>
                       <div
-                        ref={experienceContentRef}
                         className="flex gap-3 relative bg-white rounded-md p-2"
                       >
                         <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
@@ -889,14 +859,11 @@ export default function Template03() {
                           </p>
                         </div>
                       </div>
-                    </Draggable>
                   </div>
 
                   {/* Job 4 */}
                   <div className="relative group">
-                    <Draggable nodeRef={experienceContentRef}>
                       <div
-                        ref={experienceContentRef}
                         className="flex gap-3 relative bg-white rounded-md p-2"
                       >
                         <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
@@ -947,7 +914,6 @@ export default function Template03() {
                           </p>
                         </div>
                       </div>
-                    </Draggable>
                   </div>
                 </div>
               </div>
@@ -956,21 +922,17 @@ export default function Template03() {
               <div>
 
                 <div className='border-b-2 border-gray-300'>
-                  <Draggable nodeRef={referencesRef}>
                     <div className="flex items-center  relative">
-                      <h2 ref={referencesRef} className="text-base font-bold text-gray-700 mb-4 pb-2  flex items-center gap-2">
+                      <h2  className="text-xl font-bold text-gray-700 mb-2 pb-2  flex items-center gap-2">
                         References
                       </h2>
                     </div>
-                  </Draggable>
                 </div>
 
                 <div className="grid grid-cols-2 gap-6">
                   {/* Reference 1 */}
                   <div className="relative group">
-                    <Draggable nodeRef={referencesContentRef}>
                       <div
-                        ref={referencesContentRef}
                         className="relative bg-white rounded-md p-3 shadow-sm"
                       ><div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                           <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
@@ -1009,14 +971,11 @@ export default function Template03() {
                           </p>
                         </div>
                       </div>
-                    </Draggable>
                   </div>
 
                   {/* Reference 2 */}
                   <div className="relative group">
-                    <Draggable nodeRef={referencesContentRef}>
                       <div
-                        ref={referencesContentRef}
                         className="relative bg-white rounded-md p-3 shadow-sm"
                       ><div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                           <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
@@ -1055,7 +1014,6 @@ export default function Template03() {
                           </p>
                         </div>
                       </div>
-                    </Draggable>
                   </div>
                 </div>
               </div>

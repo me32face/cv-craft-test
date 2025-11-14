@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { Download, Loader2, ArrowLeft } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -6,12 +6,30 @@ import { usePDF } from "../../contexts/PDFContext";
 import FormatToolbar from "../formatToolBar/FormatToolbar";
 import { SelectedElementProvider } from "@/contexts/SelectedElementContext";
 import { useRouter } from "next/navigation";
+import ZoomControls from "../zoomcontrol/ZoomControls";
 
 const Header = () => {
   const { triggerPDF } = usePDF();
   const [isDownloading, setIsDownloading] = useState(false);
+  const [scale, setScale] = useState(1);
   const router = useRouter();
 
+  // 🔹 Zoom Handlers
+  const zoomIn = () => setScale((prev) => Math.min(prev + 0.1, 3));
+  const zoomOut = () => setScale((prev) => Math.max(prev - 0.1, 0.25));
+  const resetZoom = () => setScale(1);
+
+  // 🔹 Apply scale to CV content
+  useEffect(() => {
+    const cvElement = document.querySelector("[data-cv-page]");
+    if (cvElement) {
+      cvElement.style.transform = `scale(${scale})`;
+      cvElement.style.transformOrigin = "center top";
+      cvElement.style.transition = "transform 0.3s ease";
+    }
+  }, [scale]);
+
+  // 🔹 PDF Download
   const downloadPDF = useCallback(async () => {
     setIsDownloading(true);
 
@@ -102,6 +120,14 @@ const Header = () => {
           {isDownloading ? "Downloading..." : "Download"}
         </button>
       </div>
+
+      {/* Zoom Controls - fixed bottom center */}
+      <ZoomControls
+        onZoomIn={zoomIn}
+        onZoomOut={zoomOut}
+        onReset={resetZoom}
+        scale={scale}
+      />
     </div>
   );
 };

@@ -196,16 +196,7 @@ export default function Template05() {
 
 
   const CVPage = () => {
-    const contactRef = useRef(null);
-    const educationRef = useRef(null);
-    const skillsRef = useRef(null);
-    const languagesRef = useRef(null);
-    const profileRef = useRef(null);
-    const job1Ref = useRef(null);
-    const job2Ref = useRef(null);
-    const job3Ref = useRef(null);
-    const ref1Ref = useRef(null);
-    const ref2Ref = useRef(null);
+ 
 
     return (
 
@@ -221,8 +212,8 @@ export default function Template05() {
                 {profileImage ? (
                   <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
-                    RS
+                  <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-300 flex items-center justify-center">
+                    UPLOAD IMG
                   </div>
                 )}
               </div>
@@ -237,22 +228,17 @@ export default function Template05() {
             {/* Contact Section */}
             <div className="pb-8">
               <h2 className="text-lg font-bold mb-4 pb-2 border-b border-slate-600" contentEditable suppressContentEditableWarning>CONTACT</h2>
-              <Draggable nodeRef={contactRef} >
-                <div ref={contactRef} data-section-item className="space-y-3 text-xs">
+                <div  data-section-item className="space-y-3 text-xs">
                   <div className="flex items-start gap-2">
-                    <Phone size={14} className="mt-0.5 flex-shrink-0" />
                     <span contentEditable suppressContentEditableWarning>+123-456-7890</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <Mail size={14} className="mt-0.5 flex-shrink-0" />
                     <span className="break-all" contentEditable suppressContentEditableWarning>hello@reallygreatsite.com</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <Globe size={14} className="mt-0.5 flex-shrink-0" />
                     <span className="break-all" contentEditable suppressContentEditableWarning>www.reallygreatsite.com</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <MapPin size={14} className="mt-0.5 flex-shrink-0" />
                     <span contentEditable suppressContentEditableWarning>123 Anywhere St., Any City</span>
                   </div>
                   <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
@@ -264,14 +250,12 @@ export default function Template05() {
                     </button>
                   </div>
                 </div>
-              </Draggable>
             </div>
 
             {/* Education Section */}
             <div className="pb-8">
               <h2 className="text-lg font-bold mb-4 pb-2  " contentEditable suppressContentEditableWarning>EDUCATION</h2>
-              <Draggable nodeRef={educationRef} >
-                <div ref={educationRef} data-section-item className="space-y-4 text-xs">
+                <div  data-section-item className="space-y-4 text-xs">
                   <div >
                     <p className="text-gray-400 mb-1" contentEditable suppressContentEditableWarning>2019 - 2020</p>
                     <p className="font-bold text-sm" contentEditable suppressContentEditableWarning>WARDIERE UNIVERSITY</p>
@@ -285,15 +269,13 @@ export default function Template05() {
                     <p className="text-gray-400 mt-1" contentEditable suppressContentEditableWarning>GPA: 3.8 / 4.0</p>
                   </div>
                 </div>
-              </Draggable>
             </div>
 
             {/* Skills Section */}
             <div className="mb-6 section-container" data-section="skills">
               <div className="relative flex gap-2  group">
-                <Draggable nodeRef={skillsRef}>
-                  <h3 ref={skillsRef} className="text-xl font-bold text-white mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Skills</h3>
-                </Draggable>
+                  <h3  className="text-xl font-bold text-white mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Skills</h3>
+                
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity ">
                   <AISparkle className='mt-1' section="Skills" onGenerate={handleAIGenerate} />
                 </div>
@@ -410,9 +392,7 @@ export default function Template05() {
 
             {/* Languages Section */}
             <div className="mb-6">
-              <Draggable nodeRef={languagesRef}>
-                <h3 ref={languagesRef} className="text-xl font-bold text-white mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Languages</h3>
-              </Draggable>
+                <h3  className="text-xl font-bold text-white mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Languages</h3>
               <ul className="space-y-1.5 text-white" onKeyDown={(e) => {
                 if (e.key === 'Backspace') {
                   const lis = e.currentTarget.querySelectorAll('li');
@@ -503,8 +483,7 @@ export default function Template05() {
               </div>
 
               {/* Make this section draggable */}
-              <Draggable nodeRef={profileRef}>
-                <div ref={profileRef} className="relative group">
+                <div  className="relative group">
                   <div>
                     <p
                       id="profile-text"
@@ -535,7 +514,6 @@ export default function Template05() {
                     </button>
                   </div>
                 </div>
-              </Draggable>
             </div>
 
             {/* Work Experience Section */}
@@ -543,8 +521,7 @@ export default function Template05() {
               <h3 className="text-lg font-bold text-slate-800 mb-4" contentEditable suppressContentEditableWarning>WORK EXPERIENCE</h3>
               <div className="space-y-5">
                 {/* Job 1 */}
-                <Draggable nodeRef={job1Ref} >
-                  <div ref={job1Ref} className="relative group">
+                  <div className="relative group">
                     <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                       <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
                         <CopyPlus className="w-4 h-4" />
@@ -599,11 +576,9 @@ export default function Template05() {
                       </li>
                     </ul>
                   </div>
-                </Draggable>
 
                 {/* Job 2 */}
-                <Draggable nodeRef={job2Ref} >
-                  <div ref={job2Ref} className="relative group">
+                  <div  className="relative group">
                     <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                       <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
                         <CopyPlus className="w-4 h-4" />
@@ -658,10 +633,8 @@ export default function Template05() {
                       </li>
                     </ul>
                   </div>
-                </Draggable>
                 {/* Job 3 */}
-                <Draggable nodeRef={job3Ref} >
-                  <div ref={job3Ref} className="relative group">
+                  <div  className="relative group">
                     <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                       <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
                         <CopyPlus className="w-4 h-4" />
@@ -716,7 +689,6 @@ export default function Template05() {
                       </li>
                     </ul>
                   </div>
-                </Draggable>
               </div>
             </div>
 
@@ -725,8 +697,7 @@ export default function Template05() {
               <h3 className="text-lg font-bold text-slate-800 mb-4" contentEditable suppressContentEditableWarning>REFERENCE</h3>
               <div className="grid grid-cols-2 gap-6">
                 {/* Reference 1 */}
-                <Draggable nodeRef={ref1Ref}>
-                  <div ref={ref1Ref} data-section-item className="relative group">
+                  <div  data-section-item className="relative group">
                     <h4 className="font-bold text-slate-800 text-sm mb-1" contentEditable suppressContentEditableWarning>Estelle Darcy</h4>
                     <p className="text-slate-600 mb-2" contentEditable suppressContentEditableWarning>Wardiere Inc. / CEO</p>
                     <div className="text-slate-600 space-y-0.5">
@@ -742,11 +713,9 @@ export default function Template05() {
                       </button>
                     </div>
                   </div>
-                </Draggable>
 
                 {/* Reference 2 */}
-                <Draggable nodeRef={ref2Ref}>
-                  <div ref={ref2Ref} data-section-item className="relative group">
+                  <div  data-section-item className="relative group">
                     <h4 className="font-bold text-slate-800 text-sm mb-1" contentEditable suppressContentEditableWarning>Harper Richard</h4>
                     <p className="text-slate-600 mb-2" contentEditable suppressContentEditableWarning>Wardiere Inc. / CEO</p>
                     <div className="text-slate-600 space-y-0.5">
@@ -762,7 +731,6 @@ export default function Template05() {
                       </button>
                     </div>
                   </div>
-                </Draggable>
               </div>
             </div>
           </div>
