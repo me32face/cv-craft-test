@@ -17,10 +17,7 @@ import { geminiService } from "../../lib/gemini";
 
 /**
  * Converted Template20 -> Template22-style functionality (Option A)
- * - Keeps visual layout / classes identical
- * - Replaces complex react-dnd & slider logic with DOM contentEditable + clone/remove
- * - Autosave (debounced) to localStorage + basic snapshots for undo/redo
- * - AI writes to DOM elements directly
+ * Replaced ul/li with div/span-friendly markup and updated AI insertion logic.
  */
 
 const SNAPSHOT_KEY = "template20_snapshots_v1";
@@ -58,22 +55,6 @@ export default function Template20() {
     pushSnapshot(data);
     localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(data));
   }, [profileImage, pushSnapshot]);
-
-  // restore autosave on mount
-  // useEffect(() => {
-  //   try {
-  //     const saved = localStorage.getItem(AUTOSAVE_KEY);
-  //     if (saved && cvRef.current) {
-  //       const { html, profileImage: img } = JSON.parse(saved);
-  //       if (html) cvRef.current.innerHTML = html;
-  //       if (img) setProfileImage(img);
-  //     }
-  //     const snaps = localStorage.getItem(SNAPSHOT_KEY);
-  //     if (snaps) snapshotsRef.current = JSON.parse(snaps) || [];
-  //   } catch (e) {
-  //     console.error("restore error", e);
-  //   }
-  // }, []);
 
   // provide a listener for custom undoRedo events (compatible with Template22 usage)
   useEffect(() => {
@@ -164,48 +145,121 @@ export default function Template20() {
     }
 
     try {
-      // Get raw content
       const aiText = await geminiService.generateContent(section, keywords);
       if (!aiText) return;
 
       const raw = String(aiText).trim();
       const sec = section.toLowerCase();
 
+      // Helper: aggressively clean markdown/list noise and boilerplate
+      const cleanForSingleParagraph = (text) => {
+        if (!text) return "";
+
+        let t = String(text);
+
+        // 1) Remove code fences / inline code
+        t = t.replace(/```[\s\S]*?```/g, " ").replace(/`([^`]+)`/g, "$1");
+
+        // 2) Remove markdown headers, links, urls
+        t = t
+          .replace(/^#{1,6}\s+.*$/gm, " ")
+          .replace(/\[(.*?)\]\((?:.*?)\)/g, "$1")
+          .replace(/https?:\/\/\S+/gi, " ");
+
+        // 3) Remove list markers and common bullets/dashes safely
+        // use explicit unicode codepoints for bullets and include hyphen escaped where needed
+        t = t
+          .replace(/(^|\n)\s*[-*\u2022]\s+/g, " ")         // leading -, * or • at start of line
+          .replace(/(^|\n)\s*\d+\.\s+/g, " ")              // leading numbered lists
+          .replace(/[\u2022\*\-\u2014\u2013]/g, " ")       // stray bullets/dashes (• * - — –)
+          .replace(/\|/g, " ")                             // table separators
+          .replace(/\[.*?\]/g, " ")                        // leftover bracketed notes
+          .replace(/\s*~\s*/g, " ")                        // tildes
+          .replace(/&nbsp;|&amp;|&lt;|&gt;/g, " ");        // html entities
+
+        // 4) Remove assistant boilerplate at start
+        t = t.replace(/^\s*(sure,|of course,|here (are|is),?|i can help with that[.:]?|please find below[:,]?)\s*/i, "");
+
+        // 5) Collapse whitespace/newlines to single spaces
+        t = t.replace(/\r\n|\n|\r/g, " ").replace(/\s+/g, " ").trim();
+
+        // 6) Remove leading labels like "Profile:" or "Summary:"
+        t = t.replace(/^(profile|summary|about me)[:\-\s]+/i, "");
+
+        // 7) Split into sentences and choose first meaningful sentence(s)
+        const sentences = (t.match(/[^.!?]+[.!?]*/g) || []).map(s => s.trim()).filter(Boolean);
+
+        let chosen = "";
+        if (sentences.length > 0) {
+          // pick first reasonably-sized sentence
+          const firstGood = sentences.find(s => s.replace(/[^a-zA-Z0-9]/g, "").length >= 10);
+          if (firstGood) {
+            chosen = firstGood;
+            if (sentences.length > 1) {
+              const second = sentences[1];
+              if (second && (chosen.length + second.length) < 400) {
+                chosen = `${chosen} ${second.replace(/^[A-Z]/, m => m)}`;
+              }
+            }
+          } else {
+            chosen = sentences.slice(0, 2).join(" ");
+          }
+        } else {
+          chosen = t;
+        }
+
+        // 8) Final cleanup and length cap
+        chosen = chosen.replace(/\s+([.,!?;:])/g, "$1").replace(/([!?.,;:]){2,}/g, "$1").trim();
+        const MAX_LENGTH = 400;
+        if (chosen.length > MAX_LENGTH) {
+          chosen = chosen.slice(0, MAX_LENGTH);
+          const lastSpace = chosen.lastIndexOf(" ");
+          if (lastSpace > 50) chosen = chosen.slice(0, lastSpace);
+          chosen = chosen.replace(/[^\w]$/g, "");
+          chosen = `${chosen}...`;
+        }
+
+        return chosen;
+      };
+
       // ---------------- PROFILE ----------------
       if (sec.includes("profile") || sec.includes("summary")) {
         const el = cvRef.current.querySelector("#profile-text");
         if (el) {
-          // Insert raw without formatting
-          el.textContent = raw;
+          const finalParagraph = cleanForSingleParagraph(raw);
+          el.textContent = finalParagraph;
+          saveCurrentState();
         }
       }
 
       // ---------------- SKILLS ----------------
       else if (sec.includes("skills")) {
-        const list = cvRef.current.querySelector("#skills-list");
-        if (list) {
-          // Split lines but do NOT overclean, just trim
+        const container = cvRef.current.querySelector("#skills-list");
+        if (container) {
           const items = raw
             .split(/\r?\n|,|;|•|-/)
             .map((x) => x.trim())
             .filter((x) => x.length > 0);
 
-          // If the AI returns a single line, make one item
-          if (items.length === 0) {
-            items.push(raw);
-          }
+          if (items.length === 0 && raw.length > 0) items.push(raw);
 
-          list.innerHTML = items
+          container.innerHTML = items
             .map(
               (l) => `
-            <li class="text-sm relative group flex items-baseline gap-2 leading-snug">
-              <span>•</span>
-              <span contentEditable suppressContentEditableWarning>${l}</span>
-              <div class="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                <button data-action="duplicate" class="text-gray-600 rounded p-1 shadow-md"><svg ... /></button>
-                <button data-action="delete" class="text-gray-600 rounded p-1 shadow-md"><svg ... /></button>
-              </div>
-            </li>`
+                <div class="skill-item text-sm relative group flex items-baseline gap-2 leading-snug p-0.5">
+                  <span aria-hidden="true">•</span>
+                  <span contentEditable suppressContentEditableWarning class="flex-1">${escapeHtml(
+                    l
+                  )}</span>
+                  <div class="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
+                    <button data-action="duplicate" class="text-gray-600 rounded p-1 shadow-md" type="button">
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"></svg>
+                    </button>
+                    <button data-action="delete" class="text-gray-600 rounded p-1 shadow-md" type="button">
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"></svg>
+                    </button>
+                  </div>
+                </div>`
             )
             .join("");
         }
@@ -213,17 +267,21 @@ export default function Template20() {
 
       // ---------------- GENERAL EXPERIENCE ----------------
       else if (sec.includes("experience") || sec.includes("work")) {
-        const list = cvRef.current.querySelector("#exp-list");
-        if (list) {
+        const container = cvRef.current.querySelector("#exp-list");
+        if (container) {
           const items = raw
             .split(/\r?\n|•|-|;/)
             .map((x) => x.trim())
             .filter((x) => x.length > 0);
 
-          list.innerHTML = items
+          if (items.length === 0 && raw.length > 0) items.push(raw);
+
+          container.innerHTML = items
             .map(
-              (it) =>
-                `<li contentEditable suppressContentEditableWarning>${it}</li>`
+              (it) => `
+                <div class="exp-item text-sm text-gray-700 p-0.5" contentEditable suppressContentEditableWarning>${escapeHtml(
+                  it
+                )}</div>`
             )
             .join("");
         }
@@ -231,27 +289,33 @@ export default function Template20() {
 
       // ---------------- LANGUAGES ----------------
       else if (sec.includes("language")) {
-        const list = cvRef.current.querySelector("#lang-list");
-        if (list) {
+        const container = cvRef.current.querySelector("#lang-list");
+        if (container) {
           const items = raw
             .split(/\r?\n|,|;|•|-/)
             .map((x) => x.trim())
             .filter((x) => x.length > 0);
 
-          list.innerHTML = items
+          if (items.length === 0 && raw.length > 0) items.push(raw);
+
+          container.innerHTML = items
             .map(
               (l) => `
-            <li class="relative group" contentEditable suppressContentEditableWarning>${l}
-              <div class="absolute right-0 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
-                <button data-action="duplicate" class="p-1"><svg ... /></button>
-                <button data-action="delete" class="p-1"><svg ... /></button>
-              </div>
-            </li>`
+                <div class="lang-item relative group p-0.5">
+                  <span contentEditable suppressContentEditableWarning>${escapeHtml(
+                    l
+                  )}</span>
+                  <div class="absolute right-0 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
+                    <button data-action="duplicate" class="p-1" type="button"></button>
+                    <button data-action="delete" class="p-1" type="button"></button>
+                  </div>
+                </div>`
             )
             .join("");
         }
       }
 
+      // Save after non-profile updates
       saveCurrentState();
     } catch (err) {
       console.error("AI ERROR:", err);
@@ -283,6 +347,14 @@ export default function Template20() {
     const html = cvRef.current.innerHTML;
     pushSnapshot({ html, profileImage });
   }, [pushSnapshot, profileImage]);
+
+  // small helper to escape user text when injecting HTML (minimal)
+  function escapeHtml(text) {
+    return String(text)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
 
   // ---------- Render (keeps original Template20 layout visually) ----------
   return (
@@ -382,18 +454,18 @@ export default function Template20() {
                 data-section="profile"
               >
                 <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-bold tracking-wide border-b-2 border-black">
+                  <h2
+                    className="text-lg font-bold tracking-wide relative pb-3
+                              after:content-[''] after:block after:w-16 after:h-[2px]
+                              after:bg-black after:absolute after:left-0 after:bottom-0"
+                  >
                     Profile
                   </h2>
 
                   <div className="cursor-pointer">
-                    <AISparkle
-                      section="profile"
-                      onGenerate={handleAIGenerate}
-                    />
+                    <AISparkle section="profile" onGenerate={handleAIGenerate} />
                   </div>
                 </div>
-
                 <p
                   id="profile-text"
                   contentEditable
@@ -406,33 +478,41 @@ export default function Template20() {
               </div>
 
               <div className="p-6">
-                <h2 className="text-lg font-bold tracking-wide mb-3 border-b-2 border-black pb-1">
+                <h2
+                  className="
+                    text-lg font-bold tracking-wide mb-4 relative pb-3
+                    after:content-[''] after:block after:w-20 after:h-[2px]
+                    after:bg-black after:absolute after:left-0 after:bottom-0
+                  "
+                >
                   Contact
                 </h2>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-start space-x-2">
-                    <Phone className="w-4 h-4 text-black mt-1 flex-shrink-0" />
+
+                {/* replaced ul/li with div-based list */}
+                <div className="space-y-2 text-sm flex-1">
+                  <div className="flex items-start space-x-2 pt-4">
+                    <Phone className="w-4 h-4 text-black mt-1 mb-1 flex-shrink-0"/>
                     <span contentEditable suppressContentEditableWarning>
                       +123-456-7890
                     </span>
-                  </li>
-                  <li className="flex items-start space-x-2">
-                    <Mail className="w-4 h-4 text-black mt-1 flex-shrink-0" />
+                  </div>
+                  <div className="flex items-start space-x-2 mt-3 pt-4">
+                    <Mail className="w-4 h-4 text-black mt-1 mb-1 flex-shrink-0" />
                     <span contentEditable suppressContentEditableWarning>
                       hello@reallygreatsite.com
                     </span>
-                  </li>
-                  <li className="flex items-start space-x-2">
+                  </div>
+                  <div className="flex items-start space-x-2 pt-4">
                     <MapPin className="w-4 h-4 text-black mt-1 flex-shrink-0" />
                     <span contentEditable suppressContentEditableWarning>
                       123 Anywhere St., Any City, St 12345
                     </span>
-                  </li>
-                </ul>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Work / Education — turned into contentEditable lists with duplicate/delete */}
+            {/* Work / Education — turned into contentEditable list containers */}
             <div
               className="grid grid-cols-1 md:grid-cols-2 divide-x divide-gray-200 border-b border-gray-200"
               style={{ overflow: "visible" }}
@@ -440,12 +520,12 @@ export default function Template20() {
               <div className="p-6">
                 <div className="flex items-center mb-3">
                   <Briefcase className="w-5 h-5 text-black mr-2" />
-                  <h2 className="text-xl font-bold tracking-wide border-b-2 border-black pb-1">
+                  <h2 className="text-xl font-bold tracking-wide border-b-2 border-black pb-3 mb-2">
                     Work Experience
                   </h2>
                 </div>
 
-                   {/* work experiences  */}
+                {/* work experiences container */}
                 <div className="space-y-3">
                   <div
                     className="relative group p-3 bg-white rounded border border-gray-200 mb-3"
@@ -475,15 +555,15 @@ export default function Template20() {
                       >
                         Senior Developer
                       </div>
-                      <ul
+
+                      {/* exp-list is now a div container, items are divs */}
+                      <div
                         id="exp-list"
-                        contentEditable
-                        suppressContentEditableWarning
-                        className="list-disc pl-6 space-y-1 text-sm text-gray-700"
+                        className="pl-6 space-y-1 text-sm text-gray-700"
                       >
-                        <li>Led development team</li>
-                        <li>Designed core app architecture</li>
-                      </ul>
+                        <div className="exp-item">Led development team</div>
+                        <div className="exp-item">Designed core app architecture</div>
+                      </div>
                     </div>
 
                     <div className="absolute p-1 flex opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 backdrop-blur-sm shadow-md z-10 top-0 right-0 space-x-1 rounded-bl-lg">
@@ -491,6 +571,7 @@ export default function Template20() {
                         data-action="duplicate"
                         title="Duplicate"
                         className="text-gray-600 hover:text-blue-600 p-0.5 rounded-full"
+                        type="button"
                       >
                         <CopyPlus className="w-4 h-4" />
                       </button>
@@ -498,82 +579,81 @@ export default function Template20() {
                         data-action="delete"
                         title="Delete"
                         className="text-gray-600 hover:text-red-600 p-0.5 rounded-full"
+                        type="button"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
                 </div>
-{/* work2 */}
+
+                {/* work2 */}
                 <div className="space-y-3">
-                 <div
-  className="relative group p-3 bg-white rounded border border-gray-200 mb-3"
-  data-section-item
->
-  <div className="space-y-2">
-    <div className="flex justify-between items-start">
-      <div
-        contentEditable
-        suppressContentEditableWarning
-        className="text-sm font-bold text-black"
-      >
-        NovaTech Digital Solutions
-      </div>
+                  <div
+                    className="relative group p-3 bg-white rounded border border-gray-200 mb-3"
+                    data-section-item
+                  >
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-start">
+                        <div
+                          contentEditable
+                          suppressContentEditableWarning
+                          className="text-sm font-bold text-black"
+                        >
+                          NovaTech Digital Solutions
+                        </div>
 
-      <div
-        contentEditable
-        suppressContentEditableWarning
-        className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded"
-      >
-        2020 - 2022
-      </div>
-    </div>
+                        <div
+                          contentEditable
+                          suppressContentEditableWarning
+                          className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded"
+                        >
+                          2020 - 2022
+                        </div>
+                      </div>
 
-    <div
-      contentEditable
-      suppressContentEditableWarning
-      className="text-sm text-blue-600 font-medium"
-    >
-      Frontend Developer
-    </div>
+                      <div
+                        contentEditable
+                        suppressContentEditableWarning
+                        className="text-sm text-blue-600 font-medium"
+                      >
+                        Frontend Developer
+                      </div>
 
-    <ul
-      contentEditable
-      suppressContentEditableWarning
-      className="list-disc pl-6 space-y-1 text-sm text-gray-700"
-    >
-      <li>Developed reusable React components to improve UI consistency</li>
-      <li>Optimized page speed, achieving a 40% faster load time</li>
-      <li>Collaborated with designers and backend teams to enhance UX</li>
-    </ul>
-  </div>
+                      <div className="pl-6 space-y-1 text-sm text-gray-700">
+                        <div className="exp-item">Developed reusable React components to improve UI consistency</div>
+                        <div className="exp-item">Optimized page speed, achieving a 40% faster load time</div>
+                        <div className="exp-item">Collaborated with designers and backend teams to enhance UX</div>
+                      </div>
+                    </div>
 
-  <div className="absolute p-1 flex opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 backdrop-blur-sm shadow-md z-10 top-0 right-0 space-x-1 rounded-bl-lg">
-    <button
-      data-action="duplicate"
-      title="Duplicate"
-      className="text-gray-600 hover:text-blue-600 p-0.5 rounded-full"
-    >
-      <CopyPlus className="w-4 h-4" />
-    </button>
+                    <div className="absolute p-1 flex opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 backdrop-blur-sm shadow-md z-10 top-0 right-0 space-x-1 rounded-bl-lg">
+                      <button
+                        data-action="duplicate"
+                        title="Duplicate"
+                        className="text-gray-600 hover:text-blue-600 p-0.5 rounded-full"
+                        type="button"
+                      >
+                        <CopyPlus className="w-4 h-4" />
+                      </button>
 
-    <button
-      data-action="delete"
-      title="Delete"
-      className="text-gray-600 hover:text-red-600 p-0.5 rounded-full"
-    >
-      <Trash2 className="w-4 h-4" />
-    </button>
-  </div>
-</div>
-
+                      <button
+                        data-action="delete"
+                        title="Delete"
+                        className="text-gray-600 hover:text-red-600 p-0.5 rounded-full"
+                        type="button"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <div className="p-6">
                 <div className="flex items-center mb-3">
                   <GraduationCap className="w-5 h-5 text-black mr-2" />
-                  <h2 className="text-xl font-bold tracking-wide border-b-2 border-black pb-1">
+                  <h2 className="text-xl font-bold tracking-wide border-b-2 border-black pb-3 mb-2">
                     Education
                   </h2>
                 </div>
@@ -607,13 +687,10 @@ export default function Template20() {
                       >
                         State University
                       </div>
-                      <ul
-                        contentEditable
-                        suppressContentEditableWarning
-                        className="list-disc pl-6 space-y-1 text-sm text-gray-700"
-                      >
-                        <li>GPA: 3.8/4.0</li>
-                      </ul>
+
+                      <div className="pl-6 space-y-1 text-sm text-gray-700">
+                        <div className="exp-item">GPA: 3.8/4.0</div>
+                      </div>
                     </div>
 
                     <div className="absolute p-1 flex opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 backdrop-blur-sm shadow-md z-10 top-0 right-0 space-x-1 rounded-bl-lg">
@@ -621,6 +698,7 @@ export default function Template20() {
                         data-action="duplicate"
                         title="Duplicate"
                         className="text-gray-600 hover:text-blue-600 p-0.5 rounded-full"
+                        type="button"
                       >
                         <CopyPlus className="w-4 h-4" />
                       </button>
@@ -628,6 +706,7 @@ export default function Template20() {
                         data-action="delete"
                         title="Delete"
                         className="text-gray-600 hover:text-red-600 p-0.5 rounded-full"
+                        type="button"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -635,7 +714,7 @@ export default function Template20() {
                   </div>
                 </div>
 
-              <div className="space-y-3">
+                <div className="space-y-3">
                   <div
                     className="relative group p-3 bg-white rounded border border-gray-200 mb-3"
                     data-section-item
@@ -664,13 +743,10 @@ export default function Template20() {
                       >
                         State University
                       </div>
-                      <ul
-                        contentEditable
-                        suppressContentEditableWarning
-                        className="list-disc pl-6 space-y-1 text-sm text-gray-700"
-                      >
-                        <li>GPA: 3.8/4.0</li>
-                      </ul>
+
+                      <div className="pl-6 space-y-1 text-sm text-gray-700">
+                        <div className="exp-item">GPA: 3.8/4.0</div>
+                      </div>
                     </div>
 
                     <div className="absolute p-1 flex opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 backdrop-blur-sm shadow-md z-10 top-0 right-0 space-x-1 rounded-bl-lg">
@@ -678,6 +754,7 @@ export default function Template20() {
                         data-action="duplicate"
                         title="Duplicate"
                         className="text-gray-600 hover:text-blue-600 p-0.5 rounded-full"
+                        type="button"
                       >
                         <CopyPlus className="w-4 h-4" />
                       </button>
@@ -685,119 +762,115 @@ export default function Template20() {
                         data-action="delete"
                         title="Delete"
                         className="text-gray-600 hover:text-red-600 p-0.5 rounded-full"
+                        type="button"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
                 </div>
-
-
               </div>
             </div>
 
-            {/* Skills / Languages — now simple lists (visual styling preserved) */}
+            {/* Skills / Languages — now simple div-based lists (visual styling preserved) */}
             <div
               className="grid grid-cols-1 md:grid-cols-2 divide-x divide-gray-200"
               style={{ flex: "0 0 auto" }}
             >
               <div className="p-6 relative group" data-section="skills">
                 <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-xl font-bold tracking-wide border-b-2 border-black pb-1">
+                  <h2 className="text-xl font-bold tracking-wide border-b-2 border-black pb-3">
                     Skills
                   </h2>
 
-                  <div className="cursor-pointer">
+                  <div className="cursor-pointer  ">
                     <AISparkle section="skills" onGenerate={handleAIGenerate} />
                   </div>
                 </div>
 
-                <ul id="skills-list" className="space-y-3">
-                  <li className="text-sm relative group flex items-baseline gap-2 leading-snug">
-                    <span>•</span>
-                    <span contentEditable suppressContentEditableWarning>
+                {/* skills-list is now a div container */}
+                <div id="skills-list" className="space-y-3">
+                  <div className="skill-item text-sm relative group flex items-baseline gap-2 leading-snug">
+                    <span aria-hidden="true">•</span>
+                    <span contentEditable suppressContentEditableWarning className="flex-1">
                       Skill 1
                     </span>
                     <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                       <button
                         data-action="duplicate"
                         className="text-gray-600 rounded p-1 shadow-md"
+                        type="button"
                       >
                         <CopyPlus className="w-3 h-3" />
                       </button>
                       <button
                         data-action="delete"
                         className="text-gray-600 rounded p-1 shadow-md"
+                        type="button"
                       >
                         <Trash2 className="w-3 h-3" />
                       </button>
                     </div>
-                  </li>
-                  <li className="text-sm relative group flex items-baseline gap-2 leading-snug">
-                    <span>•</span>
-                    <span contentEditable suppressContentEditableWarning>
+                  </div>
+
+                  <div className="skill-item text-sm relative group flex items-baseline gap-2 leading-snug">
+                    <span aria-hidden="true">•</span>
+                    <span contentEditable suppressContentEditableWarning className="flex-1">
                       Skill 2
                     </span>
                     <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
                       <button
                         data-action="duplicate"
                         className="text-gray-600 rounded p-1 shadow-md"
+                        type="button"
                       >
                         <CopyPlus className="w-3 h-3" />
                       </button>
                       <button
                         data-action="delete"
                         className="text-gray-600 rounded p-1 shadow-md"
+                        type="button"
                       >
                         <Trash2 className="w-3 h-3" />
                       </button>
                     </div>
-                  </li>
-                </ul>
+                  </div>
+                </div>
               </div>
 
               <div className="p-6 relative group" data-section="languages">
                 <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-xl font-bold tracking-wide border-b-2 border-black pb-1">
+                  <h2 className="text-xl font-bold tracking-wide border-b-2 border-black pb-3">
                     Languages
                   </h2>
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    {" "}
-                  </div>
                 </div>
 
-                <ul id="lang-list" className="space-y-3 text-sm">
-                  <li
-                    className="relative group"
-                    contentEditable
-                    suppressContentEditableWarning
-                  >
-                    English
+                {/* lang-list is now a div container */}
+                <div id="lang-list" className="space-y-3 text-sm">
+                  <div className="lang-item relative group p-0.5">
+                    <span contentEditable suppressContentEditableWarning>English</span>
                     <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
-                      <button data-action="duplicate" className="p-1">
+                      <button data-action="duplicate" className="p-1" type="button">
                         <CopyPlus className="w-3 h-3" />
                       </button>
-                      <button data-action="delete" className="p-1">
+                      <button data-action="delete" className="p-1" type="button">
                         <Trash2 className="w-3 h-3" />
                       </button>
                     </div>
-                  </li>
-                  <li
-                    className="relative group"
-                    contentEditable
-                    suppressContentEditableWarning
-                  >
-                    Spanish
+                  </div>
+
+                  <div className="lang-item relative group p-0.5">
+                    <span contentEditable suppressContentEditableWarning>Spanish</span>
                     <div className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 flex gap-1">
-                      <button data-action="duplicate" className="p-1">
+                      <button data-action="duplicate" className="p-1" type="button">
                         <CopyPlus className="w-3 h-3" />
                       </button>
-                      <button data-action="delete" className="p-1">
+                      <button data-action="delete" className="p-1" type="button">
                         <Trash2 className="w-3 h-3" />
                       </button>
                     </div>
-                  </li>
-                </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
