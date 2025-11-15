@@ -237,7 +237,7 @@ export default function Template01() {
     return () => window.removeEventListener('undoRedo', handleUndoRedo);
   }, []);
 
-  // Save initial state only once
+  // Save initial state only oncee
   useEffect(() => {
     saveState({ profileImage: null, contentState: {} });
   }, []);

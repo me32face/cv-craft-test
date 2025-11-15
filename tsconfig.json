@@ -39,7 +39,7 @@
 
     ".next\\dev/types/**/*.ts"
 
-, "app/page.jsx", "components/templates/Template02.jsx", "components/templates/Template03.jsx", "components/templates/Template15.tsx", "components/templates/Template17.jsx", "components/templates/Template14.jsx", "components/templates/Template19.jsx", "components/templates/Template20.jsx", "components/templates/Template26.tsx"  ],
+, "app/page.jsx", "components/templates/Template02.jsx", "components/templates/Template03.jsx", "components/templates/Template15.tsx", "components/templates/Template17.jsx", "components/templates/Template14.jsx", "components/templates/Template19.jsx", "components/templates/Template20.jsx", "components/templates/Template26.tsx", "components/templates/Template30.jsx", "components/templates/Template31.jsx"  ],
   "exclude": [
     "node_modules"
   ]

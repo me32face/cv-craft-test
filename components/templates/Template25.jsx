@@ -115,7 +115,7 @@ const CVPage = () => {
           contentEditable
           suppressContentEditableWarning
           className="text-3xl font-bold tracking-tight"
-          onInput={onEdit(setName)}
+          onBlur={onEdit(setName)}
         >
           {name}
         </h1>
@@ -123,7 +123,7 @@ const CVPage = () => {
           contentEditable
           suppressContentEditableWarning
           className="text-sm text-gray-700 text-right"
-          onInput={onEdit(setTitle)}
+          onBlur={onEdit(setTitle)}
         >
           {title}
         </p>
@@ -132,18 +132,18 @@ const CVPage = () => {
       <div className="space-y-6">
         {/* CONTACT */}
         <section className="flex gap-8 border-b border-gray-300 pb-4">
-          <div className="w-[32%]">
+          <div className="w-[25%]">
             <h3 className="text-xs font-semibold uppercase text-gray-700 tracking-wider">
               CONTACT
             </h3>
           </div>
-          <div className="w-[68%] grid grid-cols-2 gap-x-8 gap-y-2 text-xs text-gray-700">
+          <div className="w-[75%] grid grid-cols-2 gap-x-8 gap-y-2 text-xs text-gray-700">
             {Object.entries(contact).map(([key, val]) => (
               <span
                 key={key}
                 contentEditable
                 suppressContentEditableWarning
-                onInput={(e) => updateContact(key, e.currentTarget.textContent)}
+                onBlur={(e) => updateContact(key, e.currentTarget.textContent)}
               >
                 {val}
               </span>
@@ -153,19 +153,19 @@ const CVPage = () => {
 
         {/* EXPERIENCE */}
         <section className="flex gap-8 border-b border-gray-300 pb-4">
-          <div className="w-[32%]">
+          <div className="w-[25%]">
             <h3 className="text-xs font-semibold uppercase text-gray-700 tracking-wider">
               PROFESSIONAL EXPERIENCE
             </h3>
           </div>
-          <div className="w-[68%] text-sm space-y-6">
+          <div className="w-[75%] text-sm space-y-6">
             {experiences.map((ex) => (
               <div key={ex.id}>
                 <div className="flex justify-between mb-2">
                   <div
                     contentEditable
                     suppressContentEditableWarning
-                    onInput={(e) => updateExpField(ex.id, 'title', e.currentTarget.textContent)}
+                    onBlur={(e) => updateExpField(ex.id, 'title', e.currentTarget.textContent)}
                     className="font-semibold"
                   >
                     {ex.title}
@@ -186,7 +186,7 @@ const CVPage = () => {
                       <span
                         contentEditable
                         suppressContentEditableWarning
-                        onInput={(e) => updateExpBullet(ex.id, i, e.currentTarget.textContent)}
+                        onBlur={(e) => updateExpBullet(ex.id, i, e.currentTarget.textContent)}
                         className="flex-1 outline-none"
                       >
                         {b}
@@ -207,19 +207,19 @@ const CVPage = () => {
 
         {/* EDUCATION */}
         <section className="flex gap-8 border-b border-gray-300 pb-4">
-          <div className="w-[32%]">
+          <div className="w-[25%]">
             <h3 className="text-xs font-semibold uppercase text-gray-700 tracking-wider">
               EDUCATION
             </h3>
           </div>
-          <div className="w-[68%] text-sm space-y-4">
+          <div className="w-[75%] text-sm space-y-4">
             {educationRight.map((ed) => (
               <div key={ed.id}>
                 <div className="flex justify-between">
                   <div
                     contentEditable
                     suppressContentEditableWarning
-                    onInput={(e) => updateEduRField(ed.id, 'institution', e.currentTarget.textContent)}
+                    onBlur={(e) => updateEduRField(ed.id, 'institution', e.currentTarget.textContent)}
                     className="font-semibold"
                   >
                     {ed.institution}
@@ -236,7 +236,7 @@ const CVPage = () => {
                 <div
                   contentEditable
                   suppressContentEditableWarning
-                  onInput={(e) => updateEduRField(ed.id, 'degree', e.currentTarget.textContent)}
+                  onBlur={(e) => updateEduRField(ed.id, 'degree', e.currentTarget.textContent)}
                   className="text-xs text-gray-600 mb-2"
                 >
                   {ed.degree}
@@ -248,7 +248,7 @@ const CVPage = () => {
                       <span
                         contentEditable
                         suppressContentEditableWarning
-                        onInput={(e) => updateEduRBullet(ed.id, i, e.currentTarget.textContent)}
+                        onBlur={(e) => updateEduRBullet(ed.id, i, e.currentTarget.textContent)}
                         className="flex-1 outline-none"
                       >
                         {b}
@@ -269,18 +269,18 @@ const CVPage = () => {
 
         {/* CERTIFICATES */}
         <section className="flex gap-8">
-          <div className="w-[32%]">
+          <div className="w-[30%]">
             <h3 className="text-xs font-semibold uppercase text-gray-700 tracking-wider">
               CERTIFICATES
             </h3>
           </div>
-          <div className="w-[68%] grid grid-cols-2 gap-4 text-xs text-gray-700">
+          <div className="w-[70%] grid grid-cols-2 gap-4 text-xs text-gray-700">
             {certificates.map((c) => (
               <div key={c.id} className="relative group">
-                <div contentEditable suppressContentEditableWarning onInput={(e) => updateCertificate(c.id, 'title', e.currentTarget.textContent)}>
+                <div contentEditable suppressContentEditableWarning onBlur={(e) => updateCertificate(c.id, 'title', e.currentTarget.textContent)}>
                   {c.title}
                 </div>
-                <div contentEditable suppressContentEditableWarning onInput={(e) => updateCertificate(c.id, 'org', e.currentTarget.textContent)} className="text-gray-500 text-[11px]">
+                <div contentEditable suppressContentEditableWarning onBlur={(e) => updateCertificate(c.id, 'org', e.currentTarget.textContent)} className="text-gray-500 text-[11px]">
                   {c.org}
                 </div>
                 <button
