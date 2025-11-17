@@ -19,6 +19,7 @@ function Popup({ title, children, onClose }) {
       className="fixed inset-0 bg-black/40 flex items-center justify-start z-50 p-8"
       onClick={onClose}
     >
+      
       <div 
         className="bg-white w-[450px] max-h-[80vh] rounded shadow-lg flex flex-col"
         onClick={(e) => e.stopPropagation()}
