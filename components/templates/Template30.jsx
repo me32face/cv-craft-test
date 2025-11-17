@@ -36,25 +36,73 @@ export default function Template30({ data, onClickSection }) {
         {/* Contact */}
         <div className="mb-4">
           <h2 className="font-semibold text-lg mb-2">Contact</h2>
-          <p className="text-sm">📞 {data?.phone || "123-456-7890"}</p>
-          <p className="text-sm">📧 {data?.email || "hello@email.com"}</p>
-          <p className="text-sm">📍 {data?.address || "123 Anywhere St., Any City"}</p>
+          <p className="text-sm mt-1">📞 {data?.phone || "123-456-7890"}</p>
+          <p className="text-sm mt-1">📧 {data?.email || "hello@email.com"}</p>
+          <p className="text-sm mt-1">📍 {data?.address || "123 Anywhere St., Any City"}</p>
         </div>
 
         {/* Expertise/Skills */}
         <div className="mb-4">
-          <h2 className="font-semibold text-lg mb-2">Expertise</h2>
-          {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation", "Critical Thinking", "Leadership"]).map((s, i) => (
-            <p key={i} className="text-sm mb-1">• {s}</p>
-          ))}
+          <h2 className="font-semibold text-lg mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("skills")}>Expertise</h2>
+          {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation", "Critical Thinking", "Leadership"]).map((s, i) => {
+            if (typeof s === 'string') {
+              return <p key={i} className="text-sm mb-1">• {s}</p>;
+            }
+            
+            if (s.proficiency !== undefined) {
+              return (
+                <div key={i} className="mb-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">{s.name}</span>
+                    <span className="text-xs opacity-70">{s.proficiency}%</span>
+                  </div>
+                  <div className="w-full bg-white/20 rounded-full h-1 mt-1">
+                    <div
+                      className="bg-white h-1 rounded-full transition-all"
+                      style={{ width: `${s.proficiency}%` }}
+                    ></div>
+                  </div>
+                </div>
+              );
+            }
+            
+            if (s.category && s.items) {
+              return (
+                <p key={i} className="text-sm mb-1">
+                  <span className="font-medium">{s.category}:</span> {s.items.filter(item => item && item.trim()).join(", ")}
+                </p>
+              );
+            }
+            
+            return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
+          })}
         </div>
 
         {/* Languages */}
         <div className="mb-4">
           <h2 className="font-semibold text-lg mb-2">Language</h2>
-          {(languages.length ? languages : ["Spanish", "Arabic", "English"]).map((l, i) => (
-            <p key={i} className="text-sm mb-1">{l}</p>
-          ))}
+          {(data?.languages?.length ? data.languages : ["Spanish", "Arabic", "English"]).map((l, i) => {
+            const langObj = typeof l === 'string' ? { name: l, displayFormat: "simple" } : l;
+            const { name, displayFormat, proficiency, level } = langObj;
+            
+            return (
+              <div key={i} className="mb-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">{name}</span>
+                  {displayFormat === "level" && level && <span className="text-xs opacity-70">{level}</span>}
+                  {displayFormat === "percentage" && proficiency && <span className="text-xs opacity-70">{proficiency}%</span>}
+                </div>
+                {displayFormat === "percentage" && proficiency && (
+                  <div className="w-full bg-white/20 rounded-full h-1 mt-1">
+                    <div
+                      className="bg-white h-1 rounded-full transition-all"
+                      style={{ width: `${proficiency}%` }}
+                    ></div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
 
         {/* Awards */}
@@ -74,9 +122,9 @@ export default function Template30({ data, onClickSection }) {
 
         {/* Summary */}
         <h2 className="text-xl font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("summary")}>
-          Professional Summary
+         Summary
         </h2>
-        <p className="text-sm mb-6">{data?.summary || "A dedicated professional with extensive experience in the field."}</p>
+        <p className="text-sm mb-4">{data?.summary || "A dedicated professional with extensive experience in the field."}</p>
 
         {/* Experience */}
         <h2 className="text-xl font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("experience")}>
@@ -87,11 +135,21 @@ export default function Template30({ data, onClickSection }) {
           { role: "Product Design Manager", company: "Ingoude Company", year: "2019-2020", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
           { role: "Product Design Manager", company: "Timmerman Industries", year: "2017-2019", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." }
         ]).map((exp, i) => (
-          <div key={i} className="mb-4">
-            <p className="font-semibold">{exp.role}</p>
-            <p className="text-sm opacity-80">{exp.company}</p>
-            <p className="text-xs opacity-60">{exp.year}</p>
-            <p className="text-sm mt-1">{exp.desc}</p>
+          <div key={i} className="mb-0">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="font-semibold">{exp.role}</p>
+                <p className="text-sm opacity-80">{exp.company}</p>
+              </div>
+              <p className="text-xs opacity-60">{exp.year}</p>
+            </div>
+            {exp.descFormat === "bullet" ? (
+              <ul className="text-sm mt-1 ml-4">{exp.desc?.split('\n').map((line, idx) => line.trim() && <li key={idx} className="list-disc">{line}</li>)}</ul>
+            ) : exp.descFormat === "number" ? (
+              <ol className="text-sm mt-1 ml-4">{exp.desc?.split('\n').map((line, idx) => line.trim() && <li key={idx} className="list-decimal">{line}</li>)}</ol>
+            ) : (
+              <p className="text-sm mt-1">{exp.desc}</p>
+            )}
           </div>
         ))}
 
@@ -105,9 +163,32 @@ export default function Template30({ data, onClickSection }) {
           { course: "Bachelor of Business Management", school: "Wardiere University", year: "2012-2016" }
         ]).map((edu, i) => (
           <div key={i} className="mb-4">
-            <p className="font-semibold">{edu.course}</p>
-            <p className="text-sm opacity-80">{edu.school}</p>
-            <p className="text-xs opacity-60">{edu.year}</p>
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="font-semibold">{edu.course}</p>
+                <p className="text-sm opacity-80">{edu.school}</p>
+              </div>
+              <p className="text-xs opacity-60">{edu.year}</p>
+            </div>
+          </div>
+        ))}
+
+        {/* Certifications */}
+        <h2 className="text-xl font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("certificates")}>
+          Certifications
+        </h2>
+        {(data?.certificates || [
+          { name: "Project Management Professional (PMP)", issuer: "PMI", year: "2023" },
+          { name: "Digital Marketing Certification", issuer: "Google", year: "2022" }
+        ]).map((cert, i) => (
+          <div key={i} className="mb-3">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="font-semibold">{cert.name}</p>
+                <p className="text-sm opacity-80">{cert.issuer}</p>
+              </div>
+              <p className="text-xs opacity-60">{cert.year}</p>
+            </div>
           </div>
         ))}
 

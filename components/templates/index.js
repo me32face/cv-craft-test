@@ -24,6 +24,7 @@ export const templateInputs = {
     phone: true,
     email: true,
     address: true,
+    skills: true,
     languages: true,
     Summary: true,
     experiences: true,

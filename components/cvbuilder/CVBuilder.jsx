@@ -6,6 +6,7 @@ import { templates } from "../templates";
 import PersonalInfo from "./inputsections/PersonalInfo";
 import SummaryInput from "./inputsections/SummaryInput";  
 import ImageUploader from "./inputsections/ImageUploader";
+import SkillsInput from "./inputsections/SkillsInput"; 
 import LanguagesInput from "./inputsections/LanguagesInput";
 import ExperienceInput from "./inputsections/ExperienceInput";
 import EducationInput from "./inputsections/EducationInput";
@@ -48,14 +49,20 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
     imageShape: "circle",
     imageAlign: "center",
 
-    languages: ["English", "Hindi"],
+    languages: [
+      { name: "English", proficiency: 90 },
+      { name: "Hindi", proficiency: 85 }
+    ],
     experiences: [
       { role: "Developer", company: "Google", year: "2020 - 2022" }
     ],
     education: [
       { course: "BCA", school: "ABC College", year: "2017 - 2020" }
     ],
-    certificates: ["Full Stack Course", "DSA Course"]
+    certificates: [
+      { name: "Full Stack Development", issuer: "Tech Academy", year: "2023" },
+      { name: "Data Structures & Algorithms", issuer: "Code Institute", year: "2022" }
+    ]
   });
 
   const update = (key, value) => {
@@ -118,6 +125,7 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
           { name: "Personal Info", key: "personal" },
           { name: "summary", key: "summary" },
           { name: "Profile Image", key: "image" },
+          { name: "skills", key: "skills" },
           { name: "Languages", key: "languages" },
           { name: "Experience", key: "experience" },
           { name: "Education", key: "education" },
@@ -227,6 +235,17 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
           />
         </Popup>
       )}
+
+      {openSection === "skills" && (
+        <Popup title="Edit Skills" onClose={() => setOpenSection(null)}>
+          <SkillsInput
+            skills={data.skills}
+            setSkills={(v) => update("skills", v)}
+          />
+        </Popup>
+      )}
+
+    
 
       {openSection === "education" && (
         <Popup title="Edit Education" onClose={() => setOpenSection(null)}>
