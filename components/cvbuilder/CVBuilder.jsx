@@ -29,9 +29,9 @@ function Popup({ title, children, onClose }) {
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
-export default function CVBuilder() {
+export default function CVBuilder({ initialTemplate = "template30", onBack }) {
 
-  const [template, setTemplate] = useState("Template30");
+  const [template, setTemplate] = useState(initialTemplate.toLowerCase());
   const TemplateComponent = templates[template];
 
   const [openSection, setOpenSection] = useState(null);
@@ -86,6 +86,15 @@ export default function CVBuilder() {
 
       {/* LEFT SIDE — TEMPLATE SELECTOR + INPUT BUTTONS */}
       <div className="w-1/3 space-y-6">
+
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="w-full p-3 bg-gray-600 text-white rounded hover:bg-gray-700"
+          >
+            ← Back to Templates
+          </button>
+        )}
 
         {/* Template selector */}
         <div>
