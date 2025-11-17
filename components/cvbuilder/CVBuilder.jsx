@@ -80,7 +80,7 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
 
   // --- Download CV as PDF ---
   const handleDownload = async () => {
-    const element = document.getElementById("cv-preview");
+    const element = document.getElementById("pdf-template");
     if (!element) return;
 
     const canvas = await html2canvas(element, { scale: 2 });
@@ -163,7 +163,9 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
       <div className="w-2/3 border shadow-lg overflow-auto">
         {TemplateComponent ? (
           <div id="cv-preview">
-            <TemplateComponent data={data} />
+            <div id="template-content">
+              <TemplateComponent data={data} />
+            </div>
           </div>
         ) : (
           <p className="p-5 text-red-500">Template not found.</p>
@@ -274,6 +276,11 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
         </Popup>
       )}
 
+      {/* Hidden template for PDF generation */}
+      <div id="pdf-template" className="fixed -top-[9999px] -left-[9999px]">
+        {TemplateComponent && <TemplateComponent data={data} />}
+      </div>
+
     </div>
   );
-}
+}       

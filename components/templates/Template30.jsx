@@ -14,7 +14,7 @@ export default function Template30({ data, onClickSection }) {
   const references = toArray(data?.references);
 
   return (
-    <div id="cv-preview" className="w-[794px] min-h-[1123px] bg-white mx-auto shadow-lg border flex font-sans">
+    <div id="cv-preview" className="w-[794px] min-h-[1123px] bg-white mx-auto shadow-lg border flex" style={{ fontFamily: 'Poppins, sans-serif' }}>
 
       {/* LEFT SIDEBAR */}
       <div className="w-1/3 bg-[#2C3E50] text-white p-6 flex flex-col">
@@ -35,7 +35,7 @@ export default function Template30({ data, onClickSection }) {
 
         {/* Contact */}
         <div className="mb-4">
-          <h2 className="font-semibold text-lg mb-2">Contact</h2>
+          <h2 className="font-semibold text-md mb-2">CONTACT</h2>
           <p className="text-sm mt-1">📞 {data?.phone || "123-456-7890"}</p>
           <p className="text-sm mt-1">📧 {data?.email || "hello@email.com"}</p>
           <p className="text-sm mt-1">📍 {data?.address || "123 Anywhere St., Any City"}</p>
@@ -43,7 +43,7 @@ export default function Template30({ data, onClickSection }) {
 
         {/* Expertise/Skills */}
         <div className="mb-4">
-          <h2 className="font-semibold text-lg mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("skills")}>Expertise</h2>
+          <h2 className="font-semibold text-md mb-2 cursor-pointer " onClick={() => onClickSection && onClickSection("skills")}>EXPERTISE</h2>
           {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation", "Critical Thinking", "Leadership"]).map((s, i) => {
             if (typeof s === 'string') {
               return <p key={i} className="text-sm mb-1">• {s}</p>;
@@ -56,7 +56,7 @@ export default function Template30({ data, onClickSection }) {
                     <span className="text-sm">{s.name}</span>
                     <span className="text-xs opacity-70">{s.proficiency}%</span>
                   </div>
-                  <div className="w-full bg-white/20 rounded-full h-1 mt-1">
+                  <div className="w-full bg-white/20 rounded-full h-1 mt-2">
                     <div
                       className="bg-white h-1 rounded-full transition-all"
                       style={{ width: `${s.proficiency}%` }}
@@ -80,7 +80,7 @@ export default function Template30({ data, onClickSection }) {
 
         {/* Languages */}
         <div className="mb-4">
-          <h2 className="font-semibold text-lg mb-2">Language</h2>
+          <h2 className="font-semibold text-md mb-2">LANGUAGE</h2>
           {(data?.languages?.length ? data.languages : ["Spanish", "Arabic", "English"]).map((l, i) => {
             const langObj = typeof l === 'string' ? { name: l, displayFormat: "simple" } : l;
             const { name, displayFormat, proficiency, level } = langObj;
@@ -93,7 +93,7 @@ export default function Template30({ data, onClickSection }) {
                   {displayFormat === "percentage" && proficiency && <span className="text-xs opacity-70">{proficiency}%</span>}
                 </div>
                 {displayFormat === "percentage" && proficiency && (
-                  <div className="w-full bg-white/20 rounded-full h-1 mt-1">
+                  <div className="w-full bg-white/20 rounded-full h-1 mt-2">
                     <div
                       className="bg-white h-1 rounded-full transition-all"
                       style={{ width: `${proficiency}%` }}
@@ -107,7 +107,7 @@ export default function Template30({ data, onClickSection }) {
 
         {/* Awards */}
         <div className="mb-4">
-          <h2 className="font-semibold text-lg mb-2">Awards</h2>
+          <h2 className="font-semibold text-md mb-2">AWARDS</h2>
           {(awards.length ? awards : [
             "Oct 2019 | Employee of the Year",
             "May 2015 | Best Employee"
@@ -121,32 +121,32 @@ export default function Template30({ data, onClickSection }) {
       <div className="w-2/3 p-8 flex flex-col">
 
         {/* Summary */}
-        <h2 className="text-xl font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("summary")}>
-         Summary
+        <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("summary")}>
+         SUMMARY
         </h2>
-        <p className="text-sm mb-4">{data?.summary || "A dedicated professional with extensive experience in the field."}</p>
+        <p className="text-sm mb-4 text-gray-700">{data?.summary || "A dedicated professional with extensive experience in the field."}</p>
 
         {/* Experience */}
-        <h2 className="text-xl font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("experience")}>
-          Experience
+        <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("experience")}>
+          EXPERIENCE
         </h2>
         {(experiences.length ? experiences : [
           { role: "Product Design Manager", company: "Arowwai Industries", year: "2020-2023", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
           { role: "Product Design Manager", company: "Ingoude Company", year: "2019-2020", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
           { role: "Product Design Manager", company: "Timmerman Industries", year: "2017-2019", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." }
         ]).map((exp, i) => (
-          <div key={i} className="mb-0">
+          <div key={i} className="mb-3">
             <div className="flex justify-between items-start">
               <div>
-                <p className="font-semibold">{exp.role}</p>
+                <p className="font-semibold text-gray-800 !text-sm">{exp.role}</p>
                 <p className="text-sm opacity-80">{exp.company}</p>
               </div>
               <p className="text-xs opacity-60">{exp.year}</p>
             </div>
             {exp.descFormat === "bullet" ? (
-              <ul className="text-sm mt-1 ml-4">{exp.desc?.split('\n').map((line, idx) => line.trim() && <li key={idx} className="list-disc">{line}</li>)}</ul>
+              exp.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">• {line}</p>)
             ) : exp.descFormat === "number" ? (
-              <ol className="text-sm mt-1 ml-4">{exp.desc?.split('\n').map((line, idx) => line.trim() && <li key={idx} className="list-decimal">{line}</li>)}</ol>
+              exp.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">{idx + 1}. {line}</p>)
             ) : (
               <p className="text-sm mt-1">{exp.desc}</p>
             )}
@@ -154,18 +154,18 @@ export default function Template30({ data, onClickSection }) {
         ))}
 
         {/* Education */}
-        <h2 className="text-xl font-semibold mt-6 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
-          Education
+        <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
+          EDUCATION
         </h2>
         {(education.length ? education : [
           { course: "Bachelor of Business Management", school: "Wardiere University", year: "2020-2023" },
           { course: "Bachelor of Business Management", school: "Wardiere University", year: "2016-2020" },
           { course: "Bachelor of Business Management", school: "Wardiere University", year: "2012-2016" }
         ]).map((edu, i) => (
-          <div key={i} className="mb-4">
+          <div key={i} className="mb-3">
             <div className="flex justify-between items-start">
               <div>
-                <p className="font-semibold">{edu.course}</p>
+                <p className="font-semibold !text-sm text-gray-700">{edu.course}</p>
                 <p className="text-sm opacity-80">{edu.school}</p>
               </div>
               <p className="text-xs opacity-60">{edu.year}</p>
@@ -174,8 +174,8 @@ export default function Template30({ data, onClickSection }) {
         ))}
 
         {/* Certifications */}
-        <h2 className="text-xl font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("certificates")}>
-          Certifications
+        <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("certificates")}>
+          CERTIFICATIONS
         </h2>
         {(data?.certificates || [
           { name: "Project Management Professional (PMP)", issuer: "PMI", year: "2023" },
@@ -184,7 +184,7 @@ export default function Template30({ data, onClickSection }) {
           <div key={i} className="mb-3">
             <div className="flex justify-between items-start">
               <div>
-                <p className="font-semibold">{cert.name}</p>
+                <p className="font-semibold !text-sm text-gray-700">{cert.name}</p>
                 <p className="text-sm opacity-80">{cert.issuer}</p>
               </div>
               <p className="text-xs opacity-60">{cert.year}</p>
@@ -193,16 +193,16 @@ export default function Template30({ data, onClickSection }) {
         ))}
 
         {/* References */}
-        <h2 className="text-xl font-semibold mt-6 mb-3 border-b pb-1">References</h2>
+        <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1">REFERENCES</h2>
         {(references.length ? references : [
           { name: "Harumi Kobayashi", title: "CEO", phone: "123-456-7890", email: "hello@reality.com" },
           { name: "Bailey Dupont", title: "CEO", phone: "123-456-7890", email: "hello@reality.com" }
         ]).map((r, i) => (
           <div key={i} className="mb-3">
-            <p className="font-semibold">{r.name}</p>
-            <p className="text-sm">{r.title}</p>
-            <p className="text-sm">Phone: {r.phone}</p>
-            <p className="text-sm">Email: {r.email}</p>
+            <p className="font-semibold  !text-sm text-gray-700">{r.name}</p>
+            <p className="text-sm ">{r.title}</p>
+            <p className="text-sm text-gray-700">Phone: {r.phone}</p>
+            <p className="text-sm text-gray-700">Email: {r.email}</p>
           </div>
         ))}
 
