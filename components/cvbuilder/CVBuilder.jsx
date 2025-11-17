@@ -15,8 +15,14 @@ import CertificatesInput from "./inputsections/CertificatesInput";
 // Popup wrapper
 function Popup({ title, children, onClose }) {
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-start justify-start z-50 p-10">
-      <div className="bg-white w-[450px] p-5 rounded shadow-lg">
+    <div 
+      className="fixed inset-0 bg-black/40 flex items-start justify-start z-50 p-10"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-white w-[450px] p-5 rounded shadow-lg"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex justify-between items-center mb-3">
           <h2 className="text-xl font-bold">{title}</h2>
           <button onClick={onClose} className="text-red-500 text-lg">✕</button>
@@ -105,7 +111,7 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
         )}
 
         {/* Template selector */}
-        <div>
+        {/* <div>
           <label className="font-semibold">Select Template</label>
           <select
             value={template}
@@ -118,7 +124,7 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
 
         {/* Input section buttons */}
         {[
