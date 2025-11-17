@@ -29,6 +29,9 @@ export default function Home() {
 
     {id: 'Template30', name: 'Professional Resume', key: 'John Doe', image: '/template/template30.png', category: 'modern' },
     {id: 'Template31', name: 'Executive Resume', key: 'Jane Smith', image: '/template/template31.png', category: 'proffessional' },
+    {id: 'Template32', name: 'Clean Two-Column CV', key: 'Michael Brown', image: '/template/template32.png', category: 'simple' },
+
+
 
     { id: 'Template01', name: 'Professional Classic', key: 'Richard Sanchez', image: '/template/template01n.png', category: 'modern' },
     { id: 'Template06', name: 'Sample Layout', key: 'Olivia Schwaiger', image: '/template/template06.png', category: 'modern' },
@@ -252,6 +255,3 @@ export default function Home() {
     </>
   );
 }
-
-
-

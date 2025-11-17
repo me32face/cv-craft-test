@@ -2,10 +2,12 @@
 
 import Template30 from "./Template30";
 import Template31 from "./Template31";
+import Template32 from "./Template32";
 
 export const templates = {
   template30: Template30,
   template31: Template31,
+  template32: Template32
 };
 
 export const templateInputs = {
@@ -41,4 +43,18 @@ export const templateInputs = {
     education: true,
     skills: true,
   },
+
+  template32: {
+    name: true,
+    title: true,
+    profileImage: true,
+    phone: true,
+    email: true,
+    address: true,
+    languages: true,
+    experiences: true,
+    education: true,
+    certificates: true,
+  },
+
 };
