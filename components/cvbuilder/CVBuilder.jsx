@@ -16,18 +16,20 @@ import CertificatesInput from "./inputsections/CertificatesInput";
 function Popup({ title, children, onClose }) {
   return (
     <div 
-      className="fixed inset-0 bg-black/40 flex items-start justify-start z-50 p-10"
+      className="fixed inset-0 bg-black/40 flex items-center justify-start z-50 p-8"
       onClick={onClose}
     >
       <div 
-        className="bg-white w-[450px] p-5 rounded shadow-lg"
+        className="bg-white w-[450px] max-h-[80vh] rounded shadow-lg flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-between items-center mb-3">
+        <div className="flex justify-between items-center p-5 border-b">
           <h2 className="text-xl font-bold">{title}</h2>
           <button onClick={onClose} className="text-red-500 text-lg">✕</button>
         </div>
-        {children}
+        <div className="p-5 overflow-y-auto flex-1">
+          {children}
+        </div>
       </div>
     </div>
   );
