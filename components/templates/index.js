@@ -25,6 +25,7 @@ export const templateInputs = {
     email: true,
     address: true,
     languages: true,
+    Summary: true,
     experiences: true,
     education: true,
     certificates: true,

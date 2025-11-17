@@ -6,6 +6,7 @@ export default function Template30({ data, onClickSection }) {
   const toArray = (value) => (!value ? [] : Array.isArray(value) ? value : [value]);
 
   const experiences = toArray(data?.experiences);
+  const summary = toArray(data?.summary);
   const education = toArray(data?.education);
   const certificates = toArray(data?.certificates);
   const languages = toArray(data?.languages);
@@ -70,6 +71,12 @@ export default function Template30({ data, onClickSection }) {
 
       {/* RIGHT MAIN CONTENT */}
       <div className="w-2/3 p-8 flex flex-col">
+
+        {/* Summary */}
+        <h2 className="text-xl font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("summary")}>
+          Professional Summary
+        </h2>
+        <p className="text-sm mb-6">{data?.summary || "A dedicated professional with extensive experience in the field."}</p>
 
         {/* Experience */}
         <h2 className="text-xl font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("experience")}>

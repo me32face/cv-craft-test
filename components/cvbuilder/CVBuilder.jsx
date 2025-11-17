@@ -4,6 +4,7 @@ import { templates } from "../templates";
 
 // Input components
 import PersonalInfo from "./inputsections/PersonalInfo";
+import SummaryInput from "./inputsections/SummaryInput";  
 import ImageUploader from "./inputsections/ImageUploader";
 import LanguagesInput from "./inputsections/LanguagesInput";
 import ExperienceInput from "./inputsections/ExperienceInput";
@@ -115,6 +116,7 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
         {/* Input section buttons */}
         {[
           { name: "Personal Info", key: "personal" },
+          { name: "summary", key: "summary" },
           { name: "Profile Image", key: "image" },
           { name: "Languages", key: "languages" },
           { name: "Experience", key: "experience" },
@@ -206,6 +208,16 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
           />
         </Popup>
       )}
+
+      {openSection === "summary" && (
+        <Popup title="Edit Professional Summary" onClose={() => setOpenSection(null)}>
+          <SummaryInput 
+          summary={data.summary} 
+          setSummary={(v) => update("summary", v)} 
+          />
+          </Popup>
+      )}
+     
 
       {openSection === "experience" && (
         <Popup title="Edit Experience" onClose={() => setOpenSection(null)}>
