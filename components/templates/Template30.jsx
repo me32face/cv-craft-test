@@ -13,6 +13,7 @@ export default function Template30({ data, onClickSection }) {
   const languages = toArray(data?.languages);
   const awards = toArray(data?.awards);
   const references = toArray(data?.references);
+  const projects = toArray(data?.projects);
 
   return (
     <div id="cv-preview" className="w-[794px] min-h-[1123px] bg-white mx-auto shadow-lg border flex" style={{ fontFamily: 'Poppins, sans-serif' }}>
@@ -40,12 +41,19 @@ export default function Template30({ data, onClickSection }) {
           <p className="text-sm mt-1">📞 {data?.phone || "123-456-7890"}</p>
           <p className="text-sm mt-1">📧 {data?.email || "hello@email.com"}</p>
           <p className="text-sm mt-1">📍 {data?.address || "123 Anywhere St., Any City"}</p>
+          {data?.linkedin && (<p className="text-sm mt-1">🔗 {data?.linkedin}</p>)}
+          {data?.github && (<p className="text-sm mt-1">🧑‍💻 {data?.github || ""}</p>)}
+          {data?.portfolio && (<p className="text-sm mt-1">💻 {data?.portfolio || ""}</p>)}
+
+
+
         </div>
 
         {/* Expertise/Skills */}
-        <div className="mb-4">
-          <h2 className="font-semibold text-md mb-2 cursor-pointer " onClick={() => onClickSection && onClickSection("skills")}>EXPERTISE</h2>
-          {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation", "Critical Thinking", "Leadership"]).map((s, i) => {
+        {data?.visibleSections?.skills !== false && (
+          <div className="mb-4">
+            <h2 className="font-semibold text-md mb-2 cursor-pointer " onClick={() => onClickSection && onClickSection("skills")}>EXPERTISE</h2>
+          {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation"]).map((s, i) => {
             if (typeof s === 'string') {
               return <p key={i} className="text-sm mb-1">• {s}</p>;
             }
@@ -77,15 +85,18 @@ export default function Template30({ data, onClickSection }) {
             
             return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
           })}
-        </div>
+          </div>
+        )}
 
         {/* Languages */}
-        <div className="mb-4">
+        {data?.visibleSections?.languages !== false && (
+          <div className="mb-4">
           <h2 className="font-semibold text-md mb-2">LANGUAGE</h2>
           {(data?.languages?.length ? data.languages : ["Spanish", "Arabic", "English"]).map((l, i) => 
             renderLanguage(l, i)
           )}
-        </div>
+          </div>
+        )}
 
         {/* Awards */}
         <div className="mb-4">
@@ -103,15 +114,52 @@ export default function Template30({ data, onClickSection }) {
       <div className="w-2/3 p-8 flex flex-col">
 
         {/* Summary */}
-        <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("summary")}>
-         SUMMARY
-        </h2>
-        <p className="text-sm mb-4 text-gray-700">{data?.summary || "A dedicated professional with extensive experience in the field."}</p>
+        {data?.visibleSections?.summary !== false && (
+          <>
+            <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("summary")}>
+             SUMMARY
+            </h2>
+            <p className="text-sm mb-4 text-gray-700">{data?.summary || "A dedicated professional with extensive experience in the field."}</p>
+          </>
+        )}
+
+        {/* Projects */}
+        {data?.visibleSections?.projects !== false && (
+          <>
+            <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("projects")}>
+              PROJECTS
+            </h2>
+        {projects.map((project, i) => (
+          <div key={i} className="mb-3">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="font-semibold text-gray-800 !text-sm">{project.name}</p>
+                {project.link && (
+                  <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline">
+                    {project.link}
+                  </a>
+                )}
+              </div>
+              <p className="text-xs opacity-60">{project.year}</p>
+            </div>
+            {project.descFormat === "bullet" ? (
+              project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">• {line}</p>)
+            ) : project.descFormat === "number" ? (
+              project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">{idx + 1}. {line}</p>)
+            ) : (
+              <p className="text-sm mt-1 text-gray-700">{project.desc}</p>
+            )}
+          </div>
+        ))}
+          </>
+        )}
 
         {/* Experience */}
-        <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("experience")}>
-          EXPERIENCE
-        </h2>
+        {data?.visibleSections?.experience !== false && (
+          <>
+            <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("experience")}>
+              EXPERIENCE
+            </h2>
         {(experiences.length ? experiences : [
           { role: "Product Design Manager", company: "Arowwai Industries", year: "2020-2023", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
           { role: "Product Design Manager", company: "Ingoude Company", year: "2019-2020", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
@@ -134,11 +182,15 @@ export default function Template30({ data, onClickSection }) {
             )}
           </div>
         ))}
+          </>
+        )}
 
         {/* Education */}
-        <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
-          EDUCATION
-        </h2>
+        {data?.visibleSections?.education !== false && (
+          <>
+            <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
+              EDUCATION
+            </h2>
         {(education.length ? education : [
           { course: "Bachelor of Business Management", school: "Wardiere University", year: "2020-2023" },
           { course: "Bachelor of Business Management", school: "Wardiere University", year: "2016-2020" },
@@ -154,11 +206,15 @@ export default function Template30({ data, onClickSection }) {
             </div>
           </div>
         ))}
+          </>
+        )}
 
         {/* Certifications */}
-        <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("certificates")}>
-          CERTIFICATIONS
-        </h2>
+        {data?.visibleSections?.certificates !== false && (
+          <>
+            <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("certificates")}>
+              CERTIFICATIONS
+            </h2>
         {(data?.certificates || [
           { name: "Project Management Professional (PMP)", issuer: "PMI", year: "2023" },
           { name: "Digital Marketing Certification", issuer: "Google", year: "2022" }
@@ -173,6 +229,8 @@ export default function Template30({ data, onClickSection }) {
             </div>
           </div>
         ))}
+          </>
+        )}
 
         {/* References
         <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1">REFERENCES</h2>

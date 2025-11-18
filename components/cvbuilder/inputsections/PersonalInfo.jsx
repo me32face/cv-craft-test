@@ -30,6 +30,13 @@ export default function PersonalInfo({ data, update }) {
         <label className="block text-sm font-semibold">Address</label>
         <input className="w-full border p-2 rounded" value={data.address || ""} onChange={(e) => update("address", e.target.value)} />
       </div>
+
+      <div>
+        <label className="block text-sm font-semibold">LinkedIn</label>
+        <input className="w-full border p-2 rounded" value={data.linkedin || ""} onChange={(e) => update("linkedin", e.target.value)} />
+      </div>
     </div>
+
+    
   );
 }

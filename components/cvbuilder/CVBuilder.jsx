@@ -4,23 +4,24 @@ import { templates } from "../templates";
 
 // Input components
 import PersonalInfo from "./inputsections/PersonalInfo";
-import SummaryInput from "./inputsections/SummaryInput";  
+import SummaryInput from "./inputsections/SummaryInput";
 import ImageUploader from "./inputsections/ImageUploader";
-import SkillsInput from "./inputsections/SkillsInput"; 
+import SkillsInput from "./inputsections/SkillsInput";
 import LanguagesInput from "./inputsections/LanguagesInput";
 import ExperienceInput from "./inputsections/ExperienceInput";
 import EducationInput from "./inputsections/EducationInput";
 import CertificatesInput from "./inputsections/CertificatesInput";
+import ProjectInput from "./inputsections/ProjectInput";
 
 // Popup wrapper
 function Popup({ title, children, onClose }) {
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black/40 flex items-center justify-start z-50 p-8"
       onClick={onClose}
     >
-      
-      <div 
+
+      <div
         className="bg-white w-[450px] max-h-[80vh] rounded shadow-lg flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
@@ -53,10 +54,24 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
     phone: "+91 987654321",
     email: "john@example.com",
     address: "New Delhi, India",
+    linkedin: "linkedin.com/in/johndoe",
+    github: "github.com/johndoe",
+    portfolio: "http://johndoe.com",
+
 
     profileImage: "",
     imageShape: "circle",
     imageAlign: "center",
+
+    visibleSections: {
+      summary: true,
+      projects: true,
+      skills: true,
+      languages: true,
+      experience: true,
+      education: true,
+      certificates: true
+    },
 
     languages: [
       { name: "English", proficiency: 90 },
@@ -133,6 +148,7 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
         {[
           { name: "Personal Info", key: "personal" },
           { name: "summary", key: "summary" },
+          { name: "projects", key: "projects" },
           { name: "Profile Image", key: "image" },
           { name: "skills", key: "skills" },
           { name: "Languages", key: "languages" },
@@ -205,6 +221,24 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
             onChange={(e) => update("address", e.target.value)}
             className="w-full border p-2 rounded"
           />
+           <input
+            placeholder="Linkedin"
+            value={data.linkedin}
+            onChange={(e) => update("linkedin", e.target.value)}
+            className="w-full border p-2 rounded"
+          />
+          <input
+            placeholder="Github"
+            value={data.github}
+            onChange={(e) => update("github", e.target.value)}
+            className="w-full border p-2 rounded"
+          />
+          <input
+            placeholder="Portfolio"
+            value={data.portfolio}
+            onChange={(e) => update("portfolio", e.target.value)}
+            className="w-full border p-2 rounded"
+          />
         </Popup>
       )}
 
@@ -221,6 +255,15 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
 
       {openSection === "languages" && (
         <Popup title="Edit Languages" onClose={() => setOpenSection(null)}>
+          <div className="flex items-center justify-between mb-4 p-3 bg-gray-50 rounded">
+            <span className="font-medium">Show this section in CV</span>
+            <input
+              type="checkbox"
+              checked={data.visibleSections?.languages !== false}
+              onChange={(e) => update("visibleSections", { ...data.visibleSections, languages: e.target.checked })}
+              className="w-5 h-5 cursor-pointer"
+            />
+          </div>
           <LanguagesInput
             languages={data.languages}
             setLanguages={(v) => update("languages", v)}
@@ -230,16 +273,51 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
 
       {openSection === "summary" && (
         <Popup title="Edit Professional Summary" onClose={() => setOpenSection(null)}>
-          <SummaryInput 
-          summary={data.summary} 
-          setSummary={(v) => update("summary", v)} 
+          <div className="flex items-center justify-between mb-4 p-3 bg-gray-50 rounded">
+            <span className="font-medium">Show this section in CV</span>
+            <input
+              type="checkbox"
+              checked={data.visibleSections?.summary !== false}
+              onChange={(e) => update("visibleSections", { ...data.visibleSections, summary: e.target.checked })}
+              className="w-5 h-5 cursor-pointer"
+            />
+          </div>
+          <SummaryInput
+            summary={data.summary}
+            setSummary={(v) => update("summary", v)}
           />
-          </Popup>
+        </Popup>
       )}
-     
+
+      {openSection === "projects" && (
+        <Popup title="Edit Projects" onClose={() => setOpenSection(null)}>
+          <div className="flex items-center justify-between mb-4 p-3 bg-gray-50 rounded">
+            <span className="font-medium">Show this section in CV</span>
+            <input
+              type="checkbox"
+              checked={data.visibleSections?.projects !== false}
+              onChange={(e) => update("visibleSections", { ...data.visibleSections, projects: e.target.checked })}
+              className="w-5 h-5 cursor-pointer"
+            />
+          </div>
+          <ProjectInput
+            projects={data.projects}
+            setProjects={(v) => update("projects", v)}
+          />
+        </Popup>
+      )}
 
       {openSection === "experience" && (
         <Popup title="Edit Experience" onClose={() => setOpenSection(null)}>
+          <div className="flex items-center justify-between mb-4 p-3 bg-gray-50 rounded">
+            <span className="font-medium">Show this section in CV</span>
+            <input
+              type="checkbox"
+              checked={data.visibleSections?.experience !== false}
+              onChange={(e) => update("visibleSections", { ...data.visibleSections, experience: e.target.checked })}
+              className="w-5 h-5 cursor-pointer"
+            />
+          </div>
           <ExperienceInput
             experiences={data.experiences}
             setExperiences={(v) => update("experiences", v)}
@@ -249,6 +327,15 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
 
       {openSection === "skills" && (
         <Popup title="Edit Skills" onClose={() => setOpenSection(null)}>
+          <div className="flex items-center justify-between mb-4 p-3 bg-gray-50 rounded">
+            <span className="font-medium">Show this section in CV</span>
+            <input
+              type="checkbox"
+              checked={data.visibleSections?.skills !== false}
+              onChange={(e) => update("visibleSections", { ...data.visibleSections, skills: e.target.checked })}
+              className="w-5 h-5 cursor-pointer"
+            />
+          </div>
           <SkillsInput
             skills={data.skills}
             setSkills={(v) => update("skills", v)}
@@ -256,10 +343,17 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
         </Popup>
       )}
 
-    
-
       {openSection === "education" && (
         <Popup title="Edit Education" onClose={() => setOpenSection(null)}>
+          <div className="flex items-center justify-between mb-4 p-3 bg-gray-50 rounded">
+            <span className="font-medium">Show this section in CV</span>
+            <input
+              type="checkbox"
+              checked={data.visibleSections?.education !== false}
+              onChange={(e) => update("visibleSections", { ...data.visibleSections, education: e.target.checked })}
+              className="w-5 h-5 cursor-pointer"
+            />
+          </div>
           <EducationInput
             education={data.education}
             setEducation={(v) => update("education", v)}
@@ -269,6 +363,15 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
 
       {openSection === "certificates" && (
         <Popup title="Edit Certificates" onClose={() => setOpenSection(null)}>
+          <div className="flex items-center justify-between mb-4 p-3 bg-gray-50 rounded">
+            <span className="font-medium">Show this section in CV</span>
+            <input
+              type="checkbox"
+              checked={data.visibleSections?.certificates !== false}
+              onChange={(e) => update("visibleSections", { ...data.visibleSections, certificates: e.target.checked })}
+              className="w-5 h-5 cursor-pointer"
+            />
+          </div>
           <CertificatesInput
             certificates={data.certificates}
             setCertificates={(v) => update("certificates", v)}
