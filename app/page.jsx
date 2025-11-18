@@ -37,7 +37,7 @@ export default function Home() {
     {id: 'Template35', name: 'Elegant Layout', key: 'David Wilson', image: '/template/template35.png', category: 'proffessional' },
     {id: 'Template33', name: 'Olivia Modern ', key: 'Olivia Wilson', image: '/template/template33.png', category: 'proffessional' },
     {id: 'Template38', name: 'Modern Creative', key: 'Emily Davis', image: '/template/template38.png', category: 'creative' },
-
+    {id: 'Template39', name: 'Modern Creative', key: 'Emily Davis', image: '/template/template39.png', category: 'creative' },
 
     { id: 'Template01', name: 'Professional Classic', key: 'Richard Sanchez', image: '/template/template01n.png', category: 'modern' },
     { id: 'Template06', name: 'Sample Layout', key: 'Olivia Schwaiger', image: '/template/template06.png', category: 'modern' },

@@ -24,17 +24,17 @@ export default function Template35({ data, onClickSection }) {
       {/* LEFT SIDEBAR */}
       <div className="w-[280px] bg-gradient-to-b from-green-50 to-green-200 p-8 flex-shrink-0">
         {/* PROFILE IMAGE */}
-        <div className="mb-10 relative">
-          {/* Profile Image */}
-          {data?.profileImage && (
-            <div
-              className={`overflow-hidden mb-6 ${data.imageShape === "circle" ? "rounded-full" : data.imageShape === "rounded" ? "rounded-xl" : ""}`}
-              style={{ width: 120, height: 120, margin: "0 auto" }}
-            >
-              <img src={data.profileImage} className="w-full h-full object-cover" alt="profile" />
-            </div>
-          )}
-        </div>
+          <div className="mb-10 relative">
+            {/* Profile Image */}
+            {data?.profileImage && (
+              <div
+                className={`overflow-hidden mb-6 ${data.imageShape === "circle" ? "rounded-full" : data.imageShape === "rounded" ? "rounded-xl" : ""}`}
+                style={{ width: 120, height: 120, margin: "0 auto" }}
+              >
+                <img src={data.profileImage} className="w-full h-full object-cover" alt="profile" />
+              </div>
+            )}
+          </div>
 
           {/* Contact */}
         <div className="mb-4">
@@ -122,7 +122,7 @@ export default function Template35({ data, onClickSection }) {
           className="mb-12 cursor-pointer"
           onClick={() => onClickSection("personal")}
         >
-          <div className="inline-flex flex-col items-center border-2 px-6 py-3 rounded-full">
+          <div className="inline-flex flex-col items-center border px-6 py-3 rounded-3xl">
             <h1 className="text-4xl font-bold text-gray-600 uppercase tracking-wide">
               {data.name || "YOUR NAME"}
             </h1>
