@@ -13,6 +13,7 @@ export default function Template34({ data, onClickSection }) {
         item.role ||
         item.company ||
         item.school ||
+        item.experience ||
         JSON.stringify(item)
       );
     }
@@ -44,11 +45,11 @@ export default function Template34({ data, onClickSection }) {
       className="w-[794px] min-h-[1123px] mx-auto bg-white shadow-xl p-10 font-sans"
     >
       {/* HEADER */}
-      <div className="relative mb-10">
+      <div className="relative mb-10 ml-20">
         <div className="flex items-center bg-[#e8eef4] rounded-r-full p-6 w-[620px] shadow-sm">
           {/* Profile Image */}
           <div
-            className="relative w-32 h-32 rounded-full overflow-hidden -ml-16 bg-white border-4 border-white shadow-md cursor-pointer"
+            className="relative w-32 h-32 rounded-full overflow-hidden -ml-16 bg-white border-4 border-white shadow-md cursor-pointer "
             onClick={() => onClickSection("image")}
           >
             <img
@@ -330,6 +331,7 @@ export default function Template34({ data, onClickSection }) {
                       year: "2018–2021",
                       desc: "Achieved 120% of quarterly sales...",
                     },
+                    
                   ]
               ).map((exp, i) => {
                 const e = safeObj(exp);
