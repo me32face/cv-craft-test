@@ -1,6 +1,30 @@
 'use client';
 import React from "react";
 
+// Global utility function for rendering language formats
+export const renderLanguage = (lang, index, styles = {}) => {
+  const langObj = typeof lang === 'string' ? { name: lang, displayFormat: "simple" } : lang;
+  const { name, displayFormat, proficiency, level } = langObj;
+  
+  return (
+    <div key={index} className={styles.container || "mb-2"}>
+      <div className={styles.header || "flex justify-between items-center"}>
+        <span className={styles.name || "text-sm"}>{name}</span>
+        {displayFormat === "level" && level && <span className={styles.level || "text-xs opacity-70"}>{level}</span>}
+        {displayFormat === "percentage" && proficiency && <span className={styles.percentage || "text-xs opacity-70"}>{proficiency}%</span>}
+      </div>
+      {displayFormat === "percentage" && proficiency && (
+        <div className={styles.barContainer || "w-full bg-white/20 rounded-full h-1 mt-2"}>
+          <div
+            className={styles.bar || "bg-white h-1 rounded-full transition-all"}
+            style={{ width: `${proficiency}%` }}
+          ></div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const LANGUAGE_OPTIONS = [
   "English", "Hindi", "Tamil", "Malayalam", "Kannada", 
   "Arabic", "Telugu", "French", "German", "Spanish", "Chinese"
@@ -61,7 +85,7 @@ export default function LanguagesInput({ languages = [], setLanguages }) {
                 onChange={(e) => updateLanguage(index, "displayFormat", e.target.value)}
                 className="w-full border p-2 rounded"
               >
-                <option value="simple">Simple (Name only)</option>
+                <option value="simple">Default </option>
                 <option value="percentage">Percentage</option>
                 <option value="level">Text Level</option>
               </select>

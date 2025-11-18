@@ -63,6 +63,7 @@ export const templateInputs = {
     experiences: true,
     education: true,
     certificates: true,
+
   },
 
   template31: {

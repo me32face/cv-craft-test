@@ -1,5 +1,6 @@
 'use client';
 import React from "react";
+import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
 
 export default function Template30({ data, onClickSection }) {
   // Safety conversion
@@ -81,28 +82,9 @@ export default function Template30({ data, onClickSection }) {
         {/* Languages */}
         <div className="mb-4">
           <h2 className="font-semibold text-md mb-2">LANGUAGE</h2>
-          {(data?.languages?.length ? data.languages : ["Spanish", "Arabic", "English"]).map((l, i) => {
-            const langObj = typeof l === 'string' ? { name: l, displayFormat: "simple" } : l;
-            const { name, displayFormat, proficiency, level } = langObj;
-            
-            return (
-              <div key={i} className="mb-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">{name}</span>
-                  {displayFormat === "level" && level && <span className="text-xs opacity-70">{level}</span>}
-                  {displayFormat === "percentage" && proficiency && <span className="text-xs opacity-70">{proficiency}%</span>}
-                </div>
-                {displayFormat === "percentage" && proficiency && (
-                  <div className="w-full bg-white/20 rounded-full h-1 mt-2">
-                    <div
-                      className="bg-white h-1 rounded-full transition-all"
-                      style={{ width: `${proficiency}%` }}
-                    ></div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+          {(data?.languages?.length ? data.languages : ["Spanish", "Arabic", "English"]).map((l, i) => 
+            renderLanguage(l, i)
+          )}
         </div>
 
         {/* Awards */}
@@ -192,7 +174,7 @@ export default function Template30({ data, onClickSection }) {
           </div>
         ))}
 
-        {/* References */}
+        {/* References
         <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1">REFERENCES</h2>
         {(references.length ? references : [
           { name: "Harumi Kobayashi", title: "CEO", phone: "123-456-7890", email: "hello@reality.com" },
@@ -204,7 +186,7 @@ export default function Template30({ data, onClickSection }) {
             <p className="text-sm text-gray-700">Phone: {r.phone}</p>
             <p className="text-sm text-gray-700">Email: {r.email}</p>
           </div>
-        ))}
+        ))} */}
 
       </div>
     </div>
