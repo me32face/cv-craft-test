@@ -33,11 +33,20 @@ export default function Template34({ data, onClickSection }) {
 
   const skills = toArray(data?.skills);
   const experiences = toArray(data?.experiences);
+  const summaryArr = toArray(data?.summary);
   const education = toArray(data?.education);
   const certificates = toArray(data?.certificates);
   const languages = toArray(data?.languages);
-  const references = toArray(data?.references);
   const awards = toArray(data?.awards);
+  const projects = toArray(data?.projects);
+
+  const getSummaryText = () => {
+    if (!data?.summary) return "";
+    if (Array.isArray(data.summary)) {
+      return data.summary.map((item) => safeText(item)).join(" ");
+    }
+    return safeText(data.summary);
+  };
 
   return (
     <div
@@ -49,30 +58,50 @@ export default function Template34({ data, onClickSection }) {
         <div className="flex items-center bg-[#e8eef4] rounded-r-full p-6 w-[620px] shadow-sm">
           {/* Profile Image */}
           <div
-            className="relative w-32 h-32 rounded-full overflow-hidden -ml-16 bg-white border-4 border-white shadow-md cursor-pointer "
-            onClick={() => onClickSection("image")}
-          >
-            <img
-              src={
-                data.profileImage || "/templateprofile/template22profile.jpg"
+            className={`
+              flex 
+              ${
+                data?.imageAlign === "left"
+                  ? "justify-start"
+                  : data?.imageAlign === "right"
+                  ? "justify-end"
+                  : "justify-center"
               }
-              className="w-full h-full object-cover"
-            />
+            `}
+            onClick={() => onClickSection && onClickSection("image")}
+          >
+            <div
+              className={`
+                w-32 h-32 overflow-hidden bg-white border-4 border-white shadow-md cursor-pointer
+                ${
+                  data?.imageShape === "circle"
+                    ? "rounded-full"
+                    : data?.imageShape === "rounded"
+                    ? "rounded-xl"
+                    : "rounded-none"
+                }
+              `}
+            >
+              <img
+                src={data?.profileImage || "/templateprofile/template22profile.jpg"}
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
 
           <div className="ml-8">
             <h1
               className="text-4xl font-bold text-gray-800 tracking-wide cursor-pointer"
-              onClick={() => onClickSection("personal")}
+              onClick={() => onClickSection && onClickSection("personal")}
             >
-              {data.name || "DONNA STROUPE"}
+              {data?.name || "DONNA STROUPE"}
             </h1>
 
             <p
               className="text-lg text-gray-600 font-medium mt-1 cursor-pointer"
-              onClick={() => onClickSection("personal")}
+              onClick={() => onClickSection && onClickSection("personal")}
             >
-              {data.title || "Professional Sales Executive"}
+              {data?.title || "Professional Sales Executive"}
             </p>
           </div>
         </div>
@@ -85,7 +114,7 @@ export default function Template34({ data, onClickSection }) {
           {/* CONTACT */}
           <section
             className="mb-6 cursor-pointer"
-            onClick={() => onClickSection("personal")}
+            onClick={() => onClickSection && onClickSection("personal")}
           >
             <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
               Contact
@@ -109,172 +138,180 @@ export default function Template34({ data, onClickSection }) {
           </section>
 
           {/* SKILLS */}
-          <section
-            className="mb-6 cursor-pointer"
-            onClick={() => onClickSection("skills")}
-          >
-            <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1">
-              Skills
-            </h3>
+          {data?.visibleSections?.skills !== false && (
+            <section
+              className="mb-6 cursor-pointer"
+              onClick={() => onClickSection && onClickSection("skills")}
+            >
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1">
+                Skills
+              </h3>
 
-            <div className="text-sm mt-2 space-y-2">
-              {(skills.length
-                ? skills
-                : [
-                    "Client Relationship Building",
-                    "Negotiation Skills",
-                    "Target Achievement",
-                    "CRM Management",
-                    "Team Collaboration",
-                    "Lead Prospecting",
-                    "Communication Skills",
-                    "Strategic Planning",
-                  ]
-              ).map((s, i) => {
-                // String – simple bullet item
-                if (typeof s === "string") {
+              <div className="text-sm mt-2 space-y-2">
+                {(skills.length
+                  ? skills
+                  : [
+                      "Client Relationship Building",
+                      "Negotiation Skills",
+                      "Target Achievement",
+                      "CRM Management",
+                      "Team Collaboration",
+                      "Lead Prospecting",
+                      "Communication Skills",
+                      "Strategic Planning",
+                    ]
+                ).map((s, i) => {
+                  // String – simple bullet item
+                  if (typeof s === "string") {
+                    return (
+                      <div key={i} className="flex items-start">
+                        <span className="mt-[3px] mr-2">•</span>
+                        <span>{s}</span>
+                      </div>
+                    );
+                  }
+
+                  const skillObj = safeObj(s);
+
+                  // Skill with proficiency bar
+                  if (skillObj.proficiency !== undefined) {
+                    return (
+                      <div key={i}>
+                        <div className="flex justify-between items-center">
+                          <span>{safeText(skillObj.name)}</span>
+                          <span className="text-xs opacity-70">
+                            {skillObj.proficiency}%
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-300 rounded-full h-1 mt-1">
+                          <div
+                            className="h-1 rounded-full"
+                            style={{
+                              width: `${skillObj.proficiency}%`,
+                              backgroundColor: "#4b5563",
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  // Skill category with items
+                  if (skillObj.category && skillObj.items) {
+                    const items = Array.isArray(skillObj.items)
+                      ? skillObj.items.filter(
+                          (it) => it && it.toString().trim()
+                        )
+                      : [];
+                    return (
+                      <div key={i}>
+                        <span className="font-medium">
+                          {safeText(skillObj.category)}:
+                        </span>{" "}
+                        <span>{items.join(", ")}</span>
+                      </div>
+                    );
+                  }
+
+                  // Fallback
                   return (
                     <div key={i} className="flex items-start">
                       <span className="mt-[3px] mr-2">•</span>
-                      <span>{s}</span>
+                      <span>{safeText(skillObj)}</span>
                     </div>
                   );
-                }
+                })}
+              </div>
+            </section>
+          )}
 
-                const skillObj = safeObj(s);
+          {/* LANGUAGES */}
+          {data?.visibleSections?.languages !== false && (
+            <section
+              className="mb-6 cursor-pointer"
+              onClick={() => onClickSection && onClickSection("languages")}
+            >
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
+                Language
+              </h3>
 
-                // Skill with proficiency bar
-                if (skillObj.proficiency !== undefined) {
+              <div className="text-sm space-y-2">
+                {(languages.length
+                  ? languages
+                  : ["English (Fluent)", "Hindi (Fluent)", "Spanish (Basic)"]
+                ).map((lang, i) => {
+                  // Simple string
+                  if (typeof lang === "string") {
+                    return <p key={i}>{lang}</p>;
+                  }
+
+                  const l = safeObj(lang);
+                  const { name, displayFormat, proficiency, level } = l;
+
                   return (
                     <div key={i}>
                       <div className="flex justify-between items-center">
-                        <span>{safeText(skillObj.name)}</span>
-                        <span className="text-xs opacity-70">
-                          {skillObj.proficiency}%
-                        </span>
+                        <span>{safeText(name)}</span>
+                        {displayFormat === "level" && level && (
+                          <span className="text-xs opacity-70">
+                            {safeText(level)}
+                          </span>
+                        )}
+                        {displayFormat === "percentage" && proficiency && (
+                          <span className="text-xs opacity-70">
+                            {proficiency}%
+                          </span>
+                        )}
                       </div>
-                      <div className="w-full bg-gray-300 rounded-full h-1 mt-1">
-                        <div
-                          className="h-1 rounded-full"
-                          style={{
-                            width: `${skillObj.proficiency}%`,
-                            backgroundColor: "#4b5563", // neutral gray, tiny visual tweak
-                          }}
-                        ></div>
-                      </div>
-                    </div>
-                  );
-                }
-
-                // Skill category with items
-                if (skillObj.category && skillObj.items) {
-                  const items = Array.isArray(skillObj.items)
-                    ? skillObj.items.filter((it) => it && it.toString().trim())
-                    : [];
-                  return (
-                    <div key={i}>
-                      <span className="font-medium">
-                        {safeText(skillObj.category)}:
-                      </span>{" "}
-                      <span>{items.join(", ")}</span>
-                    </div>
-                  );
-                }
-
-                // Fallback
-                return (
-                  <div key={i} className="flex items-start">
-                    <span className="mt-[3px] mr-2">•</span>
-                    <span>{safeText(skillObj)}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
-
-          {/* LANGUAGES */}
-          <section
-            className="mb-6 cursor-pointer"
-            onClick={() => onClickSection("languages")}
-          >
-            <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
-              Language
-            </h3>
-
-            <div className="text-sm space-y-2">
-              {(languages.length
-                ? languages
-                : ["English (Fluent)", "Hindi (Fluent)", "Spanish (Basic)"]
-              ).map((lang, i) => {
-                // Simple string
-                if (typeof lang === "string") {
-                  return <p key={i}>{lang}</p>;
-                }
-
-                const l = safeObj(lang);
-                const { name, displayFormat, proficiency, level } = l;
-
-                return (
-                  <div key={i}>
-                    <div className="flex justify-between items-center">
-                      <span>{safeText(name)}</span>
-                      {displayFormat === "level" && level && (
-                        <span className="text-xs opacity-70">
-                          {safeText(level)}
-                        </span>
-                      )}
                       {displayFormat === "percentage" && proficiency && (
-                        <span className="text-xs opacity-70">
-                          {proficiency}%
-                        </span>
+                        <div className="w-full bg-gray-300 rounded-full h-1 mt-1">
+                          <div
+                            className="h-1 rounded-full"
+                            style={{
+                              width: `${proficiency}%`,
+                              backgroundColor: "#4b5563",
+                            }}
+                          ></div>
+                        </div>
                       )}
                     </div>
-                    {displayFormat === "percentage" && proficiency && (
-                      <div className="w-full bg-gray-300 rounded-full h-1 mt-1">
-                        <div
-                          className="h-1 rounded-full"
-                          style={{
-                            width: `${proficiency}%`,
-                            backgroundColor: "#4b5563",
-                          }}
-                        ></div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </section>
+                  );
+                })}
+              </div>
+            </section>
+          )}
 
           {/* CERTIFICATIONS */}
-          <section
-            className="cursor-pointer mb-6"
-            onClick={() => onClickSection("certificates")}
-          >
-            <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-2 mb-3">
-              Certifications
-            </h3>
+          {data?.visibleSections?.certificates !== false && (
+            <section
+              className="cursor-pointer mb-6"
+              onClick={() => onClickSection && onClickSection("certificates")}
+            >
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-2 mb-3">
+                Certifications
+              </h3>
 
-            <ul className="text-sm space-y-2">
-              {(certificates.length
-                ? certificates
-                : [
-                    "Certified Sales Expert — 2021",
-                    "CRM Professional — 2020",
-                    "Digital Marketing Basics — Google",
-                    "Advanced Communication Skills Training",
-                  ]
-              ).map((c, i) => (
-                <li key={i}>{safeText(c)}</li>
-              ))}
-            </ul>
-          </section>
+              <ul className="text-sm space-y-2">
+                {(certificates.length
+                  ? certificates
+                  : [
+                      "Certified Sales Expert — 2021",
+                      "CRM Professional — 2020",
+                      "Digital Marketing Basics — Google",
+                      "Advanced Communication Skills Training",
+                    ]
+                ).map((c, i) => (
+                  <li key={i}>{safeText(c)}</li>
+                ))}
+              </ul>
+            </section>
+          )}
 
           {/* AWARDS – only if data.awards exists */}
           {awards.length > 0 && (
             <section
               className="cursor-pointer mb-2"
-              onClick={() => onClickSection("awards")}
+              onClick={() => onClickSection && onClickSection("awards")}
             >
               <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-2 mb-3">
                 Awards
@@ -292,71 +329,198 @@ export default function Template34({ data, onClickSection }) {
         {/* RIGHT SIDE */}
         <div>
           {/* PROFILE SUMMARY */}
-          <section
-            className="mb-8 cursor-pointer"
-            onClick={() => onClickSection("summary")}
-          >
-            <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1">
-              Profile Summary
-            </h3>
+          {data?.visibleSections?.summary !== false && (
+            <section
+              className="mb-8 cursor-pointer"
+              onClick={() => onClickSection && onClickSection("summary")}
+            >
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1">
+                Profile Summary
+              </h3>
 
-            <p className="text-sm mt-2 leading-relaxed">
-              {safeText(data?.summary) ||
-                "Dynamic and results-driven Sales Executive with over 5 years of experience..."}
-            </p>
-          </section>
+              <p className="text-sm mt-2 leading-relaxed">
+                {getSummaryText() ||
+                  "Dynamic and results-driven Sales Executive with over 5 years of experience..."}
+              </p>
+            </section>
+          )}
 
-          {/* EXPERIENCE */}
-          <section
-            className="mb-8 cursor-pointer"
-            onClick={() => onClickSection("experience")}
-          >
-            <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1">
-              Work Experience
-            </h3>
+          {/* EXPERIENCE / WORK EXPERIENCE */}
+          {data?.visibleSections?.experience !== false && (
+            <section
+              className="mb-8 cursor-pointer"
+              onClick={() => onClickSection && onClickSection("experience")}
+            >
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1">
+                Work Experience
+              </h3>
 
-            <div className="mt-3 space-y-3 border-l-2 border-gray-300 pl-4">
-              {(experiences.length
-                ? experiences
+              <div className="mt-3 space-y-3 border-l-2 border-gray-300 pl-4">
+                {(experiences.length
+                  ? experiences
+                  : [
+                      {
+                        role: "Senior Sales Executive",
+                        company: "TechnoMart Pvt Ltd",
+                        year: "2021–Present",
+                        desc: "Managed enterprise-level accounts...",
+                      },
+                      {
+                        role: "Sales Executive",
+                        company: "ABC Corp",
+                        year: "2018–2021",
+                        desc: "Achieved 120% of quarterly sales...",
+                      },
+                    ]
+                ).map((exp, i) => {
+                  const e = safeObj(exp);
+                  const desc = e.desc ? e.desc.toString() : "";
+                  const descLines = desc
+                    ? desc.split("\n").map((line) => line.trim())
+                    : [];
+
+                  return (
+                    <div key={i} className="text-sm">
+                      <p className="font-semibold">{safeText(e.role)}</p>
+                      <p className="opacity-70">{safeText(e.company)}</p>
+                      <p className="text-xs opacity-60">{safeText(e.year)}</p>
+
+                      {/* Description formats like Template30 */}
+                      {desc && (
+                        <>
+                          {e.descFormat === "bullet" ? (
+                            <ul className="mt-1 ml-4 list-disc space-y-1">
+                              {descLines.map(
+                                (line, idx) =>
+                                  line && <li key={idx}>{line}</li>
+                              )}
+                            </ul>
+                          ) : e.descFormat === "number" ? (
+                            <ol className="mt-1 ml-4 list-decimal space-y-1">
+                              {descLines.map(
+                                (line, idx) =>
+                                  line && <li key={idx}>{line}</li>
+                              )}
+                            </ol>
+                          ) : (
+                            <p className="mt-1">{desc}</p>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+
+          {/* EDUCATION */}
+          {data?.visibleSections?.education !== false && (
+            <section
+              className="mb-8 cursor-pointer"
+              onClick={() => onClickSection && onClickSection("education")}
+            >
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
+                Education
+              </h3>
+
+              {(education.length
+                ? education
                 : [
                     {
-                      role: "Senior Sales Executive",
-                      company: "TechnoMart Pvt Ltd",
-                      year: "2021–Present",
-                      desc: "Managed enterprise-level accounts...",
+                      course: "Bachelor of Commerce (B.Com)",
+                      school: "Wardiere University",
+                      year: "2015–2018",
                     },
                     {
-                      role: "Sales Executive",
-                      company: "ABC Corp",
-                      year: "2018–2021",
-                      desc: "Achieved 120% of quarterly sales...",
+                      course: "Higher Secondary",
+                      school: "St. Mary's Senior School",
+                      year: "2013–2015",
                     },
-                    
                   ]
-              ).map((exp, i) => {
-                const e = safeObj(exp);
-                const desc = e.desc ? e.desc.toString() : "";
+              ).map((edu, i) => {
+                const ed = safeObj(edu);
+                return (
+                  <div key={i} className="mb-3">
+                    <p className="font-semibold">{safeText(ed.course)}</p>
+                    <p className="text-xs opacity-70">
+                      {safeText(ed.school)} — {safeText(ed.year)}
+                    </p>
+                  </div>
+                );
+              })}
+            </section>
+          )}
+
+          {/* PROJECTS (replacing References) */}
+          {data?.visibleSections?.projects !== false && (
+            <section
+              className="mb-8 cursor-pointer"
+              onClick={() => onClickSection && onClickSection("projects")}
+            >
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
+                Projects
+              </h3>
+
+              {(projects.length
+                ? projects
+                : [
+                    {
+                      name: "Portfolio Website",
+                      year: "2023",
+                      link: "https://yourportfolio.com",
+                      desc: "Designed and developed a responsive personal portfolio using React and Tailwind CSS.\nImplemented reusable components and responsive layouts.",
+                      descFormat: "bullet",
+                    },
+                    {
+                      name: "Sales Dashboard",
+                      year: "2022",
+                      link: "https://github.com/yourusername/sales-dashboard",
+                      desc: "Built an interactive dashboard to visualize sales KPIs.\nIntegrated charts and filters for real-time insights.",
+                      descFormat: "number",
+                    },
+                  ]
+              ).map((project, i) => {
+                const p = safeObj(project);
+                const desc = p.desc ? p.desc.toString() : "";
                 const descLines = desc
                   ? desc.split("\n").map((line) => line.trim())
                   : [];
 
                 return (
-                  <div key={i} className="text-sm">
-                    <p className="font-semibold">{safeText(e.role)}</p>
-                    <p className="opacity-70">{safeText(e.company)}</p>
-                    <p className="text-xs opacity-60">{safeText(e.year)}</p>
+                  <div key={i} className="text-sm mb-4">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-semibold">
+                          {safeText(p.name) || "Project Title"}
+                        </p>
+                        {p.link && (
+                          <a
+                            href={p.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-600 underline break-all"
+                          >
+                            {p.link}
+                          </a>
+                        )}
+                      </div>
+                      <p className="text-xs opacity-60">
+                        {safeText(p.year)}
+                      </p>
+                    </div>
 
                     {/* Description formats like Template30 */}
                     {desc && (
                       <>
-                        {e.descFormat === "bullet" ? (
+                        {p.descFormat === "bullet" ? (
                           <ul className="mt-1 ml-4 list-disc space-y-1">
                             {descLines.map(
                               (line, idx) =>
                                 line && <li key={idx}>{line}</li>
                             )}
                           </ul>
-                        ) : e.descFormat === "number" ? (
+                        ) : p.descFormat === "number" ? (
                           <ol className="mt-1 ml-4 list-decimal space-y-1">
                             {descLines.map(
                               (line, idx) =>
@@ -371,84 +535,8 @@ export default function Template34({ data, onClickSection }) {
                   </div>
                 );
               })}
-            </div>
-          </section>
-
-          {/* EDUCATION */}
-          <section
-            className="mb-8 cursor-pointer"
-            onClick={() => onClickSection("education")}
-          >
-            <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
-              Education
-            </h3>
-
-            {(education.length
-              ? education
-              : [
-                  {
-                    course: "Bachelor of Commerce (B.Com)",
-                    school: "Wardiere University",
-                    year: "2015–2018",
-                  },
-                  {
-                    course: "Higher Secondary",
-                    school: "St. Mary's Senior School",
-                    year: "2013–2015",
-                  },
-                ]
-            ).map((edu, i) => {
-              const ed = safeObj(edu);
-              return (
-                <div key={i} className="mb-3">
-                  <p className="font-semibold">{safeText(ed.course)}</p>
-                  <p className="text-xs opacity-70">
-                    {safeText(ed.school)} — {safeText(ed.year)}
-                  </p>
-                </div>
-              );
-            })}
-          </section>
-
-          {/* REFERENCES */}
-          <section
-            className="cursor-pointer"
-            onClick={() => onClickSection("references")}
-          >
-            <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
-              References
-            </h3>
-
-            {(references.length
-              ? references
-              : [
-                  {
-                    name: "John Smith",
-                    title: "Sales Director",
-                    phone: "999-888-7777",
-                    email: "john@company.com",
-                  },
-                  {
-                    name: "Emily Davis",
-                    title: "Senior Manager",
-                    phone: "888-777-6666",
-                    email: "emily@abccorp.com",
-                  },
-                ]
-            ).map((ref, i) => {
-              const r = safeObj(ref);
-              return (
-                <div key={i} className="text-sm mb-4">
-                  <p className="font-semibold">
-                    {safeText(r.name)} — {safeText(r.title)}
-                  </p>
-                  <p className="text-xs opacity-70">
-                    {safeText(r.email)} | {safeText(r.phone)}
-                  </p>
-                </div>
-              );
-            })}
-          </section>
+            </section>
+          )}
         </div>
       </div>
     </div>
