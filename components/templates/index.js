@@ -28,6 +28,7 @@ export const templates = {
   template41: Template41,
   template42: Template42,
 
+  template33: Template33,
 };
 
 export const templateInputs = {
@@ -38,6 +39,7 @@ export const templateInputs = {
     profileImage: false,
     skills: true,
   },
+ 
 
   template34: {
     name: true,
