@@ -16,10 +16,11 @@ export default function Template30({ data, onClickSection }) {
   const projects = toArray(data?.projects);
 
   return (
-    <div id="cv-preview" className="w-[794px] min-h-[1123px] bg-white mx-auto shadow-lg border flex" style={{ fontFamily: 'Poppins, sans-serif' }}>
+    <div id="cv-preview" className="w-[794px] min-h-[1123px] bg-white mx-auto shadow-lg border flex pb-8" style={{ fontFamily: 'Poppins, sans-serif' }}>
 
       {/* LEFT SIDEBAR */}
-      <div className="w-1/3 bg-[#2C3E50] text-white p-6 flex flex-col">
+      
+      <div className="cv-sidebar w-1/3 bg-[#2C3E50] text-white p-6 flex flex-col">
         {/* Profile Image */}
         {data?.profileImage && (
           <div
@@ -44,9 +45,6 @@ export default function Template30({ data, onClickSection }) {
           {data?.linkedin && (<p className="text-sm mt-1">🔗 {data?.linkedin}</p>)}
           {data?.github && (<p className="text-sm mt-1">🧑‍💻 {data?.github || ""}</p>)}
           {data?.portfolio && (<p className="text-sm mt-1">💻 {data?.portfolio || ""}</p>)}
-
-
-
         </div>
 
         {/* Expertise/Skills */}
@@ -119,7 +117,7 @@ export default function Template30({ data, onClickSection }) {
             <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("summary")}>
              SUMMARY
             </h2>
-            <p className="text-sm mb-4 text-gray-700">{data?.summary || "A dedicated professional with extensive experience in the field."}</p>
+            <p className="text-sm mb-4 text-gray-700 text-justify">{data?.summary || "A dedicated professional with extensive experience in the field."}</p>
           </>
         )}
 
@@ -130,12 +128,12 @@ export default function Template30({ data, onClickSection }) {
               PROJECTS
             </h2>
         {projects.map((project, i) => (
-          <div key={i} className="mb-3">
+          <div key={i} className="cv-item mb-3">
             <div className="flex justify-between items-start">
               <div>
                 <p className="font-semibold text-gray-800 !text-sm">{project.name}</p>
                 {project.link && (
-                  <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline">
+                  <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 ">
                     {project.link}
                   </a>
                 )}
@@ -143,11 +141,11 @@ export default function Template30({ data, onClickSection }) {
               <p className="text-xs opacity-60">{project.year}</p>
             </div>
             {project.descFormat === "bullet" ? (
-              project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">• {line}</p>)
+              project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 text-justify">• {line}</p>)
             ) : project.descFormat === "number" ? (
-              project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">{idx + 1}. {line}</p>)
+              project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 text-justify">{idx + 1}. {line}</p>)
             ) : (
-              <p className="text-sm mt-1 text-gray-700">{project.desc}</p>
+              <p className="text-sm mt-1 text-gray-700 text-justify">{project.desc}</p>
             )}
           </div>
         ))}
@@ -165,7 +163,7 @@ export default function Template30({ data, onClickSection }) {
           { role: "Product Design Manager", company: "Ingoude Company", year: "2019-2020", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
           { role: "Product Design Manager", company: "Timmerman Industries", year: "2017-2019", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." }
         ]).map((exp, i) => (
-          <div key={i} className="mb-3">
+          <div key={i} className="cv-item mb-3">
             <div className="flex justify-between items-start">
               <div>
                 <p className="font-semibold text-gray-800 !text-sm">{exp.role}</p>
@@ -174,11 +172,11 @@ export default function Template30({ data, onClickSection }) {
               <p className="text-xs opacity-60">{exp.year}</p>
             </div>
             {exp.descFormat === "bullet" ? (
-              exp.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">• {line}</p>)
+              exp.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 text-justify">• {line}</p>)
             ) : exp.descFormat === "number" ? (
-              exp.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">{idx + 1}. {line}</p>)
+              exp.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 text-justify">{idx + 1}. {line}</p>)
             ) : (
-              <p className="text-sm mt-1">{exp.desc}</p>
+              <p className="text-sm mt-1 text-justify text-gray-700">{exp.desc}</p>
             )}
           </div>
         ))}
@@ -196,7 +194,7 @@ export default function Template30({ data, onClickSection }) {
           { course: "Bachelor of Business Management", school: "Wardiere University", year: "2016-2020" },
           { course: "Bachelor of Business Management", school: "Wardiere University", year: "2012-2016" }
         ]).map((edu, i) => (
-          <div key={i} className="mb-3">
+          <div key={i} className="cv-item mb-3">
             <div className="flex justify-between items-start">
               <div>
                 <p className="font-semibold !text-sm text-gray-700">{edu.course}</p>
@@ -219,7 +217,7 @@ export default function Template30({ data, onClickSection }) {
           { name: "Project Management Professional (PMP)", issuer: "PMI", year: "2023" },
           { name: "Digital Marketing Certification", issuer: "Google", year: "2022" }
         ]).map((cert, i) => (
-          <div key={i} className="mb-3">
+          <div key={i} className="cv-item mb-3">
             <div className="flex justify-between items-start">
               <div>
                 <p className="font-semibold !text-sm text-gray-700">{cert.name}</p>

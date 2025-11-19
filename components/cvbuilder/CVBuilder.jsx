@@ -93,10 +93,13 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
     setData({ ...data, [key]: value });
   };
 
-  // --- Download CV as PDF ---
+  // --- Download CV as PDF with Smart Page Break Detection ---
   const handleDownload = async () => {
     const element = document.getElementById("pdf-template");
     if (!element) return;
+
+    // Adjust layout to prevent content splitting
+    adjustLayoutForPageBreaks(element);
 
     const canvas = await html2canvas(element, { scale: 2 });
     const imgData = canvas.toDataURL("image/png");
@@ -105,12 +108,80 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
 
-    // Calculate image dimensions to fit A4
-    const imgProps = pdf.getImageProperties(imgData);
-    const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
+    const imgWidth = pageWidth;
+    const imgHeight = (canvas.height * pageWidth) / canvas.width;
 
-    pdf.addImage(imgData, "PNG", 0, 0, pageWidth, pdfHeight);
+    // A4 page height at scale 2: 1123px * 2 = 2246px
+    const A4_HEIGHT_PX = 2246;
+    const totalPages = Math.ceil(canvas.height / A4_HEIGHT_PX);
+
+    console.log('Canvas height:', canvas.height);
+    console.log('Total pages:', totalPages);
+
+    for (let page = 0; page < totalPages; page++) {
+      if (page > 0) pdf.addPage();
+      const yOffset = -(page * pageHeight);
+      pdf.addImage(imgData, "PNG", 0, yOffset, imgWidth, imgHeight);
+    }
+
+    // Reset layout
+    resetLayout(element);
+
     pdf.save(`${data.name || "cv"}.pdf`);
+  };
+
+  // Smart page break detection
+  const adjustLayoutForPageBreaks = (element) => {
+    const totalHeight = element.scrollHeight;
+    const pageHeight = 1123;
+
+    console.log('Element height before adjustments:', totalHeight);
+
+    // Only run smart breaks if content exceeds 1 page
+    if (totalHeight <= pageHeight * 1.05) {
+      console.log('Content fits on 1 page, skipping smart breaks');
+      return;
+    }
+
+    console.log('Running smart breaks for multi-page content');
+    const items = element.querySelectorAll('.cv-item');
+
+    items.forEach(item => {
+      const rect = item.getBoundingClientRect();
+      const elementRect = element.getBoundingClientRect();
+      const top = rect.top - elementRect.top;
+      const bottom = top + rect.height;
+
+      const pageNumber = Math.floor(top / pageHeight);
+      const pageEnd = (pageNumber + 1) * pageHeight;
+
+      if (bottom > pageEnd && top < pageEnd) {
+        const pushDistance = pageEnd - top + 20;
+        item.style.marginTop = `${pushDistance}px`;
+        console.log('Pushed item by', pushDistance, 'px');
+      }
+    });
+
+    // Extend sidebar to match total content height
+    const sidebar = element.querySelector('.cv-sidebar');
+    if (sidebar) {
+      const totalHeightAfterAdjustments = element.scrollHeight;
+      sidebar.style.minHeight = `${totalHeightAfterAdjustments}px`;
+      console.log('Sidebar extended to:', totalHeightAfterAdjustments, 'px');
+    }
+  };
+
+  const resetLayout = (element) => {
+    const items = element.querySelectorAll('.cv-item');
+    items.forEach(item => {
+      item.style.marginTop = '';
+    });
+
+    // Reset sidebar height
+    const sidebar = element.querySelector('.cv-sidebar');
+    if (sidebar) {
+      sidebar.style.minHeight = '';
+    }
   };
 
   return (
