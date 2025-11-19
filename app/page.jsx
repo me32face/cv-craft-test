@@ -82,22 +82,22 @@ export default function Home() {
       image: "/template/template38.png",
       category: "creative",
     },
-     {
-    id: "Template39",
-    name: "Clean Creative",
-    key: "Emily Davis",
-    image: "/template/template39.png",
-    category: "professional",
-  },
-  {
-    id: "Template41",
-    name: "Stylish Classic",
-    key: "Emily Davis",
-    image: "/template/template41.png",
-    category: "modern",
-  },
+    {
+      id: "Template39",
+      name: "Clean Creative",
+      key: "Emily Davis",
+      image: "/template/template39.png",
+      category: "professional",
+    },
+    {
+      id: "Template41",
+      name: "Stylish Classic",
+      key: "Emily Davis",
+      image: "/template/template41.png",
+      category: "modern",
+    },
 
-   
+
     {
       id: "Template40",
       name: "Modern Creative",
@@ -273,6 +273,17 @@ export default function Home() {
       image: "/template/template24.png",
       category: "proffessional",
     },
+    { id: 'Template30', name: 'Professional Resume', key: 'John Doe', image: '/template/template30.png', category: 'modern' },
+    { id: 'Template31', name: 'Executive Resume', key: 'Jane Smith', image: '/template/template31.png', category: 'proffessional' },
+    { id: 'Template32', name: 'Clean Two-Column CV', key: 'Michael Brown', image: '/template/template32.png', category: 'simple' },
+    { id: 'Template34', name: 'Modern Creative', key: 'Emily Davis', image: '/template/template34.jpg', category: 'creative' },
+    { id: 'Template35', name: 'Elegant Layout', key: 'David Wils on', image: '/template/template35.jpg', category: 'proffessional' },
+    { id: 'Template37', name: 'Stylish Resume', key: 'Sophia Lee', image: '/template/template37.jpg', category: 'modern' },
+    { id: 'Template33', name: 'Olivia Modern ', key: 'Olivia Wilson', image: '/template/template33.png', category: 'proffessional' },
+    { id: 'Template38', name: 'Modern Creative', key: 'Emily Davis', image: '/template/template38.png', category: 'creative' },
+    { id: 'Template39', name: 'Clean Creative', key: 'Emily Davis', image: '/template/template39.png', category: 'proffessional' },
+    { id: 'Template41', name: 'Stylish Classic', key: 'Emily Davis', image: '/template/template41.png', category: 'modern' },
+    { id: 'Template42', name: 'Creative Classic', key: 'Emily Davis', image: '/template/template42.png', category: 'creative' },
 
     {
       id: "Template22",
@@ -287,9 +298,9 @@ export default function Home() {
     activeFilter === "All"
       ? templates
       : templates.filter(
-          (template) =>
-            template.category.toLowerCase() === activeFilter.toLowerCase()
-        );
+        (template) =>
+          template.category.toLowerCase() === activeFilter.toLowerCase()
+      );
 
   const scrollPrev = () => {
     scrollRef.current?.scrollBy({ left: -344, behavior: "smooth" });
@@ -481,11 +492,10 @@ export default function Home() {
               {filteredTemplates.map((_, index) => (
                 <button
                   key={index}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    activeIndex === index
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${activeIndex === index
                       ? "bg-indigo-600 scale-125"
                       : "bg-gray-300 hover:bg-gray-400"
-                  }`}
+                    }`}
                   onClick={() => {
                     const cardWidth = 344;
                     scrollRef.current?.scrollTo({
