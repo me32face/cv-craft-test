@@ -12,7 +12,6 @@ import Template38 from "./Template38";
 import Template39 from "./Template39";
 import Template40 from "./Template40";
 import Template41 from "./Template41";
-
 export const templates = {
   template30: Template30,
   template31: Template31,
@@ -26,6 +25,7 @@ export const templates = {
   template40: Template40,
   template41: Template41,
 
+  template40: Template40,
 };
 
 export const templateInputs = {
@@ -193,4 +193,6 @@ export const templateInputs = {
     certificates: true,
     references: false,
   },
-};
+  
+}
+
