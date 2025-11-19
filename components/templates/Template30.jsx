@@ -16,7 +16,7 @@ export default function Template30({ data, onClickSection }) {
   const projects = toArray(data?.projects);
 
   return (
-    <div id="cv-preview" className="w-[794px] min-h-[1123px] bg-white mx-auto shadow-lg border flex pb-8" style={{ fontFamily: 'Poppins, sans-serif' }}>
+    <div id="pdf-template" className="w-[794px] min-h-[1123px] bg-white flex pb-8" style={{ fontFamily: 'Poppins, sans-serif' }}>
 
       {/* LEFT SIDEBAR */}
       
