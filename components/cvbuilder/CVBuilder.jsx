@@ -303,10 +303,7 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
                   </button>
                 )}
                 <div style={{ transform: `translateY(-${pageIndex * 1123}px)` }}>
-                  <div style={{ marginTop: pageIndex > 0 ? '30px' : '0px', marginBottom: pageIndex === 0 ? '30px' : '0px', paddingTop: pageIndex > 0 ? '30px' : '0px', paddingBottom: pageIndex === 0 ? '30px' : '0px' }}>
-                    <TemplateComponent data={data} />
-                  </div>
-
+                  <TemplateComponent data={data} />
                 </div>
               </div>
             ))}

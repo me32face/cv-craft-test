@@ -1,428 +1,526 @@
 'use client';
 import React from 'react';
+import { motion } from 'framer-motion';
+import { FiPhone, FiMail, FiMapPin, FiLink, FiLinkedin } from 'react-icons/fi';
+import { GiLaurelsTrophy } from 'react-icons/gi';
+import { BsFillBriefcaseFill } from 'react-icons/bs';
+import { AiFillTool } from 'react-icons/ai';
+import { MdOutlineLanguage } from 'react-icons/md';
+import { FaGithub } from 'react-icons/fa';
 
-/*
- Template40.jsx
- - Experience rendering fixes: bullet / numbered lists and defensive desc handling
- - JavaScript (not TypeScript)
-*/
+// New CV component: preserves Template30 behaviours but styled referencing Template32.
+// Props: { data, onClickSection }
 
-export default function Template40({ data = {}, onClickSection }) {
+export default function TemplateFromRefs({ data = {}, onClickSection }) {
+  // --- merge defaults ---
+  const defaults = {
+    name: 'Your Name',
+    title: 'Your Role',
+    phone: '',
+    email: '',
+    linkedin: '',
+    github: '',
+    portfolio: '',
+    address: '',
+    profileImage: null,
+    imageShape: 'circle',
+    summary: '',
+    experiences: [],
+    education: [],
+    skills: [],
+    languages: [],
+    certificates: [],
+    references: [],
+    projects: [],
+    visibleSections: {},
+  };
+  const merged = { ...defaults, ...data };
+
+  // --- helpers ---
   const toArray = (v) => (!v ? [] : Array.isArray(v) ? v : [v]);
-
-  // canonical arrays
-  const experiences = toArray(data.experiences);
-  const education = toArray(data.education);
-  const certificates = toArray(data.certificates);
-  const skills = toArray(data.skills);
-  const languages = toArray(data.languages);
-  const projects = toArray(data.projects);
-  const awards = toArray(data.awards);
-  const references = toArray(data.references);
-
-  // safe summary text (handles string or array)
-  const summaryText =
-    Array.isArray(data.summary) ? data.summary.filter(Boolean).join(' ') : (data.summary ? String(data.summary) : '');
-
-  const toText = (val) => {
-    if (val == null) return '';
-    if (typeof val === 'string' || typeof val === 'number') return String(val);
-    if (typeof val === 'object') {
-      // prefer common fields; fallback to JSON string for debugging
-      return val.title || val.name || val.company || val.issuer || JSON.stringify(val);
-    }
-    return '';
+  const safeText = (v, fb = '') => {
+    if (v === 0) return '0';
+    if (v === null || v === undefined || v === '') return fb;
+    if (typeof v === 'string' || typeof v === 'number') return v;
+    if (typeof v === 'object') return v.name || v.title || v.label || fb;
+    return fb;
+  };
+  const clamp = (n, min = 0, max = 100) => {
+    const num = Number(n);
+    if (Number.isNaN(num)) return min;
+    return Math.max(min, Math.min(max, num));
   };
 
-  const parsePct = (raw) => {
-    if (raw == null) return 0;
-    if (typeof raw === 'number') return Math.max(0, Math.min(100, Math.round(raw)));
-    if (typeof raw === 'string') {
-      const n = parseInt(raw.replace(/[^\d-]/g, ''), 10);
-      return isNaN(n) ? 0 : Math.max(0, Math.min(100, n));
-    }
-    if (typeof raw === 'object') {
-      const candidate = raw.proficiency ?? raw.level ?? raw.value ?? 0;
-      return parsePct(candidate);
-    }
-    return 0;
+  const makeHref = (raw) => {
+    if (!raw) return null;
+    const s = String(raw).trim();
+    if (s.includes('@') && !s.startsWith('http') && !s.startsWith('mailto:')) return `mailto:${s}`;
+    if (!s.startsWith('http://') && !s.startsWith('https://') && !s.startsWith('mailto:')) return `https://${s}`;
+    return s;
   };
 
-  const normalizeDisplayFormat = (raw) => {
-    if (raw === null || raw === undefined) return 'simple';
-    const s = String(raw).trim().toLowerCase();
-    if (!s) return 'simple';
-    if (s.includes('level') || s.includes('text')) return 'level';
-    if (s.includes('perc') || s.includes('%') || s.includes('percent')) return 'percentage';
-    if (s.includes('simple') || s.includes('name')) return 'simple';
-    if (/^\d+%?$/.test(s)) return 'percentage';
-    return 'simple';
-  };
-
-  const initials = (name = '') =>
-    (name || 'AE')
-      .split(' ')
-      .map((p) => (p ? p[0] : ''))
-      .join('')
-      .slice(0, 3)
-      .toUpperCase();
-
-  // Format a readable period string
-  const formatPeriod = (exp) => {
-    if (!exp) return '';
-    const year = exp.year ? toText(exp.year).trim() : '';
-    if (year) return year;
-    const start = exp.start ? toText(exp.start).trim() : '';
-    const end = exp.end ? toText(exp.end).trim() : '';
-    if (start && end) return `${start} • ${end}`;
-    if (start && !end) return `${start} • Present`;
-    if (!start && end) return end;
-    return '';
-  };
-
-  // NEW: robust description renderer for experience entries
-  const renderDescription = (exp) => {
-    // priority: bullets array -> metrics array -> desc field
-    if (!exp) return null;
-
-    // If explicit bullets array provided, render it
-    if (Array.isArray(exp.bullets) && exp.bullets.length) {
-      return (
-        <ul className="mt-2 ml-4 list-disc text-sm text-gray-600">
-          {exp.bullets.map((b, idx) => {
-            const txt = toText(b);
-            if (!txt || !String(txt).trim()) return null;
-            return <li key={idx}>{txt}</li>;
-          })}
-        </ul>
-      );
-    }
-
-    // Metrics as list (optional)
-    if (Array.isArray(exp.metrics) && exp.metrics.length) {
-      return (
-        <ul className="mt-2 ml-4 list-disc text-sm text-gray-600">
-          {exp.metrics.map((m, idx) => {
-            const txt = toText(m);
-            if (!txt || !String(txt).trim()) return null;
-            return <li key={idx}>{txt}</li>;
-          })}
-        </ul>
-      );
-    }
-
-    // desc may be string or array
-    const desc = exp.desc;
-
-    if (Array.isArray(desc) && desc.length) {
-      // If descFormat indicates ordered, use ol; else use paragraphs
-      if (exp.descFormat === 'number' || exp.descFormat === 'ordered') {
-        return (
-          <ol className="mt-2 ml-4 list-decimal text-sm text-gray-600">
-            {desc.map((d, idx) => {
-              const txt = toText(d);
-              if (!txt || !String(txt).trim()) return null;
-              return <li key={idx}>{txt}</li>;
-            })}
-          </ol>
-        );
+  // language normalizer (compatible with both string and object inputs)
+  const parseProficiency = (val) => {
+    if (val == null || val === '') return null;
+    if (typeof val === 'number') return clamp(val);
+    if (typeof val === 'string') {
+      const percent = val.match(/(-?\d+(?:\.\d+)?)(?=\s*%)/);
+      if (percent) return clamp(Number(percent[1]));
+      const number = val.match(/(-?\d+(?:\.\d+)?)/);
+      if (number) {
+        const n = Number(number[1]);
+        if (n > 0 && n <= 1 && val.includes('.')) return clamp(Math.round(n * 100));
+        return clamp(n);
       }
-
-      if (exp.descFormat === 'bullet' || exp.descFormat === 'list') {
-        return (
-          <ul className="mt-2 ml-4 list-disc text-sm text-gray-600">
-            {desc.map((d, idx) => {
-              const txt = toText(d);
-              if (!txt || !String(txt).trim()) return null;
-              return <li key={idx}>{txt}</li>;
-            })}
-          </ul>
-        );
-      }
-
-      // default: paragraphs
-      return (
-        <div className="text-sm mt-2 text-gray-700">
-          {desc.map((d, idx) => {
-            const txt = toText(d);
-            if (!txt || !String(txt).trim()) return null;
-            return <p key={idx} className="mb-1">{txt}</p>;
-          })}
-        </div>
-      );
     }
-
-    if (typeof desc === 'string' && desc.trim()) {
-      const lines = desc.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-
-      // If descFormat requests bullets
-      if (exp.descFormat === 'bullet' || exp.descFormat === 'list') {
-        return (
-          <ul className="mt-2 ml-4 list-disc text-sm text-gray-600">
-            {lines.map((line, idx) => <li key={idx}>{line}</li>)}
-          </ul>
-        );
-      }
-
-      // If descFormat requests ordered list
-      if (exp.descFormat === 'number' || exp.descFormat === 'ordered') {
-        return (
-          <ol className="mt-2 ml-4 list-decimal text-sm text-gray-600">
-            {lines.map((line, idx) => <li key={idx}>{line}</li>)}
-          </ol>
-        );
-      }
-
-      // Default: paragraphs (preserve line breaks as separate <p>)
-      return (
-        <div className="text-sm mt-2 text-gray-700">
-          {lines.map((line, idx) => <p key={idx} className="mb-1">{line}</p>)}
-        </div>
-      );
-    }
-
-    // Nothing to render
     return null;
   };
 
-  const imageUrl = data.profileImage ? toText(data.profileImage) : null;
+  const proficiencyToTextLevel = (p) => {
+    if (p == null) return null;
+    if (p <= 20) return 'Beginner';
+    if (p <= 45) return 'Intermediate';
+    if (p <= 75) return 'Advanced';
+    if (p <= 94) return 'Fluent';
+    return 'Native';
+  };
 
-  return (
-    <div id="cv-preview" className="w-[794px] min-h-[1123px] bg-white mx-auto shadow-lg border font-sans text-gray-900">
+  const normalizeLang = (raw) => {
+    if (raw == null) return { name: 'Language', displayFormat: 'default', proficiency: null, textLevel: null };
+    if (typeof raw === 'string') {
+      const paren = raw.match(/^(.+?)\s*\((.+)\)\s*$/);
+      if (paren) return { name: paren[1].trim(), displayFormat: 'text', proficiency: null, textLevel: paren[2].trim() };
+      return { name: raw.trim(), displayFormat: 'default', proficiency: null, textLevel: null };
+    }
+    const name = raw.name || raw.label || raw.language || 'Language';
+    let fmt = (raw.displayFormat || raw.format || raw.showAs || merged.languageDisplayFormat || 'default').toString().toLowerCase();
+    if (!['percentage', 'text', 'level', 'default'].includes(fmt)) fmt = 'default';
+    const profVal = raw.proficiency ?? raw.proficiencyValue ?? raw.levelValue ?? raw.score ?? raw.value ?? raw.percent ?? raw.percentage;
+    const prof = parseProficiency(profVal);
+    const textLevel = raw.textLevel || raw.level || raw.proficiencyLabel || raw.proficiencyText || raw.label || null;
+    return { name: safeText(name, 'Language'), displayFormat: fmt, proficiency: prof, textLevel: textLevel || null };
+  };
 
-      {/* Top bar */}
-      <div className="h-12 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 flex items-center px-6 text-white">
-        <div className="flex-1">
-          <div className="text-sm uppercase tracking-wider font-semibold">{toText(data.title) || 'Professional Title'}</div>
+  // render language (keeps parity with Template30 renderLanguage)
+  const renderLanguage = (l, i) => {
+    const lang = normalizeLang(l);
+    const fmt = lang.displayFormat || 'default';
+    const prof = lang.proficiency;
+    const derived = lang.textLevel || (prof != null ? proficiencyToTextLevel(prof) : null);
+
+    return (
+      <div key={i} className="mb-3">
+        <div className="flex justify-between items-center text-[12px] uppercase tracking-wide text-gray-700">
+          <div>{safeText(lang.name)}</div>
+          <div className="text-[12px] text-gray-500">{(fmt === 'text' || fmt === 'level') ? (derived || '—') : ''}</div>
         </div>
-        <div className="text-xs opacity-90">{toText(data.name) || 'Your Name'}</div>
+        {(fmt === 'percentage' || (fmt === 'default' && prof != null)) && (
+          <div className="mt-2 w-full bg-gray-200 h-2 rounded overflow-hidden">
+            <div className="h-2 rounded" style={{ width: `${prof != null ? clamp(prof) : 0}%`, background: 'linear-gradient(90deg,#16a34a,#0f766e)' }} />
+          </div>
+        )}
       </div>
+    );
+  };
 
-      <div className="flex">
-        {/* LEFT MAIN COLUMN */}
-        <main className="flex-1 p-8">
-          {/* Hero */}
-          <div className="flex items-start gap-6">
-            <div className="flex-1">
-              <h1 className="text-3xl font-bold leading-tight">{toText(data.name) || 'Alex Emerson'}</h1>
-              <p className="text-sm text-gray-600 mt-1">
-                {toText(data.headline) || summaryText || 'Experienced product leader who builds delightful, scalable experiences.'}
-              </p>
+  // Bullet span - now returns a single span (not a div) and default size smaller (thin)
+  const Bullet = ({ size = 6, colorClass = 'bg-gray-700', mt = 'mt-1' }) => (
+    <span
+      role="presentation"
+      className={`${mt} inline-block flex-shrink-0`}
+      style={{ width: `${size}px`, height: `${size}px`, lineHeight: 0 }}
+    >
+      {/* single span circle */}
+      <span
+        className={`${colorClass} rounded-full block`}
+        style={{ width: `${size}px`, height: `${size}px` }}
+      />
+    </span>
+  );
 
-              <div className="mt-4 flex flex-wrap gap-2">
-                {data.phone && <span className="text-xs px-2 py-1 bg-gray-100 rounded">📞 {toText(data.phone)}</span>}
-                {data.email && <span className="text-xs px-2 py-1 bg-gray-100 rounded">✉️ {toText(data.email)}</span>}
-                {data.location && <span className="text-xs px-2 py-1 bg-gray-100 rounded">📍 {toText(data.location)}</span>}
-                {data.website && <span className="text-xs px-2 py-1 bg-gray-100 rounded">🔗 {toText(data.website)}</span>}
-              </div>
+  // Render skill item using Bullet spans for alignment
+  const renderSkillItem = (s, idx) => {
+    if (typeof s === 'string') {
+      return (
+        <div key={idx} className="flex items-start gap-3 mb-2">
+          <Bullet size={6} colorClass="bg-gray-700" />
+          <div className="text-[12px] leading-tight">{s}</div>
+        </div>
+      );
+    }
+    const sk = typeof s === 'object' ? s : { name: s };
+
+    if (sk.category && Array.isArray(sk.items)) {
+      return (
+        <div key={idx} className="mb-2">
+          <div className="font-medium text-[12px] mb-1">{safeText(sk.category)}:</div>
+          {sk.items.filter(Boolean).map((it, j) => (
+            <div key={j} className="flex items-start gap-3 mb-1">
+              <Bullet size={5} colorClass="bg-gray-700" />
+              <div className="text-[12px] leading-tight">{it}</div>
             </div>
+          ))}
+        </div>
+      );
+    }
 
-            <div className="w-28 h-28 flex-shrink-0">
-              {imageUrl ? (
-                <img src={imageUrl} alt={toText(data.name)} className={`w-28 h-28 object-cover ${data.imageShape === 'circle' ? 'rounded-full' : 'rounded-lg'}`} />
+    if (sk.proficiency !== undefined && sk.proficiency !== null) {
+      const p = clamp(sk.proficiency);
+      return (
+        <div key={idx} className="mb-3">
+          <div className="flex justify-between items-center text-[12px]">
+            <div>{safeText(sk.name || sk.label, 'Skill')}</div>
+            <div className="text-[12px] text-gray-500">{p}%</div>
+          </div>
+          <div className="mt-2 w-full bg-gray-200 h-2 rounded overflow-hidden">
+            <div className="h-2 rounded" style={{ width: `${p}%`, background: 'linear-gradient(90deg,#16a34a,#0f766e)' }} />
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div key={idx} className="flex items-start gap-3 mb-2">
+        <Bullet size={6} colorClass="bg-gray-700" />
+        <div className="text-[12px] leading-tight">{safeText(sk.name || sk.label, 'Skill')}</div>
+      </div>
+    );
+  };
+
+  // --- prepared sections ---
+  const experiences = toArray(merged.experiences);
+  const projects = toArray(merged.projects);
+  const education = toArray(merged.education);
+  const certificates = toArray(merged.certificates);
+  const skills = toArray(merged.skills);
+  const languages = toArray(merged.languages).map(normalizeLang);
+  const references = toArray(merged.references || []);
+  const summary = typeof merged.summary === 'string' ? merged.summary : Array.isArray(merged.summary) ? merged.summary[0] || '' : '';
+
+  const visible = {
+    summary: merged.visibleSections?.summary !== false,
+    projects: merged.visibleSections?.projects !== false,
+    experience: merged.visibleSections?.experience !== false,
+    education: merged.visibleSections?.education !== false,
+    skills: merged.visibleSections?.skills !== false,
+    languages: merged.visibleSections?.languages !== false,
+    certificates: merged.visibleSections?.certificates !== false,
+  };
+
+  const click = (key) => { if (typeof onClickSection === 'function') onClickSection(key); };
+
+  const linkedinHref = makeHref(merged.linkedin);
+  const githubHref = makeHref(merged.github);
+  const portfolioHref = makeHref(merged.portfolio || merged.website);
+
+  // consistent gutter used for content blocks under section headers
+  const CONTENT_GUTTER_CLASS = 'pl-14';
+
+  // small helper to render an icon with fixed size (no internal padding so baseline is stable)
+  const Icon = ({ children }) => (
+    <span className="w-8 h-8 flex items-center justify-center bg-green-50 rounded-md">
+      {children}
+    </span>
+  );
+
+  const IconSmall = ({ children }) => (
+    <span className="w-5 h-5 flex items-center justify-center flex-shrink-0">
+      {children}
+    </span>
+  );
+
+  // --- component render ---
+  return (
+    <div id="cv-preview" className="mx-auto bg-white border shadow-sm print:shadow-none print:border-0" style={{ width: '794px', minHeight: '1123px', margin: '0 auto', padding: 32, boxSizing: 'border-box', fontFamily: 'Inter, Poppins, Arial, sans-serif' }}>
+      <div className="flex gap-6 items-start">
+        {/* LEFT */}
+        <aside className="w-1/3 pr-4 pl-2">
+          <div className="mb-4 flex justify-center">
+            {merged.profileImage ? (
+              <img src={merged.profileImage} alt="profile" className={`w-28 h-28 object-cover ${merged.imageShape === 'circle' ? 'rounded-full' : 'rounded-lg'}`} />
+            ) : (
+              <div className={`w-28 h-28 flex items-center justify-center ${merged.imageShape === 'circle' ? 'rounded-full' : 'rounded-lg'} bg-green-50`}>
+                <span className="text-2xl text-gray-400 font-bold">{(merged.name||'YN').split(' ').map(n=>n[0]).slice(0,2).join('')}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Contacts */}
+          <div className="mb-5">
+            <div className="flex items-center gap-2 text-green-700 font-semibold">
+              <Icon><FiMail className="w-4 h-4" /></Icon>
+              <span className='mb-4'>CONTACTS</span>
+            </div>
+            <div className="text-gray-700 text-[12px] space-y-2 pl-2">
+              <div className="flex items-center gap-2">
+                <IconSmall><FiPhone className="w-4 h-4" /></IconSmall>
+                <span>{safeText(merged.phone, 'Phone')}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <IconSmall><FiMail className="w-4 h-4" /></IconSmall>
+                <span>{safeText(merged.email, 'Email')}</span>
+              </div>
+              {linkedinHref && (
+                <div className="flex items-center gap-2">
+                  <IconSmall><FiLinkedin className="w-4 h-4" /></IconSmall>
+                  <a className="no-underline hover:underline text-green-800 break-words" href={linkedinHref} target="_blank" rel="noreferrer">{merged.linkedin}</a>
+                </div>
+              )}
+              {githubHref && (
+                <div className="flex items-center gap-2">
+                  <IconSmall><FaGithub className="w-4 h-4" /></IconSmall>
+                  <a className="no-underline hover:underline text-green-800 break-words" href={githubHref} target="_blank" rel="noreferrer">{merged.github}</a>
+                </div>
+              )}
+              {portfolioHref ? (
+                <div className="flex items-center gap-2">
+                  <IconSmall><FiLink className="w-4 h-4" /></IconSmall>
+                  <a className="no-underline hover:underline text-green-800 break-words" href={portfolioHref} target="_blank" rel="noreferrer">{merged.portfolio || merged.website}</a>
+                </div>
               ) : (
-                <div className="w-28 h-28 rounded-lg bg-gray-100 flex items-center justify-center text-xl font-bold text-gray-500">
-                  {initials(toText(data.name))}
+                <div className="flex items-center gap-2">
+                  <IconSmall><FiMapPin className="w-4 h-4" /></IconSmall>
+                  <span>{safeText(merged.address, 'Location')}</span>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Experience */}
-          <section className="mt-8">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Experience</h2>
-              <button onClick={() => onClickSection && onClickSection('experience')} className="text-xs text-indigo-600">Edit</button>
-            </div>
-
-            <div className="mt-4 space-y-4">
-              {experiences.length ? experiences.map((exp, idx) => (
-                <div key={idx} className="relative pl-6">
-                  <div className="absolute left-0 top-1 w-2 flex flex-col items-center">
-                    <div className="w-2 h-2 bg-indigo-600 rounded-full" />
-                    {idx < experiences.length - 1 && <div className="w-px h-full bg-gray-200 mt-1" />}
-                  </div>
-
-                  <div className="bg-white border rounded-lg p-3 shadow-sm">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <div className="font-semibold">{toText(exp.role) || toText(exp.title)}</div>
-                        <div className="text-sm text-gray-600">{toText(exp.company)}</div>
-                      </div>
-                      <div className="text-xs text-gray-500">{formatPeriod(exp)}</div>
+          {/* Achievements / Certs */}
+          {visible.certificates && (
+            <div className="mb-5">
+              <div className="flex items-center gap-2 text-green-700 font-semibold">
+                <Icon><GiLaurelsTrophy className="w-4 h-4" /></Icon>
+                <span className='mb-4'>KEY ACHIEVEMENTS</span>
+              </div>
+              <div className="text-gray-700 text-[12px] space-y-3 pl-6">
+                {certificates.length ? certificates.slice(0,4).map((c,i) => (
+                  <div key={i} className="flex gap-3 items-start">
+                    <span className="w-2 h-2 rounded-full bg-gray-700 mt-2 block" />
+                    <div>
+                      <div className="font-semibold">{safeText(c.name || c.title, 'Achievement')}</div>
+                      {c.issuer && <div className="text-[12px] text-gray-500">{c.issuer} • {c.year || ''}</div>}
                     </div>
-
-                    {/* Render description / bullets / numbering robustly */}
-                    {renderDescription(exp)}
                   </div>
-                </div>
-              )) : (
-                <div className="text-sm text-gray-500">No experience added.</div>
-              )}
+                )) : (
+                  <div className="text-gray-500">Add notable certifications or achievements to highlight impact.</div>
+                )}
+              </div>
             </div>
-          </section>
+          )}
 
-          {/* Projects */}
-          {projects.length > 0 && (
-            <section className="mt-8">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold">Projects</h2>
-                <button onClick={() => onClickSection && onClickSection('projects')} className="text-xs text-indigo-600">Edit</button>
+          {/* Skills */}
+          {visible.skills && (
+            <div className="mb-5">
+              <div className="flex items-center gap-2 text-green-700 font-semibold">
+                <Icon><AiFillTool className="w-4 h-4"/></Icon>
+                <span className='mb-4'>SKILLS</span>
+              </div>
+              <div className="text-gray-700 pl-6">
+                {skills.length ? skills.map((s,i) => renderSkillItem(s,i)) : <div className="text-gray-500">Your top skills</div>}
+              </div>
+            </div>
+          )}
+
+          {/* Languages */}
+          {visible.languages && (
+            <div>
+              <div className="flex items-center gap-2 text-green-700 font-semibold">
+                <Icon><MdOutlineLanguage className="w-4 h-4" /></Icon>
+                <span className='mb-4'>LANGUAGES</span>
+              </div>
+              <div className="text-gray-700 pl-10">
+                {languages.length ? languages.map((l, idx) => renderLanguage(l, idx)) : <div className="text-gray-500">English</div>}
+              </div>
+            </div>
+          )}
+        </aside>
+
+        {/* RIGHT */}
+        <main className="w-2/3 pl-3">
+          <header className="mb-6">
+            <h1 className="text-2xl font-semibold text-gray-900">{safeText(merged.name, 'YOUR NAME')}</h1>
+            <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.28 }} className="inline-block mt-3 bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold text-[12px]">
+              {safeText(merged.title, 'THE ROLE YOU ARE APPLYING FOR')}
+            </motion.div>
+          </header>
+
+          {/* Summary */}
+          {visible.summary && (
+            <section className="mb-6">
+              <div className="flex items-center gap-3">
+                <Icon><FiMail className="w-4 h-4" /></Icon>
+                <div className="text-green-700 font-semibold cursor-pointer mb-4" onClick={() => click('summary')}>SUMMARY</div>
+              </div>
+              <div className={CONTENT_GUTTER_CLASS}>
+                <p className="text-gray-600 leading-6 text-xs">{summary || 'A concise professional summary goes here.'}</p>
+              </div>
+            </section>
+          )}
+
+          {/* PROJECTS */}
+          {visible.projects && (
+            <section className="mb-6">
+              <div className="flex items-center gap-3">
+                <Icon><FiLink className="w-4 h-4" /></Icon>
+                <div className="text-green-700 font-semibold cursor-pointer mb-4" onClick={() => click('projects')}>PROJECTS</div>
               </div>
 
-              <div className="mt-4 grid grid-cols-2 gap-4">
-                {projects.map((p, i) => (
-                  <div key={i} className="border rounded-lg p-3 bg-gray-50">
-                    <div className="font-semibold">{toText(p.title)}</div>
-                    <div className="text-xs text-gray-600">{toText(p.role)}</div>
-                    {p.desc && <p className="text-sm mt-2 text-gray-700">{toText(p.desc)}</p>}
-                    {p.tech && p.tech.length > 0 && <div className="mt-3 flex flex-wrap gap-2">{p.tech.map((t,ti)=>(<span key={ti} className="text-xs px-2 py-1 bg-white rounded border">{toText(t)}</span>))}</div>}
-                  </div>
-                ))}
+              <div className={CONTENT_GUTTER_CLASS}>
+                {projects.length ? projects.map((proj, i) => {
+                  const desc = proj.desc || '';
+                  const lines = desc.split('\n').map(l => l.trim()).filter(Boolean);
+                  return (
+                    <div key={i} className="mb-5">
+                      <div className="flex justify-between items-start gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <div className="font-semibold text-gray-800 text-[13px]">{safeText(proj.name || proj.title)}</div>
+                            {proj.link && (
+                              <a href={makeHref(proj.link)} target="_blank" rel="noreferrer" className="text-[12px] no-underline hover:underline text-green-800 break-words">{proj.link}</a>
+                            )}
+                          </div>
+                          {proj.role && <div className="text-[12px] text-green-800 font-medium mt-1">{proj.role}</div>}
+                        </div>
+                        <div className="text-[12px] text-gray-500 text-right min-w-[110px]">{safeText(proj.year)}</div>
+                      </div>
+
+                      {proj.descFormat === 'bullet' && lines.length > 0 && (
+                        <div className="mt-3">
+                          {lines.map((ln, idx) => (
+                            <div key={idx} className="flex gap-3 items-start mb-2">
+                              <Bullet size={6} colorClass="bg-gray-700 mt-2" />
+                              <span className="text-gray-700 text-[11px] leading-tight">{ln}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {proj.descFormat === 'number' && lines.length > 0 && (
+                        <div className="mt-3">
+                          {lines.map((ln, idx) => (
+                            <div key={idx} className="flex gap-3 items-start mb-2">
+                              <span className="inline-block mt-1 text-[11px] leading-5 w-4 text-right">{idx+1}.</span>
+                              <span className="text-gray-700 text-[11px] leading-tight">{ln}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {proj.descFormat !== 'bullet' && proj.descFormat !== 'number' && proj.desc && (
+                        <div className="mt-3 text-gray-700 text-[11px] leading-tight">{proj.desc}</div>
+                      )}
+                    </div>
+                  );
+                }) : (
+                  <div className="text-gray-500">Add projects you worked on — include role, year and short impact bullets.</div>
+                )}
+              </div>
+            </section>
+          )}
+
+          {/* Experience */}
+          {visible.experience && (
+            <section className="mb-6">
+              <div className="flex items-center gap-3">
+                <Icon><BsFillBriefcaseFill className="w-4 h-4" /></Icon>
+                <div className="text-green-700 font-semibold cursor-pointer mb-4" onClick={() => click('experience')}>EXPERIENCE</div>
+              </div>
+
+              <div className={CONTENT_GUTTER_CLASS}>
+                {experiences.length ? experiences.map((exp, i) => {
+                  const desc = exp.desc || '';
+                  const lines = desc.split('\n').map(l=>l.trim()).filter(Boolean);
+                  return (
+                    <div key={i} className="mb-6">
+                      <div className="flex justify-between items-start gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <div className="font-semibold text-gray-800 text-[13px]">{exp.company}</div>
+                            {exp.location && <span className="text-[12px] text-gray-500">• {exp.location}</span>}
+                          </div>
+                          <div className="text-[12px] text-green-800 font-medium mt-1">{exp.role}</div>
+                        </div>
+                        <div className="text-[12px] text-gray-500 text-right min-w-[110px]">{exp.year}</div>
+                      </div>
+
+                      {/* description */}
+                      {exp.descFormat === 'bullet' && lines.length > 0 && (
+                        <div className="mt-3">
+                          {lines.map((ln, idx) => (
+                            <div key={idx} className="flex gap-3 items-start mb-2">
+                              <Bullet size={6} colorClass="bg-gray-700 mt-2" />
+                              <span className="text-gray-700 text-[11px] leading-tight">{ln}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {exp.descFormat === 'number' && lines.length > 0 && (
+                        <div className="mt-3">
+                          {lines.map((ln, idx) => (
+                            <div key={idx} className="flex gap-3 items-start mb-2">
+                              <span className="inline-block mt-1 text-[11px] leading-5 w-4 text-right">{idx+1}.</span>
+                              <span className="text-gray-700 text-[11px] leading-tight">{ln}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {exp.descFormat !== 'bullet' && exp.descFormat !== 'number' && exp.desc && (
+                        <div className="mt-3 text-gray-700 text-[11px] leading-tight">{exp.desc}</div>
+                      )}
+                    </div>
+                  );
+                }) : (
+                  <div className="text-gray-500">Add your professional experience here. Include achievements and metrics where possible.</div>
+                )}
               </div>
             </section>
           )}
 
           {/* Education */}
-          <section className="mt-8">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Education</h2>
-              <button onClick={() => onClickSection && onClickSection('education')} className="text-xs text-indigo-600">Edit</button>
-            </div>
+          {visible.education && (
+            <section className="mb-6">
+              <div className="flex items-center gap-3">
+                <Icon>
+                  <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 7l11 5 9-4v6h2V6L12 2z"/></svg>
+                </Icon>
+                <div className="text-green-700 font-semibold cursor-pointer mb-4" onClick={() => click('education')}>EDUCATION</div>
+              </div>
 
-            <div className="mt-4 space-y-3">
-              {education.length ? education.map((ed, i) => (
-                <div key={i} className="p-3 border rounded bg-white">
-                  <div className="flex justify-between">
+              <div className={CONTENT_GUTTER_CLASS}>
+                {education.length ? education.map((edu, i) => (
+                  <div key={i} className="flex justify-between items-start mb-4">
                     <div>
-                      <div className="font-semibold">{toText(ed.course) || toText(ed.degree)}</div>
-                      <div className="text-xs text-gray-600">{toText(ed.school)}</div>
+                      <div className="font-semibold text-gray-800 text-[14px]">{safeText(edu.course, 'Degree and Field')}</div>
+                      <div className="text-[12px] text-gray-600">{safeText(edu.school, 'School or University')}</div>
                     </div>
-                    <div className="text-xs text-gray-500">{toText(ed.year)}</div>
+                    <div className="text-[12px] text-gray-500">{safeText(edu.year, '')}</div>
                   </div>
-                </div>
-              )) : (<div className="text-sm text-gray-500">No education added.</div>)}
-            </div>
-          </section>
+                )) : (
+                  <div className="text-gray-500">Add your education details here.</div>
+                )}
+              </div>
+            </section>
+          )}
 
-          {/* Certificates */}
-          <section className="mt-8">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Certificates</h2>
-              <button onClick={() => onClickSection && onClickSection('certificates')} className="text-xs text-indigo-600">Edit</button>
-            </div>
-
-            <div className="mt-4 space-y-2">
-              {certificates.length ? certificates.map((c, i) => (
-                <div key={i} className="flex justify-between items-center p-2 bg-gray-50 rounded border">
-                  <div>
-                    <div className="font-medium">{toText(c.name)}</div>
-                    <div className="text-xs text-gray-600">{toText(c.issuer)}</div>
-                  </div>
-                  <div className="text-xs text-gray-500">{toText(c.year)}</div>
+          {/* References */}
+          {references.length > 0 && (
+            <section className="mt-3">
+              <div className="font-semibold mb-3">REFERENCES</div>
+              {references.map((r,i) => (
+                <div key={i} className="mb-3">
+                  <div className="font-semibold text-gray-800">{safeText(r.name)}</div>
+                  <div className="text-[12px] text-gray-600">{safeText(r.title)}</div>
+                  {r.phone && <div className="text-[12px]">Phone: {r.phone}</div>}
+                  {r.email && <div className="text-[12px]">Email: {r.email}</div>}
                 </div>
-              )) : (<div className="text-sm text-gray-500">No certificates added.</div>)}
-            </div>
-          </section>
+              ))}
+            </section>
+          )}
 
         </main>
-
-        {/* RIGHT SLIM SIDEBAR */}
-        <aside className="w-64 border-l bg-gradient-to-b from-white to-gray-50 p-6 flex flex-col gap-6">
-          {/* Skills (supports category objects) */}
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="text-sm font-semibold">Skills</h4>
-              <button onClick={() => onClickSection && onClickSection('skills')} className="text-xs text-indigo-600">Edit</button>
-            </div>
-
-            <div className="space-y-3 mt-2">
-              {skills.length ? skills.map((s, i) => {
-                if (s && typeof s === 'object' && s.category && Array.isArray(s.items)) {
-                  return (
-                    <div key={i} className="text-sm">
-                      <div className="font-medium text-gray-700">{s.category}</div>
-                      <div className="mt-1 flex flex-wrap gap-2">
-                        {s.items.filter(Boolean).map((it, j) => (
-                          <span key={j} className="text-xs px-2 py-1 bg-indigo-50 rounded border">{toText(it)}</span>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                }
-
-                if (typeof s === 'string') {
-                  return <div key={i} className="text-sm flex items-center justify-between"><span>{s}</span></div>;
-                }
-
-                const name = s?.name || s?.label || 'Skill';
-                const pct = parsePct(s?.proficiency ?? s?.level ?? s?.value);
-
-                return (
-                  <div key={i} className="text-sm">
-                    <div className="flex justify-between items-center">
-                      <span className="truncate">{toText(name)}</span>
-                      <span className="text-xs text-gray-500 ml-2">{pct}%</span>
-                    </div>
-
-                    <div
-                      role="progressbar"
-                      aria-label={`${toText(name)} proficiency`}
-                      aria-valuemin={0}
-                      aria-valuemax={100}
-                      aria-valuenow={pct}
-                      className="w-full bg-gray-100 h-2 rounded mt-1 overflow-hidden"
-                    >
-                      <div
-                        className="h-2 rounded bg-indigo-500 transition-[width] duration-300"
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
-                  </div>
-                );
-              }) : (
-                <div className="text-sm text-gray-500">Add skills</div>
-              )}
-            </div>
-          </div>
-
-          {/* Languages */}
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="text-sm font-semibold">Languages</h4>
-              <button onClick={() => onClickSection && onClickSection('languages')} className="text-xs text-indigo-600">Edit</button>
-            </div>
-            <div className="space-y-2">
-              {languages.length ? languages.map((l, i) => {
-                const langObj = typeof l === 'string' ? { name: l, displayFormat: 'simple' } : (l || {});
-                const name = langObj.name ?? langObj.language ?? 'Language';
-                const displayFormat = normalizeDisplayFormat(langObj.displayFormat ?? langObj.display ?? '');
-                const rawPct = langObj.proficiency ?? langObj.value ?? (typeof langObj.level === 'number' ? langObj.level : undefined);
-                const pct = parsePct(rawPct);
-                const textLevel = (typeof langObj.level === 'string') ? langObj.level : (langObj.levelText ?? langObj.levelLabel ?? null);
-
-                return (
-                  <div key={i} className="text-sm">
-                    <div className="flex justify-between"><span>{toText(name)}</span><span className="text-xs text-gray-500">{displayFormat === 'percentage' ? `${pct}%` : (textLevel || '')}</span></div>
-                    {displayFormat === 'percentage' && (
-                      <div role="progressbar" aria-label={`${toText(name)} language proficiency`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct} className="w-full bg-gray-100 h-1 rounded mt-1 overflow-hidden">
-                        <div style={{ width: `${pct}%` }} className="h-1 bg-indigo-500 transition-[width] duration-300" />
-                      </div>
-                    )}
-                  </div>
-                );
-              }) : <div className="text-sm text-gray-500">Add languages</div>}
-            </div>
-          </div>
-
-          {/* Small contact card */}
-          <div className="p-3 bg-white border rounded shadow-sm">
-            <div className="text-sm font-semibold">Contact</div>
-            <div className="text-xs text-gray-600 mt-1">{toText(data.email)}</div>
-            <div className="text-xs text-gray-600">{toText(data.phone)}</div>
-            {data.website && <div className="text-xs text-indigo-600 mt-2">{toText(data.website)}</div>}
-          </div>
-        </aside>
       </div>
     </div>
   );

@@ -112,7 +112,7 @@ export default function ModernTemplate({ data, onClickSection }) {
 
   return (
     <div
-      id="cv-preview"
+      id="pdf-template"
       className="w-[794px] min-h-[1123px] mx-auto bg-white shadow-2xl font-sans"
     >
       {/* HEADER */}
@@ -162,7 +162,7 @@ export default function ModernTemplate({ data, onClickSection }) {
       {/* TWO COLUMNS */}
       <div className="grid grid-cols-[38%_62%] gap-0">
         {/* LEFT SIDEBAR */}
-        <div className="bg-slate-100 px-8 py-10">
+        <div className="cv-sidebar bg-slate-100 px-8 py-10">
           {/* CONTACT */}
           <section
             className="mb-8 cursor-pointer"
@@ -391,7 +391,7 @@ export default function ModernTemplate({ data, onClickSection }) {
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="px-12 py-10">
+        <div className="w-2/3" className="px-12 py-10">
           {/* PROFILE SUMMARY */}
           {data?.visibleSections?.summary !== false && (
             <section
@@ -427,7 +427,7 @@ export default function ModernTemplate({ data, onClickSection }) {
                     : [];
 
                   return (
-                    <div key={i} className="relative pl-6 border-l-4 border-slate-300">
+                    <div key={i} className="cv-item relative pl-6 border-l-4 border-slate-300">
                       <div className="absolute -left-2 top-0 w-4 h-4 bg-slate-800 rounded-full"></div>
                       
                       <p className="text-base font-bold text-slate-800">{safeText(e.role)}</p>
@@ -476,7 +476,7 @@ export default function ModernTemplate({ data, onClickSection }) {
                 {(education.length ? education : defaultEducation).map((edu, i) => {
                   const ed = safeObj(edu);
                   return (
-                    <div key={i} className="pl-6 border-l-4 border-slate-300 relative">
+                    <div key={i} className="cv-item pl-6 border-l-4 border-slate-300 relative">
                       <div className="absolute -left-2 top-0 w-4 h-4 bg-slate-800 rounded-full"></div>
                       <p className="font-bold text-slate-800">{safeText(ed.course)}</p>
                       <p className="text-sm text-slate-600">{safeText(ed.school)}</p>
@@ -507,7 +507,7 @@ export default function ModernTemplate({ data, onClickSection }) {
                     : [];
 
                   return (
-                    <div key={i} className="pl-6 border-l-4 border-slate-300 relative">
+                    <div key={i} className="cv-item pl-6 border-l-4 border-slate-300 relative">
                       <div className="absolute -left-2 top-0 w-4 h-4 bg-slate-800 rounded-full"></div>
                       
                       <div className="flex justify-between items-start mb-1">
