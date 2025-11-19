@@ -113,12 +113,12 @@ export default function Template30({ data, onClickSection }) {
 
         {/* Summary */}
         {data?.visibleSections?.summary !== false && (
-          <>
+          <div className="cv-item mb-4">
             <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("summary")}>
              SUMMARY
             </h2>
-            <p className="text-sm mb-4 text-gray-700 text-justify">{data?.summary || "A dedicated professional with extensive experience in the field."}</p>
-          </>
+            <p className="text-sm text-gray-700 text-justify">{data?.summary || "A dedicated professional with extensive experience in the field."}</p>
+          </div>
         )}
 
         {/* Projects */}

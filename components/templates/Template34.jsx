@@ -50,7 +50,7 @@ export default function Template34({ data, onClickSection }) {
 
   return (
     <div
-      id="cv-preview"
+      id="pdf-template"
       className="w-[794px] min-h-[1123px] mx-auto bg-white shadow-xl p-10 font-sans"
     >
       {/* HEADER */}
@@ -110,7 +110,7 @@ export default function Template34({ data, onClickSection }) {
       {/* TWO COLUMNS */}
       <div className="grid grid-cols-[45%_55%] gap-6 text-gray-800">
         {/* LEFT SIDEBAR */}
-        <div className="bg-[#f3f6fa] rounded-2xl p-5">
+        <div className="cv-sidebar bg-[#f3f6fa] rounded-2xl p-5">
           {/* CONTACT */}
           <section
             className="mb-6 cursor-pointer"
@@ -330,7 +330,7 @@ export default function Template34({ data, onClickSection }) {
         </div>
 
         {/* RIGHT SIDE */}
-        <div>
+        <div className="w-2/3">
           {/* PROFILE SUMMARY */}
           {data?.visibleSections?.summary !== false && (
             <section
@@ -383,7 +383,7 @@ export default function Template34({ data, onClickSection }) {
                     : [];
 
                   return (
-                    <div key={i} className="text-sm">
+                    <div key={i} className="cv-item text-sm">
                       <p className="font-semibold">{safeText(e.role)}</p>
                       <p className="opacity-70">{safeText(e.company)}</p>
                       <p className="text-xs opacity-60">{safeText(e.year)}</p>
@@ -444,7 +444,7 @@ export default function Template34({ data, onClickSection }) {
               ).map((edu, i) => {
                 const ed = safeObj(edu);
                 return (
-                  <div key={i} className="mb-3">
+                  <div key={i} className="cv-item mb-3">
                     <p className="font-semibold">{safeText(ed.course)}</p>
                     <p className="text-xs opacity-70">
                       {safeText(ed.school)} — {safeText(ed.year)}
@@ -491,7 +491,7 @@ export default function Template34({ data, onClickSection }) {
                   : [];
 
                 return (
-                  <div key={i} className="text-sm mb-4">
+                  <div key={i} className="cv-item text-sm mb-4">
                     <div className="flex justify-between items-start">
                       <div>
                         <p className="font-semibold">
