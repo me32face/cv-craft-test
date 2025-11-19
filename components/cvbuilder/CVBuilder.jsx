@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { templates } from "../templates";
 
 // Input components
@@ -20,7 +20,6 @@ function Popup({ title, children, onClose }) {
       className="fixed inset-0 bg-black/40 flex items-center justify-start z-50 p-8"
       onClick={onClose}
     >
-
       <div
         className="bg-white w-[450px] max-h-[80vh] rounded shadow-lg flex flex-col"
         onClick={(e) => e.stopPropagation()}
@@ -47,6 +46,7 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
   const TemplateComponent = templates[template];
 
   const [openSection, setOpenSection] = useState(null);
+  const [totalPages, setTotalPages] = useState(1);
 
   const [data, setData] = useState({
     name: "John Doe",
@@ -99,7 +99,7 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
     if (!element) return;
 
     // Adjust layout to prevent content splitting
-    adjustLayoutForPageBreaks(element);
+    const calculatedPages = adjustLayoutForPageBreaks(element);
 
     const canvas = await html2canvas(element, { scale: 2 });
     const imgData = canvas.toDataURL("image/png");
@@ -111,9 +111,8 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
     const imgWidth = pageWidth;
     const imgHeight = (canvas.height * pageWidth) / canvas.width;
 
-    // A4 page height at scale 2: 1123px * 2 = 2246px
-    const A4_HEIGHT_PX = 2246;
-    const totalPages = Math.ceil(canvas.height / A4_HEIGHT_PX);
+    // Use calculated pages from layout adjustment
+    const totalPages = calculatedPages;
 
     console.log('Canvas height:', canvas.height);
     console.log('Total pages:', totalPages);
@@ -137,10 +136,28 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
 
     console.log('Element height before adjustments:', totalHeight);
 
+    // Calculate sidebar height first (before any early returns)
+    const sidebar = element.querySelector('.cv-sidebar');
+    const mainContent = element.querySelector('.w-2\\/3');
+    let totalPages = 1;
+    
+    if (sidebar && mainContent) {
+      const contentHeight = mainContent.scrollHeight;
+      const sidebarHeight = sidebar.scrollHeight;
+      const maxHeight = Math.max(contentHeight, sidebarHeight);
+      totalPages = Math.ceil(maxHeight / pageHeight);
+      const fullPagesHeight = totalPages * pageHeight;
+      
+      // Always set sidebar to full pages height
+      sidebar.style.minHeight = `${fullPagesHeight}px`;
+      
+      console.log('Content:', contentHeight, 'Sidebar:', sidebarHeight, 'Pages:', totalPages, 'Sidebar set to:', fullPagesHeight);
+    }
+
     // Only run smart breaks if content exceeds 1 page
     if (totalHeight <= pageHeight * 1.05) {
       console.log('Content fits on 1 page, skipping smart breaks');
-      return;
+      return totalPages;
     }
 
     console.log('Running smart breaks for multi-page content');
@@ -156,19 +173,13 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
       const pageEnd = (pageNumber + 1) * pageHeight;
 
       if (bottom > pageEnd && top < pageEnd) {
-        const pushDistance = pageEnd - top + 20;
+        const pushDistance = pageEnd - top + 40;
         item.style.marginTop = `${pushDistance}px`;
         console.log('Pushed item by', pushDistance, 'px');
       }
     });
-
-    // Extend sidebar to match total content height
-    const sidebar = element.querySelector('.cv-sidebar');
-    if (sidebar) {
-      const totalHeightAfterAdjustments = element.scrollHeight;
-      sidebar.style.minHeight = `${totalHeightAfterAdjustments}px`;
-      console.log('Sidebar extended to:', totalHeightAfterAdjustments, 'px');
-    }
+    
+    return totalPages;
   };
 
   const resetLayout = (element) => {
@@ -183,6 +194,31 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
       sidebar.style.minHeight = '';
     }
   };
+
+  // Apply page breaks in real-time preview
+  useEffect(() => {
+    const element = document.getElementById('pdf-template');
+    if (element) {
+      const calculatedPages = adjustLayoutForPageBreaks(element);
+      setTotalPages(calculatedPages);
+    }
+    
+    // Also apply to preview pages
+    setTimeout(() => {
+      const previewPages = document.querySelectorAll('[data-preview-page]');
+      previewPages.forEach(page => {
+        const sidebar = page.querySelector('.cv-sidebar');
+        const mainContent = page.querySelector('.w-2\\/3');
+        if (sidebar && mainContent) {
+          const contentHeight = mainContent.scrollHeight;
+          const sidebarHeight = sidebar.scrollHeight;
+          const maxHeight = Math.max(contentHeight, sidebarHeight);
+          const pages = Math.ceil(maxHeight / 1123);
+          sidebar.style.minHeight = `${pages * 1123}px`;
+        }
+      });
+    }, 100);
+  }, [data]);
 
   return (
     <div className="flex gap-6 p-6">
@@ -247,12 +283,33 @@ export default function CVBuilder({ initialTemplate = "template30", onBack }) {
       </div>
 
       {/* RIGHT SIDE — TEMPLATE PREVIEW */}
-      <div className="w-2/3 border shadow-lg overflow-auto">
+      <div className="w-2/3 overflow-auto bg-gray-300 p-5">
         {TemplateComponent ? (
-          <div id="cv-preview">
-            <div id="template-content">
-              <TemplateComponent data={data} />
-            </div>
+          <div className="space-y-5">
+            {Array.from({ length: totalPages }).map((_, pageIndex) => (
+              <div 
+                key={pageIndex}
+                data-preview-page 
+                style={{ height: '1123px', width: '794px', overflow: 'hidden' }} 
+                className="bg-white shadow-xl mx-auto relative"
+              >
+                {pageIndex > 0 && (
+                  <button
+                    onClick={() => setTotalPages(pageIndex)}
+                    className="absolute top-3 left-3 z-10 bg-red-500 text-white w-8 h-8 rounded-full hover:bg-red-600 flex items-center justify-center shadow-lg"
+                    title="Remove this page"
+                  >
+                    ✕
+                  </button>
+                )}
+                <div style={{ transform: `translateY(-${pageIndex * 1123}px)` }}>
+                  <div style={{ marginTop: pageIndex > 0 ? '30px' : '0px', marginBottom: pageIndex === 0 ? '30px' : '0px', paddingTop: pageIndex > 0 ? '30px' : '0px', paddingBottom: pageIndex === 0 ? '30px' : '0px' }}>
+                    <TemplateComponent data={data} />
+                  </div>
+
+                </div>
+              </div>
+            ))}
           </div>
         ) : (
           <p className="p-5 text-red-500">Template not found.</p>
