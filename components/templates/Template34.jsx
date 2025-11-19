@@ -130,10 +130,13 @@ export default function Template34({ data, onClickSection }) {
               {safeText(data?.address) || "Your City, Country"}
             </p>
             <p className="text-sm mt-1">
-              {safeText(data?.website) || "www.yourportfolio.com"}
+              {safeText(data?.portfolio) || "www.yourportfolio.com"}
             </p>
             <p className="text-sm">
               {safeText(data?.linkedin) || "linkedin.com/in/yourname"}
+            </p>
+            <p>
+              {safeText(data?.github) || "github.com/yourusername"}
             </p>
           </section>
 

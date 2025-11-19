@@ -48,19 +48,10 @@ export default function Template35({ data, onClickSection }) {
     {data.address && <p>📍 {data.address}</p>}
 
     {/* Website (OPTIONAL FIELD) */}
-  {data.website && (
-  <p>
-    🔗{" "}
-    <a
-      href={data.website}
-      target="_blank"
-      className="text-blue-600 underline"
-    >
-      {data.website}
-    </a>
-  </p>
-)}
-
+  
+     {data?.portfolio && <p>🔗 {data.portfolio}</p>}
+     {data?.linkedin && <p>🔗 {data.linkedin}</p>}
+     {data?.github && <p>🔗 {data.github}</p>}
   </div>
 </header>
 
