@@ -132,53 +132,40 @@ export default function template39({ data, onClickSection }) {
           )}
 
           {/* Skills */}
-          {data?.visibleSections?.skills !== false && (
-            <section
-              className="mb-6 cursor-pointer"
-              onClick={() => onClickSection && onClickSection("skills")}
-            >
-              <h2 className="text-md font-semibold text-gray-800 mb-2 border-b-2 border-amber-700 pb-1.5">
-                Skills
-              </h2>
-              <ul className="space-y-1">
-                {(skills.length ? skills : [
-                  "Digital Marketing Strategy",
-                  "Brand Management",
-                  "Social Media Marketing",
-                  "Content Marketing",
-                  "Team Leadership",
-                  "Budget Management",
-                  "Data Analytics",
-                ]).map((s, i) => {
-                  if (typeof s === 'string') {
-                    return (
-                      <li key={i} className="text-xs text-gray-700 flex items-start gap-1.5">
-                        <span className="text-amber-700 font-bold">•</span>
-                        <span>{s}</span>
-                      </li>
-                    );
-                  }
-                  if (s.category && s.items) {
-                    return (
-                      <li key={i} className="text-xs text-gray-700 flex items-start gap-1.5">
-                        <span className="text-amber-700 font-bold">•</span>
-                        <span>
-                          <span className="font-semibold">{s.category}:</span>{" "}
-                          {s.items.filter(item => item && item.trim()).join(", ")}
-                        </span>
-                      </li>
-                    );
-                  }
-                  return (
-                    <li key={i} className="text-xs text-gray-700 flex items-start gap-1.5">
-                      <span className="text-amber-700 font-bold">•</span>
-                      <span className="text-xs">{s.name || "Skill"}</span>
-                    </li>
-                  );
-                })}
-              </ul>
-            </section>
-          )}
+         {data?.visibleSections?.skills !== false && (
+        <div className="mb-4 mt-8">
+          <h2 className="font-semibold text-md mb-2 cursor-pointer border-b-2 border-amber-700 pb-1.5 " onClick={() => onClickSection && onClickSection("skills")}>SKILLS</h2>
+          {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation", "Critical Thinking", "Leadership"]).map((s, i) => {
+            if (typeof s === 'string') {
+              return <p key={i} className="text-xs mb-1">• {s}</p>;
+            }
+            if (s.proficiency !== undefined) {
+              return (
+                <div key={i} className="mb-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">{s.name}</span>
+                    <span className="text-xs opacity-70">{s.proficiency}%</span>
+                  </div>
+                  <div className="w-full bg-white/20 rounded-full h-1 mt-2">
+                    <div
+                      className="bg-amber-700 h-1 rounded-full transition-all"
+                      style={{ width: `${s.proficiency}%` }}
+                    ></div>
+                  </div>
+                </div>
+              );
+            }
+            if (s.category && s.items) {
+              return (
+                <p key={i} className="text-sm mb-1">
+                  <span className="font-medium text-amber-700">{s.category}:</span> {s.items.filter(item => item && item.trim()).join(", ")}
+                </p>
+              );
+            }
+            return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
+          })}
+        </div>
+        )}
 
           {/* Education */}
           {data?.visibleSections?.education !== false && (

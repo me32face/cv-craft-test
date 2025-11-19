@@ -90,7 +90,7 @@ export default function Template38({ data, onClickSection }) {
                   </div>
                   <div className="w-full bg-white/20 rounded-full h-1 mt-2">
                     <div
-                      className="bg-white h-1 rounded-full transition-all"
+                      className="bg-black h-1 rounded-full transition-all"
                       style={{ width: `${s.proficiency}%` }}
                     ></div>
                   </div>
