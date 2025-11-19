@@ -10,6 +10,7 @@ import Template33 from "./Template33";
 import Template37 from "./Template37";
 import Template38 from "./Template38";
 import Template39 from "./Template39";
+import Template40 from "./Template40";
 import Template41 from "./Template41";
 
 export const templates = {
@@ -22,6 +23,7 @@ export const templates = {
   template33: Template33,
   template38: Template38,
   template39: Template39,
+  template40: Template40,
   template41: Template41,
 
 };
@@ -34,7 +36,6 @@ export const templateInputs = {
     profileImage: false,
     skills: true,
   },
- 
 
   template34: {
     name: true,
@@ -76,8 +77,7 @@ export const templateInputs = {
     experiences: true,
     education: true,
     certificates: true,
-    project:true,
-
+    project: true,
   },
 
   template31: {
@@ -132,7 +132,7 @@ export const templateInputs = {
     certificates: true,
     references: false,
   },
-    Template38: {
+  Template38: {
     name: true,
     title: true,
     profileImage: false,
@@ -162,7 +162,23 @@ export const templateInputs = {
     certificates: true,
     references: false,
   },
-    template41: {
+  template40: {
+    name: true,
+    title: true,
+    profileImage: false,
+    phone: true,
+    email: true,
+    address: true,
+    summary: true,
+    experiences: true,
+    education: true,
+    skills: true,
+    languages: true,
+    certificates: true,
+    references: false,
+  },
+
+  template41: {
     name: true,
     title: true,
     profileImage: true,
@@ -177,5 +193,4 @@ export const templateInputs = {
     certificates: true,
     references: false,
   },
-
 };

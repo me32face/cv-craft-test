@@ -165,7 +165,9 @@ export default function Template37({ data, onClickSection }) {
                 {safeText(data?.email, "hello@reallygreatsite.com")}
               </p>
               <p>{safeText(data?.address, "123 Anywhere St., Any City")}</p>
-              <p>{safeText(data?.website, "www.reallygreatsite.com")}</p>
+              <p>{safeText(data?.portfolio, "www.reallygreatsite.com")}</p>
+             <p>{safeText(data?.linkedin, "linkedin.com/in/yourname")}</p>
+              <p>{safeText(data?.github, "github.com/yourusername")}</p>
             </div>
           </div>
         )}
