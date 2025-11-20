@@ -1,7 +1,7 @@
 'use client';
-import React, { useState ,useEffect} from "react";
+import React, { useState ,useEffect, useMemo} from "react";
 import Image from "next/image";
-import { templates } from "../templates";
+import { templates, templateInputs } from "../templates";
 import { User, Camera, Link2, Code, GraduationCap, Briefcase, Globe, Award, Printer, Share2, Download, ZoomIn, ZoomOut, Expand, Sparkles, ChevronLeft, Menu, FolderCode } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -197,18 +197,22 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
   }, [data]);
   
 
-  const menuItems = [
-    { name: "Personal Details", key: "personal", icon: User },
-    { name: "Photo", key: "image", icon: Camera },
-    { name: "Social Links", key: "sociallinks", icon: Link2 },
-    { name: "Skills", key: "skills", icon: Code },
-    { name: "Education", key: "education", icon: GraduationCap },
-    { name: "Work Experience", key: "experience", icon: Briefcase },
-    { name: "Languages", key: "languages", icon: Globe },
-    { name: "Certificates", key: "certificates", icon: Award },
-    { name: "projects", key: "projects", icon: FolderCode },
-
+  const allMenuItems = [
+    { name: "Personal Details", key: "personal", icon: User, inputKey: "name" },
+    { name: "Photo", key: "image", icon: Camera, inputKey: "profileImage" },
+    { name: "Social Links", key: "sociallinks", icon: Link2, inputKey: "socialLinks" },
+    { name: "Skills", key: "skills", icon: Code, inputKey: "skills" },
+    { name: "Education", key: "education", icon: GraduationCap, inputKey: "education" },
+    { name: "Work Experience", key: "experience", icon: Briefcase, inputKey: "experiences" },
+    { name: "Languages", key: "languages", icon: Globe, inputKey: "languages" },
+    { name: "Certificates", key: "certificates", icon: Award, inputKey: "certificates" },
+    { name: "projects", key: "projects", icon: FolderCode, inputKey: "project" },
   ];
+
+  const menuItems = useMemo(() => {
+    const config = templateInputs[template] || {};
+    return allMenuItems.filter(item => config[item.inputKey] !== false);
+  }, [template]);
 
   return (
     <div className="h-screen flex bg-[#F6F5F6] text-gray-800 overflow-hidden">
