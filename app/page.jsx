@@ -1,8 +1,8 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import TemplatePreview from '@/components/TemplatePreview';
-import CVBuilder from "@/components/cvbuilder/CVBuilder";
 import { useEffect, useRef, useState } from "react";
 import Navbar from "../components/navbar/page";
 import BuildSection from "../components/builder-page/page";
@@ -18,12 +18,12 @@ import Toast from "../components/Toast";
 // import Login from './login/page'
 
 export default function Home() {
+  const router = useRouter();
   const scrollRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeFilter, setActiveFilter] = useState("All");
   const [showToast, setShowToast] = useState(false);
-  const [selectedTemplate, setSelectedTemplate] = useState(null);
   const templates = [
     {
       id: "Template30",
@@ -344,15 +344,6 @@ export default function Home() {
     };
   }, [currentIndex, templates.length]);
 
-  if (selectedTemplate) {
-    return (
-      <CVBuilder
-        initialTemplate={selectedTemplate}
-        onBack={() => setSelectedTemplate(null)}
-      />
-    );
-  }
-
   return (
     <>
       <Navbar />
@@ -470,12 +461,9 @@ export default function Home() {
                             const token = localStorage.getItem("token");
                             if (!token) {
                               setShowToast(true);
-                              setTimeout(
-                                () => (window.location.href = "/login"),
-                                1500
-                              );
+                              setTimeout(() => router.push("/login"), 1500);
                             } else {
-                              setSelectedTemplate(template.id);
+                              router.push(`/templates/${template.id}`);
                             }
                           }}
                         >
