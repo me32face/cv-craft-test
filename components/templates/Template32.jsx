@@ -231,16 +231,16 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
 
   // --- component render ---
   return (
-    <div id="cv-preview" className="mx-auto bg-white border shadow-sm print:shadow-none print:border-0" style={{ width: '794px', minHeight: '1123px', margin: '0 auto', padding: 32, boxSizing: 'border-box', fontFamily: 'Inter, Poppins, Arial, sans-serif' }}>
+    <div id="pdf-template" className="mx-auto bg-white border shadow-sm print:shadow-none print:border-0" style={{ width: '794px', minHeight: '1123px', margin: '0 auto', padding: 32, boxSizing: 'border-box', fontFamily: 'Inter, Poppins, Arial, sans-serif' }}>
       <div className="flex gap-6 items-start">
         {/* LEFT */}
-        <aside className="w-1/3 pr-4 pl-2">
+        <aside className="cv-sidebar w-1/3 pr-4 pl-2">
           <div className="mb-4 flex justify-center">
             {merged.profileImage ? (
               <img src={merged.profileImage} alt="profile" className={`w-28 h-28 object-cover ${merged.imageShape === 'circle' ? 'rounded-full' : 'rounded-lg'}`} />
             ) : (
               <div className={`w-28 h-28 flex items-center justify-center ${merged.imageShape === 'circle' ? 'rounded-full' : 'rounded-lg'} bg-green-50`}>
-                <span className="text-2xl text-gray-400 font-bold">{(merged.name||'YN').split(' ').map(n=>n[0]).slice(0,2).join('')}</span>
+                <span className="text-2xl text-gray-400 font-bold mb-4">{(merged.name||'YN').split(' ').map(n=>n[0]).slice(0,2).join('')}</span>
               </div>
             )}
           </div>
@@ -339,15 +339,24 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
         {/* RIGHT */}
         <main className="w-2/3 pl-3">
           <header className="mb-6">
-            <h1 className="text-2xl font-semibold text-gray-900">{safeText(merged.name, 'YOUR NAME')}</h1>
-            <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.28 }} className="inline-block mt-3 bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold text-[12px]">
-              {safeText(merged.title, 'THE ROLE YOU ARE APPLYING FOR')}
-            </motion.div>
+            <h1 className="text-2xl font-semibold text-gray-900 pl-3">{safeText(merged.name, 'YOUR NAME')}</h1>
+            <div className="inline-block mt-3 ">
+              <motion.div
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.28 }}
+                className="inline-block bg-green-100 rounded-full"
+              >
+                <span className="text-green-800 font-semibold text-[12px] px-4 py-1 inline-block text-left mb-4">
+                  {safeText(merged.title, 'THE ROLE YOU ARE APPLYING FOR')}
+                </span>
+              </motion.div>
+            </div>
           </header>
 
           {/* Summary */}
           {visible.summary && (
-            <section className="mb-6">
+            <section className="mb-6 cv-item">
               <div className="flex items-center gap-3">
                 <Icon><FiMail className="w-4 h-4" /></Icon>
                 <div className="text-green-700 font-semibold cursor-pointer mb-4" onClick={() => click('summary')}>SUMMARY</div>
@@ -371,7 +380,7 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                   const desc = proj.desc || '';
                   const lines = desc.split('\n').map(l => l.trim()).filter(Boolean);
                   return (
-                    <div key={i} className="mb-5">
+                    <div key={i} className="mb-5 cv-item">
                       <div className="flex justify-between items-start gap-4">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
@@ -432,7 +441,7 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                   const desc = exp.desc || '';
                   const lines = desc.split('\n').map(l=>l.trim()).filter(Boolean);
                   return (
-                    <div key={i} className="mb-6">
+                    <div key={i} className="mb-6 cv-item">
                       <div className="flex justify-between items-start gap-4">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
@@ -491,7 +500,7 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
 
               <div className={CONTENT_GUTTER_CLASS}>
                 {education.length ? education.map((edu, i) => (
-                  <div key={i} className="flex justify-between items-start mb-4">
+                  <div key={i} className="cv-item flex justify-between items-start mb-4">
                     <div>
                       <div className="font-semibold text-gray-800 text-[14px]">{safeText(edu.course, 'Degree and Field')}</div>
                       <div className="text-[12px] text-gray-600">{safeText(edu.school, 'School or University')}</div>
