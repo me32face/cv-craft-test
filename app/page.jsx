@@ -1,8 +1,7 @@
-"use client";
-
-import Link from "next/link";
-import Image from "next/image";
-import TemplatePreview from "@/components/TemplatePreview";
+'use client';
+import Link from 'next/link';
+import Image from 'next/image';
+import TemplatePreview from '@/components/TemplatePreview';
 import CVBuilder from "@/components/cvbuilder/CVBuilder";
 import { useEffect, useRef, useState } from "react";
 import Navbar from "../components/navbar/page";
