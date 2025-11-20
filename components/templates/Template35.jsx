@@ -14,7 +14,7 @@ export default function Template35({ data, onClickSection }) {
   const certificates = toArray(data.certificates);
   const references = toArray(data.references);
   const awards = toArray(data.awards);
-
+const  socialLinks = toArray(data.socialLinks);
   // visibility logic like Template30
   const visible = data?.visibleSections || {};
 
@@ -49,9 +49,24 @@ export default function Template35({ data, onClickSection }) {
 
     {/* Website (OPTIONAL FIELD) */}
   
-     {data?.portfolio && <p>🔗 {data.portfolio}</p>}
-     {data?.linkedin && <p>🔗 {data.linkedin}</p>}
-     {data?.github && <p>🔗 {data.github}</p>}
+  {/* SOCIAL LINKS (dynamic from SocialLinks.jsx) */}
+{visible.socialLinks !== false && Array.isArray(data?.socialLinks) && data.socialLinks.length > 0 && (
+  <div className="flex flex-wrap gap-4 mt-2 text-sm cursor-pointer"
+       onClick={() => onClickSection("social")}
+  >
+    {data.socialLinks.map((link, i) => (
+      <a
+        key={i}
+        href={link}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-600 underline break-all"
+      >
+        🔗 {link}
+      </a>
+    ))}
+  </div>
+)}
   </div>
 </header>
 
