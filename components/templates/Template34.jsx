@@ -1,8 +1,7 @@
 "use client";
 import React from "react";
 
-export default function ModernTemplate({ data, onClickSection }) {
-  /* ---------------- SAFE TEXT / FALLBACK ---------------- */
+export default function Template34({ data, onClickSection }) {
   const safeText = (item) => {
     if (!item) return "";
     if (typeof item === "string") return item;
@@ -24,129 +23,62 @@ export default function ModernTemplate({ data, onClickSection }) {
   const safeObj = (item) => (typeof item === "object" && item !== null ? item : {});
 
   const toArray = (v) =>
-    !v ? [] : Array.isArray(v) ? v : typeof v === "string" ? [v] : [];
+    !v
+      ? []
+      : Array.isArray(v)
+      ? v
+      : typeof v === "string"
+      ? [v]
+      : [];
 
-  /* ---------------- SAMPLE DEFAULT DATA ---------------- */
-
-  const defaultSkills = [
-    "Client Relationship Building",
-    "Negotiation Skills",
-    "Target Achievement",
-    "CRM Management",
-    "Team Collaboration",
-    "Lead Prospecting",
-    "Communication Skills",
-    "Strategic Planning",
-  ];
-
-  const defaultExperience = [
-    {
-      role: "Senior Sales Executive",
-      company: "TechnoMart Pvt Ltd",
-      year: "2021–Present",
-      desc: "Managed enterprise-level accounts and achieved 150% of annual sales targets.\nLed a team of 5 sales representatives and mentored junior staff.",
-      descFormat: "bullet",
-    },
-    {
-      role: "Sales Executive",
-      company: "ABC Corp",
-      year: "2018–2021",
-      desc: "Achieved 120% of quarterly sales targets consistently.\nDeveloped and maintained relationships with 50+ key clients.",
-    },
-  ];
-
-  const defaultSummary =
-    "Dynamic and results-driven Sales Executive with over 5 years of experience in driving revenue growth, building strong client relationships, and exceeding sales targets. Proven track record in strategic planning and team collaboration.";
-
-  const defaultEducation = [
-    {
-      course: "Bachelor of Commerce (B.Com)",
-      school: "Wardiere University",
-      year: "2015–2018",
-    },
-    {
-      course: "Higher Secondary",
-      school: "St. Mary's Senior School",
-      year: "2013–2015",
-    },
-  ];
-
-  const defaultProjects = [
-    {
-      name: "Portfolio Website",
-      year: "2023",
-      link: "https://yourportfolio.com",
-      desc: "Designed and developed a responsive personal portfolio using React and Tailwind CSS.\nImplemented reusable components and responsive layouts.",
-      descFormat: "bullet",
-    },
-    {
-      name: "Sales Dashboard",
-      year: "2022",
-      link: "https://github.com/yourusername/sales-dashboard",
-      desc: "Built an interactive dashboard to visualize sales KPIs.\nIntegrated charts and filters for real-time insights.",
-      descFormat: "number",
-    },
-  ];
-
-  /* ---------------- SMART MERGING LOGIC ---------------- */
-
-  const skills = data?.skills?.length ? data.skills : defaultSkills;
-  const experiences =
-    data?.experiences?.length ? data.experiences : defaultExperience;
-  const summaryText =
-    data?.summary && data.summary.toString().trim().length > 0
-      ? Array.isArray(data.summary)
-        ? data.summary.map((it) => safeText(it)).join(" ")
-        : safeText(data.summary)
-      : defaultSummary;
-  const education =
-    data?.education?.length ? data.education : defaultEducation;
-  const projects =
-    data?.projects?.length ? data.projects : defaultProjects;
-
+  const skills = toArray(data?.skills);
+  const experiences = toArray(data?.experiences);
+  const summaryArr = toArray(data?.summary);
+  const education = toArray(data?.education);
   const certificates = toArray(data?.certificates);
   const languages = toArray(data?.languages);
   const awards = toArray(data?.awards);
+  const projects = toArray(data?.projects);
 
-  /* ------------------------------------------------------ */
+  const getSummaryText = () => {
+    if (!data?.summary) return "";
+    if (Array.isArray(data.summary)) {
+      return data.summary.map((item) => safeText(item)).join(" ");
+    }
+    return safeText(data.summary);
+  };
 
   return (
     <div
       id="pdf-template"
-      className="w-[794px] min-h-[1123px] mx-auto bg-white shadow-2xl font-sans"
+      className="w-[794px] min-h-[1123px] mx-auto bg-white shadow-xl p-10 font-sans"
     >
       {/* HEADER */}
-      <div className="bg-gradient-to-r from-slate-800 to-slate-900 text-white px-12 py-10">
-        <div className="flex items-center justify-between">
-          <div className="flex-1">
-            <h1
-              className="text-5xl font-bold tracking-tight cursor-pointer mb-2"
-              onClick={() => onClickSection && onClickSection("personal")}
-            >
-              {data?.name || "DONNA STROUPE"}
-            </h1>
-            <p
-              className="text-xl text-slate-300 font-light tracking-wide cursor-pointer"
-              onClick={() => onClickSection && onClickSection("personal")}
-            >
-              {data?.title || "Professional Sales Executive"}
-            </p>
-          </div>
-
+      <div className="relative mb-10 ml-20">
+        <div className="flex items-center bg-[#e8eef4] rounded-r-full p-6 w-[620px] shadow-sm">
           {/* Profile Image */}
           <div
-            className="ml-8"
+            className={`
+              flex 
+              ${
+                data?.imageAlign === "left"
+                  ? "justify-start"
+                  : data?.imageAlign === "right"
+                  ? "justify-end"
+                  : "justify-center"
+              }
+            `}
             onClick={() => onClickSection && onClickSection("image")}
           >
             <div
               className={`
-                w-36 h-36 overflow-hidden border-4 border-white shadow-xl cursor-pointer
+                w-32 h-32 overflow-hidden bg-white border-4 border-white shadow-md cursor-pointer
                 ${
                   data?.imageShape === "circle"
                     ? "rounded-full"
                     : data?.imageShape === "rounded"
-                    ? "rounded-2xl"
-                    : "rounded-lg"
+                    ? "rounded-xl"
+                    : "rounded-none"
                 }
               `}
             >
@@ -156,79 +88,86 @@ export default function ModernTemplate({ data, onClickSection }) {
               />
             </div>
           </div>
+
+          <div className="ml-8">
+            <h1
+              className="text-4xl font-bold text-gray-800 tracking-wide cursor-pointer"
+              onClick={() => onClickSection && onClickSection("personal")}
+            >
+              {data?.name || "DONNA STROUPE"}
+            </h1>
+
+            <p
+              className="text-lg text-gray-600 font-medium mt-1 cursor-pointer"
+              onClick={() => onClickSection && onClickSection("personal")}
+            >
+              {data?.title || "Professional Sales Executive"}
+            </p>
+          </div>
         </div>
       </div>
 
       {/* TWO COLUMNS */}
-      <div className="grid grid-cols-[38%_62%] gap-0">
+      <div className="grid grid-cols-[45%_55%] gap-6 text-gray-800">
         {/* LEFT SIDEBAR */}
-        <div className="cv-sidebar bg-slate-100 px-8 py-10">
+        <div className="cv-sidebar bg-[#f3f6fa] rounded-2xl p-5">
           {/* CONTACT */}
           <section
-            className="mb-8 cursor-pointer"
+            className="mb-6 cursor-pointer"
             onClick={() => onClickSection && onClickSection("personal")}
           >
-            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-800 mb-4 pb-2 border-b-2 border-slate-400">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
               Contact
             </h3>
 
-            <div className="space-y-2 text-sm text-slate-700">
-              <div className="flex items-start">
-                <span className="font-semibold mr-2">📱</span>
-                <span>{safeText(data?.phone) || "+1 234 567 890"}</span>
-              </div>
-              <div className="flex items-start">
-                <span className="font-semibold mr-2">✉️</span>
-                <span className="break-all">{safeText(data?.email) || "example@mail.com"}</span>
-              </div>
-              <div className="flex items-start">
-                <span className="font-semibold mr-2">📍</span>
-                <span>{safeText(data?.address) || "Your City, Country"}</span>
-              </div>
-              {(data?.portfolio || data?.linkedin || data?.github) && (
-                <div className="mt-4 pt-4 border-t border-slate-300 space-y-2">
-                  {data?.portfolio && (
-                    <div className="flex items-start">
-                      <span className="font-semibold mr-2">🌐</span>
-                      <span className="break-all text-xs">{safeText(data.portfolio)}</span>
-                    </div>
-                  )}
-                  {data?.linkedin && (
-                    <div className="flex items-start">
-                      <span className="font-semibold mr-2">💼</span>
-                      <span className="break-all text-xs">{safeText(data.linkedin)}</span>
-                    </div>
-                  )}
-                  {data?.github && (
-                    <div className="flex items-start">
-                      <span className="font-semibold mr-2">💻</span>
-                      <span className="break-all text-xs">{safeText(data.github)}</span>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
+            <p className="text-sm">
+              {safeText(data?.phone) || "+1 234 567 890"}
+            </p>
+            <p className="text-sm break-all">
+              {safeText(data?.email) || "example@mail.com"}
+            </p>
+            <p className="text-sm">
+              {safeText(data?.address) || "Your City, Country"}
+            </p>
+            <p className="text-sm mt-1">
+              {safeText(data?.portfolio) || "www.yourportfolio.com"}
+            </p>
+            <p className="text-sm">
+              {safeText(data?.linkedin) || "linkedin.com/in/yourname"}
+            </p>
+            <p>
+              {safeText(data?.github) || "github.com/yourusername"}
+            </p>
           </section>
 
-          {/* SKILLS - Simple UI from Template34 */}
+          {/* SKILLS */}
           {data?.visibleSections?.skills !== false && (
             <section
-              className="mb-8 cursor-pointer"
-              onClick={(e) => {
-                e.stopPropagation();
-                onClickSection && onClickSection("skills");
-              }}
+              className="mb-6 cursor-pointer"
+              onClick={() => onClickSection && onClickSection("skills")}
             >
-              <h3 className="text-sm font-bold uppercase tracking-widest text-slate-800 mb-4 pb-2 border-b-2 border-slate-400">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1">
                 Skills
               </h3>
 
-              <div className="text-sm space-y-3">
-                {(skills.length ? skills : defaultSkills).map((s, i) => {
+              <div className="text-sm mt-2 space-y-2">
+                {(skills.length
+                  ? skills
+                  : [
+                      "Client Relationship Building",
+                      "Negotiation Skills",
+                      "Target Achievement",
+                      "CRM Management",
+                      "Team Collaboration",
+                      "Lead Prospecting",
+                      "Communication Skills",
+                      "Strategic Planning",
+                    ]
+                ).map((s, i) => {
                   // String – simple bullet item
                   if (typeof s === "string") {
                     return (
-                      <div key={i} className="flex items-start text-slate-700">
+                      <div key={i} className="flex items-start">
                         <span className="mt-[3px] mr-2">•</span>
                         <span>{s}</span>
                       </div>
@@ -240,10 +179,10 @@ export default function ModernTemplate({ data, onClickSection }) {
                   // Skill with proficiency bar
                   if (skillObj.proficiency !== undefined) {
                     return (
-                      <div key={i} className="text-slate-700">
+                      <div key={i}>
                         <div className="flex justify-between items-center">
                           <span>{safeText(skillObj.name)}</span>
-                          <span className="text-xs text-slate-500">
+                          <span className="text-xs opacity-70">
                             {skillObj.proficiency}%
                           </span>
                         </div>
@@ -263,11 +202,15 @@ export default function ModernTemplate({ data, onClickSection }) {
                   // Skill category with items
                   if (skillObj.category && skillObj.items) {
                     const items = Array.isArray(skillObj.items)
-                      ? skillObj.items.filter((it) => it && it.toString().trim())
+                      ? skillObj.items.filter(
+                          (it) => it && it.toString().trim()
+                        )
                       : [];
                     return (
-                      <div key={i} className="text-slate-700">
-                        <span className="font-medium">{safeText(skillObj.category)}:</span>{" "}
+                      <div key={i}>
+                        <span className="font-medium">
+                          {safeText(skillObj.category)}:
+                        </span>{" "}
                         <span>{items.join(", ")}</span>
                       </div>
                     );
@@ -275,7 +218,7 @@ export default function ModernTemplate({ data, onClickSection }) {
 
                   // Fallback
                   return (
-                    <div key={i} className="flex items-start text-slate-700">
+                    <div key={i} className="flex items-start">
                       <span className="mt-[3px] mr-2">•</span>
                       <span>{safeText(skillObj)}</span>
                     </div>
@@ -288,20 +231,21 @@ export default function ModernTemplate({ data, onClickSection }) {
           {/* LANGUAGES */}
           {data?.visibleSections?.languages !== false && (
             <section
-              className="mb-8 cursor-pointer"
+              className="mb-6 cursor-pointer"
               onClick={() => onClickSection && onClickSection("languages")}
             >
-              <h3 className="text-sm font-bold uppercase tracking-widest text-slate-800 mb-4 pb-2 border-b-2 border-slate-400">
-                Languages
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
+                Language
               </h3>
 
-              <div className="text-sm space-y-3">
+              <div className="text-sm space-y-2">
                 {(languages.length
                   ? languages
                   : ["English (Fluent)", "Hindi (Fluent)", "Spanish (Basic)"]
                 ).map((lang, i) => {
+                  // Simple string
                   if (typeof lang === "string") {
-                    return <p key={i} className="text-slate-700">{lang}</p>;
+                    return <p key={i}>{lang}</p>;
                   }
 
                   const l = safeObj(lang);
@@ -310,24 +254,25 @@ export default function ModernTemplate({ data, onClickSection }) {
                   return (
                     <div key={i}>
                       <div className="flex justify-between items-center">
-                        <span className="text-slate-700 font-medium">{safeText(name)}</span>
+                        <span>{safeText(name)}</span>
                         {displayFormat === "level" && level && (
-                          <span className="text-xs text-slate-500">
+                          <span className="text-xs opacity-70">
                             {safeText(level)}
                           </span>
                         )}
                         {displayFormat === "percentage" && proficiency && (
-                          <span className="text-xs text-slate-500">
+                          <span className="text-xs opacity-70">
                             {proficiency}%
                           </span>
                         )}
                       </div>
                       {displayFormat === "percentage" && proficiency && (
-                        <div className="w-full bg-slate-300 rounded-full h-2 mt-1">
+                        <div className="w-full bg-gray-300 rounded-full h-1 mt-1">
                           <div
-                            className="h-2 rounded-full bg-gradient-to-r from-slate-600 to-slate-800"
+                            className="h-1 rounded-full"
                             style={{
                               width: `${proficiency}%`,
+                              backgroundColor: "#4b5563",
                             }}
                           ></div>
                         </div>
@@ -342,14 +287,14 @@ export default function ModernTemplate({ data, onClickSection }) {
           {/* CERTIFICATIONS */}
           {data?.visibleSections?.certificates !== false && (
             <section
-              className="cursor-pointer mb-8"
+              className="cursor-pointer mb-6"
               onClick={() => onClickSection && onClickSection("certificates")}
             >
-              <h3 className="text-sm font-bold uppercase tracking-widest text-slate-800 mb-4 pb-2 border-b-2 border-slate-400">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-2 mb-3">
                 Certifications
               </h3>
 
-              <ul className="text-sm space-y-2 text-slate-700">
+              <ul className="text-sm space-y-2">
                 {(certificates.length
                   ? certificates
                   : [
@@ -359,31 +304,25 @@ export default function ModernTemplate({ data, onClickSection }) {
                       "Advanced Communication Skills Training",
                     ]
                 ).map((c, i) => (
-                  <li key={i} className="flex items-start">
-                    <span className="text-slate-600 mr-2">•</span>
-                    <span>{safeText(c)}</span>
-                  </li>
+                  <li key={i}>{safeText(c)}</li>
                 ))}
               </ul>
             </section>
           )}
 
-          {/* AWARDS */}
+          {/* AWARDS – only if data.awards exists */}
           {awards.length > 0 && (
             <section
-              className="cursor-pointer"
+              className="cursor-pointer mb-2"
               onClick={() => onClickSection && onClickSection("awards")}
             >
-              <h3 className="text-sm font-bold uppercase tracking-widest text-slate-800 mb-4 pb-2 border-b-2 border-slate-400">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-2 mb-3">
                 Awards
               </h3>
 
-              <ul className="text-sm space-y-2 text-slate-700">
+              <ul className="text-sm space-y-1">
                 {awards.map((a, i) => (
-                  <li key={i} className="flex items-start">
-                    <span className="text-slate-600 mr-2">★</span>
-                    <span>{safeText(a)}</span>
-                  </li>
+                  <li key={i}>{safeText(a)}</li>
                 ))}
               </ul>
             </section>
@@ -391,35 +330,52 @@ export default function ModernTemplate({ data, onClickSection }) {
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="w-2/3" className="px-12 py-10">
+        <div className="w-2/3">
           {/* PROFILE SUMMARY */}
           {data?.visibleSections?.summary !== false && (
             <section
-              className="mb-10 cursor-pointer"
+              className="mb-8 cursor-pointer"
               onClick={() => onClickSection && onClickSection("summary")}
             >
-              <h3 className="text-lg font-bold uppercase tracking-wide text-slate-800 mb-3 pb-2 border-b-2 border-slate-800">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1">
                 Profile Summary
               </h3>
 
-              <p className="text-sm text-slate-700 leading-relaxed">
-                {summaryText}
+              <p className="text-sm mt-2 leading-relaxed">
+                {getSummaryText() ||
+                  "Dynamic and results-driven Sales Executive with over 5 years of experience..."}
               </p>
             </section>
           )}
 
-          {/* EXPERIENCE */}
+          {/* EXPERIENCE / WORK EXPERIENCE */}
           {data?.visibleSections?.experience !== false && (
             <section
-              className="mb-10 cursor-pointer"
+              className="mb-8 cursor-pointer"
               onClick={() => onClickSection && onClickSection("experience")}
             >
-              <h3 className="text-lg font-bold uppercase tracking-wide text-slate-800 mb-3 pb-2 border-b-2 border-slate-800">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1">
                 Work Experience
               </h3>
 
-              <div className="mt-4 space-y-6">
-                {(experiences.length ? experiences : defaultExperience).map((exp, i) => {
+              <div className="mt-3 space-y-3 border-l-2 border-gray-300 pl-4">
+                {(experiences.length
+                  ? experiences
+                  : [
+                      {
+                        role: "Senior Sales Executive",
+                        company: "TechnoMart Pvt Ltd",
+                        year: "2021–Present",
+                        desc: "Managed enterprise-level accounts...",
+                      },
+                      {
+                        role: "Sales Executive",
+                        company: "ABC Corp",
+                        year: "2018–2021",
+                        desc: "Achieved 120% of quarterly sales...",
+                      },
+                    ]
+                ).map((exp, i) => {
                   const e = safeObj(exp);
                   const desc = e.desc ? e.desc.toString() : "";
                   const descLines = desc
@@ -427,31 +383,30 @@ export default function ModernTemplate({ data, onClickSection }) {
                     : [];
 
                   return (
-                    <div key={i} className="cv-item relative pl-6 border-l-4 border-slate-300">
-                      <div className="absolute -left-2 top-0 w-4 h-4 bg-slate-800 rounded-full"></div>
-                      
-                      <p className="text-base font-bold text-slate-800">{safeText(e.role)}</p>
-                      <p className="text-sm text-slate-600 font-medium">{safeText(e.company)}</p>
-                      <p className="text-xs text-slate-500 mb-2">{safeText(e.year)}</p>
+                    <div key={i} className="cv-item text-sm">
+                      <p className="font-semibold">{safeText(e.role)}</p>
+                      <p className="opacity-70">{safeText(e.company)}</p>
+                      <p className="text-xs opacity-60">{safeText(e.year)}</p>
 
+                      {/* Description formats like Template30 */}
                       {desc && (
                         <>
                           {e.descFormat === "bullet" ? (
-                            <ul className="mt-2 ml-4 list-disc space-y-1 text-sm text-slate-700">
+                            <ul className="mt-1 ml-4 list-disc space-y-1">
                               {descLines.map(
                                 (line, idx) =>
                                   line && <li key={idx}>{line}</li>
                               )}
                             </ul>
                           ) : e.descFormat === "number" ? (
-                            <ol className="mt-2 ml-4 list-decimal space-y-1 text-sm text-slate-700">
+                            <ol className="mt-1 ml-4 list-decimal space-y-1">
                               {descLines.map(
                                 (line, idx) =>
                                   line && <li key={idx}>{line}</li>
                               )}
                             </ol>
                           ) : (
-                            <p className="mt-2 text-sm text-slate-700">{desc}</p>
+                            <p className="mt-1">{desc}</p>
                           )}
                         </>
                       )}
@@ -465,96 +420,124 @@ export default function ModernTemplate({ data, onClickSection }) {
           {/* EDUCATION */}
           {data?.visibleSections?.education !== false && (
             <section
-              className="mb-10 cursor-pointer"
+              className="mb-8 cursor-pointer"
               onClick={() => onClickSection && onClickSection("education")}
             >
-              <h3 className="text-lg font-bold uppercase tracking-wide text-slate-800 mb-3 pb-2 border-b-2 border-slate-800">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
                 Education
               </h3>
 
-              <div className="mt-4 space-y-4">
-                {(education.length ? education : defaultEducation).map((edu, i) => {
-                  const ed = safeObj(edu);
-                  return (
-                    <div key={i} className="cv-item pl-6 border-l-4 border-slate-300 relative">
-                      <div className="absolute -left-2 top-0 w-4 h-4 bg-slate-800 rounded-full"></div>
-                      <p className="font-bold text-slate-800">{safeText(ed.course)}</p>
-                      <p className="text-sm text-slate-600">{safeText(ed.school)}</p>
-                      <p className="text-xs text-slate-500">{safeText(ed.year)}</p>
-                    </div>
-                  );
-                })}
-              </div>
+              {(education.length
+                ? education
+                : [
+                    {
+                      course: "Bachelor of Commerce (B.Com)",
+                      school: "Wardiere University",
+                      year: "2015–2018",
+                    },
+                    {
+                      course: "Higher Secondary",
+                      school: "St. Mary's Senior School",
+                      year: "2013–2015",
+                    },
+                  ]
+              ).map((edu, i) => {
+                const ed = safeObj(edu);
+                return (
+                  <div key={i} className="cv-item mb-3">
+                    <p className="font-semibold">{safeText(ed.course)}</p>
+                    <p className="text-xs opacity-70">
+                      {safeText(ed.school)} — {safeText(ed.year)}
+                    </p>
+                  </div>
+                );
+              })}
             </section>
           )}
 
-          {/* PROJECTS */}
+          {/* PROJECTS (replacing References) */}
           {data?.visibleSections?.projects !== false && (
             <section
-              className="cursor-pointer"
+              className="mb-8 cursor-pointer"
               onClick={() => onClickSection && onClickSection("projects")}
             >
-              <h3 className="text-lg font-bold uppercase tracking-wide text-slate-800 mb-3 pb-2 border-b-2 border-slate-800">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
                 Projects
               </h3>
 
-              <div className="mt-4 space-y-5">
-                {(projects.length ? projects : defaultProjects).map((project, i) => {
-                  const p = safeObj(project);
-                  const desc = p.desc ? p.desc.toString() : "";
-                  const descLines = desc
-                    ? desc.split("\n").map((line) => line.trim())
-                    : [];
+              {(projects.length
+                ? projects
+                : [
+                    {
+                      name: "Portfolio Website",
+                      year: "2023",
+                      link: "https://yourportfolio.com",
+                      desc: "Designed and developed a responsive personal portfolio using React and Tailwind CSS.\nImplemented reusable components and responsive layouts.",
+                      descFormat: "bullet",
+                    },
+                    {
+                      name: "Sales Dashboard",
+                      year: "2022",
+                      link: "https://github.com/yourusername/sales-dashboard",
+                      desc: "Built an interactive dashboard to visualize sales KPIs.\nIntegrated charts and filters for real-time insights.",
+                      descFormat: "number",
+                    },
+                  ]
+              ).map((project, i) => {
+                const p = safeObj(project);
+                const desc = p.desc ? p.desc.toString() : "";
+                const descLines = desc
+                  ? desc.split("\n").map((line) => line.trim())
+                  : [];
 
-                  return (
-                    <div key={i} className="cv-item pl-6 border-l-4 border-slate-300 relative">
-                      <div className="absolute -left-2 top-0 w-4 h-4 bg-slate-800 rounded-full"></div>
-                      
-                      <div className="flex justify-between items-start mb-1">
-                        <p className="font-bold text-slate-800">
+                return (
+                  <div key={i} className="cv-item text-sm mb-4">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-semibold">
                           {safeText(p.name) || "Project Title"}
                         </p>
-                        <p className="text-xs text-slate-500">
-                          {safeText(p.year)}
-                        </p>
+                        {p.link && (
+                          <a
+                            href={p.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-600 underline break-all"
+                          >
+                            {p.link}
+                          </a>
+                        )}
                       </div>
-
-                      {p.link && (
-                        <a
-                          href={p.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs text-blue-600 hover:underline break-all"
-                        >
-                          {p.link}
-                        </a>
-                      )}
-
-                      {desc && (
-                        <>
-                          {p.descFormat === "bullet" ? (
-                            <ul className="mt-2 ml-4 list-disc space-y-1 text-sm text-slate-700">
-                              {descLines.map(
-                                (line, idx) =>
-                                  line && <li key={idx}>{line}</li>
-                              )}
-                            </ul>
-                          ) : p.descFormat === "number" ? (
-                            <ol className="mt-2 ml-4 list-decimal space-y-1 text-sm text-slate-700">
-                              {descLines.map(
-                                (line, idx) =>
-                                  line && <li key={idx}>{line}</li>
-                              )}
-                            </ol>
-                          ) : (
-                            <p className="mt-2 text-sm text-slate-700">{desc}</p>
-                          )}
-                        </>
-                      )}
+                      <p className="text-xs opacity-60">
+                        {safeText(p.year)}
+                      </p>
                     </div>
-                  );
-                })}
-              </div>
+
+                    {/* Description formats like Template30 */}
+                    {desc && (
+                      <>
+                        {p.descFormat === "bullet" ? (
+                          <ul className="mt-1 ml-4 list-disc space-y-1">
+                            {descLines.map(
+                              (line, idx) =>
+                                line && <li key={idx}>{line}</li>
+                            )}
+                          </ul>
+                        ) : p.descFormat === "number" ? (
+                          <ol className="mt-1 ml-4 list-decimal space-y-1">
+                            {descLines.map(
+                              (line, idx) =>
+                                line && <li key={idx}>{line}</li>
+                            )}
+                          </ol>
+                        ) : (
+                          <p className="mt-1">{desc}</p>
+                        )}
+                      </>
+                    )}
+                  </div>
+                );
+              })}
             </section>
           )}
         </div>
