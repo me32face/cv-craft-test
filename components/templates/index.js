@@ -15,6 +15,8 @@ import Template39 from "./Template39";
 import Template40 from "./Template40";
 import Template41 from "./Template41";
 import Template42 from "./Template42";
+import Template43 from "./Template43";
+import Template44 from "./Template44";
 
 export const templates = {
   template01: Template01,
@@ -31,6 +33,9 @@ export const templates = {
   template40: Template40,
   template41: Template41,
   template42: Template42,
+  template43: Template43,
+    template44: Template44,
+
 
   template33: Template33,
 };
@@ -256,6 +261,37 @@ export const templateInputs = {
     certificates: true,
     references: false,
   },
-   
+    template43: {
+    name: true,
+    title: true,
+    profileImage: true,
+    phone: true,
+    email: true,
+    address: true,
+    summary: true,
+    experiences: true,
+    education: true,
+    skills: true,
+    languages: true,
+    certificates: true,
+    references: false,
+  },
+
+   template44: {
+    name: true,
+    title: true,
+    profileImage: true,
+    phone: true,
+    email: true,
+    address: true,
+    summary: true,
+    experiences: true,
+    education: true,
+    skills: true,
+    languages: true,
+    certificates: true,
+    references: false,
+  },
+
 
 };

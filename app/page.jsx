@@ -290,6 +290,8 @@ export default function Home() {
     { id: 'Template39', name: 'Clean Creative', key: 'Emily Davis', image: '/template/template39.png', category: 'proffessional' },
     { id: 'Template41', name: 'Stylish Classic', key: 'Emily Davis', image: '/template/template41.png', category: 'modern' },
     { id: 'Template42', name: 'Creative Classic', key: 'Emily Davis', image: '/template/template42.png', category: 'creative' },
+    { id: 'Template43', name: 'Stylish Layout', key: 'Emily Davis', image: '/template/template43.png', category: 'modern' },
+    { id: 'Template44', name: 'Modern Creative ', key: 'Emily Davis', image: '/template/template44.png', category: 'modern' },
 
     {
       id: "Template22",

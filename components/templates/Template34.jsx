@@ -35,6 +35,7 @@ export default function Template34({ data, onClickSection }) {
   const awards = toArray(data?.awards);
   const projects = toArray(data?.projects);
   const socialLinks = toArray(data?.socialLinks);
+  
   const getSummaryText = () => {
     if (!data?.summary) return "";
     if (Array.isArray(data.summary)) {
