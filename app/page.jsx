@@ -42,9 +42,16 @@ export default function Home() {
     {
       id: "Template32",
       name: "Clean Two-Column CV",
-      key: "Michael Brown",
+      key: "Rahul Menon",
       image: "/template/template32.png",
       category: "simple",
+    },
+    {
+      id: "Template36",
+      name: "Modern Creative",
+      key: "Emily Davis",
+      image: "/template/template34.jpg",
+      category: "creative",
     },
     {
       id: "Template34",

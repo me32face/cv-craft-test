@@ -120,6 +120,21 @@ export const templateInputs = {
     education: true,
     certificates: true,
   },
+
+  template36: {
+    name: true,
+    title: true,
+    profileImage: true,
+    phone: true,
+    email: true,
+    address: true,
+    languages: true,
+    Summary: true,
+    experiences: true,
+    education: true,
+    certificates: true,
+  },
+
   template33: {
     name: true,
     title: true,
