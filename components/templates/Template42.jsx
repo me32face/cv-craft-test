@@ -1,20 +1,21 @@
 "use client";
 
 import React from "react";
+import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
 
-const renderLanguage = (lang, index) => {
-  if (typeof lang === 'string') {
-    return <p key={index} className="text-gray-700 text-xs mb-1">• {lang}</p>;
-  }
-  return (
-    <div key={index} className="mb-2">
-      <div className="flex justify-between items-center text-gray-700 text-xs">
-        <span>{lang.name}</span>
-        <span className="opacity-70">{lang.proficiency || 'Fluent'}</span>
-      </div>
-    </div>
-  );
-};
+// const renderLanguage = (lang, index) => {
+//   if (typeof lang === 'string') {
+//     return <p key={index} className="text-gray-700 text-xs mb-1">• {lang}</p>;
+//   }
+//   return (
+//     <div key={index} className="mb-2">
+//       <div className="flex justify-between items-center text-gray-700 text-xs">
+//         <span>{lang.name}</span>
+//         <span className="opacity-70">{lang.proficiency || 'Fluent'}</span>
+//       </div>
+//     </div>
+//   );
+// };
 
 export default function Template42({ data, onClickSection }) {
   const toArray = (value) => (!value ? [] : Array.isArray(value) ? value : [value]);
@@ -59,29 +60,29 @@ export default function Template42({ data, onClickSection }) {
             <p className="text-xl text-slate-200 mb-4">
               {data?.title || "Professional Title"}
             </p>
-             <div className="flex flex-wrap gap-x-1 gap-y-1 text-white text-xs">
-            <div className="flex items-center gap-1.5">
-              <span >📞</span>
-              <span>{data?.phone || "+123-456-7890"}</span>
+            <div className="flex flex-wrap gap-x-1 gap-y-1 text-white text-xs">
+              <div className="flex items-center gap-1.5">
+                <span >📞</span>
+                <span>{data?.phone || "+123-456-7890"}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span >✉️</span>
+                <span>{data?.email || "hello@reallygreatsite.com"}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span>📍</span>
+                <span>{data?.address || "123 Anywhere St., Any City"}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                {data?.github && (<p className="text-xs ">🧑‍💻 {data?.github || ""}</p>)}
+              </div>
+              <div className="flex items-center ">
+                {data?.linkedin && (<p className="text-xs ">🔗 {data?.linkedin}</p>)}
+              </div>
+              <div className="flex items-center gap-1.5">
+                {data?.portfolio && (<p className="text-xs ">💻 {data?.portfolio || ""}</p>)}
+              </div>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span >✉️</span>
-              <span>{data?.email || "hello@reallygreatsite.com"}</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span>📍</span>
-              <span>{data?.address || "123 Anywhere St., Any City"}</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              {data?.github && (<p className="text-xs ">🧑‍💻 {data?.github || ""}</p>)}
-            </div>
-            <div className="flex items-center ">
-              {data?.linkedin && (<p className="text-xs ">🔗 {data?.linkedin}</p>)}
-            </div>
-            <div className="flex items-center gap-1.5">
-              {data?.portfolio && (<p className="text-xs ">💻 {data?.portfolio || ""}</p>)}
-            </div>
-          </div>
           </div>
         </div>
       </div>
@@ -100,17 +101,16 @@ export default function Template42({ data, onClickSection }) {
               </p>
             </section>
           )}
+
           {/* Skills */}
           {data?.visibleSections?.skills !== false && (
             <div className="mb-6 cursor-pointer" onClick={() => onClickSection && onClickSection("skills")}>
               <h2 className="text-base font-bold text-slate-800 mb-3 pb-2 border-b-2 border-slate-300">
                 SKILLS
               </h2>
-
               {/* ADDED ml-4 HERE */}
               <div >
                 {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation", "Critical Thinking", "Leadership"]).map((s, i) => {
-
                   if (typeof s === 'string') {
                     return (
                       <div key={i} className="flex items-center gap-2">
@@ -119,7 +119,6 @@ export default function Template42({ data, onClickSection }) {
                       </div>
                     );
                   }
-
                   if (s.proficiency !== undefined) {
                     return (
                       <div key={i} className="mb-4">
@@ -127,7 +126,6 @@ export default function Template42({ data, onClickSection }) {
                           <span className="text-sm">{s.name}</span>
                           <span className="text-xs opacity-70">{s.proficiency}%</span>
                         </div>
-
                         <div className="w-full bg-white/20 rounded-full h-1 mt-2">
                           <div
                             className="bg-black h-1 rounded-full transition-all"
@@ -137,7 +135,6 @@ export default function Template42({ data, onClickSection }) {
                       </div>
                     );
                   }
-
                   if (s.category && s.items) {
                     return (
                       <p key={i} className="text-sm mb-1">
@@ -145,19 +142,16 @@ export default function Template42({ data, onClickSection }) {
                       </p>
                     );
                   }
-
                   return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
                 })}
               </div>
-
             </div>
           )}
 
-       
-           {/* Education */}
+          {/* Education */}
           {data?.visibleSections?.education !== false && (
-            <section className="mb-8 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
-              <h2 className="text-xl font-bold text-slate-800 mb-4 pb-2 border-b-2 border-slate-300">
+            <section className="mb-4 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
+              <h2 className="text-base font-bold text-slate-800 mb-4 pb-2 border-b-2 border-slate-300">
                 EDUCATION
               </h2>
               <div className="space-y-5">
@@ -179,9 +173,9 @@ export default function Template42({ data, onClickSection }) {
                     <div className="absolute -left-1.5 top-0 w-2.5 h-2.5 rounded-full bg-slate-700"></div>
                     <div className="flex justify-between items-start mb-1">
                       <div>
-                        <p className="text-sm font-bold text-slate-800">{edu.course}</p>
-                        <p className="text-sm text-slate-600">{edu.school}</p>
-                        {edu.gpa && <p className="text-xs text-gray-600 mt-0.5">{edu.gpa}</p>}
+                        <p className="text-sm  font-bold text-slate-800">{edu.course}</p>
+                        <p className="text-xs text-slate-600">{edu.school}</p>
+                        {edu.gpa && <p className="text-xs  text-gray-600 mt-0.5">{edu.gpa}</p>}
                       </div>
                       <p className="text-xs text-gray-500 ml-4">{edu.year}</p>
                     </div>
@@ -190,7 +184,8 @@ export default function Template42({ data, onClickSection }) {
               </div>
             </section>
           )}
-  {/* Certifications */}
+
+          {/* Certifications */}
           {data?.visibleSections?.certificates !== false && (
             <section className="mb-6 cursor-pointer" onClick={() => onClickSection && onClickSection("certificates")}>
               <h2 className="text-base font-bold text-slate-800 mb-3 pb-2 border-b-2 border-slate-300">
@@ -217,26 +212,21 @@ export default function Template42({ data, onClickSection }) {
               </div>
             </section>
           )}
-          
-           {/* Languages */}
-          {data?.visibleSections?.languages !== false && (
-            <section className="mb-6 cursor-pointer" onClick={() => onClickSection && onClickSection("languages")}>
-              <h2 className="text-base font-bold text-slate-800 mb-3 pb-2 border-b-2 border-slate-300">
-                LANGUAGES
+
+          {/* Languages */}
+           {data?.visibleSections?.languages !== false && (
+              <section className="cursor-pointer" onClick={() => onClickSection("languages")}>
+                 <h2 className="text-base uppercase font-bold text-slate-800 mb-4 pb-2 border-b-2 border-slate-300">
+                Languages
               </h2>
-              <div className="space-y-2">
-                {(data?.languages?.length ? data.languages : ["English - Native", "Spanish - Fluent", "French - Intermediate"]).map((l, i) => {
-                  const langText = typeof l === 'string' ? l : `${l.name} - ${l.proficiency || 'Fluent'}`;
-                  return (
-                    <div key={i} className="flex items-center gap-2">
-                      <span className="text-slate-600">•</span>
-                      <span className="text-xs text-gray-700">{langText}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-          )}
+
+                <div className="ml-4  gap-x-4 gap-y-1">
+                  {(data?.languages?.length ? data.languages : ["Spanish", "Arabic", "English"]).map((l, i) =>
+                    renderLanguage(l, i)
+                  )}
+                </div>
+              </section>
+            )}
         </div>
 
         {/* Right Column */}
@@ -273,7 +263,7 @@ export default function Template42({ data, onClickSection }) {
                     <div className="flex justify-between items-start mb-1">
                       <div>
                         <p className="text-sm font-bold text-slate-800">{exp.role}</p>
-                        <p className="text-sm text-slate-600 italic">{exp.company}</p>
+                        <p className="text-xs text-slate-600 italic">{exp.company}</p>
                       </div>
                       <p className="text-xs text-gray-500 ml-4">{exp.year}</p>
                     </div>
@@ -302,15 +292,13 @@ export default function Template42({ data, onClickSection }) {
             </section>
           )}
 
-         
-           {/* Projects */}
-            {data?.visibleSections?.projects !== false && (
+          {/* Projects */}
+          {data?.visibleSections?.projects !== false && (
             <section
-              className="mb-8 cursor-pointer" onClick={() => onClickSection && onClickSection("projects")}> 
-               <h2 className="text-xl font-bold text-slate-800 mb-4 pb-2 border-b-2 border-slate-300">
+              className="mb-8 cursor-pointer" onClick={() => onClickSection && onClickSection("projects")}>
+              <h2 className="text-xl font-bold text-slate-800 mb-4 pb-2 border-b-2 border-slate-300">
                 PROJECTS
               </h2>
-
               <div className="space-y-4 ml-4">
                 {projects.map((project, i) => (
                   <div key={i}>
@@ -328,7 +316,6 @@ export default function Template42({ data, onClickSection }) {
                     {project.year && (
                       <p className="text-[12px] text-gray-500 mt-0.5">{project.year}</p>
                     )}
-
                     {project.desc && (
                       <div className="mt-1.5 text-[12px] text-gray-700 leading-relaxed">
                         {project.descFormat === "bullet" ? (
@@ -353,7 +340,6 @@ export default function Template42({ data, onClickSection }) {
               </div>
             </section>
           )}
-          
         </div>
       </div>
     </div>

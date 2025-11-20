@@ -115,7 +115,6 @@ export default function template39({ data, onClickSection }) {
                       </li>
                     );
                   }
-
                   return (
                     <li key={i} className="flex items-start gap-1.5">
                       <span className="text-amber-700 font-bold text-[10px]">•</span>
@@ -132,40 +131,40 @@ export default function template39({ data, onClickSection }) {
           )}
 
           {/* Skills */}
-         {data?.visibleSections?.skills !== false && (
-        <div className="mb-4 mt-8">
-          <h2 className="font-semibold text-md mb-2 cursor-pointer border-b-2 border-amber-700 pb-1.5 " onClick={() => onClickSection && onClickSection("skills")}>SKILLS</h2>
-          {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation", "Critical Thinking", "Leadership"]).map((s, i) => {
-            if (typeof s === 'string') {
-              return <p key={i} className="text-xs mb-1">• {s}</p>;
-            }
-            if (s.proficiency !== undefined) {
-              return (
-                <div key={i} className="mb-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">{s.name}</span>
-                    <span className="text-xs opacity-70">{s.proficiency}%</span>
-                  </div>
-                  <div className="w-full bg-white/20 rounded-full h-1 mt-2">
-                    <div
-                      className="bg-amber-700 h-1 rounded-full transition-all"
-                      style={{ width: `${s.proficiency}%` }}
-                    ></div>
-                  </div>
-                </div>
-              );
-            }
-            if (s.category && s.items) {
-              return (
-                <p key={i} className="text-sm mb-1">
-                  <span className="font-medium text-amber-700">{s.category}:</span> {s.items.filter(item => item && item.trim()).join(", ")}
-                </p>
-              );
-            }
-            return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
-          })}
-        </div>
-        )}
+          {data?.visibleSections?.skills !== false && (
+            <div className="mb-4 mt-8">
+              <h2 className="font-semibold text-md mb-2 cursor-pointer border-b-2 border-amber-700 pb-1.5 " onClick={() => onClickSection && onClickSection("skills")}>SKILLS</h2>
+              {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation", "Critical Thinking", "Leadership"]).map((s, i) => {
+                if (typeof s === 'string') {
+                  return <p key={i} className="text-xs mb-1">• {s}</p>;
+                }
+                if (s.proficiency !== undefined) {
+                  return (
+                    <div key={i} className="mb-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm">{s.name}</span>
+                        <span className="text-xs opacity-70">{s.proficiency}%</span>
+                      </div>
+                      <div className="w-full bg-white/20 rounded-full h-1 mt-2">
+                        <div
+                          className="bg-amber-700 h-1 rounded-full transition-all"
+                          style={{ width: `${s.proficiency}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  );
+                }
+                if (s.category && s.items) {
+                  return (
+                    <p key={i} className="text-sm mb-1">
+                      <span className="font-medium text-amber-700">{s.category}:</span> {s.items.filter(item => item && item.trim()).join(", ")}
+                    </p>
+                  );
+                }
+                return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
+              })}
+            </div>
+          )}
 
           {/* Education */}
           {data?.visibleSections?.education !== false && (
@@ -228,7 +227,6 @@ export default function template39({ data, onClickSection }) {
             </section>
           )}
 
-
           {/* Professional Experience */}
           {data?.visibleSections?.experience !== false && (
             <section
@@ -238,7 +236,6 @@ export default function template39({ data, onClickSection }) {
               <h2 className="text-md font-semibold uppercase text-gray-800 mb-3 border-b-2 border-amber-700 pb-1.5">
                 Professional Experience
               </h2>
-
               <div className="space-y-4">
                 {(experiences.length ? experiences : [
                   {
@@ -253,7 +250,6 @@ export default function template39({ data, onClickSection }) {
                     year: "March 2016 - February 2018",
                     desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                   },
-                  
                 ]).map((exp, i) => (
                   <div key={i}>
                     <p className="text-[14px] font-bold text-gray-800">{exp.role}</p>
@@ -296,7 +292,6 @@ export default function template39({ data, onClickSection }) {
               <h2 className="text-md uppercase font-semibold text-gray-800 mb-3 border-b-2 border-amber-700 pb-1.5">
                 Projects
               </h2>
-
               <div className="space-y-4">
                 {projects.map((project, i) => (
                   <div key={i}>
@@ -314,7 +309,6 @@ export default function template39({ data, onClickSection }) {
                     {project.year && (
                       <p className="text-[12px] text-gray-500 mt-0.5">{project.year}</p>
                     )}
-
                     {project.desc && (
                       <div className="mt-1.5 text-[12px] text-gray-700 leading-relaxed">
                         {project.descFormat === "bullet" ? (
