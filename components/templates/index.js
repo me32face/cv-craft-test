@@ -1,6 +1,6 @@
 // components/templates/index.js
 
-import Template02 from "./Template02";
+import Template01 from "./Template01";
 import Template30 from "./Template30";
 import Template31 from "./Template31";
 import Template32 from "./Template32";
@@ -17,6 +17,7 @@ import Template41 from "./Template41";
 import Template42 from "./Template42";
 
 export const templates = {
+  template01: Template01,
   template30: Template30,
   template31: Template31,
   template32: Template32,
@@ -35,12 +36,21 @@ export const templates = {
 };
 
 export const templateInputs = {
-  template1: {
+  template01: {
     name: true,
     title: true,
     about: true,
     profileImage: false,
     skills: true,
+    phone: true,
+    email: true,
+    address: true,
+    languages: true,
+    Summary: true,
+    experiences: true,
+    education: true,
+    certificates: false,
+    project: true,
   },
  
 
@@ -74,7 +84,7 @@ export const templateInputs = {
   template30: {
     name: true,
     title: true,
-    profileImage: true,
+    profileImage:true,
     phone: true,
     email: true,
     address: true,
@@ -155,7 +165,7 @@ export const templateInputs = {
     certificates: true,
     references: false,
   },
-  Template38: {
+  template38: {
     name: true,
     title: true,
     profileImage: false,
