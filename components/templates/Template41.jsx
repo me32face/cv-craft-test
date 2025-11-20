@@ -84,7 +84,6 @@ export default function Template41({ data, onClickSection }) {
         <div className="grid grid-cols-2 gap-10 border-t p-5">
           {/* LEFT SIDE */}
           <div className="space-y-6">
-
             {/* Contact Section */}
             <section className="cursor-pointer" onClick={() => onClickSection && onClickSection("personal")}>
               <div className="flex items-start gap-3 mb-2">
@@ -100,55 +99,53 @@ export default function Template41({ data, onClickSection }) {
                 {data?.portfolio && (<p className="text-xs mt-2">💻 {data?.portfolio || ""}</p>)}
               </div>
             </section>
-                     {/* Skills */}
+            {/* Skills */}
             {data?.visibleSections?.skills !== false && (
-  <div className="mb-4 mt-8" onClick={() => onClickSection && onClickSection("skills")}>
-    
-    <div className="flex items-start gap-3 mb-2">
-      <div className="w-1 h-5 bg-gray-600"></div>
-      <h2 className="text-sm font-semibold text-gray-700 uppercase">SKILLS</h2>
-    </div>
+              <div className="mb-4 mt-8" onClick={() => onClickSection && onClickSection("skills")}>
 
-    {/* ADDED ml-4 HERE */}
-    <div className="ml-4">
-      {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation", "Critical Thinking", "Leadership"]).map((s, i) => {
-        
-        if (typeof s === 'string') {
-          return <p key={i} className="text-xs mb-1">• {s}</p>;
-        }
+                <div className="flex items-start gap-3 mb-2">
+                  <div className="w-1 h-5 bg-gray-600"></div>
+                  <h2 className="text-sm font-semibold text-gray-700 uppercase">SKILLS</h2>
+                </div>
 
-        if (s.proficiency !== undefined) {
-          return (
-            <div key={i} className="mb-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm">{s.name}</span>
-                <span className="text-xs opacity-70">{s.proficiency}%</span>
+                {/* ADDED ml-4 HERE */}
+                <div className="ml-4">
+                  {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation", "Critical Thinking", "Leadership"]).map((s, i) => {
+
+                    if (typeof s === 'string') {
+                      return <p key={i} className="text-xs mb-1">• {s}</p>;
+                    }
+                    if (s.proficiency !== undefined) {
+                      return (
+                        <div key={i} className="mb-4">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm">{s.name}</span>
+                            <span className="text-xs opacity-70">{s.proficiency}%</span>
+                          </div>
+
+                          <div className="w-full bg-white/20 rounded-full h-1 mt-2">
+                            <div
+                              className="bg-black h-1 rounded-full transition-all"
+                              style={{ width: `${s.proficiency}%` }}
+                            >
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    }
+                    if (s.category && s.items) {
+                      return (
+                        <p key={i} className="text-sm mb-1">
+                          <span className="font-medium">{s.category}:</span> {s.items.filter(item => item && item.trim()).join(", ")}
+                        </p>
+                      );
+                    }
+                    return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
+                  })}
+                </div>
+
               </div>
-
-              <div className="w-full bg-white/20 rounded-full h-1 mt-2">
-                <div
-                  className="bg-black h-1 rounded-full transition-all"
-                  style={{ width: `${s.proficiency}%` }}
-                ></div>
-              </div>
-            </div>
-          );
-        }
-
-        if (s.category && s.items) {
-          return (
-            <p key={i} className="text-sm mb-1">
-              <span className="font-medium">{s.category}:</span> {s.items.filter(item => item && item.trim()).join(", ")}
-            </p>
-          );
-        }
-
-        return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
-      })}
-    </div>
-
-  </div>
-)}
+            )}
 
             {/* Education */}
             {data?.visibleSections?.education !== false && (
@@ -157,7 +154,6 @@ export default function Template41({ data, onClickSection }) {
                   <div className="w-1 h-5 bg-gray-800"></div>
                   <h2 className="text-sm font-semibold text-gray-700 uppercase">Education</h2>
                 </div>
-
                 <div className="ml-4 grid grid-cols-1 gap-2">
                   {(education.length ? education : [
                     {
@@ -176,7 +172,6 @@ export default function Template41({ data, onClickSection }) {
                     <div key={i}>
                       <p className="text-sm font-semibold text-gray-700">{edu.course} | {edu.year}</p>
                       <p className="text-xs text-gray-600 mb-1">{edu.school}</p>
-
                       {edu.details && (
                         <ul className="space-y-0.5">
                           {edu.details.map((d, idx) => (
@@ -208,12 +203,10 @@ export default function Template41({ data, onClickSection }) {
                 </div>
               </section>
             )}
-
           </div>
 
           {/* RIGHT SIDE */}
           <div className="space-y-6">
-
             {/* Certifications */}
             {data?.visibleSections?.certificates !== false && (
               <section className="cursor-pointer" onClick={() => onClickSection("certificates")}>
@@ -239,9 +232,6 @@ export default function Template41({ data, onClickSection }) {
                 </div>
               </section>
             )}
-
-   
-
             {/* Work Experience */}
             {data?.visibleSections?.experience !== false && (
               <section className="cursor-pointer" onClick={() => onClickSection("experience")}>
@@ -289,277 +279,58 @@ export default function Template41({ data, onClickSection }) {
 
             {/* Projects */}
             {data?.visibleSections?.projects !== false && (
-            <section
-              className="cursor-pointer"
-              onClick={() => onClickSection && onClickSection("projects")}
-            >
-               <div className="flex items-start gap-3 mb-2">
+              <section
+                className="cursor-pointer"
+                onClick={() => onClickSection && onClickSection("projects")}
+              >
+                <div className="flex items-start gap-3 mb-2">
                   <div className="w-1 h-5 bg-gray-600"></div>
                   <h2 className="text-sm font-semibold text-gray-700 uppercase">Projects</h2>
                 </div>
 
-              <div className="space-y-4 ml-4">
-                {projects.map((project, i) => (
-                  <div key={i}>
-                    <p className="text-[15px] font-bold text-gray-800">{project.name}</p>
-                    {project.link && (
-                      <a
-                        href={project.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[12px] text-blue-600 underline block mt-0.5"
-                      >
-                        {project.link}
-                      </a>
-                    )}
-                    {project.year && (
-                      <p className="text-[12px] text-gray-500 mt-0.5">{project.year}</p>
-                    )}
-
-                    {project.desc && (
-                      <div className="mt-1.5 text-[12px] text-gray-700 leading-relaxed">
-                        {project.descFormat === "bullet" ? (
-                          project.desc.split('\n').map((line, idx) =>
-                            line.trim() && (
-                              <p key={idx} className="mb-0.5">• {line.trim()}</p>
+                <div className="space-y-4 ml-4">
+                  {projects.map((project, i) => (
+                    <div key={i}>
+                      <p className="text-[15px] font-bold text-gray-800">{project.name}</p>
+                      {project.link && (
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[12px] text-blue-600 underline block mt-0.5"
+                        >
+                          {project.link}
+                        </a>
+                      )}
+                      {project.year && (
+                        <p className="text-[12px] text-gray-500 mt-0.5">{project.year}</p>
+                      )}
+                      {project.desc && (
+                        <div className="mt-1.5 text-[12px] text-gray-700 leading-relaxed">
+                          {project.descFormat === "bullet" ? (
+                            project.desc.split('\n').map((line, idx) =>
+                              line.trim() && (
+                                <p key={idx} className="mb-0.5">• {line.trim()}</p>
+                              )
                             )
-                          )
-                        ) : project.descFormat === "number" ? (
-                          project.desc.split('\n').map((line, idx) =>
-                            line.trim() && (
-                              <p key={idx} className="mb-0.5">{idx + 1}. {line.trim()}</p>
+                          ) : project.descFormat === "number" ? (
+                            project.desc.split('\n').map((line, idx) =>
+                              line.trim() && (
+                                <p key={idx} className="mb-0.5">{idx + 1}. {line.trim()}</p>
+                              )
                             )
-                          )
-                        ) : (
-                          <p>{project.desc}</p>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-
+                          ) : (
+                            <p>{project.desc}</p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
         </div>
-
-
-        {/* grid grid-cols-[38%_62%] */}
-
-        {/* Contact Section
-        <section className="mb-6 cursor-pointer" onClick={() => onClickSection && onClickSection("personal")}>
-          <div className="flex items-start gap-3 mb-2">
-            <div className="w-1 h-5 bg-gray-800 flex-shrink-0"></div>
-            <h2 className="text-sm font-bold text-gray-900 uppercase">Contact</h2>
-          </div>
-          <div className="ml-4 grid grid-cols-2 gap-x-8 gap-y-1">
-            <div>
-              <p className="text-xs text-gray-700">
-                <span className="font-semibold">Phone:</span> {data?.phone || "+123-456-7890"}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-700">
-                <span className="font-semibold">LinkedIn:</span> {data?.linkedin || "linkedin.com/in/"}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-700">
-                <span className="font-semibold">Email:</span> {data?.email || "hello@reallygreatsite.com"}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-700">
-                <span className="font-semibold">Website:</span> {data?.portfolio || "www.reallygreatsite.com"}
-              </p>
-            </div>
-          </div>
-        </section>*/}
-
-        {/* Work Experience Section */}
-        {/* {data?.visibleSections?.experience !== false && (
-          <section className="mb-6 cursor-pointer" onClick={() => onClickSection && onClickSection("experience")}>
-            <div className="flex items-start gap-3 mb-2">
-              <div className="w-1 h-5 bg-gray-800 flex-shrink-0"></div>
-              <h2 className="text-sm font-bold text-gray-900 uppercase">Work Experience</h2>
-            </div>
-            <div className="ml-4 space-y-4">
-              {(experiences.length ? experiences : [
-                {
-                  role: "English Teacher | Internship",
-                  company: "Plumeria High School",
-                  year: "June 2024 - Present",
-                  desc: "Provides one-on-one tutoring for high school students who want to excel in English reading and writing\nDevelops comprehensive study plans to meet students' learning styles and needs"
-                },
-                {
-                  role: "Intern",
-                  company: "The Learning Center",
-                  year: "2023-2024",
-                  desc: "Assisted in creating educational materials and activities for high school students\nHelped organize events and campaigns within curricula-based projects to help increase student engagement"
-                }
-              ]).map((exp, i) => (
-                <div key={i}>
-                  <p className="text-sm font-bold text-gray-900">{exp.role}</p>
-                  <p className="text-xs text-gray-600 italic mb-1">{exp.company} | {exp.year}</p>
-                  {exp.desc && (
-                    <ul className="space-y-0.5">
-                      {exp.desc.split('\n').map((line, idx) =>
-                        line.trim() && (
-                          <li key={idx} className="text-xs text-gray-700 flex items-start gap-2">
-                            <span className="flex-shrink-0">•</span>
-                            <span>{line.trim()}</span>
-                          </li>
-                        )
-                      )}
-                    </ul>
-                  )}
-                </div>
-              ))}
-            </div>
-          </section>
-        )} */}
-
-        {/* Education Section */}
-        {/* {data?.visibleSections?.education !== false && (
-          <section className="mb-6 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
-            <div className="flex items-start gap-3 mb-2">
-              <div className="w-1 h-5 bg-gray-800 flex-shrink-0"></div>
-              <h2 className="text-sm font-bold text-gray-900 uppercase">Education</h2>
-            </div>
-            <div className="ml-4 grid grid-cols-2 gap-6">
-              {(education.length ? education : [
-                {
-                  course: "City College",
-                  school: "Bachelor of Education in Secondary Education",
-                  year: "2020-2024",
-                  details: ["GPA: 3.5", "Member, Theater Club", "Volunteer, English Tutor"]
-                },
-                {
-                  course: "City High School",
-                  school: "High School Diploma",
-                  year: "2016-2020",
-                  details: ["Student Teacher", "Essay Competition 1st Place, Regional Team", "Member, Debate Team"]
-                }
-              ]).map((edu, i) => (
-                <div key={i}>
-                  <p className="text-sm font-bold text-gray-900">{edu.course} | {edu.year}</p>
-                  <p className="text-xs text-gray-600 mb-1">{edu.school}</p>
-                  {edu.details && (
-                    <ul className="space-y-0.5">
-                      {edu.details.map((detail, idx) => (
-                        <li key={idx} className="text-xs text-gray-700 flex items-start gap-2">
-                          <span className="flex-shrink-0">•</span>
-                          <span>{detail}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  {!edu.details && edu.gpa && (
-                    <p className="text-xs text-gray-700">• {edu.gpa}</p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </section>
-        )} */}
-
-        {/* Certifications Section */}
-        {/* {data?.visibleSections?.certificates !== false && (
-          <section className="mb-6 cursor-pointer" onClick={() => onClickSection && onClickSection("certificates")}>
-            <div className="flex items-start gap-3 mb-2">
-              <div className="w-1 h-5 bg-gray-800 flex-shrink-0"></div>
-              <h2 className="text-sm font-bold text-gray-900 uppercase">Certifications</h2>
-            </div>
-            <div className="ml-4 grid grid-cols-2 gap-6">
-              {(certificates.length ? certificates : [
-                {
-                  name: "Teaching License",
-                  issuer: "State Department of Education",
-                  year: "July 2024"
-                },
-                {
-                  name: "Certified CPR and First Aid Responder",
-                  issuer: "Heart Health Organization",
-                  year: ""
-                }
-              ]).map((cert, i) => (
-                <div key={i}>
-                  <p className="text-sm font-bold text-gray-900">
-                    {typeof cert === 'string' ? cert : cert.name}
-                    {cert.year && ` | ${cert.year}`}
-                  </p>
-                  {cert.issuer && (
-                    <p className="text-xs text-gray-600">{cert.issuer}</p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </section>
-        )} */}
-
-        {/* Skills Section */}
-        {/* {data?.visibleSections?.skills !== false && (
-          <section className="mb-6 cursor-pointer" onClick={() => onClickSection && onClickSection("skills")}>
-            <div className="flex items-start gap-3 mb-2">
-              <div className="w-1 h-5 bg-gray-800 flex-shrink-0"></div>
-              <h2 className="text-sm font-bold text-gray-900 uppercase">Skills</h2>
-            </div>
-            <div className="ml-4">
-              <div className="flex flex-wrap gap-x-4 gap-y-1">
-                {(data?.skills || ["Classroom Management", "Lesson Planning", "Student Assessment", "Communication", "Time Management"]).map((s, i) => {
-                  const skillName = typeof s === 'string' ? s : s.name;
-                  return (
-                    <p key={i} className="text-xs text-gray-700">• {skillName}</p>
-                  );
-                })}
-              </div>
-            </div>
-          </section>
-        )} */}
-
-        {/* Languages Section */}
-        {/* {data?.visibleSections?.languages !== false && (
-          <section className="mb-6 cursor-pointer" onClick={() => onClickSection && onClickSection("languages")}>
-            <div className="flex items-start gap-3 mb-2">
-              <div className="w-1 h-5 bg-gray-800 flex-shrink-0"></div>
-              <h2 className="text-sm font-bold text-gray-900 uppercase">Languages</h2>
-            </div>
-            <div className="ml-4">
-              <div className="flex flex-wrap gap-x-4 gap-y-1">
-                {(data?.languages?.length ? data.languages : ["English (Native)", "Spanish (Conversational)", "French (Basic)"]).map((l, i) => {
-                  const langText = typeof l === 'string' ? l : `${l.name} (${l.proficiency || 'Fluent'})`;
-                  return (
-                    <p key={i} className="text-xs text-gray-700">• {langText}</p>
-                  );
-                })}
-              </div>
-            </div>
-          </section>
-        )} */}
-
-        {/* Projects Section */}
-        {/*  {data?.visibleSections?.projects !== false && projects.length > 0 && (
-          <section className="mb-6 cursor-pointer" onClick={() => onClickSection && onClickSection("projects")}>
-            <div className="flex items-start gap-3 mb-2">
-              <div className="w-1 h-5 bg-gray-800 flex-shrink-0"></div>
-              <h2 className="text-sm font-bold text-gray-900 uppercase">Projects</h2>
-            </div>
-            <div className="ml-4 space-y-4">
-              {projects.map((project, i) => (
-                <div key={i}>
-                  <p className="text-sm font-bold text-gray-900">{project.name}</p>
-                  {project.year && (
-                    <p className="text-xs text-gray-600 italic mb-1">{project.year}</p>
-                  )}
-                  {project.desc && (
-                    <p className="text-xs text-gray-700">{project.desc}</p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </section>
-        )} */}
       </div>
     </div>
   );
