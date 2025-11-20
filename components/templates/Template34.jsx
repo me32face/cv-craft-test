@@ -20,16 +20,11 @@ export default function Template34({ data, onClickSection }) {
     return String(item);
   };
 
-  const safeObj = (item) => (typeof item === "object" && item !== null ? item : {});
+  const safeObj = (item) =>
+    typeof item === "object" && item !== null ? item : {};
 
   const toArray = (v) =>
-    !v
-      ? []
-      : Array.isArray(v)
-      ? v
-      : typeof v === "string"
-      ? [v]
-      : [];
+    !v ? [] : Array.isArray(v) ? v : typeof v === "string" ? [v] : [];
 
   const skills = toArray(data?.skills);
   const experiences = toArray(data?.experiences);
@@ -39,7 +34,7 @@ export default function Template34({ data, onClickSection }) {
   const languages = toArray(data?.languages);
   const awards = toArray(data?.awards);
   const projects = toArray(data?.projects);
-
+  const socialLinks = toArray(data?.socialLinks);
   const getSummaryText = () => {
     if (!data?.summary) return "";
     if (Array.isArray(data.summary)) {
@@ -83,7 +78,9 @@ export default function Template34({ data, onClickSection }) {
               `}
             >
               <img
-                src={data?.profileImage || "/templateprofile/template22profile.jpg"}
+                src={
+                  data?.profileImage || "/templateprofile/template22profile.jpg"
+                }
                 className="w-full h-full object-cover"
               />
             </div>
@@ -129,16 +126,39 @@ export default function Template34({ data, onClickSection }) {
             <p className="text-sm">
               {safeText(data?.address) || "Your City, Country"}
             </p>
-            <p className="text-sm mt-1">
-              {safeText(data?.portfolio) || "www.yourportfolio.com"}
-            </p>
-            <p className="text-sm">
-              {safeText(data?.linkedin) || "linkedin.com/in/yourname"}
-            </p>
-            <p>
-              {safeText(data?.github) || "github.com/yourusername"}
-            </p>
+           
           </section>
+
+          {/* SOCIAL LINKS (Works with checkbox toggle) */}
+  {data?.visibleSections?.socialLinks !== false && (
+  <section
+    className="mb-6 cursor-pointer"
+    onClick={() => onClickSection && onClickSection("socialLinks")}
+  >
+    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
+      Social Links
+    </h3>
+
+    {socialLinks.length > 0 ? (
+      <div className="text-sm space-y-1">
+        {socialLinks.map((link, index) => (
+          <a
+            key={index}
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-700 underline break-all block"
+          >
+            {link}
+          </a>
+        ))}
+      </div>
+    ) : (
+      <p className="text-sm text-gray-400">No social links added</p>
+    )}
+  </section>
+)}
+
 
           {/* SKILLS */}
           {data?.visibleSections?.skills !== false && (
@@ -394,15 +414,13 @@ export default function Template34({ data, onClickSection }) {
                           {e.descFormat === "bullet" ? (
                             <ul className="mt-1 ml-4 list-disc space-y-1">
                               {descLines.map(
-                                (line, idx) =>
-                                  line && <li key={idx}>{line}</li>
+                                (line, idx) => line && <li key={idx}>{line}</li>
                               )}
                             </ul>
                           ) : e.descFormat === "number" ? (
                             <ol className="mt-1 ml-4 list-decimal space-y-1">
                               {descLines.map(
-                                (line, idx) =>
-                                  line && <li key={idx}>{line}</li>
+                                (line, idx) => line && <li key={idx}>{line}</li>
                               )}
                             </ol>
                           ) : (
@@ -508,9 +526,7 @@ export default function Template34({ data, onClickSection }) {
                           </a>
                         )}
                       </div>
-                      <p className="text-xs opacity-60">
-                        {safeText(p.year)}
-                      </p>
+                      <p className="text-xs opacity-60">{safeText(p.year)}</p>
                     </div>
 
                     {/* Description formats like Template30 */}
@@ -519,15 +535,13 @@ export default function Template34({ data, onClickSection }) {
                         {p.descFormat === "bullet" ? (
                           <ul className="mt-1 ml-4 list-disc space-y-1">
                             {descLines.map(
-                              (line, idx) =>
-                                line && <li key={idx}>{line}</li>
+                              (line, idx) => line && <li key={idx}>{line}</li>
                             )}
                           </ul>
                         ) : p.descFormat === "number" ? (
                           <ol className="mt-1 ml-4 list-decimal space-y-1">
                             {descLines.map(
-                              (line, idx) =>
-                                line && <li key={idx}>{line}</li>
+                              (line, idx) => line && <li key={idx}>{line}</li>
                             )}
                           </ol>
                         ) : (

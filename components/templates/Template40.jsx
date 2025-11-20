@@ -32,6 +32,7 @@ export default function Template40({ data, onClickSection }) {
   const languages = toArray(data?.languages);
   const awards = toArray(data?.awards);
   const projects = toArray(data?.projects);
+  const socialLinks = toArray(data?.socialLinks);
 
   const getSummaryText = () => {
     if (!data?.summary) return "";
@@ -117,24 +118,33 @@ export default function Template40({ data, onClickSection }) {
                 <span className="text-indigo-600">📍</span>
                 <span>{safeText(data?.address) || "Los Angeles, CA"}</span>
               </div>
-              {data?.portfolio && (
-                <div className="flex items-start gap-2">
-                  <span className="text-indigo-600">🌐</span>
-                  <span className="break-all text-xs">{safeText(data.portfolio)}</span>
-                </div>
-              )}
-              {data?.linkedin && (
-                <div className="flex items-start gap-2">
-                  <span className="text-indigo-600">💼</span>
-                  <span className="break-all text-xs">{safeText(data.linkedin)}</span>
-                </div>
-              )}
-              {data?.github && (
-                <div className="flex items-start gap-2">
-                  <span className="text-indigo-600">💻</span>
-                  <span className="break-all text-xs">{safeText(data.github)}</span>
-                </div>
-              )}
+              {data?.visibleSections?.socialLinks !== false && (
+  <section
+    className="mb-6 cursor-pointer"
+    onClick={() => onClickSection && onClickSection("socialLinks")}
+  >
+   
+
+    {socialLinks.length > 0 ? (
+      <div className="text-sm space-y-1">
+        {socialLinks.map((link, index) => (
+          <a
+            key={index}
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-700 underline break-all block"
+          >
+            {link}
+          </a>
+        ))}
+      </div>
+    ) : (
+      <p className="text-sm text-gray-400">No social links added</p>
+    )}
+  </section>
+)}
+
             </div>
           </section>
 
@@ -542,7 +552,11 @@ export default function Template40({ data, onClickSection }) {
               </div>
             </section>
           )}
+
+        
+
         </div>
+          <div className="w-full h-10 bg-gradient-to-r from-indigo-600 to-purple-600"></div>
       </div>
     </div>
   );

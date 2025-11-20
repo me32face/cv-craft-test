@@ -32,8 +32,6 @@ export default function Template37({ data, onClickSection }) {
   // visibleSections just like Template30
   const visible = data?.visibleSections || {};
 
-
- 
   const rawExperiences = toArray(data?.experiences);
   const experiences = rawExperiences.length
     ? rawExperiences
@@ -42,16 +40,14 @@ export default function Template37({ data, onClickSection }) {
           company: "Borcelle Studio",
           role: "Marketing Manager",
           year: "2030 - PRESENT",
-          desc:
-            "Develop and execute marketing strategies...\nLead the marketing team...",
+          desc: "Develop and execute marketing strategies...\nLead the marketing team...",
           descFormat: "bullet",
         },
         {
           company: "Fauget Studio",
           role: "Marketing Specialist",
           year: "2025 - 2029",
-          desc:
-            "Create and manage campaign budgets...\nConduct market research...",
+          desc: "Create and manage campaign budgets...\nConduct market research...",
           descFormat: "bullet",
         },
       ];
@@ -103,8 +99,7 @@ export default function Template37({ data, onClickSection }) {
           name: "Marketing Dashboard",
           year: "2022",
           link: "https://github.com/yourrepo",
-          desc:
-            "Created an analytics dashboard...\nIntegrated charts and KPIs.",
+          desc: "Created an analytics dashboard...\nIntegrated charts and KPIs.",
           descFormat: "number",
         },
       ];
@@ -122,7 +117,6 @@ export default function Template37({ data, onClickSection }) {
     >
       {/* LEFT SIDEBAR */}
       <div className="w-[35%] bg-gray-100 p-6 pl-8">
-
         {/* Profile Image */}
         <div
           className={`mb-6 ${
@@ -155,7 +149,10 @@ export default function Template37({ data, onClickSection }) {
 
         {/* Contact */}
         {visible.personal !== false && (
-          <div className="mb-6 cursor-pointer" onClick={() => onClickSection("personal")}>
+          <div
+            className="mb-6 cursor-pointer"
+            onClick={() => onClickSection("personal")}
+          >
             <h3 className="text-sm font-bold mb-3 uppercase tracking-wide">
               Contact
             </h3>
@@ -165,9 +162,28 @@ export default function Template37({ data, onClickSection }) {
                 {safeText(data?.email, "hello@reallygreatsite.com")}
               </p>
               <p>{safeText(data?.address, "123 Anywhere St., Any City")}</p>
-              <p>{safeText(data?.portfolio, "www.reallygreatsite.com")}</p>
-             <p>{safeText(data?.linkedin, "linkedin.com/in/yourname")}</p>
-              <p>{safeText(data?.github, "github.com/yourusername")}</p>
+              {visible.social !== false &&
+                Array.isArray(data?.socialLinks) &&
+                data.socialLinks.length > 0 && (
+                  <div
+                    className="mb-6 cursor-pointer"
+                    onClick={() => onClickSection("social")}
+                  >
+                    <div className="space-y-2 text-xs break-all">
+                      {data.socialLinks.map((link, i) => (
+                        <a
+                          key={i}
+                          href={link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline text-blue-600 block"
+                        >
+                          🔗 {link}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
             </div>
           </div>
         )}
@@ -227,9 +243,7 @@ export default function Template37({ data, onClickSection }) {
                   );
                 }
 
-                return (
-                  <p key={i}>• {safeText(sk.name, "Skill")}</p>
-                );
+                return <p key={i}>• {safeText(sk.name, "Skill")}</p>;
               })}
             </div>
           </div>
@@ -262,7 +276,9 @@ export default function Template37({ data, onClickSection }) {
                       <span>{safeText(lang.name)}</span>
 
                       {lang.displayFormat === "level" && lang.level && (
-                        <span className="text-[10px] opacity-70">{lang.level}</span>
+                        <span className="text-[10px] opacity-70">
+                          {lang.level}
+                        </span>
                       )}
                       {lang.displayFormat === "percentage" &&
                         lang.proficiency !== undefined && (
@@ -343,7 +359,6 @@ export default function Template37({ data, onClickSection }) {
 
       {/* RIGHT SIDE */}
       <div className="w-[65%] bg-white">
-
         {/* HEADER */}
         {visible.personal !== false && (
           <div
@@ -360,7 +375,6 @@ export default function Template37({ data, onClickSection }) {
         )}
 
         <div className="px-6 py-5 pt-8">
-
           {/* PROFILE */}
           {visible.summary !== false && (
             <div
@@ -414,7 +428,9 @@ export default function Template37({ data, onClickSection }) {
                     <div key={i}>
                       <div className="flex justify-between items-start mb-1">
                         <div>
-                          <h3 className="text-sm font-bold">{safeText(e.company)}</h3>
+                          <h3 className="text-sm font-bold">
+                            {safeText(e.company)}
+                          </h3>
                           <p className="text-xs text-gray-600">
                             {safeText(e.role)}
                           </p>
@@ -477,8 +493,12 @@ export default function Template37({ data, onClickSection }) {
                     <div key={i}>
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="text-sm font-bold">{safeText(ed.course)}</h3>
-                          <p className="text-xs text-gray-600">{safeText(ed.school)}</p>
+                          <h3 className="text-sm font-bold">
+                            {safeText(ed.course)}
+                          </h3>
+                          <p className="text-xs text-gray-600">
+                            {safeText(ed.school)}
+                          </p>
                           {ed.gpa && <p className="text-xs">{ed.gpa}</p>}
                         </div>
                         <span className="text-xs text-gray-500 whitespace-nowrap">
@@ -516,7 +536,9 @@ export default function Template37({ data, onClickSection }) {
                     <div key={i}>
                       <div className="flex justify-between items-start mb-1">
                         <div>
-                          <h3 className="text-sm font-bold">{safeText(pr.name)}</h3>
+                          <h3 className="text-sm font-bold">
+                            {safeText(pr.name)}
+                          </h3>
 
                           {pr.link && (
                             <a
