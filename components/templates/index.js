@@ -19,6 +19,7 @@ import Template42 from "./Template42";
 import Template43 from "./Template43";
 import Template44 from "./Template44";
 import Template45 from "./Template45";
+import Template46 from "./Template46";
 
 export const templates = {
   template01: Template01,
@@ -38,9 +39,7 @@ export const templates = {
   template43: Template43,
   template44: Template44,
   template45: Template45,
-
-
-  template33: Template33,
+  template46: Template46,
 };
 
 export const templateInputs = {
@@ -60,7 +59,7 @@ export const templateInputs = {
     certificates: false,
     project: true,
   },
- 
+
 
   template34: {
     name: true,
@@ -92,7 +91,7 @@ export const templateInputs = {
   template30: {
     name: true,
     title: true,
-    profileImage:true,
+    profileImage: true,
     phone: true,
     email: true,
     address: true,
@@ -262,7 +261,7 @@ export const templateInputs = {
     certificates: true,
     references: false,
   },
-    template42: {
+  template42: {
     name: true,
     title: true,
     profileImage: true,
@@ -277,38 +276,7 @@ export const templateInputs = {
     certificates: true,
     references: false,
   },
-    template43: {
-    name: true,
-    title: true,
-    profileImage: true,
-    phone: true,
-    email: true,
-    address: true,
-    summary: true,
-    experiences: true,
-    education: true,
-    skills: true,
-    languages: true,
-    certificates: true,
-    references: false,
-  },
-
-   template44: {
-    name: true,
-    title: true,
-    profileImage: true,
-    phone: true,
-    email: true,
-    address: true,
-    summary: true,
-    experiences: true,
-    education: true,
-    skills: true,
-    languages: true,
-    certificates: true,
-    references: false,
-  },
-     template45: {
+  template43: {
     name: true,
     title: true,
     profileImage: true,
@@ -324,5 +292,35 @@ export const templateInputs = {
     references: false,
   },
 
+  template44: {
+    name: true,
+    title: true,
+    profileImage: true,
+    phone: true,
+    email: true,
+    address: true,
+    summary: true,
+    experiences: true,
+    education: true,
+    skills: true,
+    languages: true,
+    certificates: true,
+    references: false,
+  },
+  template45: {
+    name: true,
+    title: true,
+    profileImage: true,
+    phone: true,
+    email: true,
+    address: true,
+    summary: true,
+    experiences: true,
+    education: true,
+    skills: true,
+    languages: true,
+    certificates: true,
+    references: false,
+  },
 
 };

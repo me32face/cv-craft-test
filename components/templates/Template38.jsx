@@ -88,37 +88,43 @@ export default function Template38({ data, onClickSection }) {
 
           {/* SKILLS */}
           {data?.visibleSections?.skills !== false && (
-            <div className="mb-4 mt-8">
-              <h2 className="font-semibold text-md mb-2 cursor-pointer " onClick={() => onClickSection && onClickSection("skills")}>SKILLS</h2>
-              {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation", "Critical Thinking", "Leadership"]).map((s, i) => {
-                if (typeof s === 'string') {
-                  return <p key={i} className="text-xs mb-1">• {s}</p>;
-                }
-                if (s.proficiency !== undefined) {
-                  return (
-                    <div key={i} className="mb-2">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm">{s.name}</span>
-                        <span className="text-xs opacity-70">{s.proficiency}%</span>
+            <div className="mb-4">
+              <div className="mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("skills")}>
+                <h2 className="text-md  font-semibold  mb-3 pb-2 ">
+                  SKILLS
+                </h2>          {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation"]).map((s, i) => {
+                  if (typeof s === 'string') {
+                    return <p key={i} className="text-sm mb-1">• {s}</p>;
+                  }
+
+                  if (s.proficiency !== undefined) {
+                    return (
+                      <div key={i} className="mb-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm">{s.name}</span>
+                          <span className="text-xs  opacity-70">{s.proficiency}%</span>
+                        </div>
+                        <div className="w-full bg-white/20 rounded-full h-1 mt-2">
+                          <div
+                            className="bg-slate-600 h-1 rounded-full transition-all"
+                            style={{ width: `${s.proficiency}%` }}
+                          ></div>
+                        </div>
                       </div>
-                      <div className="w-full bg-white/20 rounded-full h-1 mt-2">
-                        <div
-                          className="bg-black h-1 rounded-full transition-all"
-                          style={{ width: `${s.proficiency}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                  );
-                }
-                if (s.category && s.items) {
-                  return (
-                    <p key={i} className="text-sm mb-1">
-                      <span className="font-medium">{s.category}:</span> {s.items.filter(item => item && item.trim()).join(", ")}
-                    </p>
-                  );
-                }
-                return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
-              })}
+                    );
+                  }
+
+                  if (s.category && s.skills) {
+                    return (
+                      <p key={i} className="text-sm mb-1">
+                        <span className="font-medium">{s.category}:</span> {s.skills.filter(item => item && item.trim()).join(", ")}
+                      </p>
+                    );
+                  }
+
+                  return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
+                })}
+              </div>
             </div>
           )}
 

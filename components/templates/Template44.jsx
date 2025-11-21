@@ -142,7 +142,7 @@ export default function Template44({ data, onClickSection }) {
           {/* Education */}
           {data?.visibleSections?.education !== false && (
             <div className="">
-              <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
+              <h2 className="text-md text-[#83549f] font-semibold mt-2 mb-3 border-b-2 border-[#dfc3f1] pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
                 EDUCATION
               </h2>
               {education.map((edu, i) => (
@@ -166,44 +166,40 @@ export default function Template44({ data, onClickSection }) {
           )}
           {/* Skills */}
           {data?.visibleSections?.skills !== false && (
-            <div className="mb-6 cursor-pointer" onClick={() => onClickSection && onClickSection("skills")}>
-              <h2 className="text-sm font-bold text-[#83549f] mb-3 pb-2 border-b-2 border-[#dfc3f1]">
-                SKILLS
-              </h2>
-              {/* ADDED ml-4 HERE */}
-              <div >
-                {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation", "Critical Thinking", "Leadership"]).map((s, i) => {
+            <div className="mb-4">
+              <div className="mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("skills")}>
+                <h2 className="text-sm text-[#83549f] font-semibold  mb-3 pb-2 border-b-2 border-[#dfc3f1]">
+                  SKILLS
+                </h2>          {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation"]).map((s, i) => {
                   if (typeof s === 'string') {
-                    return (
-                      <div key={i} className="flex items-center gap-2">
-                        <span className="text-[#83549f]">•</span>
-                        <span className="text-xs text-gray-700">{s}</span>
-                      </div>
-                    );
+                    return <p key={i} className="text-sm mb-1">• {s}</p>;
                   }
+
                   if (s.proficiency !== undefined) {
                     return (
-                      <div key={i} className="mb-4">
+                      <div key={i} className="mb-2">
                         <div className="flex justify-between items-center">
                           <span className="text-sm">{s.name}</span>
-                          <span className="text-xs opacity-70">{s.proficiency}%</span>
+                          <span className="text-xs  opacity-70">{s.proficiency}%</span>
                         </div>
                         <div className="w-full bg-white/20 rounded-full h-1 mt-2">
                           <div
-                            className="bg-black h-1 rounded-full transition-all"
+                            className="bg-slate-600 h-1 rounded-full transition-all"
                             style={{ width: `${s.proficiency}%` }}
                           ></div>
                         </div>
                       </div>
                     );
                   }
-                  if (s.category && s.items) {
+
+                  if (s.category && s.skills) {
                     return (
                       <p key={i} className="text-sm mb-1">
-                        <span className="font-medium">{s.category}:</span> {s.items.filter(item => item && item.trim()).join(", ")}
+                        <span className="font-medium">{s.category}:</span> {s.skills.filter(item => item && item.trim()).join(", ")}
                       </p>
                     );
                   }
+
                   return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
                 })}
               </div>

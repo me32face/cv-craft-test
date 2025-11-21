@@ -1,20 +1,21 @@
 "use client";
 
 import React from "react";
+import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
 
-const renderLanguage = (lang, index) => {
-  if (typeof lang === 'string') {
-    return <p key={index} className="text-gray-700 text-xs mb-1">• {lang}</p>;
-  }
-  return (
-    <div key={index} className="mb-2">
-      <div className="flex justify-between items-center text-gray-700 text-xs">
-        <span>{lang.name}</span>
-        <span className="opacity-70">({lang.proficiency || 'Fluent'})</span>
-      </div>
-    </div>
-  );
-};
+// const renderLanguage = (lang, index) => {
+//   if (typeof lang === 'string') {
+//     return <p key={index} className="text-gray-700 text-xs mb-1">• {lang}</p>;
+//   }
+//   return (
+//     <div key={index} className="mb-2">
+//       <div className="flex justify-between items-center text-gray-700 text-xs">
+//         <span>{lang.name}</span>
+//         <span className="opacity-70">({lang.proficiency || 'Fluent'})</span>
+//       </div>
+//     </div>
+//   );
+// };
 
 export default function Template41({ data, onClickSection }) {
   const toArray = (value) => (!value ? [] : Array.isArray(value) ? value : [value]);
@@ -119,53 +120,55 @@ export default function Template41({ data, onClickSection }) {
             </section>
             {/* Skills */}
             {data?.visibleSections?.skills !== false && (
-              <div className="mb-4 mt-8" onClick={() => onClickSection && onClickSection("skills")}>
-                <div className="flex items-start gap-3 mb-2">
-                  <div className="w-1 h-5 bg-gray-600"></div>
-                  <h2 className="text-sm font-semibold text-gray-700 uppercase">SKILLS</h2>
-                </div>
-                {/* ADDED ml-4 HERE */}
-                <div className="ml-4">
-                  {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation", "Critical Thinking", "Leadership"]).map((s, i) => {
+              <div className="mb-4">
+                <div className="mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("skills")}>
+                  <div className="flex items-start gap-3 mb-2">
+                    <div className="w-1 h-5 bg-gray-600"></div>
+                    <h2 className="text-sm font-semibold text-gray-700 uppercase">SKILLS</h2>
+                  </div>
+                  {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation"]).map((s, i) => {
                     if (typeof s === 'string') {
-                      return <p key={i} className="text-xs mb-1">• {s}</p>;
+                      return <p key={i} className="text-sm mb-1">• {s}</p>;
                     }
+
                     if (s.proficiency !== undefined) {
                       return (
-                        <div key={i} className="mb-4">
+                        <div key={i} className="mb-2">
                           <div className="flex justify-between items-center">
                             <span className="text-sm">{s.name}</span>
-                            <span className="text-xs opacity-70">{s.proficiency}%</span>
+                            <span className="text-xs  opacity-70">{s.proficiency}%</span>
                           </div>
-
                           <div className="w-full bg-white/20 rounded-full h-1 mt-2">
                             <div
-                              className="bg-black h-1 rounded-full transition-all"
+                              className="bg-slate-600 h-1 rounded-full transition-all"
                               style={{ width: `${s.proficiency}%` }}
-                            >
-                            </div>
+                            ></div>
                           </div>
                         </div>
                       );
                     }
-                    if (s.category && s.items) {
+
+                    if (s.category && s.skills) {
                       return (
                         <p key={i} className="text-sm mb-1">
-                          <span className="font-medium">{s.category}:</span> {s.items.filter(item => item && item.trim()).join(", ")}
+                          <span className="font-medium">{s.category}:</span> {s.skills.filter(item => item && item.trim()).join(", ")}
                         </p>
                       );
                     }
+
                     return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
                   })}
                 </div>
               </div>
             )}
+
             {/* Education */}
             {data?.visibleSections?.education !== false && (
-              <div className="">
-                <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
-                  EDUCATION
-                </h2>
+              <div className=" cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
+                <div className="flex items-start gap-3 mb-2">
+                  <div className="w-1 h-5 bg-gray-600"></div>
+                  <h2 className="text-sm font-semibold text-gray-700 uppercase">EDUCATION</h2>
+                </div>
                 {education.map((edu, i) => (
                   <div key={i} className=" mb-3">
                     <div className="flex justify-between items-start">
