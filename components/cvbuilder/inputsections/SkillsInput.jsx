@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Trash2 } from "lucide-react";
+import { Trash2, Sparkles } from "lucide-react";
 
 
 const debounce = (fn, delay = 120) => {
@@ -317,6 +317,21 @@ export default function SkillsInput({ skills = [], setSkills, onClose, onNext })
           Add
         </button>
       </div>
+
+      <div className="flex items-center justify-between my-4">
+          {/* <label className="block text-sm  text-gray-500">Please enter to quickly add skills</label> */}
+
+          {/* AI Generate Button */}
+          <button
+            className="flex items-center gap-1 px-3 py-1 rounded-full 
+                 bg-gradient-to-r from-purple-400 to-purple-200 
+                 text-[#634BC9] font-medium text-sm shadow-sm 
+                 hover:opacity-90  transition"
+          >
+            <Sparkles size={14}/> 
+            Generate Using AI
+          </button>
+        </div>
 
       {/* FOOTER */}
       <div className="flex items-center justify-between pt-4  text-sm">

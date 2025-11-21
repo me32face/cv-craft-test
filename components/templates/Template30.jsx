@@ -206,18 +206,22 @@ export default function Template30({ data, onClickSection }) {
             </h2>
         {education.map((edu, i) => (
           <div key={i} className=" mb-3">
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="font-semibold !text-sm text-gray-700">{edu.degree}</p>
-                <p className="text-sm opacity-80">{edu.school}</p>
-                {edu.field && <p className="text-xs opacity-70">{edu.field}</p>}
-              </div>
-              <p className="text-xs opacity-60">
-                {edu.start && formatDate(edu.start)}
-                {edu.start && (edu.end || edu.current) && " - "}
-                {edu.current ? "Present" : edu.end && formatDate(edu.end)}
-              </p>
-            </div>
+             <div className="flex justify-between items-start">
+                  <div>
+                    <p className="font-semibold !text-sm text-gray-700">{edu.degree}</p>
+                    <p className="text-sm opacity-80">{edu.school}</p>
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    {edu.start
+                      ? `${new Date(edu.start).getFullYear()}${edu.current
+                        ? " - Present"
+                        : edu.end
+                          ? " - " + new Date(edu.end).getFullYear()
+                          : ""
+                      }`
+                      : "Year not set"}
+                  </p>
+                </div>
             {edu.description && <p className="text-sm mt-1 text-gray-700 text-justify">{edu.description}</p>}
           </div>
         ))}

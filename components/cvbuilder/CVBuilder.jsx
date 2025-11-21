@@ -159,10 +159,12 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
       { name: "Hindi", proficiency: 85 }
     ],
     experiences: [
-      { role: "Developer", company: "Google", year: "2020 - 2022" }
+      { role: "Developer", company: "Google", start: "2020", end: "2022" },
+      { role: "Developer", company: "Google", start: "2020", end: "2022" }
     ],
     education: [
-      { course: "BCA", school: "ABC College", year: "2017 - 2020" }
+      { course: "BCA", school: "Calicut university", start: "2020", end: "2022" },
+      { course: "Bcom", school: "Calicut university", start: "2020", end: "2022" }
     ],
     certificates: [
       { name: "Full Stack Development", issuer: "Tech Academy", year: "2023" },
@@ -394,15 +396,20 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
                   <div className="h-6 sm:h-8 bg-gradient-to-r from-[#4B74F4] to-[#7642EE] rounded-t-xl sm:rounded-t-2xl absolute left-0 right-0 -bottom-3 sm:-bottom-4 z-20"></div>
                 </div>
 
-                <div className="w-full overflow-auto bg-gray-50 p-5">
+<div className="w-full overflow-auto bg-gray-50 p-5">
                   {TemplateComponent ? (
                     <div className="space-y-5">
                       {Array.from({ length: totalPages }).map((_, pageIndex) => (
                         <div
                           key={pageIndex}
                           data-preview-page
-                          style={{ height: '1123px', width: '794px', overflow: 'hidden' }}
-                          className="bg-white shadow-xl mx-auto relative"
+                          style={{ 
+                            height: '1123px', 
+                            width: '794px', 
+                            overflow: 'hidden',
+                            position: 'relative'
+                          }}
+                          className="bg-white shadow-xl mx-auto"
                         >
                           {pageIndex > 0 && (
                             <button
@@ -413,10 +420,16 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
                               ✕
                             </button>
                           )}
-                          <div style={{ transform: `translateY(-${pageIndex * 1123}px)` }}>
-                            <div style={{ marginTop: pageIndex > 0 ? '30px' : '0px', marginBottom: pageIndex === 0 ? '30px' : '0px', paddingTop: pageIndex > 0 ? '30px' : '0px', paddingBottom: pageIndex === 0 ? '30px' : '0px' }}>
-                              <TemplateComponent data={data} />
-                            </div>
+                          <div 
+                            style={{ 
+                              transform: `translateY(-${pageIndex * 1123}px)`,
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              width: '100%'
+                            }}
+                          >
+                            <TemplateComponent data={data} />
                           </div>
                         </div>
                       ))}
@@ -440,7 +453,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
         update={update}
         onNext={(nextSection) => {
           setOpenSection(nextSection);
-          setSelectedMenu(nextSection); 
+          setSelectedMenu(nextSection);
         }}
       />
 

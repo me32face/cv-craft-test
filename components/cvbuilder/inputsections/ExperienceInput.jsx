@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Sparkles } from "lucide-react";
 
 export default function ExperienceInput({ experiences = [], setExperiences, onClose, onNext }) {
   const [openIndex, setOpenIndex] = useState(0);
@@ -62,20 +62,32 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
             </button>
           </div>
 
-          <div className="flex justify-between items-center pt-4 text-sm">
-            <button className="px-4 py-2 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 transition">
-              Cancel
-            </button>
+          <div className="flex items-center justify-between pt-4  text-sm">
 
-            <div className="flex space-x-2">
-              <button className="px-4 py-2 rounded-md bg-purple-100 text-[#634BC9] hover:bg-purple-200 transition">
+            {/* Left Buttons */}
+            <div className="flex gap-3 ">
+              <button
+                className="px-2 py-2 rounded-xl border border-gray-300 hover:bg-gray-100 transition"
+                onClick={onClose}
+              >
+                Cancel
+              </button>
+
+              <button
+                className="px-2 py-2 rounded-xl bg-[#634BC9] text-white hover:bg-[#553fb2] transition"
+              // onClick={onSave}
+              >
                 Save Changes
               </button>
-
-              <button className="px-4 py-2 rounded-md bg-[#634BC9] text-white transition">
-                Next →
-              </button>
             </div>
+
+            {/* Right Button */}
+            <button
+              className="px-2 py-2 rounded-xl bg-[#634BC9] text-white hover:bg-[#553fb2] transition"
+              onClick={onNext}
+            >
+              Next →
+            </button>
           </div>
         </div>
       )}
@@ -200,7 +212,20 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                     </div>
 
                     <div className="mt-4">
-                      <label className="font-medium">Description</label>
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="block text-sm font-semibold">Professional Summary</label>
+
+                        {/* AI Generate Button */}
+                        <button
+                          className="flex items-center gap-1 px-3 py-1 rounded-full 
+                                    bg-gradient-to-r from-purple-400 to-purple-200 
+                                    text-[#634BC9] font-medium text-sm shadow-sm 
+                                    hover:opacity-90  transition"
+                        >
+                          <Sparkles size={14} />
+                          Generate Using AI
+                        </button>
+                      </div>
                       <textarea
                         className="mt-1 w-full p-3 rounded-xl border"
                         rows={4}
@@ -236,26 +261,32 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
           </button>
 
           {/* Footer */}
-          <div className="flex justify-between items-center pt-4 text-sm">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 transition"
-            >
-              Cancel
-            </button>
+          <div className="flex items-center justify-between pt-4  text-sm">
 
-            <div className="flex space-x-2">
-              <button className="px-4 py-2 rounded-md bg-purple-100 text-[#634BC9] hover:bg-purple-200 transition">
-                Save Changes
+            {/* Left Buttons */}
+            <div className="flex gap-3 ">
+              <button
+                className="px-2 py-2 rounded-xl border border-gray-300 hover:bg-gray-100 transition"
+                onClick={onClose}
+              >
+                Cancel
               </button>
 
               <button
-                onClick={onNext}
-                className="px-4 py-2 rounded-md bg-[#634BC9] text-white transition"
+                className="px-2 py-2 rounded-xl bg-[#634BC9] text-white hover:bg-[#553fb2] transition"
+              // onClick={onSave}
               >
-                Next →
+                Save Changes
               </button>
             </div>
+
+            {/* Right Button */}
+            <button
+              className="px-2 py-2 rounded-xl bg-[#634BC9] text-white hover:bg-[#553fb2] transition"
+              onClick={onNext}
+            >
+              Next →
+            </button>
           </div>
         </div>
       )}
