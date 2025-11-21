@@ -1,35 +1,265 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
+import { ChevronDown } from "lucide-react";
 
-export default function ExperienceModal({ experiences = [], setExperiences }) {
-  const add = () => setExperiences([...(experiences || []), { role: "", company: "", year: "", desc: "", descFormat: "paragraph" }]);
-  const updateField = (i, k, v) => {
-    const arr = [...(experiences || [])]; arr[i] = { ...arr[i], [k]: v }; setExperiences(arr);
+export default function ExperienceInput({ experiences = [], setExperiences, onClose, onNext }) {
+  const [openIndex, setOpenIndex] = useState(0);
+
+  const emptyExp = {
+    role: "",
+    company: "",
+    location: "",
+    start: "",
+    end: "",
+    current: false,
+    desc: "",
+    reference: "",
   };
-  const remove = (i) => setExperiences(experiences.filter((_, idx) => idx !== i));
+
+  const addExperience = () => {
+    const updated = [...experiences, { ...emptyExp }];
+    setExperiences(updated);
+    setOpenIndex(updated.length - 1);
+  };
+
+  const updateField = (i, field, value) => {
+    const list = [...experiences];
+    list[i] = { ...list[i], [field]: value };
+    setExperiences(list);
+  };
+
+  const removeExperience = (i) => {
+    const filtered = experiences.filter((_, idx) => idx !== i);
+    setExperiences(filtered);
+    if (openIndex === i) setOpenIndex(null);
+  };
+
+  const toggleOpen = (i) => setOpenIndex(openIndex === i ? null : i);
 
   return (
-    <div>
-      {(experiences || []).map((exp, i) => (
-        <div key={i} className="border rounded p-3 mb-3">
-          <input placeholder="Role" className="w-full border p-2 rounded mb-2" value={exp.role || ""} onChange={(e)=>updateField(i,"role",e.target.value)} />
-          <input placeholder="Company" className="w-full border p-2 rounded mb-2" value={exp.company || ""} onChange={(e)=>updateField(i,"company",e.target.value)} />
-          <input placeholder="Year" className="w-full border p-2 rounded mb-2" value={exp.year || ""} onChange={(e)=>updateField(i,"year",e.target.value)} />
-          <textarea placeholder="Description" className="w-full border p-2 rounded mb-2" rows="3" value={exp.desc || ""} onChange={(e)=>updateField(i,"desc",e.target.value)} />
-          <select className="w-full border p-2 rounded mb-2" value={exp.descFormat || "paragraph"} onChange={(e)=>updateField(i,"descFormat",e.target.value)}>
-            <option value="paragraph">Paragraph</option>
-            <option value="bullet">• Bullet Points</option>
-            <option value="number">1. Numbered List</option>
-          </select>
-          <div className="flex justify-end">
-            <button className="px-3 py-1 bg-red-500 text-white rounded" onClick={()=>remove(i)}>Remove</button>
+    <div className="w-full space-y-6">
+
+      {/* Empty View First Time */}
+      {experiences.length === 0 && (
+        <div className="flex flex-col justify-between h-full">
+          <div>
+            <h3 className="text-2xl font-semibold text-[#634BC9]">Work Experience</h3>
+            <p className="text-sm text-gray-500 mt-1">
+              Detail your work history and professional achievements
+            </p>
+          </div>
+
+          <div className="flex flex-col items-center text-center mt-10 mb-10">
+            <p className="text-gray-600 text-sm pb-10">
+              No experience added yet. Add your first entry below.
+            </p>
+
+            <button
+              onClick={addExperience}
+              className="flex items-center gap-2 border border-[#634BC9] text-[#634BC9] px-10 py-2 rounded-xl font-medium hover:bg-purple-50 transition"
+            >
+              <span className="text-xl">+</span> Add Experience
+            </button>
+          </div>
+
+          <div className="flex justify-between items-center pt-4 text-sm">
+            <button className="px-4 py-2 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 transition">
+              Cancel
+            </button>
+
+            <div className="flex space-x-2">
+              <button className="px-4 py-2 rounded-md bg-purple-100 text-[#634BC9] hover:bg-purple-200 transition">
+                Save Changes
+              </button>
+
+              <button className="px-4 py-2 rounded-md bg-[#634BC9] text-white transition">
+                Next →
+              </button>
+            </div>
           </div>
         </div>
-      ))}
+      )}
 
-      <div className="flex gap-2">
-        <button onClick={add} className="px-3 py-1 bg-blue-600 text-white rounded">+ Add Experience</button>
-      </div>
+      {/* List Mode */}
+      {experiences.length > 0 && (
+        <div className="space-y-6">
+          {experiences.map((exp, i) => {
+            const isOpen = openIndex === i;
+
+            return (
+              <div key={i} className="border-2 border-gray-300 rounded-2xl bg-white shadow-sm">
+
+                {/* Collapsed */}
+                {!isOpen && (
+                  <div
+                    onClick={() => toggleOpen(i)}
+                    className="p-5 flex justify-between items-center cursor-pointer"
+                  >
+                    <div>
+                      <p className="font-semibold">{exp.role || "Job Title"}</p>
+                      <p className="text-sm text-gray-600">{exp.company || "Company Name"}</p>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <ChevronDown className="text-xl" />
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeExperience(i);
+                        }}
+                        className="text-gray-500 hover:text-red-500 text-xl"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Expanded */}
+                {isOpen && (
+                  <div className="p-6 relative">
+
+                    <button
+                      onClick={() => removeExperience(i)}
+                      className="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-xl"
+                    >
+                      ×
+                    </button>
+
+                    <div
+                      onClick={() => toggleOpen(i)}
+                      className="absolute top-3 left-3 text-gray-500 text-xl cursor-pointer"
+                    >
+                      <ChevronDown className="rotate-180" />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                      <div>
+                        <label className="font-medium">Position Title</label>
+                        <input
+                          className="mt-1 w-full p-3 rounded-xl border"
+                          value={exp.role ?? ""}
+                          onChange={(e) => updateField(i, "role", e.target.value)}
+                          placeholder="Senior Software Engineer"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="font-medium">Company</label>
+                        <input
+                          className="mt-1 w-full p-3 rounded-xl border"
+                          value={exp.company ?? ""}
+                          onChange={(e) => updateField(i, "company", e.target.value)}
+                          placeholder="Company Name"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="font-medium">Location</label>
+                        <input
+                          className="mt-1 w-full p-3 rounded-xl border"
+                          value={exp.location ?? ""}
+                          onChange={(e) => updateField(i, "location", e.target.value)}
+                          placeholder="City / Country"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="font-medium">Start Year</label>
+                        <input
+                          type="number"
+                          className="mt-1 w-full p-3 rounded-xl border"
+                          value={exp.start ?? ""}
+                          onChange={(e) => updateField(i, "start", e.target.value)}
+                          placeholder="2020"
+                        />
+                      </div>
+
+                      {!exp.current && (
+                        <div>
+                          <label className="font-medium">End Year</label>
+                          <input
+                            type="number"
+                            className="mt-1 w-full p-3 rounded-xl border"
+                            value={exp.end ?? ""}
+                            onChange={(e) => updateField(i, "end", e.target.value)}
+                            placeholder="2023"
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-3 mt-3">
+                      <input
+                        type="checkbox"
+                        checked={exp.current ?? false}
+                        onChange={(e) => updateField(i, "current", e.target.checked)}
+                      />
+                      <span>I currently work here</span>
+                    </div>
+
+                    <div className="mt-4">
+                      <label className="font-medium">Description</label>
+                      <textarea
+                        className="mt-1 w-full p-3 rounded-xl border"
+                        rows={4}
+                        value={exp.desc ?? ""}
+                        onChange={(e) => updateField(i, "desc", e.target.value)}
+                        placeholder="Describe your roles and responsibilities"
+                      />
+                    </div>
+
+                    <div className="mt-4">
+                      <label className="font-medium">Reference (optional)</label>
+                      <textarea
+                        className="mt-1 w-full p-3 rounded-xl border"
+                        rows={2}
+                        value={exp.reference ?? ""}
+                        onChange={(e) => updateField(i, "reference", e.target.value)}
+                        placeholder="Any reference details"
+                      />
+                    </div>
+
+                  </div>
+                )}
+              </div>
+            );
+          })}
+
+          {/* Add Button */}
+          <button
+            onClick={addExperience}
+            className="w-full border-2 border-[#634BC9] text-[#634BC9] py-3 rounded-2xl text-lg font-medium hover:bg-[#634BC9] hover:text-white transition"
+          >
+            + Add Experience
+          </button>
+
+          {/* Footer */}
+          <div className="flex justify-between items-center pt-4 text-sm">
+            <button
+              onClick={onClose}
+              className="px-4 py-2 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 transition"
+            >
+              Cancel
+            </button>
+
+            <div className="flex space-x-2">
+              <button className="px-4 py-2 rounded-md bg-purple-100 text-[#634BC9] hover:bg-purple-200 transition">
+                Save Changes
+              </button>
+
+              <button
+                onClick={onNext}
+                className="px-4 py-2 rounded-md bg-[#634BC9] text-white transition"
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

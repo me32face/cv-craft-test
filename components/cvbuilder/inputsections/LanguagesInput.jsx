@@ -1,11 +1,12 @@
 'use client';
 import React from "react";
+import { Globe, Trash2, Plus, ChevronDown } from "lucide-react";
 
 // Global utility function for rendering language formats
 export const renderLanguage = (lang, index, styles = {}) => {
   const langObj = typeof lang === 'string' ? { name: lang, displayFormat: "simple" } : lang;
   const { name, displayFormat, proficiency, level } = langObj;
-  
+
   return (
     <div key={index} className={styles.container || "mb-2"}>
       <div className={styles.header || "flex justify-between items-center"}>
@@ -26,7 +27,7 @@ export const renderLanguage = (lang, index, styles = {}) => {
 };
 
 const LANGUAGE_OPTIONS = [
-  "English", "Hindi", "Tamil", "Malayalam", "Kannada", 
+  "English", "Hindi", "Tamil", "Malayalam", "Kannada",
   "Arabic", "Telugu", "French", "German", "Spanish", "Chinese"
 ];
 
@@ -53,87 +54,171 @@ export default function LanguagesInput({ languages = [], setLanguages }) {
   };
 
   return (
-    <div className="mb-4">
-      {languages.map((lang, index) => {
-        const langObj = typeof lang === 'string' ? { name: lang, displayFormat: "simple" } : lang;
-        
-        return (
-          <div key={index} className="border p-3 rounded mb-2">
-            <div className="flex gap-2 mb-2">
-              <select
-                value={langObj.name || ""}
-                onChange={(e) => updateLanguage(index, "name", e.target.value)}
-                className="flex-1 border p-2 rounded"
-              >
-                <option value="">Select Language</option>
-                {LANGUAGE_OPTIONS.map(option => (
-                  <option key={option} value={option}>{option}</option>
-                ))}
-              </select>
-              <button
-                onClick={() => removeLanguage(index)}
-                className="px-3 py-2 bg-red-500 text-white rounded"
-              >
-                Delete
-              </button>
-            </div>
+    <div className="max-w-3xl mx-auto ">
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-2">
+          <h2 className="text-2xl font-bold text-[#634BC9]">Languages</h2>
+        </div>
+        <p className="text-gray-600 text-sm ">List languages you speak and your proficiency level</p>
+      </div>
 
-            <div className="mb-2">
-              <label className="text-sm font-medium mb-1 block">Display Format:</label>
-              <select
-                value={langObj.displayFormat || "simple"}
-                onChange={(e) => updateLanguage(index, "displayFormat", e.target.value)}
-                className="w-full border p-2 rounded"
-              >
-                <option value="simple">Default </option>
-                <option value="percentage">Percentage</option>
-                <option value="level">Text Level</option>
-              </select>
-            </div>
-
-            {langObj.displayFormat === "percentage" && (
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm w-12">{langObj.proficiency || 50}%</span>
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    value={langObj.proficiency || 50}
-                    onChange={(e) => updateLanguage(index, "proficiency", parseInt(e.target.value))}
-                    className="flex-1"
-                  />
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
-                  <div
-                    className="bg-blue-600 h-2 rounded-full transition-all"
-                    style={{ width: `${langObj.proficiency || 50}%` }}
-                  ></div>
-                </div>
-              </div>
-            )}
-
-            {langObj.displayFormat === "level" && (
-              <select
-                value={langObj.level || "Intermediate"}
-                onChange={(e) => updateLanguage(index, "level", e.target.value)}
-                className="w-full border p-2 rounded"
-              >
-                {PROFICIENCY_LEVELS.map(level => (
-                  <option key={level} value={level}>{level}</option>
-                ))}
-              </select>
-            )}
+      <div className="space-y-4">
+        {languages.length === 0 && (
+          <div className="  border-b border-gray-200 p-8 text-center">
+            {/* <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Globe className="w-8 h-8 text-blue-600" />
+            </div> */}
+            <p className="text-gray-500 text-sm">No languages added yet. Add your first language below.</p>
           </div>
-        );
-      })}
 
-      <button
-        onClick={addLanguage}
-        className="w-full mt-2 px-3 py-2 bg-blue-600 text-white rounded"
-      >
-        + Add Language
-      </button>
+        )}
+
+        {languages.map((lang, index) => {
+          const langObj = typeof lang === "string" ? { name: lang, displayFormat: "simple" } : lang;
+
+          return (
+            <div
+              key={index}
+              className="overflow-hidden transition-all border-b border-gray-300"
+            >
+              <div className="p-5 flex items-center gap-4 flex-wrap">
+                {/* Language Selector */}
+                <div className="flex-1 min-w-[150px]">
+                  {/* <label className="text-xs font-semibold text-gray-700 mb-1.5 block uppercase tracking-wide">
+                    Language
+                  </label> */}
+                  <div className="relative">
+                    <select
+                      value={langObj.name || ""}
+                      onChange={(e) => updateLanguage(index, "name", e.target.value)}
+                      className="w-full appearance-none bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 pr-10 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    >
+                      <option value="">Select Language</option>
+                      {LANGUAGE_OPTIONS.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
+
+                {/* Display Format */}
+                <div className="flex-1 min-w-[150px]">
+                  {/* <label className="text-xs font-semibold text-gray-700 mb-1.5 block uppercase tracking-wide">
+                    Display Format
+                  </label> */}
+                  <div className="relative">
+                    <select
+                      value={langObj.displayFormat || "simple"}
+                      onChange={(e) => updateLanguage(index, "displayFormat", e.target.value)}
+                      className="w-full appearance-none bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 pr-10 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    >
+                      <option value="simple">Normal</option>
+                      <option value="percentage">Percentage</option>
+                      <option value="level">Levels</option>
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
+
+                {/* Proficiency / Level */}
+                {langObj.displayFormat === "percentage" && (
+                  <div className="flex-1 min-w-[200px]">
+                    {/* <label className="text-xs font-semibold text-gray-700 mb-1.5 block uppercase tracking-wide">
+                      Proficiency (%)
+                    </label> */}
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={langObj.proficiency || 50}
+                      onChange={(e) => updateLanguage(index, "proficiency", parseInt(e.target.value))}
+                      className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                      style={{
+                        background: `linear-gradient(to right, #2563eb 0%, #2563eb ${langObj.proficiency || 50}%, #d1d5db ${langObj.proficiency || 50}%, #d1d5db 100%)`,
+                      }}
+                    />
+                    <span className="w-12 text-right text-sm font-semibold text-gray-700">
+                      {langObj.proficiency || 50}%
+                    </span>
+                  </div>
+                )}
+
+                {langObj.displayFormat === "level" && (
+                  <div className="flex-1 min-w-[150px]">
+                    {/* <label className="text-xs font-semibold text-gray-700 mb-1.5 block uppercase tracking-wide">
+                      Proficiency Level
+                    </label> */}
+                    <div className="relative">
+                      <select
+                        value={langObj.level || "Intermediate"}
+                        onChange={(e) => updateLanguage(index, "level", e.target.value)}
+                        className="w-full appearance-none bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 pr-10 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      >
+                        {PROFICIENCY_LEVELS.map((level) => (
+                          <option key={level} value={level}>
+                            {level}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                    </div>
+                  </div>
+                )}
+
+                {/* Remove Button */}
+                <button
+                  onClick={() => removeLanguage(index)}
+                  className="px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors flex items-center gap-2 font-medium"
+                >
+                  <Trash2 className="w-4 h-7" />
+                </button>
+              </div>
+            </div>
+          );
+        })}
+
+
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={addLanguage}
+            className="px-4 py-2 bg-[#634BC9] text-white hover:bg-[#553fb2] rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 group"
+          >
+            <Plus className="w-5 h-5" />
+            Add New Language
+          </button>
+        </div>
+
+        <div className="flex items-center justify-between pt-4  text-sm">
+
+          {/* Left Buttons */}
+          <div className="flex gap-3 ">
+            <button
+              className="px-2 py-2 rounded-xl border border-gray-300 hover:bg-gray-100 transition"
+            // onClick={onClose}
+            >
+              Cancel
+            </button>
+
+            <button
+              className="px-2 py-2 rounded-xl bg-[#634BC9] text-white hover:bg-[#553fb2] transition"
+            // onClick={onSave}
+            >
+              Save Changes
+            </button>
+          </div>
+
+          {/* Right Button */}
+          <button
+            className="px-2 py-2 rounded-xl bg-[#634BC9] text-white hover:bg-[#553fb2] transition"
+          // onClick={onNext}
+          >
+            Next →
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

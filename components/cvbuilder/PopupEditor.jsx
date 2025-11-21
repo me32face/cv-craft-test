@@ -10,7 +10,7 @@ import ProjectInput from "./inputsections/ProjectInput";
 import SocialLinks from "./inputsections/SocialLinks";
 import SkillsInput from "./inputsections/SkillsInput"
 
-export default function PopupEditor({ visible, section, onClose, data, update, onNext  }) {
+export default function PopupEditor({ visible, section, onClose, data, update, onNext }) {
   if (!visible || !section) return null;
 
   const renderContent = () => {
@@ -25,16 +25,13 @@ export default function PopupEditor({ visible, section, onClose, data, update, o
             setImage={(v) => update("profileImage", v)}
             setShape={(v) => update("imageShape", v)}
             setAlign={(v) => update("imageAlign", v)}
-            onClose={onClose} 
+            onClose={onClose}
             onNext={() => onNext("sociallinks")}
           />
         );
 
-      // case "summary":
-      //   return <SummaryInput summary={data.summary} setSummary={(v) => update("summary", v)} />;
-
       case "skills":
-        return <SkillsInput skills={data.skills} setSkills={(v) => update("skills", v)} />;
+        return <SkillsInput skills={data.skills} setSkills={(v) => update("skills", v)} onClose={onClose} onNext={() => onNext("education")} />;
 
       case "languages":
         return <LanguagesInput languages={data.languages} setLanguages={(v) => update("languages", v)} />;
@@ -42,7 +39,12 @@ export default function PopupEditor({ visible, section, onClose, data, update, o
       case "experience":
         return (
           <div>
-            <label className="flex items-center gap-2 mb-4">
+            <ExperienceInput
+              experiences={data.experiences}
+              setExperiences={(v) => update("experiences", v)}
+              onClose={onClose} onNext={() => onNext("languages")}
+            />
+            <label className="flex items-center gap-2 mt-4">
               <input
                 type="checkbox"
                 checked={data.visibleSections?.experience !== false}
@@ -55,18 +57,18 @@ export default function PopupEditor({ visible, section, onClose, data, update, o
               />
               <span className="text-sm font-medium">Show Experience</span>
             </label>
-
-            <ExperienceInput
-              experiences={data.experiences}
-              setExperiences={(v) => update("experiences", v)}
-            />
           </div>
         );
 
       case "education":
         return (
           <div>
-            <label className="flex items-center gap-2 mb-4">
+            <EducationInput
+              education={data.education}
+              setEducation={(v) => update("education", v)}
+              onClose={onClose} onNext={() => onNext("experience")}
+            />
+            <label className="flex items-center gap-2 mt-4">
               <input
                 type="checkbox"
                 checked={data.visibleSections?.education !== false}
@@ -79,11 +81,6 @@ export default function PopupEditor({ visible, section, onClose, data, update, o
               />
               <span className="text-sm font-medium">Show Education</span>
             </label>
-
-            <EducationInput
-              education={data.education}
-              setEducation={(v) => update("education", v)}
-            />
           </div>
         );
 
@@ -178,7 +175,7 @@ export default function PopupEditor({ visible, section, onClose, data, update, o
       >
         {/* CONTENT */}
         <div className="p-8 overflow-y-auto">
-            {renderContent(onClose)}
+          {renderContent(onClose)}
         </div>
       </div>
     </div>

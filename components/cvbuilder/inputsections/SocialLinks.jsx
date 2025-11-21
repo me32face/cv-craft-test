@@ -35,7 +35,7 @@ export default function SocialLinks({ data, setSocialLinks, onClose, onNext }) {
 
     setSocialLinks([...links, formatted]);
     setNewLink("");
-    setMessage("✅ Link added successfully!");
+    setMessage("Link added successfully!");
     setTimeout(() => setMessage(""), 2000);
   };
 
@@ -58,10 +58,10 @@ export default function SocialLinks({ data, setSocialLinks, onClose, onNext }) {
 
   return (
     <div className=" mx-auto bg-white  space-y-5 ">
-      
+
       {/* Header */}
       <div>
-        <h2 className="text-xl font-semibold text-purple-700">Social Links</h2>
+        <h2 className="text-xl font-semibold text-[#634BC9]">Social Links</h2>
         <p className="text-gray-500 text-sm">
           Add links to your professional profiles and portfolio.
         </p>
@@ -115,17 +115,16 @@ export default function SocialLinks({ data, setSocialLinks, onClose, onNext }) {
           <button
             type="button"
             onClick={handleAdd}
-            className="px-8 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition"
+            className="px-8 py-2 bg-[#634BC9] text-white hover:bg-[#553fb2] transition rounded-xl"
           >
-           +Add
+            +Add
           </button>
         </div>
 
         {message && (
           <p
-            className={`text-xs ${
-              message.startsWith("✅") ? "text-green-600" : "text-red-500"
-            }`}
+            className={`text-xs ${message.startsWith("✅") ? "text-green-600" : "text-red-500"
+              }`}
           >
             {message}
           </p>
@@ -133,27 +132,22 @@ export default function SocialLinks({ data, setSocialLinks, onClose, onNext }) {
       </div>
 
       {/* Footer Buttons */}
-      <div className="flex justify-between items-center pt-4 text-sm">
-        <button
-          onClick={onClose}
-          className="px-4 py-2 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 transition"
-        >
-          Cancel
-        </button>
-
-        <div className="flex space-x-2">
-          <button className="px-4 py-2 rounded-md bg-purple-100 text-purple-700 hover:bg-purple-200 transition">
+      <div className="flex items-center justify-between pt-4 text-sm">
+        <div className="flex gap-3">
+          <button onClick={onClose} className="px-2 py-2 rounded-xl border border-gray-300 hover:bg-gray-100 transition">
+            Cancel
+          </button>
+          <button className="px-2 py-2 rounded-xl bg-[#634BC9] text-white hover:bg-[#553fb2] transition">
             Save Changes
           </button>
-
-          <button
-            onClick={onNext}
-            className="px-4 py-2 rounded-md bg-purple-600 text-white hover:bg-purple-700 transition flex items-center gap-1"
-          >
-            <span>Next →</span>
-            
-          </button>
         </div>
+
+        <button
+          onClick={onNext}
+          className="px-2 py-2 rounded-xl bg-[#634BC9] text-white hover:bg-[#553fb2] transition"
+        >
+          Next →
+        </button>
       </div>
     </div>
   );

@@ -1,9 +1,11 @@
 'use client';
+
 import React, { useState, useCallback } from "react";
 import Cropper from "react-easy-crop";
+import { Plus } from "lucide-react"; // or wherever your icon comes from
 
 export default function ImageUploader({ image, setImage, setShape, setAlign, onClose, onNext }) {
-  const [tempImage, setTempImage] = useState(null); 
+  const [tempImage, setTempImage] = useState(null);
   const [cropping, setCropping] = useState(false);
 
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -20,7 +22,7 @@ export default function ImageUploader({ image, setImage, setShape, setAlign, onC
 
     const reader = new FileReader();
     reader.onload = () => {
-      setTempImage(reader.result); // show for cropping
+      setTempImage(reader.result);
       setCropping(true);
     };
     reader.readAsDataURL(file);
@@ -37,7 +39,6 @@ export default function ImageUploader({ image, setImage, setShape, setAlign, onC
 
     const imageObj = new Image();
     imageObj.src = tempImage;
-
     await new Promise((res) => (imageObj.onload = res));
 
     const canvas = document.createElement("canvas");
@@ -45,7 +46,6 @@ export default function ImageUploader({ image, setImage, setShape, setAlign, onC
     canvas.height = croppedAreaPixels.height;
 
     const ctx = canvas.getContext("2d");
-
     ctx.drawImage(
       imageObj,
       croppedAreaPixels.x,
@@ -59,19 +59,16 @@ export default function ImageUploader({ image, setImage, setShape, setAlign, onC
     );
 
     const croppedBase64 = canvas.toDataURL("image/jpeg");
-
     setImage(croppedBase64);
     setTempImage(null);
     setCropping(false);
   }, [tempImage, croppedAreaPixels, setImage]);
 
-  // Shape change
   const handleShapeChange = (shape) => {
     setSelectedShape(shape);
     setShape(shape);
   };
 
-  // Alignment
   const handleAlignChange = (align) => {
     setSelectedAlign(align);
     setAlign(align);
@@ -79,13 +76,12 @@ export default function ImageUploader({ image, setImage, setShape, setAlign, onC
 
   return (
     <div className="max-w-lg mx-auto">
-      
-      {/* CROPPING UI */}
+
+      {/* CROPPING MODAL */}
       {cropping && tempImage && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
           <div className="bg-white p-5 rounded-xl w-[90%] max-w-xl">
             <h2 className="text-xl font-bold mb-3 text-indigo-700">Crop Your Photo</h2>
-
             <div className="relative w-full h-72 bg-gray-200 rounded-xl overflow-hidden">
               <Cropper
                 image={tempImage}
@@ -98,7 +94,6 @@ export default function ImageUploader({ image, setImage, setShape, setAlign, onC
               />
             </div>
 
-            {/* Zoom slider */}
             <div className="mt-4">
               <input
                 type="range"
@@ -112,17 +107,10 @@ export default function ImageUploader({ image, setImage, setShape, setAlign, onC
             </div>
 
             <div className="flex justify-between mt-5">
-              <button
-                onClick={() => setCropping(false)}
-                className="px-4 py-2 bg-gray-300 rounded-lg"
-              >
+              <button onClick={() => setCropping(false)} className="px-4 py-2 bg-gray-300 rounded-lg">
                 Cancel
               </button>
-
-              <button
-                onClick={getCroppedImage}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-lg"
-              >
+              <button onClick={getCroppedImage} className="px-4 py-2 bg-indigo-600 text-white rounded-lg">
                 Apply Crop
               </button>
             </div>
@@ -132,12 +120,10 @@ export default function ImageUploader({ image, setImage, setShape, setAlign, onC
 
       {/* MAIN UI */}
       <div className={`${cropping ? "opacity-20 pointer-events-none" : "opacity-100"}`}>
-        
-        {/* Header */}
-        <h2 className="text-2xl font-bold text-indigo-700 mb-1">Upload Your Photo</h2>
+        <h2 className="text-2xl font-bold text-[#634BC9] mb-1">Upload Your Photo</h2>
         <p className="text-sm text-gray-500 mb-4">Preferred size: 200×200, Max 1MB.</p>
 
-        {/* Upload */}
+        {/* Upload Buttons */}
         <div className="flex gap-3">
           <input
             type="file"
@@ -146,12 +132,12 @@ export default function ImageUploader({ image, setImage, setShape, setAlign, onC
             className="hidden"
             onChange={handleImageUpload}
           />
-
           <label
             htmlFor="photo-upload"
-            className="px-4 py-1 bg-indigo-600 text-white rounded-lg cursor-pointer"
+            className="px-4 py-1 bg-[#634BC9] text-white rounded-lg cursor-pointer flex items-center gap-1"
           >
-            Upload +
+            <Plus className="w-4 h-4" />
+            Upload
           </label>
 
           {image && (
@@ -164,47 +150,41 @@ export default function ImageUploader({ image, setImage, setShape, setAlign, onC
           )}
         </div>
 
-        {/* Preview */}
+        {/* Image Preview */}
         <div className="flex justify-center py-4">
           {image ? (
             <div
-              className="relative w-48 h-48 overflow-hidden border-4 border-indigo-200 shadow-md"
+              className="relative w-48 h-48 overflow-hidden border-4 border-indigo-200 shadow-md flex"
               style={{
                 borderRadius:
                   selectedShape === "circle"
                     ? "50%"
                     : selectedShape === "rounded"
-                    ? "1.5rem"
-                    : "0",
+                      ? "1.5rem"
+                      : "0",
                 justifyContent:
                   selectedAlign === "left"
                     ? "flex-start"
                     : selectedAlign === "right"
-                    ? "flex-end"
-                    : "center",
-                display: "flex",
+                      ? "flex-end"
+                      : "center",
               }}
             >
               <img src={image} className="object-cover w-full h-full" />
             </div>
           ) : (
-            <div className="w-48 h-48 rounded-full bg-indigo-600"></div>
+            <div className="w-48 h-48 rounded-full bg-[#634BC9]"></div>
           )}
         </div>
 
-        {/* Shape & Align */}
+        {/* Shape & Alignment */}
         {image && (
           <div className="flex justify-center gap-2 py-4 flex-wrap">
-            {/* Shape */}
             {["circle", "rounded", "square"].map((s) => (
               <button
                 key={s}
                 onClick={() => handleShapeChange(s)}
-                className={`px-3 py-1.5 text-sm rounded-lg ${
-                  selectedShape === s
-                    ? "bg-indigo-600 text-white"
-                    : "bg-gray-200"
-                }`}
+                className={`px-3 py-1.5 text-sm rounded-lg ${selectedShape === s ? "bg-[#634BC9] text-white" : "bg-gray-200"}`}
               >
                 {s}
               </button>
@@ -212,16 +192,11 @@ export default function ImageUploader({ image, setImage, setShape, setAlign, onC
 
             <div className="w-px bg-gray-300 mx-1" />
 
-            {/* Align */}
             {["left", "center", "right"].map((a) => (
               <button
                 key={a}
                 onClick={() => handleAlignChange(a)}
-                className={`px-3 py-1.5 text-sm rounded-lg ${
-                  selectedAlign === a
-                    ? "bg-indigo-600 text-white"
-                    : "bg-gray-200"
-                }`}
+                className={`px-3 py-1.5 text-sm rounded-lg ${selectedAlign === a ? "bg-[#634BC9] text-white" : "bg-gray-200"}`}
               >
                 {a}
               </button>
@@ -230,16 +205,20 @@ export default function ImageUploader({ image, setImage, setShape, setAlign, onC
         )}
 
         {/* Footer Buttons */}
-        <div className="flex justify-between pt-4 text-sm">
-          <button onClick={onClose} className="px-4 py-1 bg-gray-200 rounded-lg">
-            Cancel
-          </button>
+        <div className="flex items-center justify-between pt-4 text-sm">
+          <div className="flex gap-3">
+            <button onClick={onClose} className="px-2 py-2 rounded-xl border border-gray-300 hover:bg-gray-100 transition">
+              Cancel
+            </button>
+            <button className="px-2 py-2 rounded-xl bg-[#634BC9] text-white hover:bg-[#553fb2] transition">
+              Save Changes
+            </button>
+          </div>
 
-          <button onClick={onClose} className="px-4 py-1 bg-indigo-200 rounded-lg">
-            Save Changes
-          </button>
-
-          <button onClick={onNext} className="px-4 py-1 bg-indigo-600 text-white rounded-lg">
+          <button
+            onClick={onNext}
+            className="px-2 py-2 rounded-xl bg-[#634BC9] text-white hover:bg-[#553fb2] transition"
+          >
             Next →
           </button>
         </div>

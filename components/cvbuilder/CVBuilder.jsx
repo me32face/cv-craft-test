@@ -334,6 +334,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
                       <Expand size={14} className="sm:w-4 sm:h-4 text-[#7B61FF]" />
                     </button>
                   </div>
+                  <div className="h-6 sm:h-8 bg-gradient-to-r from-[#4B74F4] to-[#7642EE] rounded-t-xl sm:rounded-t-2xl absolute left-0 right-0 -bottom-3 sm:-bottom-4 z-20"></div>
                 </div>
 
                 <div className="w-full overflow-auto bg-gray-50 p-5">
