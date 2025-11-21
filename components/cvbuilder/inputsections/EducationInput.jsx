@@ -112,7 +112,7 @@ export default function EducationInput({
                   >
                     <div>
                       <p className="font-semibold">
-                        {edu.degree || "Untitled Degree"}
+                        {edu.degree || "Course Name"}
                       </p>
                       <p className="text-sm text-gray-600">
                         {edu.school || "Institution Name"}
@@ -244,7 +244,7 @@ export default function EducationInput({
           {/* ADD BUTTON */}
           <button
             onClick={addEducation}
-            className="w-full border-2 border-[#634BC9] text-[#634BC9] py-3 rounded-2xl text-lg font-medium hover:bg-[#634BC9] hover:text-white transition"
+            className="w-full border-2 border-[#634BC9] text-[#634BC9] py-2 rounded-2xl text-md font-medium hover:bg-[#634BC9] hover:text-white transition"
           >
             + Add Education
           </button>

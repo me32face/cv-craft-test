@@ -30,35 +30,57 @@ export default function PopupEditor({ visible, section, onClose, data, update, o
           />
         );
 
-      case "skills":
-        return <SkillsInput skills={data.skills} setSkills={(v) => update("skills", v)} onClose={onClose} onNext={() => onNext("education")} />;
-
-      case "languages":
-        return <LanguagesInput languages={data.languages} setLanguages={(v) => update("languages", v)} />;
-
-      case "experience":
+      case "sociallinks":
         return (
           <div>
-            <ExperienceInput
-              experiences={data.experiences}
-              setExperiences={(v) => update("experiences", v)}
-              onClose={onClose} onNext={() => onNext("languages")}
+            <SocialLinks
+              data={data.socialLinks}
+              setSocialLinks={(v) => update("socialLinks", v)}
+              onClose={onClose} onNext={() => onNext("skills")}
             />
             <label className="flex items-center gap-2 mt-4">
               <input
                 type="checkbox"
-                checked={data.visibleSections?.experience !== false}
+                checked={data.visibleSections?.sociallinks !== false}
                 onChange={(e) =>
                   update("visibleSections", {
                     ...data.visibleSections,
-                    experience: e.target.checked,
+                    sociallinks: e.target.checked,
                   })
                 }
               />
-              <span className="text-sm font-medium">Show Experience</span>
+              <span className="text-sm font-medium">Show Social Links</span>
             </label>
           </div>
         );
+
+      case "sociallinks":
+        return (
+          <div>
+            <SocialLinks
+              data={data.socialLinks}
+              setSocialLinks={(v) => update("socialLinks", v)}
+              onClose={onClose} onNext={() => onNext("skills")}
+            />
+            <label className="flex items-center gap-2 mt-4">
+              <input
+                type="checkbox"
+                checked={data.visibleSections?.socialLinks !== false}
+                onChange={(e) =>
+                  update("visibleSections", {
+                    ...data.visibleSections,
+                    socialLinks: e.target.checked,
+                  })
+                }
+              />
+              <span className="text-sm font-medium">Show Social Links</span>
+            </label>
+          </div>
+        );
+
+      case "skills":
+        return <SkillsInput skills={data.skills} setSkills={(v) => update("skills", v)} onClose={onClose} onNext={() => onNext("education")} />;
+
 
       case "education":
         return (
@@ -84,10 +106,43 @@ export default function PopupEditor({ visible, section, onClose, data, update, o
           </div>
         );
 
+      case "experience":
+        return (
+          <div>
+            <ExperienceInput
+              experiences={data.experiences}
+              setExperiences={(v) => update("experiences", v)}
+              onClose={onClose} onNext={() => onNext("languages")}
+            />
+            <label className="flex items-center gap-2 mt-4">
+              <input
+                type="checkbox"
+                checked={data.visibleSections?.experience !== false}
+                onChange={(e) =>
+                  update("visibleSections", {
+                    ...data.visibleSections,
+                    experience: e.target.checked,
+                  })
+                }
+              />
+              <span className="text-sm font-medium">Show Experience</span>
+            </label>
+          </div>
+        );
+
+
+      case "languages":
+        return <LanguagesInput languages={data.languages} setLanguages={(v) => update("languages", v)} onClose={onClose} onNext={() => onNext("certificates")} />;
+
       case "certificates":
         return (
           <div>
-            <label className="flex items-center gap-2 mb-4">
+            <CertificatesInput
+              certificates={data.certificates}
+              setCertificates={(v) => update("certificates", v)}
+               onClose={onClose} onNext={() => onNext("projects")}
+            />
+            <label className="flex items-center gap-2 mt-4">
               <input
                 type="checkbox"
                 checked={data.visibleSections?.certificates !== false}
@@ -100,19 +155,18 @@ export default function PopupEditor({ visible, section, onClose, data, update, o
               />
               <span className="text-sm font-medium">Show Certificates</span>
             </label>
-
-            <CertificatesInput
-              certificates={data.certificates}
-              setCertificates={(v) => update("certificates", v)}
-            />
           </div>
         );
-
 
       case "projects":
         return (
           <div>
-            <label className="flex items-center gap-2 mb-4">
+            <ProjectInput
+              projects={data.projects}
+              setProjects={(v) => update("projects", v)}
+              onClose={onClose}
+            />
+            <label className="flex items-center gap-2 mt-4">
               <input
                 type="checkbox"
                 checked={data.visibleSections?.projects !== false}
@@ -125,38 +179,11 @@ export default function PopupEditor({ visible, section, onClose, data, update, o
               />
               <span className="text-sm font-medium">Show Projects</span>
             </label>
-
-            <ProjectInput
-              projects={data.projects}
-              setProjects={(v) => update("projects", v)}
-            />
           </div>
         );
 
 
-      case "sociallinks":
-        return (
-          <div>
-            <SocialLinks
-              data={data.socialLinks}
-              setSocialLinks={(v) => update("socialLinks", v)}
-              onClose={onClose} onNext={() => onNext("skills")}
-            />
-            <label className="flex items-center gap-2 mt-4">
-              <input
-                type="checkbox"
-                checked={data.visibleSections?.socialLinks !== false}
-                onChange={(e) =>
-                  update("visibleSections", {
-                    ...data.visibleSections,
-                    socialLinks: e.target.checked,
-                  })
-                }
-              />
-              <span className="text-sm font-medium">Show Social Links</span>
-            </label>
-          </div>
-        );
+
 
 
       default:

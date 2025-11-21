@@ -1,8 +1,9 @@
 'use client';
-import React, { useState ,useEffect, useMemo} from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { templates, templateInputs } from "../templates";
-import { User, Camera, Link2, Code, GraduationCap, Briefcase, Globe, Award, Printer, Share2, Download, ZoomIn, ZoomOut, Expand, Sparkles, ChevronLeft, Menu, FolderCode } from "lucide-react";
+import { User, Camera, Link2, Code, GraduationCap, Briefcase, Globe, Award, Printer, Share2, Download, ZoomIn, ZoomOut, Expand, Sparkles, ChevronLeft, Menu, FolderCode, X, Home } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import PopupEditor from "./PopupEditor"; // reusable popup
@@ -15,6 +16,8 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
   const [scale, setScale] = useState(1);
   const [collapsed, setCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const router = useRouter();
+
 
   const [totalPages, setTotalPages] = useState(1);
   const update = (key, value) => setData(prev => ({ ...prev, [key]: value }));
@@ -148,7 +151,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
       experience: true,
       education: true,
       certificates: true,
-      socialLinks:true
+      socialLinks: true
     },
 
     languages: [
@@ -191,7 +194,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
       });
     }, 100);
   }, [data]);
-  
+
 
   const allMenuItems = [
     { name: "Personal Details", key: "personal", icon: User, inputKey: "name" },
@@ -217,8 +220,13 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-lg border border-indigo-100"
       >
-        <Menu size={24} className="text-indigo-600" />
+        {mobileMenuOpen ? (
+          <X size={24} className="text-indigo-600" />
+        ) : (
+          <Menu size={24} className="text-indigo-600" />
+        )}
       </button>
+
 
       {/* SIDEBAR */}
       <aside
@@ -238,13 +246,30 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
           <button
             onClick={() => setCollapsed(prev => !prev)}
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            className="ml-auto inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 text-indigo-600 rounded-full hover:bg-[#F2F0FF] transition"
+            className={`
+            ${collapsed ? "mx-auto" : "ml-auto"} 
+            inline-flex items-center justify-center 
+            w-7 h-7 sm:w-8 sm:h-8 
+            text-indigo-600 rounded-full 
+            hover:bg-[#F2F0FF] transition
+          `}
           >
-            <ChevronLeft size={18} className={`${collapsed ? 'rotate-180' : ''} transition-transform`} />
+            <ChevronLeft
+              size={22}
+              className={`${collapsed ? "rotate-180" : ""} transition-transform`}
+            />
           </button>
+
         </div>
 
-        <nav className={`w-full px-3 sm:px-4 lg:px-10 py-4 sm:py-6 lg:py-8 flex-1 overflow-auto transition-all duration-300`}>
+        <nav
+          className={`
+          w-full 
+          ${collapsed ? "px-6" : "px-3 sm:px-4 lg:px-8"} 
+          py-4 sm:py-6 lg:py-6
+          flex-1 overflow-auto transition-all duration-300
+        `}
+        >
           <div className="flex flex-col gap-2 sm:gap-3">
             {menuItems.map(item => (
               <button
@@ -252,21 +277,33 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
                 onClick={() => handleMenuItemClick(item.key)}
                 title={item.name}
                 className={`
-                  flex items-center 
-                  ${collapsed ? "justify-center w-10 h-10 rounded-full"
+          flex items-center 
+          ${collapsed ? "justify-center w-10 h-10 rounded-full"
                     : "gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-full "}
-                  transition-all text-xs sm:text-sm font-medium       
-                  ${selectedMenu === item.key
+          transition-all text-xs sm:text-sm font-medium       
+          ${selectedMenu === item.key
                     ? "bg-gradient-to-r from-[#4B74F4] to-[#7642EE] text-white shadow-md scale-[1.02]"
                     : "bg-white text-indigo-700 border border-indigo-200 hover:bg-indigo-50"
                   }
-                `}
+        `}
               >
                 <item.icon size={18} className={`${collapsed ? "mx-auto" : ""}`} />
                 {!collapsed && <span className="truncate">{item.name}</span>}
               </button>
             ))}
           </div>
+
+          {!collapsed && (
+            <div className="mt-6 p-4 bg-[#F4EEFF] rounded-xl">
+              <h3 className="text-sm font-semibold text-[#6C4CCF]">Quick Tips</h3>
+              <ul className="mt-2 text-xs text-[#6C4CCF] leading-relaxed space-y-1">
+                <li>• Click any section to start editing</li>
+                <li>• Changes save automatically</li>
+                <li>• Download as PDF when ready</li>
+                <li>• Try different templates</li>
+              </ul>
+            </div>
+          )}
         </nav>
       </aside>
 
@@ -281,22 +318,46 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
       {/* TEMPLATE PREVIEW */}
       <div className="flex-1 flex flex-col overflow-hidden pt-16 lg:pt-0">
         {/* Topbar */}
-        <div className="flex items-center justify-end gap-2 sm:gap-4 px-4 sm:px-8 lg:px-20 pt-4 sm:pt-6 lg:pt-10 bg-transparent">
-          <button className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm">
-            <Printer size={14} className="sm:w-3 sm:h-3" /> <span className="hidden sm:inline">Print</span>
-          </button>
-          <button className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm">
-            <Share2 size={14} className="sm:w-3 sm:h-3" /> <span className="hidden sm:inline">Share</span>
-          </button>
-          <button
-            onClick={handleDownload}
-            className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm"
-          >
-            <Download size={14} className="sm:w-3 sm:h-3" />
-            <span className="hidden md:inline">Export PDF</span>
-            <span className="md:hidden">PDF</span>
-          </button>
+        <div className="flex items-center justify-between px-4 sm:px-8 lg:px-20 pt-4 sm:pt-6 lg:pt-8 bg-transparent">
+
+          {/* LEFT → HOME BUTTON */}
+          <div>
+            <button
+              onClick={() => router.push('/')}
+              className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-2 py-1.5 sm:py-2 
+              rounded-lg bg-white/80 text-[#634BC9] hover:bg-[#634BC9] hover:text-white transition text-xs sm:text-sm"
+            >
+              <Home
+                className="w-4 h-4 sm:w-6 sm:h-6 "
+              />
+            </button>
+          </div>
+
+
+          {/* RIGHT → OTHER ACTION BUTTONS */}
+          <div className="flex items-center justify-end gap-2 sm:gap-4">
+            <button className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm">
+              <Printer size={14} className="sm:w-3 sm:h-3" />
+              <span className="hidden sm:inline">Print</span>
+            </button>
+
+            <button className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm">
+              <Share2 size={14} className="sm:w-3 sm:h-3" />
+              <span className="hidden sm:inline">Share</span>
+            </button>
+
+            <button
+              onClick={handleDownload}
+              className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm"
+            >
+              <Download size={14} className="sm:w-3 sm:h-3" />
+              <span className="hidden md:inline">Export PDF</span>
+              <span className="md:hidden">PDF</span>
+            </button>
+          </div>
+
         </div>
+
 
         {/* Preview area */}
         <div className="flex-1 overflow-auto px-3 sm:px-6 lg:px-20 py-3 sm:py-6 lg:py-8">
@@ -377,7 +438,10 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
         onClose={() => setOpenSection(null)}
         data={data}
         update={update}
-        onNext={(nextSection) => setOpenSection(nextSection)}
+        onNext={(nextSection) => {
+          setOpenSection(nextSection);
+          setSelectedMenu(nextSection); 
+        }}
       />
 
       {/* Hidden PDF template */}

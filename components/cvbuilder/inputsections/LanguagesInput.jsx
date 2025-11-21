@@ -35,7 +35,7 @@ const PROFICIENCY_LEVELS = [
   "Beginner", "Intermediate", "Advanced", "Fluent", "Native"
 ];
 
-export default function LanguagesInput({ languages = [], setLanguages }) {
+export default function LanguagesInput({ languages = [], setLanguages, onClose, onNext }) {
   const addLanguage = () => {
     setLanguages([...languages, { name: "", displayFormat: "simple" }]);
   };
@@ -197,7 +197,7 @@ export default function LanguagesInput({ languages = [], setLanguages }) {
           <div className="flex gap-3 ">
             <button
               className="px-2 py-2 rounded-xl border border-gray-300 hover:bg-gray-100 transition"
-            // onClick={onClose}
+            onClick={onClose}
             >
               Cancel
             </button>
@@ -213,7 +213,7 @@ export default function LanguagesInput({ languages = [], setLanguages }) {
           {/* Right Button */}
           <button
             className="px-2 py-2 rounded-xl bg-[#634BC9] text-white hover:bg-[#553fb2] transition"
-          // onClick={onNext}
+          onClick={onNext}
           >
             Next →
           </button>
