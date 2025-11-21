@@ -14,6 +14,7 @@ export default function Template30({ data, onClickSection }) {
   const awards = toArray(data?.awards);
   const references = toArray(data?.references);
   const projects = toArray(data?.projects);
+  const socialLinks = toArray(data?.socialLinks);
 
   return (
     <div id="pdf-template" className="w-[794px] min-h-[1123px] bg-white flex pb-8" style={{ fontFamily: 'Poppins, sans-serif' }}>
@@ -42,9 +43,17 @@ export default function Template30({ data, onClickSection }) {
           <p className="text-sm mt-1">📞 {data?.phone || "123-456-7890"}</p>
           <p className="text-sm mt-1">📧 {data?.email || "hello@email.com"}</p>
           <p className="text-sm mt-1">📍 {data?.address || "123 Anywhere St., Any City"}</p>
-          {data?.linkedin && (<p className="text-sm mt-1">🔗 {data?.linkedin}</p>)}
-          {data?.github && (<p className="text-sm mt-1">🧑‍💻 {data?.github || ""}</p>)}
-          {data?.portfolio && (<p className="text-sm mt-1">💻 {data?.portfolio || ""}</p>)}
+          {data?.visibleSections?.socialLinks !== false && (
+            <>
+              {socialLinks.length > 0 && (
+                <div className="">
+                  {socialLinks.map((link, i) => (
+                    <p key={i} className="text-sm break-all">{link}</p>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
         </div>
 
         {/* Expertise/Skills */}
@@ -113,7 +122,7 @@ export default function Template30({ data, onClickSection }) {
 
         {/* Summary */}
         {data?.visibleSections?.summary !== false && (
-          <div className="cv-item mb-4">
+          <div className=" mb-4">
             <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("summary")}>
              SUMMARY
             </h2>
@@ -128,7 +137,7 @@ export default function Template30({ data, onClickSection }) {
               PROJECTS
             </h2>
         {projects.map((project, i) => (
-          <div key={i} className="cv-item mb-3">
+          <div key={i} className=" mb-3">
             <div className="flex justify-between items-start">
               <div>
                 <p className="font-semibold text-gray-800 !text-sm">{project.name}</p>
@@ -163,7 +172,7 @@ export default function Template30({ data, onClickSection }) {
           { role: "Product Design Manager", company: "Ingoude Company", year: "2019-2020", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
           { role: "Product Design Manager", company: "Timmerman Industries", year: "2017-2019", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." }
         ]).map((exp, i) => (
-          <div key={i} className="cv-item mb-3">
+          <div key={i} className=" mb-3">
             <div className="flex justify-between items-start">
               <div>
                 <p className="font-semibold text-gray-800 !text-sm">{exp.role}</p>
@@ -185,7 +194,7 @@ export default function Template30({ data, onClickSection }) {
 
         {/* Education */}
         {data?.visibleSections?.education !== false && (
-          <>
+          <div className="">
             <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
               EDUCATION
             </h2>
@@ -194,7 +203,7 @@ export default function Template30({ data, onClickSection }) {
           { course: "Bachelor of Business Management", school: "Wardiere University", year: "2016-2020" },
           { course: "Bachelor of Business Management", school: "Wardiere University", year: "2012-2016" }
         ]).map((edu, i) => (
-          <div key={i} className="cv-item mb-3">
+          <div key={i} className=" mb-3">
             <div className="flex justify-between items-start">
               <div>
                 <p className="font-semibold !text-sm text-gray-700">{edu.course}</p>
@@ -204,12 +213,12 @@ export default function Template30({ data, onClickSection }) {
             </div>
           </div>
         ))}
-          </>
+          </div>
         )}
 
         {/* Certifications */}
         {data?.visibleSections?.certificates !== false && (
-          <>
+          <div className="">
             <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("certificates")}>
               CERTIFICATIONS
             </h2>
@@ -217,7 +226,7 @@ export default function Template30({ data, onClickSection }) {
           { name: "Project Management Professional (PMP)", issuer: "PMI", year: "2023" },
           { name: "Digital Marketing Certification", issuer: "Google", year: "2022" }
         ]).map((cert, i) => (
-          <div key={i} className="cv-item mb-3">
+          <div key={i} className=" mb-3">
             <div className="flex justify-between items-start">
               <div>
                 <p className="font-semibold !text-sm text-gray-700">{cert.name}</p>
@@ -227,7 +236,7 @@ export default function Template30({ data, onClickSection }) {
             </div>
           </div>
         ))}
-          </>
+          </div>
         )}
 
         {/* References

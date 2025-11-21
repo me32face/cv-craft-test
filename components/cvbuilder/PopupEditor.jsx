@@ -145,11 +145,11 @@ export default function PopupEditor({ visible, section, onClose, data, update, o
             <label className="flex items-center gap-2 mt-4">
               <input
                 type="checkbox"
-                checked={data.visibleSections?.sociallinks !== false}
+                checked={data.visibleSections?.socialLinks !== false}
                 onChange={(e) =>
                   update("visibleSections", {
                     ...data.visibleSections,
-                    sociallinks: e.target.checked,
+                    socialLinks: e.target.checked,
                   })
                 }
               />

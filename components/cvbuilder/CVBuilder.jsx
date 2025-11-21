@@ -136,12 +136,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
     phone: "+91 987654321",
     email: "john@example.com",
     address: "New Delhi, India",
-    socialLinks: {
-      linkedin: "linkedin.com/in/johndoe",
-      github: "github.com/johndoe",
-      portfolio: "http://johndoe.com",
-      twitter: "",
-    },
+    socialLinks: [],
     profileImage: "",
     imageShape: "circle",
     imageAlign: "center",
@@ -152,7 +147,8 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
       languages: true,
       experience: true,
       education: true,
-      certificates: true
+      certificates: true,
+      socialLinks:true
     },
 
     languages: [
