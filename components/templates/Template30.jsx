@@ -6,6 +6,12 @@ export default function Template30({ data, onClickSection }) {
   // Safety conversion
   const toArray = (value) => (!value ? [] : Array.isArray(value) ? value : [value]);
 
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  };
+
   const experiences = toArray(data?.experiences);
   const summary = toArray(data?.summary);
   const education = toArray(data?.education);
@@ -48,7 +54,7 @@ export default function Template30({ data, onClickSection }) {
               {socialLinks.length > 0 && (
                 <div className="">
                   {socialLinks.map((link, i) => (
-                    <p key={i} className="text-sm break-all">{link}</p>
+                    <p key={i} className="text-sm break-all">🔗 {link}</p>
                   ))}
                 </div>
               )}
@@ -82,10 +88,10 @@ export default function Template30({ data, onClickSection }) {
               );
             }
             
-            if (s.category && s.items) {
+            if (s.category && s.skills) {
               return (
                 <p key={i} className="text-sm mb-1">
-                  <span className="font-medium">{s.category}:</span> {s.items.filter(item => item && item.trim()).join(", ")}
+                  <span className="font-medium">{s.category}:</span> {s.skills.filter(item => item && item.trim()).join(", ")}
                 </p>
               );
             }
@@ -198,19 +204,21 @@ export default function Template30({ data, onClickSection }) {
             <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
               EDUCATION
             </h2>
-        {(education.length ? education : [
-          { course: "Bachelor of Business Management", school: "Wardiere University", year: "2020-2023" },
-          { course: "Bachelor of Business Management", school: "Wardiere University", year: "2016-2020" },
-          { course: "Bachelor of Business Management", school: "Wardiere University", year: "2012-2016" }
-        ]).map((edu, i) => (
+        {education.map((edu, i) => (
           <div key={i} className=" mb-3">
             <div className="flex justify-between items-start">
               <div>
-                <p className="font-semibold !text-sm text-gray-700">{edu.course}</p>
+                <p className="font-semibold !text-sm text-gray-700">{edu.degree}</p>
                 <p className="text-sm opacity-80">{edu.school}</p>
+                {edu.field && <p className="text-xs opacity-70">{edu.field}</p>}
               </div>
-              <p className="text-xs opacity-60">{edu.year}</p>
+              <p className="text-xs opacity-60">
+                {edu.start && formatDate(edu.start)}
+                {edu.start && (edu.end || edu.current) && " - "}
+                {edu.current ? "Present" : edu.end && formatDate(edu.end)}
+              </p>
             </div>
+            {edu.description && <p className="text-sm mt-1 text-gray-700 text-justify">{edu.description}</p>}
           </div>
         ))}
           </div>

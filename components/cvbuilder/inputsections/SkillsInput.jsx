@@ -107,10 +107,20 @@ export default function SkillsInput({ skills = [], setSkills, onClose, onNext })
     if (format === "percentage") {
       updated = [...localSkills, { name: newSkillText, proficiency: 60 }];
     } else if (format === "category") {
-      updated = [
-        ...localSkills,
-        { category: newSkillText, skills: ["New Skill"], __collapsed: false },
-      ];
+      // Parse "Frontend:react,angular" format
+      if (newSkillText.includes(":")) {
+        const [category, skillsStr] = newSkillText.split(":");
+        const skills = skillsStr.split(",").map(s => s.trim()).filter(s => s);
+        updated = [
+          ...localSkills,
+          { category: category.trim(), skills: skills.length ? skills : ["New Skill"], __collapsed: false },
+        ];
+      } else {
+        updated = [
+          ...localSkills,
+          { category: newSkillText, skills: ["New Skill"], __collapsed: false },
+        ];
+      }
     } else {
       updated = [...localSkills, newSkillText];
     }
