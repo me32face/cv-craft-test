@@ -3,22 +3,14 @@
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
 
-// const renderLanguage = (lang, index) => {
-//   if (typeof lang === 'string') {
-//     return <p key={index} className="text-gray-700 text-xs mb-1">• {lang}</p>;
-//   }
-//   return (
-//     <div key={index} className="mb-2">
-//       <div className="flex justify-between items-center text-gray-700 text-xs">
-//         <span>{lang.name}</span>
-//         <span className="opacity-70">{lang.proficiency || 'Fluent'}</span>
-//       </div>
-//     </div>
-//   );
-// };
-
 export default function Template42({ data, onClickSection }) {
   const toArray = (value) => (!value ? [] : Array.isArray(value) ? value : [value]);
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  };
 
   const experiences = toArray(data?.experiences);
   const education = toArray(data?.education);
@@ -27,6 +19,7 @@ export default function Template42({ data, onClickSection }) {
   const certificates = toArray(data?.certificates);
   const references = toArray(data?.references);
   const projects = toArray(data?.projects);
+  const socialLinks = toArray(data?.socialLinks);
 
   return (
     <div
@@ -54,33 +47,40 @@ export default function Template42({ data, onClickSection }) {
             </div>
           )}
           <div className="flex-1 ml-11 cursor-pointer" onClick={() => onClickSection && onClickSection("personal")}>
-            <h1 className="text-4xl  font-bold text-white mb-2">
+            <h1 className="text-4xl font-bold text-white mb-2">
               {data?.name || "Your Name"}
             </h1>
             <p className="text-xl text-slate-200 mb-4">
               {data?.title || "Professional Title"}
             </p>
-            <div className="flex flex-wrap gap-x-1 gap-y-1 text-white text-xs">
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-white text-xs">
+              {/* Phone */}
               <div className="flex items-center gap-1.5">
-                <span >📞</span>
+                <span>📞</span>
                 <span>{data?.phone || "+123-456-7890"}</span>
               </div>
+              {/* Email */}
               <div className="flex items-center gap-1.5">
-                <span >✉️</span>
+                <span>✉️</span>
                 <span>{data?.email || "hello@reallygreatsite.com"}</span>
               </div>
+              {/* Address */}
               <div className="flex items-center gap-1.5">
                 <span>📍</span>
                 <span>{data?.address || "123 Anywhere St., Any City"}</span>
               </div>
+              {/* SOCIAL LINKS */}
               <div className="flex items-center gap-1.5">
-                {data?.github && (<p className="text-xs ">🧑‍💻 {data?.github || ""}</p>)}
-              </div>
-              <div className="flex items-center ">
-                {data?.linkedin && (<p className="text-xs ">🔗 {data?.linkedin}</p>)}
-              </div>
-              <div className="flex items-center gap-1.5">
-                {data?.portfolio && (<p className="text-xs ">💻 {data?.portfolio || ""}</p>)}
+                {data?.visibleSections?.socialLinks !== false && socialLinks.length > 0 && (
+                  <div className="flex items-center gap-1.5">
+                    {socialLinks.map((link, i) => (
+                      <div key={i} className="flex items-center gap-1.5">
+                        <span>🔗</span>
+                        <span className="text-xs break-all">{link}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -150,39 +150,28 @@ export default function Template42({ data, onClickSection }) {
 
           {/* Education */}
           {data?.visibleSections?.education !== false && (
-            <section className="mb-4 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
-              <h2 className="text-base font-bold text-slate-800 mb-4 pb-2 border-b-2 border-slate-300">
+            <div className="">
+              <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
                 EDUCATION
               </h2>
-              <div className="space-y-5">
-                {(education.length ? education : [
-                  {
-                    course: "Master of Business Administration",
-                    school: "University Name",
-                    year: "2014 - 2016",
-                    gpa: "GPA: 3.8/4.0"
-                  },
-                  {
-                    course: "Bachelor of Science",
-                    school: "University Name",
-                    year: "2010 - 2014",
-                    gpa: "GPA: 3.7/4.0"
-                  }
-                ]).map((edu, i) => (
-                  <div key={i} className="relative pl-6 border-l-2 border-slate-300">
-                    <div className="absolute -left-1.5 top-0 w-2.5 h-2.5 rounded-full bg-slate-700"></div>
-                    <div className="flex justify-between items-start mb-1">
-                      <div>
-                        <p className="text-sm  font-bold text-slate-800">{edu.course}</p>
-                        <p className="text-xs text-slate-600">{edu.school}</p>
-                        {edu.gpa && <p className="text-xs  text-gray-600 mt-0.5">{edu.gpa}</p>}
-                      </div>
-                      <p className="text-xs text-gray-500 ml-4">{edu.year}</p>
+              {education.map((edu, i) => (
+                <div key={i} className=" mb-3">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="font-semibold !text-sm text-gray-700">{edu.degree}</p>
+                      <p className="text-sm opacity-80">{edu.school}</p>
+                      {edu.field && <p className="text-xs opacity-70">{edu.field}</p>}
                     </div>
+                    <p className="text-xs opacity-60">
+                      {edu.start && formatDate(edu.start)}
+                      {edu.start && (edu.end || edu.current) && " - "}
+                      {edu.current ? "Present" : edu.end && formatDate(edu.end)}
+                    </p>
                   </div>
-                ))}
-              </div>
-            </section>
+                  {edu.description && <p className="text-sm mt-1 text-gray-700 text-justify">{edu.description}</p>}
+                </div>
+              ))}
+            </div>
           )}
 
           {/* Certifications */}
@@ -214,19 +203,19 @@ export default function Template42({ data, onClickSection }) {
           )}
 
           {/* Languages */}
-           {data?.visibleSections?.languages !== false && (
-              <section className="cursor-pointer" onClick={() => onClickSection("languages")}>
-                 <h2 className="text-base uppercase font-bold text-slate-800 mb-4 pb-2 border-b-2 border-slate-300">
+          {data?.visibleSections?.languages !== false && (
+            <section className="cursor-pointer" onClick={() => onClickSection("languages")}>
+              <h2 className="text-base uppercase font-bold text-slate-800 mb-4 pb-2 border-b-2 border-slate-300">
                 Languages
               </h2>
 
-                <div className="ml-4  gap-x-4 gap-y-1">
-                  {(data?.languages?.length ? data.languages : ["Spanish", "Arabic", "English"]).map((l, i) =>
-                    renderLanguage(l, i)
-                  )}
-                </div>
-              </section>
-            )}
+              <div className="ml-4  gap-x-4 gap-y-1">
+                {(data?.languages?.length ? data.languages : ["Spanish", "Arabic", "English"]).map((l, i) =>
+                  renderLanguage(l, i)
+                )}
+              </div>
+            </section>
+          )}
         </div>
 
         {/* Right Column */}

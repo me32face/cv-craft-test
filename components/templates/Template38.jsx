@@ -5,6 +5,12 @@ import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
 export default function Template38({ data, onClickSection }) {
   const toArray = (v) => !v ? [] : Array.isArray(v) ? v : typeof v === "string" ? [v] : [];
 
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  };
+
   const safeObj = (v) => (typeof v === "object" && v !== null ? v : {});
   const experiences = toArray(data.experiences);
   const education = toArray(data.education);
@@ -14,6 +20,7 @@ export default function Template38({ data, onClickSection }) {
   const references = toArray(data.references);
   const awards = toArray(data.awards);
   const projects = toArray(data?.projects);
+  const socialLinks = toArray(data?.socialLinks);
 
   return (
     <div
@@ -34,14 +41,26 @@ export default function Template38({ data, onClickSection }) {
         {/* LEFT COLUMN */}
         <div className="bg-gray-50 px-8 py-8">
           {/* Contact */}
-          <div className="mb-8">
-            <h2 className="font-semibold text-lg mb-2 ml-4">CONTACT</h2>
-            <p className="text-xs mt-2">📞 {data?.phone || "123-456-7890"}</p>
-            <p className="text-xs mt-2">📧 {data?.email || "hello@email.com"}</p>
-            <p className="text-xs mt-2  ">📍 {data?.address || "123 Anywhere St., Any City"}</p>
-            {data?.linkedin && (<p className="text-xs mt-2">🔗 {data?.linkedin}</p>)}
-            {data?.github && (<p className="text-xs mt-2">🧑‍💻 {data?.github || ""}</p>)}
-            {data?.portfolio && (<p className="text-xs mt-2">💻 {data?.portfolio || ""}</p>)}
+          <div>
+            <div className="mb-4">
+              <h2 className="font-semibold text-md mb-2">CONTACT</h2>
+              <p className="text-sm mt-1">📞 {data?.phone || "123-456-7890"}</p>
+              <p className="text-sm mt-1">📧 {data?.email || "hello@email.com"}</p>
+              <p className="text-sm mt-1">📍 {data?.address || "123 Anywhere St., Any City"}</p>
+              {data?.visibleSections?.socialLinks !== false && (
+                <>
+                  {socialLinks.length > 0 && (
+                    <div className="">
+                      {socialLinks.map((link, i) => (
+                        <p key={i} className="text-xs mt-1 break-all"> <span >🔗</span>
+                          <span className="ml-1">{link}</span>
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
           </div>
 
           {/* Certifications */}
@@ -190,26 +209,28 @@ export default function Template38({ data, onClickSection }) {
 
           {/* Education */}
           {data?.visibleSections?.education !== false && (
-            <>
-              <h2 className="text-md font-semibold mt-8 mb-3  border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
+            <div className="">
+              <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
                 EDUCATION
               </h2>
-              {(education.length ? education : [
-                { course: "Bachelor of Business Management", school: "Wardiere University", year: "2020-2023" },
-                { course: "Bachelor of Business Management", school: "Wardiere University", year: "2016-2020" },
-                { course: "Bachelor of Business Management", school: "Wardiere University", year: "2012-2016" }
-              ]).map((edu, i) => (
-                <div key={i} className="mb-3">
+              {education.map((edu, i) => (
+                <div key={i} className=" mb-3">
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="font-semibold !text-sm text-gray-700">{edu.course}</p>
-                      <p className="text-xs opacity-80">{edu.school}</p>
+                      <p className="font-semibold !text-sm text-gray-700">{edu.degree}</p>
+                      <p className="text-sm opacity-80">{edu.school}</p>
+                      {edu.field && <p className="text-xs opacity-70">{edu.field}</p>}
                     </div>
-                    <p className="text-xs opacity-60">{edu.year}</p>
+                    <p className="text-xs opacity-60">
+                      {edu.start && formatDate(edu.start)}
+                      {edu.start && (edu.end || edu.current) && " - "}
+                      {edu.current ? "Present" : edu.end && formatDate(edu.end)}
+                    </p>
                   </div>
+                  {edu.description && <p className="text-sm mt-1 text-gray-700 text-justify">{edu.description}</p>}
                 </div>
               ))}
-            </>
+            </div>
           )}
         </div>
       </div>

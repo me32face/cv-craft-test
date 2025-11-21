@@ -19,12 +19,19 @@ const renderLanguage = (lang, index) => {
 export default function Template41({ data, onClickSection }) {
   const toArray = (value) => (!value ? [] : Array.isArray(value) ? value : [value]);
 
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  };
+
   const experiences = toArray(data?.experiences);
   const education = toArray(data?.education);
   const skills = toArray(data?.skills);
   const languages = toArray(data?.languages);
   const certificates = toArray(data?.certificates);
   const projects = toArray(data?.projects);
+  const socialLinks = toArray(data?.socialLinks);
 
   return (
     <div
@@ -90,28 +97,36 @@ export default function Template41({ data, onClickSection }) {
                 <div className="w-1 h-5 bg-gray-600"></div>
                 <h2 className="text-sm font-semibold text-gray-700 uppercase">Contact</h2>
               </div>
-              <div className="mb-5">
-                <p className="text-xs mt-2">📞 {data?.phone || "123-456-7890"}</p>
-                <p className="text-xs mt-2">📧 {data?.email || "hello@email.com"}</p>
-                <p className="text-xs mt-2  ">📍 {data?.address || "123 Anywhere St., Any City"}</p>
-                {data?.linkedin && (<p className="text-xs mt-2">🔗 {data?.linkedin}</p>)}
-                {data?.github && (<p className="text-xs mt-2">🧑‍💻 {data?.github || ""}</p>)}
-                {data?.portfolio && (<p className="text-xs mt-2">💻 {data?.portfolio || ""}</p>)}
+              <div>
+                <div className="mb-4">
+                  <p className="text-sm mt-1">📞 {data?.phone || "123-456-7890"}</p>
+                  <p className="text-sm mt-1">📧 {data?.email || "hello@email.com"}</p>
+                  <p className="text-sm mt-1">📍 {data?.address || "123 Anywhere St., Any City"}</p>
+                  {data?.visibleSections?.socialLinks !== false && (
+                    <>
+                      {socialLinks.length > 0 && (
+                        <div className="">
+                          {socialLinks.map((link, i) => (
+                            <p key={i} className="text-xs mt-1 break-all"> <span >🔗</span>
+                              <span className="ml-1">{link}</span>
+                            </p>))}
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
               </div>
             </section>
             {/* Skills */}
             {data?.visibleSections?.skills !== false && (
               <div className="mb-4 mt-8" onClick={() => onClickSection && onClickSection("skills")}>
-
                 <div className="flex items-start gap-3 mb-2">
                   <div className="w-1 h-5 bg-gray-600"></div>
                   <h2 className="text-sm font-semibold text-gray-700 uppercase">SKILLS</h2>
                 </div>
-
                 {/* ADDED ml-4 HERE */}
                 <div className="ml-4">
                   {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation", "Critical Thinking", "Leadership"]).map((s, i) => {
-
                     if (typeof s === 'string') {
                       return <p key={i} className="text-xs mb-1">• {s}</p>;
                     }
@@ -143,51 +158,33 @@ export default function Template41({ data, onClickSection }) {
                     return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
                   })}
                 </div>
-
               </div>
             )}
-
             {/* Education */}
             {data?.visibleSections?.education !== false && (
-              <section className="cursor-pointer" onClick={() => onClickSection("education")}>
-                <div className="flex items-start gap-3 mb-2">
-                  <div className="w-1 h-5 bg-gray-800"></div>
-                  <h2 className="text-sm font-semibold text-gray-700 uppercase">Education</h2>
-                </div>
-                <div className="ml-4 grid grid-cols-1 gap-2">
-                  {(education.length ? education : [
-                    {
-                      course: "City College",
-                      school: "Bachelor of Education in Secondary Education",
-                      year: "2020-2024",
-                      details: ["GPA: 3.5", "Member, Theater Club", "Volunteer, English Tutor"]
-                    },
-                    {
-                      course: "City High School",
-                      school: "High School Diploma",
-                      year: "2016-2020",
-                      details: ["Student Teacher", "Essay Competition Winner", "Member, Debate Team"]
-                    }
-                  ]).map((edu, i) => (
-                    <div key={i}>
-                      <p className="text-sm font-semibold text-gray-700">{edu.course} | {edu.year}</p>
-                      <p className="text-xs text-gray-600 mb-1">{edu.school}</p>
-                      {edu.details && (
-                        <ul className="space-y-0.5">
-                          {edu.details.map((d, idx) => (
-                            <li key={idx} className="text-xs text-gray-700 flex items-start gap-1">
-                              <span>•</span>
-                              <span>{d}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
+              <div className="">
+                <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
+                  EDUCATION
+                </h2>
+                {education.map((edu, i) => (
+                  <div key={i} className=" mb-3">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-semibold !text-sm text-gray-700">{edu.degree}</p>
+                        <p className="text-sm opacity-80">{edu.school}</p>
+                        {edu.field && <p className="text-xs opacity-70">{edu.field}</p>}
+                      </div>
+                      <p className="text-xs opacity-60">
+                        {edu.start && formatDate(edu.start)}
+                        {edu.start && (edu.end || edu.current) && " - "}
+                        {edu.current ? "Present" : edu.end && formatDate(edu.end)}
+                      </p>
                     </div>
-                  ))}
-                </div>
-              </section>
+                    {edu.description && <p className="text-sm mt-1 text-gray-700 text-justify">{edu.description}</p>}
+                  </div>
+                ))}
+              </div>
             )}
-
             {/* Languages */}
             {data?.visibleSections?.languages !== false && (
               <section className="cursor-pointer" onClick={() => onClickSection("languages")}>
@@ -214,7 +211,6 @@ export default function Template41({ data, onClickSection }) {
                   <div className="w-1 h-5 bg-gray-600"></div>
                   <h2 className="text-sm font-semibold text-gray-700 uppercase">Certifications</h2>
                 </div>
-
                 <div className="ml-4 grid grid-cols-1 gap-6">
                   {(certificates.length ? certificates : [
                     { name: "Teaching License", issuer: "State Department", year: "July 2024" },
@@ -232,6 +228,7 @@ export default function Template41({ data, onClickSection }) {
                 </div>
               </section>
             )}
+
             {/* Work Experience */}
             {data?.visibleSections?.experience !== false && (
               <section className="cursor-pointer" onClick={() => onClickSection("experience")}>
@@ -239,7 +236,6 @@ export default function Template41({ data, onClickSection }) {
                   <div className="w-1 h-5 bg-gray-600"></div>
                   <h2 className="text-sm font-semibold text-gray-700 uppercase">Work Experience</h2>
                 </div>
-
                 <div className="ml-4 space-y-4">
                   {(experiences.length ? experiences : [
                     {
@@ -287,7 +283,6 @@ export default function Template41({ data, onClickSection }) {
                   <div className="w-1 h-5 bg-gray-600"></div>
                   <h2 className="text-sm font-semibold text-gray-700 uppercase">Projects</h2>
                 </div>
-
                 <div className="space-y-4 ml-4">
                   {projects.map((project, i) => (
                     <div key={i}>

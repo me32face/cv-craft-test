@@ -6,6 +6,12 @@ import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
 export default function Template43({ data, onClickSection }) {
   const toArray = (value) => (!value ? [] : Array.isArray(value) ? value : [value]);
 
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  };
+
   const experiences = toArray(data?.experiences);
   const education = toArray(data?.education);
   const skills = toArray(data?.skills);
@@ -14,6 +20,7 @@ export default function Template43({ data, onClickSection }) {
   const references = toArray(data?.references);
   const projects = toArray(data?.projects);
   const interests = toArray(data?.interests);
+  const socialLinks = toArray(data?.socialLinks);
 
   return (
     <div
@@ -24,10 +31,10 @@ export default function Template43({ data, onClickSection }) {
       <div className="relative h-[200px]">
         {/* Dark blue diagonal section */}
         <svg viewBox="0 0 794 180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-  <polygon points="0,0 794,0 394,120 100,200 0,200" fill="#aeacbc"/>
-  
-  <polygon points="100,0 794,0 794,200 418,190" fill="#8f8c9f"/>
-</svg>
+          <polygon points="0,0 794,0 394,120 100,200 0,200" fill="#aeacbc" />
+
+          <polygon points="100,0 794,0 794,200 418,190" fill="#8f8c9f" />
+        </svg>
 
         {/* Profile Image */}
         <div className="absolute left-8 top-8 z-10">
@@ -93,14 +100,19 @@ export default function Template43({ data, onClickSection }) {
                 <span>{data?.address || "123 Anywhere St., Any City"}</span>
               </div>
               <div className="flex items-center gap-1.5">
-                {data?.github && (<p className="text-xs ">🧑‍💻 {data?.github || ""}</p>)}
-              </div>
-              <div className="flex items-center ">
-                {data?.linkedin && (<p className="text-xs ">🔗 {data?.linkedin}</p>)}
-              </div>
-              <div className="flex items-center gap-1.5">
-                {data?.portfolio && (<p className="text-xs ">💻 {data?.portfolio || ""}</p>)}
-              </div>
+                {data?.visibleSections?.socialLinks !== false && (
+                  <>
+                    {socialLinks.length > 0 && (
+                      <div className="">
+                        {socialLinks.map((link, i) => (
+                          <p key={i} className="text-xs break-all"> <span >🔗</span>
+                            <span className="ml-1">{link}</span>
+                          </p>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                )} </div>
             </div>
           </section>
 
@@ -119,7 +131,7 @@ export default function Template43({ data, onClickSection }) {
           )}
 
           {/* Skills */}
-           {data?.visibleSections?.skills !== false && (
+          {data?.visibleSections?.skills !== false && (
             <div className="mb-6 cursor-pointer" onClick={() => onClickSection && onClickSection("skills")}>
               <h2 className="text-sm font-bold text-slate-600 mb-3 pb-2 border-b-2 border-[#8f8c9f]">
                 SKILLS
@@ -215,7 +227,6 @@ export default function Template43({ data, onClickSection }) {
                     year: "2018 - 2020",
                     desc: "Managed daily operations and team development. Successfully executed multiple high-impact projects that enhanced customer satisfaction and revenue."
                   },
-                
                 ]).map((exp, i) => (
                   <div key={i} className="relative pl-3 ">
                     <div className="flex justify-between items-start mb-1">
@@ -251,92 +262,81 @@ export default function Template43({ data, onClickSection }) {
           )}
 
           {/* Education */}
-         {data?.visibleSections?.education !== false && (
-            <section className="mb-4 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
-              <h2 className="text-base font-bold text-slate-600 mb-4 pb-2 border-b-2 border-[#d4d2db]">
+          {data?.visibleSections?.education !== false && (
+            <div className="">
+              <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
                 EDUCATION
               </h2>
-              <div className="space-y-5">
-                {(education.length ? education : [
-                  {
-                    course: "Master of Business Administration",
-                    school: "University Name",
-                    year: "2014 - 2016",
-                    gpa: "GPA: 3.8/4.0"
-                  },
-                  {
-                    course: "Bachelor of Science",
-                    school: "University Name",
-                    year: "2010 - 2014",
-                    gpa: "GPA: 3.7/4.0"
-                  }
-                ]).map((edu, i) => (
-                  <div key={i} className="relative pl-3">
-                    <div className="flex justify-between items-start mb-1">
-                      <div>
-                        <p className="text-sm  font-bold text-slate-800">{edu.course}</p>
-                        <p className="text-xs text-slate-600">{edu.school}</p>
-                        {edu.gpa && <p className="text-xs  text-gray-600 mt-0.5">{edu.gpa}</p>}
-                      </div>
-                      <p className="text-xs text-gray-500 ml-4">{edu.year}</p>
+              {education.map((edu, i) => (
+                <div key={i} className=" mb-3">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="font-semibold !text-sm text-gray-700">{edu.degree}</p>
+                      <p className="text-sm opacity-80">{edu.school}</p>
+                      {edu.field && <p className="text-xs opacity-70">{edu.field}</p>}
                     </div>
+                    <p className="text-xs opacity-60">
+                      {edu.start && formatDate(edu.start)}
+                      {edu.start && (edu.end || edu.current) && " - "}
+                      {edu.current ? "Present" : edu.end && formatDate(edu.end)}
+                    </p>
+                  </div>
+                  {edu.description && <p className="text-sm mt-1 text-gray-700 text-justify">{edu.description}</p>}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Projects */}
+          {data?.visibleSections?.projects !== false && (
+            <section
+              className="cursor-pointer"
+              onClick={() => onClickSection && onClickSection("projects")}
+            >
+              <h2 className="text-base uppercase font-bold text-slate-600 mb-4 pb-2 border-b-2 border-[#d4d2db]">
+                Projects
+              </h2>
+              <div className="space-y-4 ml-4">
+                {projects.map((project, i) => (
+                  <div key={i}>
+                    <p className="text-[15px] font-bold text-gray-800">{project.name}</p>
+                    {project.link && (
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[12px] text-blue-600 underline block mt-0.5"
+                      >
+                        {project.link}
+                      </a>
+                    )}
+                    {project.year && (
+                      <p className="text-[12px] text-gray-500 mt-0.5">{project.year}</p>
+                    )}
+                    {project.desc && (
+                      <div className="mt-1.5 text-[12px] text-gray-700 leading-relaxed">
+                        {project.descFormat === "bullet" ? (
+                          project.desc.split('\n').map((line, idx) =>
+                            line.trim() && (
+                              <p key={idx} className="mb-0.5">• {line.trim()}</p>
+                            )
+                          )
+                        ) : project.descFormat === "number" ? (
+                          project.desc.split('\n').map((line, idx) =>
+                            line.trim() && (
+                              <p key={idx} className="mb-0.5">{idx + 1}. {line.trim()}</p>
+                            )
+                          )
+                        ) : (
+                          <p>{project.desc}</p>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
             </section>
           )}
-
-          {/* Projects */}
-          {data?.visibleSections?.projects !== false && (
-              <section
-                className="cursor-pointer"
-                onClick={() => onClickSection && onClickSection("projects")}
-              >
-                <h2 className="text-base uppercase font-bold text-slate-600 mb-4 pb-2 border-b-2 border-[#d4d2db]">
-                Projects
-              </h2>
-
-                <div className="space-y-4 ml-4">
-                  {projects.map((project, i) => (
-                    <div key={i}>
-                      <p className="text-[15px] font-bold text-gray-800">{project.name}</p>
-                      {project.link && (
-                        <a
-                          href={project.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[12px] text-blue-600 underline block mt-0.5"
-                        >
-                          {project.link}
-                        </a>
-                      )}
-                      {project.year && (
-                        <p className="text-[12px] text-gray-500 mt-0.5">{project.year}</p>
-                      )}
-                      {project.desc && (
-                        <div className="mt-1.5 text-[12px] text-gray-700 leading-relaxed">
-                          {project.descFormat === "bullet" ? (
-                            project.desc.split('\n').map((line, idx) =>
-                              line.trim() && (
-                                <p key={idx} className="mb-0.5">• {line.trim()}</p>
-                              )
-                            )
-                          ) : project.descFormat === "number" ? (
-                            project.desc.split('\n').map((line, idx) =>
-                              line.trim() && (
-                                <p key={idx} className="mb-0.5">{idx + 1}. {line.trim()}</p>
-                              )
-                            )
-                          ) : (
-                            <p>{project.desc}</p>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
         </div>
       </div>
     </div>

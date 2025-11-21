@@ -32,6 +32,10 @@ export default function Home() {
       image: "/template/template30.png",
       category: "modern",
     },
+    { id: 'Template43', name: 'Stylish Layout', key: 'Emily Davis', image: '/template/template43.png', category: 'modern' },
+    { id: 'Template44', name: 'proffessional ', key: 'Emily Davis', image: '/template/template44.png', category: 'modern' },
+    { id: 'Template45', name: 'Modern Creative ', key: 'Emily Davis', image: '/template/template45.png', category: 'modern' },
+
     {
       id: "Template31",
       name: "Executive Resume",
@@ -102,6 +106,13 @@ export default function Home() {
       image: "/template/template41.png",
       category: "modern",
     },
+
+    {id: 'Template30', name: 'Professional Resume', key: 'John Doe', image: '/template/template30.png', category: 'modern' },
+    {id: 'Template31', name: 'Executive Resume', key: 'Jane Smith', image: '/template/template31.png', category: 'proffessional' },
+    {id: 'Template32', name: 'Clean Two-Column CV', key: 'Michael Brown', image: '/template/template32.png', category: 'simple' },
+    {id: 'Template34', name: 'Modern Creative', key: 'Emily Davis', image: '/template/template34.png', category: 'creative' },
+    {id: 'Template35', name: 'Elegant Layout', key: 'David Wilson', image: '/template/template35.png', category: 'proffessional' },
+    {id: 'Template33', name: 'Olivia Modern ', key: 'Olivia Wilson', image: '/template/template33.png', category: 'proffessional' },
 
 
     {
@@ -290,8 +301,6 @@ export default function Home() {
     { id: 'Template39', name: 'Clean Creative', key: 'Emily Davis', image: '/template/template39.png', category: 'proffessional' },
     { id: 'Template41', name: 'Stylish Classic', key: 'Emily Davis', image: '/template/template41.png', category: 'modern' },
     { id: 'Template42', name: 'Creative Classic', key: 'Emily Davis', image: '/template/template42.png', category: 'creative' },
-    { id: 'Template43', name: 'Stylish Layout', key: 'Emily Davis', image: '/template/template43.png', category: 'modern' },
-    { id: 'Template44', name: 'Modern Creative ', key: 'Emily Davis', image: '/template/template44.png', category: 'modern' },
 
     {
       id: "Template22",

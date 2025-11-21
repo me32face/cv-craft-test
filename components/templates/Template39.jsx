@@ -6,6 +6,12 @@ import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
 export default function template39({ data, onClickSection }) {
   const toArray = (value) => (!value ? [] : Array.isArray(value) ? value : [value]);
 
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  };
+
   const experiences = toArray(data.experiences);
   const education = toArray(data.education);
   const skills = toArray(data.skills);
@@ -16,6 +22,7 @@ export default function template39({ data, onClickSection }) {
   const courses = toArray(data.courses);
   const interests = toArray(data.interests);
   const projects = toArray(data?.projects);
+  const socialLinks = toArray(data?.socialLinks);
 
 
   return (
@@ -57,29 +64,35 @@ export default function template39({ data, onClickSection }) {
           <p className="text-sm text-gray-600 mb-4">
             {data?.title || "Professional Marketing Manager"}
           </p>
-
           {/* Contact Icons Row */}
-          <div className="flex flex-wrap gap-x-1 gap-y-1 text-xs">
+          <div className="flex flex-wrap gap-x-1 gap-y-1 text-black text-xs">
+            {/* Phone */}
             <div className="flex items-center gap-1.5">
-              <span className="text-amber-600">📞</span>
+              <span>📞</span>
               <span>{data?.phone || "+123-456-7890"}</span>
             </div>
+            {/* Email */}
             <div className="flex items-center gap-1.5">
-              <span className="text-amber-600">✉️</span>
+              <span>✉️</span>
               <span>{data?.email || "hello@reallygreatsite.com"}</span>
             </div>
+            {/* Address */}
             <div className="flex items-center gap-1.5">
-              <span className="text-amber-600">📍</span>
+              <span>📍</span>
               <span>{data?.address || "123 Anywhere St., Any City"}</span>
             </div>
+            {/* Social Links */}
             <div className="flex items-center gap-1.5">
-              {data?.github && (<p className="text-xs ">🧑‍💻 {data?.github || ""}</p>)}
-            </div>
-            <div className="flex items-center ">
-              {data?.linkedin && (<p className="text-xs ">🔗 {data?.linkedin}</p>)}
-            </div>
-            <div className="flex items-center gap-1.5">
-              {data?.portfolio && (<p className="text-xs ">💻 {data?.portfolio || ""}</p>)}
+              {data?.visibleSections?.socialLinks !== false && socialLinks.length > 0 && (
+                <div className="flex items-center gap-1.5">
+                  {socialLinks.map((link, i) => (
+                    <div key={i} className="flex items-center gap-1.5">
+                      <span>🔗</span>
+                      <span className="text-xs break-all">{link}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -168,34 +181,28 @@ export default function template39({ data, onClickSection }) {
 
           {/* Education */}
           {data?.visibleSections?.education !== false && (
-            <section
-              className="mb-6 cursor-pointer"
-              onClick={() => onClickSection && onClickSection("education")}
-            >
-              <h2 className="text-md font-semibold uppercase text-gray-800 mb-2 border-b-2 border-amber-700 pb-1.5">
-                Education
+            <div className="">
+              <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
+                EDUCATION
               </h2>
-              <div className="space-y-3">
-                {(education.length ? education : [
-                  {
-                    course: "Master of Science in Marketing",
-                    school: "University of Torch Universities",
-                    year: "January 2013 - February 2015",
-                  },
-                  {
-                    course: "Bachelor of Digital Business",
-                    school: "University of Torch Universities",
-                    year: "January 2009 - February 2013",
-                  },
-                ]).map((edu, i) => (
-                  <div key={i}>
-                    <p className="text-sm font-bold text-gray-800 leading-tight">{edu.course}</p>
-                    <p className="text-xs text-gray-600 mt-0.5">{edu.school}</p>
-                    <p className="text-xs text-gray-500 mt-0.5">{edu.year}</p>
+              {education.map((edu, i) => (
+                <div key={i} className=" mb-3">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="font-semibold !text-sm text-gray-700">{edu.degree}</p>
+                      <p className="text-sm opacity-80">{edu.school}</p>
+                      {edu.field && <p className="text-xs opacity-70">{edu.field}</p>}
+                    </div>
+                    <p className="text-xs opacity-60">
+                      {edu.start && formatDate(edu.start)}
+                      {edu.start && (edu.end || edu.current) && " - "}
+                      {edu.current ? "Present" : edu.end && formatDate(edu.end)}
+                    </p>
                   </div>
-                ))}
-              </div>
-            </section>
+                  {edu.description && <p className="text-sm mt-1 text-gray-700 text-justify">{edu.description}</p>}
+                </div>
+              ))}
+            </div>
           )}
 
           {/* Languages */}

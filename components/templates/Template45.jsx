@@ -1,10 +1,9 @@
-
 "use client";
 
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
 
-export default function Template44({ data, onClickSection }) {
+export default function Template45({ data, onClickSection }) {
   const toArray = (value) => (!value ? [] : Array.isArray(value) ? value : [value]);
 
   const formatDate = (dateStr) => {
@@ -22,48 +21,71 @@ export default function Template44({ data, onClickSection }) {
   const interests = toArray(data?.interests);
   const socialLinks = toArray(data?.socialLinks);
 
-  // Theme color from image
-  const themeColor = "#855e9e"; // Muted Purple
+  const themeColor = "#2c2c2c"; // Dark gray/black
 
   return (
     <div
       id="cv-preview"
-      className="w-[794px] min-h-[1123px] bg-white mx-auto font-sans relative overflow-hidden flex text-slate-800"
+      className="w-[794px] min-h-[1123px] bg-gray-50 mx-auto font-sans relative overflow-hidden flex text-slate-800"
     >
-      {/* --- BACKGROUND SVG WAVE --- */}
-      <div className="absolute left-0 top-0 h-full w-full z-0 pointer-events-none">
-        <svg
-          viewBox="0 0 794 1123"
-          width="100%"
-          height="100%"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M0,0 L320,0 C320,150 90,200 0,400"
-            fill={themeColor}
-          />
-        </svg>
-      </div>
-      <div className="absolute bottom-0 right-0 h-full w-full z-0 pointer-events-none">
-        <svg
-          viewBox="0 0 794 1123"
-          width="100%"
-          height="100%"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M794,1123 L474,1123 C474,973 704,923 794,723"
-            fill={themeColor}
-          />
-        </svg>
-      </div>
+      {/* SVG Background Design - Top */}
+      <svg
+        className="absolute left-0 top-0 w-full h-full z-0 pointer-events-none"
+        viewBox="0 0 794 1123"
+        preserveAspectRatio="none"
+      >
+        {/* Large diagonal shape in top left */}
+        <path
+          d="M 244 0 L 0 0 L 0 450 Q 104 380, 244 320 Z"
+          fill="#e7e6e6"
+          opacity="0.5"
+        />
+        {/* Subtle curved accent top left */}
+        <path
+          d="M 144 0 Q 44 180, 0 320 L 0 0 Z"
+          fill="#a59f9f"
+          opacity="0.4"
+        />
+        {/* Additional top layer (left) */}
+        <path
+          d="M 94 0 L 0 0 L 0 250 Q 44 220, 94 180 Z"
+          fill="#8f8b8b"
+          opacity="0.3"
+        />
+      </svg>
+
+      {/* SVG Background Design - Right */}
+      <svg
+        className="absolute right-0 bottom-0 w-full h-full z-0 pointer-events-none"
+        viewBox="0 0 794 1123"
+        preserveAspectRatio="none"
+      >
+        {/* Large diagonal shape on right */}
+        <path
+          d="M 794 1123 L 794 643 Q 794 850, 304 1153 L 854 1123 Z"
+          fill="#e7e6e6"
+          opacity="0.5"
+        />
+        {/* Subtle curved accent right */}
+        <path
+          d="M 794 1123 L 794 703 Q 784 920, 444 1150 L 794 1123 Z"
+          fill="#a59f9f"
+          opacity="0.4"
+        />
+        {/* Additional right layer */}
+        <path
+          d="M 794 1123 L 794 823 Q 774 980, 554 1150 L 794 1123 Z"
+          fill="#8f8b8b"
+          opacity="0.3"
+        />
+      </svg>
 
       {/* --- LEFT COLUMN (Sidebar) --- */}
-      <div className="w-[35%] relative z-10 flex flex-col pt-10">
-        {/* Profile Image (Positioned inside the top wave) */}
-        <div className="flex justify-center mb-12 pr-8">
+      <div className="w-[38%] relative z-10 flex flex-col pt-16 pb-10 bg-[#]">
+        {/* Profile Image with circular border */}
+        <div className="flex justify-center mb-12 px-8">
           <div
-            className="mb-8"
+            className="cursor-pointer"
             onClick={() => onClickSection && onClickSection("personal")}
           >
             {data?.profileImage && (
@@ -86,49 +108,48 @@ export default function Template44({ data, onClickSection }) {
           </div>
         </div>
 
-        {/* Sidebar Content (Padded to sit to the right of the thin wave) */}
-        <div className="pl-[60px] pr-6 flex flex-col gap-8">
+        {/* Sidebar Content */}
+        <div className="px-8 flex flex-col gap-8">
           {/* Profile Section */}
-          <section className="mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("personal")}>
-            <h2 className="text-sm font-bold text-black mb-3 uppercase tracking-wide pb-2 border-b border-[#dfc3f1]">
+          <section className="mb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("personal")}>
+            <h2 className="text-sm font-bold text-slate-600 mb-3 uppercase tracking-wide pb-2 border-b-2 border-[#d4d2db]">
               Contact
             </h2>
-            <div className="flex flex-wrap gap-x-1 gap-y-1 text-gray-700 text-xs">
+            <div className="flex flex-wrap gap-x-2 gap-y-1 text-gray-500 text-xs">
+              {/* Phone */}
               <div className="flex items-center gap-1.5">
-                <span >📞</span>
+                <span>📞</span>
                 <span>{data?.phone || "+123-456-7890"}</span>
               </div>
+              {/* Email */}
               <div className="flex items-center gap-1.5">
-                <span >✉️</span>
+                <span>✉️</span>
                 <span>{data?.email || "hello@reallygreatsite.com"}</span>
               </div>
+              {/* Address */}
               <div className="flex items-center gap-1.5">
                 <span>📍</span>
                 <span>{data?.address || "123 Anywhere St., Any City"}</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                {data?.visibleSections?.socialLinks !== false && (
-                  <>
-                    {socialLinks.length > 0 && (
-                      <div className="">
-                        {socialLinks.map((link, i) => (
-                          <p key={i} className="text-xs  break-all">
-                            <span >🔗</span>
-                            <span className="ml-1">{link}</span>
+              {/* SOCIAL LINKS → always bottom line */}
+              {data?.visibleSections?.socialLinks !== false && socialLinks.length > 0 && (
+                <div className="w-full flex flex-col gap-1 mt-1">
+                  {socialLinks.map((link, i) => (
+                    <div key={i} className="flex items-center gap-1.5 text-xs break-all">
+                      <span>🔗</span>
+                      <span>{link}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
 
-                          </p>
-                        ))}
-                      </div>
-                    )}
-                  </>
-                )}
-              </div>
             </div>
           </section>
+
           {/* Languages */}
           {data?.visibleSections?.languages !== false && (
             <section className="mb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("languages")}>
-              <h2 className="text-sm font-bold text-[#83549f] mb-3 uppercase tracking-wide pb-2 border-b-2 border-[#dfc3f1]">
+              <h2 className="text-sm font-bold text-slate-600 mb-3 uppercase tracking-wide pb-2 border-b-2 border-[#d4d2db]">
                 Languages
               </h2>
               <div className="space-y-1">
@@ -164,10 +185,11 @@ export default function Template44({ data, onClickSection }) {
               ))}
             </div>
           )}
+
           {/* Skills */}
           {data?.visibleSections?.skills !== false && (
-            <div className="mb-6 cursor-pointer" onClick={() => onClickSection && onClickSection("skills")}>
-              <h2 className="text-sm font-bold text-[#83549f] mb-3 pb-2 border-b-2 border-[#dfc3f1]">
+            <div className="mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("skills")}>
+              <h2 className="text-sm font-bold text-slate-600 mb-3 pb-2 border-b-2 border-[#8f8c9f]">
                 SKILLS
               </h2>
               {/* ADDED ml-4 HERE */}
@@ -176,7 +198,7 @@ export default function Template44({ data, onClickSection }) {
                   if (typeof s === 'string') {
                     return (
                       <div key={i} className="flex items-center gap-2">
-                        <span className="text-[#83549f]">•</span>
+                        <span className="text-slate-600">•</span>
                         <span className="text-xs text-gray-700">{s}</span>
                       </div>
                     );
@@ -213,13 +235,14 @@ export default function Template44({ data, onClickSection }) {
       </div>
 
       {/* --- RIGHT COLUMN (Main Content) --- */}
-      <div className="w-[65%] pt-10 pr-12 pl-4 pb-10 flex flex-col gap-8">
+      <div className="w-[62%] pt-16 pr-12 pl-8 pb-10 flex flex-col gap-8">
+
         {/* Header */}
         <header onClick={() => onClickSection && onClickSection("personal")} className="cursor-pointer mb-2">
           <h1 className="text-5xl font-bold uppercase mb-2 ml-8 tracking-wide" >
             {data?.name || "NAME SURNAME"}
           </h1>
-          <p className="text-sm ml-2 font-bold tracking-widest uppercase text-[#83549f]">
+          <p className="text-sm ml-14 font-bold tracking-widest uppercase text-[#787677]">
             {data?.title || "JOB TITLE"}
           </p>
         </header>
@@ -227,7 +250,7 @@ export default function Template44({ data, onClickSection }) {
         {/* Profile / Summary */}
         {data?.visibleSections?.summary !== false && (
           <section onClick={() => onClickSection && onClickSection("summary")} className="cursor-pointer">
-            <h2 className="text-sm font-bold tracking-widest uppercase mb-3  pb-2 border-b-2 border-[#dfc3f1]" style={{ color: themeColor }}>
+            <h2 className="text-sm font-bold tracking-widest uppercase mb-3  pb-2 border-b-2 border-[#8f8c9f]" style={{ color: themeColor }}>
               Profile
             </h2>
             <p className="text-xs leading-relaxed text-slate-700 text-justify">
@@ -238,8 +261,8 @@ export default function Template44({ data, onClickSection }) {
 
         {/* Professional Experience */}
         {data?.visibleSections?.experience !== false && (
-          <section className="mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("experience")}>
-            <h2 className="text-sm font-bold text-[#83549f] mb-4 pb-2 border-b-2 border-[#dfc3f1]">
+          <section className="mb-0 cursor-pointer" onClick={() => onClickSection && onClickSection("experience")}>
+            <h2 className="text-sm font-bold text-[#475569] mb-4 pb-2 border-b-2 border-[#8f8c9f]">
               WORK EXPERIENCE
             </h2>
             <div className="space-y-5">
@@ -290,13 +313,14 @@ export default function Template44({ data, onClickSection }) {
             </div>
           </section>
         )}
+
         {/* Projects */}
         {data?.visibleSections?.projects !== false && (
           <section
-            className="cursor-pointer "
+            className="cursor-pointer -mb-1 "
             onClick={() => onClickSection && onClickSection("projects")}
           >
-            <h2 className="text-sm uppercase font-bold text-[#83549f] mb-4 pb-2 border-b-2 border-[#dfc3f1]">
+            <h2 className="text-sm uppercase font-bold text-[#475569] mb-4 pb-2 border-b-2 border-[#8f8c9f]">
               Projects
             </h2>
             <div className="space-y-4 ">
@@ -340,10 +364,11 @@ export default function Template44({ data, onClickSection }) {
             </div>
           </section>
         )}
+
         {/* Certifications */}
         {data?.visibleSections?.certificates !== false && (
           <section className="mb-6 cursor-pointer" onClick={() => onClickSection && onClickSection("certificates")}>
-            <h2 className="text-sm font-bold text-[#83549f] mb-3 pb-2 border-b-2 border-[#dfc3f1]">
+            <h2 className="text-sm font-bold text-[#475569] mb-3 pb-2 border-b-2 border-[#8f8c9f]">
               CERTIFICATIONS
             </h2>
             <div className="space-y-3">
