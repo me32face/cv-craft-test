@@ -173,25 +173,25 @@ export default function Template30({ data, onClickSection }) {
             <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("experience")}>
               EXPERIENCE
             </h2>
-        {(experiences.length ? experiences : [
-          { role: "Product Design Manager", company: "Arowwai Industries", year: "2020-2023", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
-          { role: "Product Design Manager", company: "Ingoude Company", year: "2019-2020", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
-          { role: "Product Design Manager", company: "Timmerman Industries", year: "2017-2019", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." }
-        ]).map((exp, i) => (
+        {experiences.map((exp, i) => (
           <div key={i} className=" mb-3">
             <div className="flex justify-between items-start">
               <div>
                 <p className="font-semibold text-gray-800 !text-sm">{exp.role}</p>
                 <p className="text-sm opacity-80">{exp.company}</p>
+                {exp.location && <p className="text-xs opacity-70">{exp.location}</p>}
               </div>
-              <p className="text-xs opacity-60">{exp.year}</p>
+              <p className="text-xs opacity-60">
+                {exp.start}
+                {exp.start && (exp.end || exp.current) && " - "}
+                {exp.current ? "Present" : exp.end}
+              </p>
             </div>
-            {exp.descFormat === "bullet" ? (
-              exp.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 text-justify">• {line}</p>)
-            ) : exp.descFormat === "number" ? (
-              exp.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 text-justify">{idx + 1}. {line}</p>)
-            ) : (
+            {exp.desc && (
               <p className="text-sm mt-1 text-justify text-gray-700">{exp.desc}</p>
+            )}
+            {exp.reference && (
+              <p className="text-xs mt-1 italic text-gray-600">Reference: {exp.reference}</p>
             )}
           </div>
         ))}
