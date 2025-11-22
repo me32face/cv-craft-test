@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { Sparkles } from "lucide-react";
 
 export default function PersonalInfo({ data, update, onClose, onNext, onSave }) {
   return (
@@ -79,15 +80,32 @@ export default function PersonalInfo({ data, update, onClose, onNext, onSave }) 
 
       {/* Summary */}
       <div>
-        <label className="block text-sm font-semibold mb-1">Professional Summary</label>
+        <div className="flex items-center justify-between mb-1">
+          <label className="block text-sm font-semibold">Professional Summary</label>
+
+          {/* AI Generate Button */}
+          <button
+            className="flex items-center gap-1 px-3 py-1 rounded-full 
+                 bg-gradient-to-r from-purple-400 to-purple-200 
+                 text-[#634BC9] font-medium text-sm shadow-sm 
+                 hover:opacity-90  transition"
+          >
+            <Sparkles size={14}/> 
+            Generate Using AI
+          </button>
+        </div>
+
         <textarea
-          className="w-full border border-gray-300 focus:border-[#634BC9] focus:ring-1 focus:ring-[#634BC9] p-3 outline-none rounded-xl"
+          className="w-full border border-gray-300 focus:border-[#634BC9] 
+               focus:ring-1 focus:ring-[#634BC9] p-3 outline-none 
+               rounded-xl"
           rows="5"
           value={data.summary || ""}
           onChange={(e) => update("summary", e.target.value)}
           placeholder="A brief description of your professional background and key strengths..."
         />
       </div>
+
 
       {/* --- FOOTER BUTTONS --- */}
       <div className="flex items-center justify-between pt-4  text-sm">
