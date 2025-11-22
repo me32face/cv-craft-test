@@ -205,9 +205,19 @@ export default function Template01({ data, onClickSection }) {
 
                 {exp.desc && (
                   exp.descFormat === "bullet" ? (
-                    exp.desc.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 break-words">• {line}</p>)
+                    exp.desc.split('\n').map((line, idx) => {
+                      const trimmed = line.trim();
+                      if (!trimmed) return null;
+                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                      return <p key={idx} className="text-sm mt-1 break-words">{hasPrefix ? trimmed : `• ${trimmed}`}</p>;
+                    })
                   ) : exp.descFormat === "number" ? (
-                    exp.desc.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 break-words">{idx + 1}. {line}</p>)
+                    exp.desc.split('\n').map((line, idx) => {
+                      const trimmed = line.trim();
+                      if (!trimmed) return null;
+                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                      return <p key={idx} className="text-sm mt-1 break-words">{hasPrefix ? trimmed : `${idx + 1}. ${trimmed}`}</p>;
+                    })
                   ) : (
                     <p className="text-sm mt-1 break-words">{exp.desc}</p>
                   )

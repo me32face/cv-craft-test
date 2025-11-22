@@ -1,10 +1,37 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Sparkles } from "lucide-react";
+import { geminiService } from "./gemini";
+import Toast from "../../Toast";
 
 export default function PersonalInfo({ data, update, onClose, onNext, onSave }) {
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  const handleGenerateAI = async () => {
+    const title = data.title;
+    if (!title || title.trim() === "") {
+      setToast("Please enter a professional title first");
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const response = await geminiService.generateContent("summary", title);
+      update("summary", response);
+      setToast("Ai generated successfully!");
+    } catch (error) {
+      console.error("AI generation error:", error);
+      setToast("Failed to generate summary. Please try again.");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
-    <div className="space-y-5">
+    <>
+      {toast && <Toast message={toast} onClose={() => setToast(null)} />}
+      <div className="space-y-5">
 
       {/* SECTION TITLE */}
       <div className="flex items-start justify-between">
@@ -85,13 +112,15 @@ export default function PersonalInfo({ data, update, onClose, onNext, onSave }) 
 
           {/* AI Generate Button */}
           <button
+            onClick={handleGenerateAI}
+            disabled={isGenerating}
             className="flex items-center gap-1 px-3 py-1 rounded-full 
                  bg-gradient-to-r from-purple-400 to-purple-200 
                  text-[#634BC9] font-medium text-sm shadow-sm 
-                 hover:opacity-90  transition"
+                 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
             <Sparkles size={14}/> 
-            Generate Using AI
+            {isGenerating ? "Generating..." : "Generate Using AI"}
           </button>
         </div>
 
@@ -136,5 +165,6 @@ export default function PersonalInfo({ data, update, onClose, onNext, onSave }) 
         </button>
       </div>
     </div>
+    </>
   );
 }

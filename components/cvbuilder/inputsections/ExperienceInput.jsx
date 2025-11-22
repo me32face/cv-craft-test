@@ -1,9 +1,13 @@
 "use client";
 import React, { useState } from "react";
 import { ChevronDown, Sparkles } from "lucide-react";
+import { geminiService } from "./gemini";
+import Toast from "../../Toast";
 
 export default function ExperienceInput({ experiences = [], setExperiences, onClose, onNext }) {
   const [openIndex, setOpenIndex] = useState(0);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [toast, setToast] = useState(null);
 
   const emptyExp = {
     role: "",
@@ -37,8 +41,55 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
 
   const toggleOpen = (i) => setOpenIndex(openIndex === i ? null : i);
 
+  const formatResponse = (text, format) => {
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+    
+    // Helper function to remove all existing bullets, numbers, and dashes
+    const cleanLine = (line) => {
+      return line.replace(/^[•\-*]+\s*/, '').replace(/^\d+\.\s*/, '').trim();
+    };
+    
+    if (format === "default") {
+      return lines.map(cleanLine).join('. ').replace(/\.\s*\./g, '.');
+    }
+    
+    if (format === "bullet") {
+      return lines.map(l => `• ${cleanLine(l)}`).join('\n');
+    }
+    
+    if (format === "number") {
+      return lines.map((l, i) => `${i + 1}. ${cleanLine(l)}`).join('\n');
+    }
+    
+    return text;
+  };
+
+  const handleGenerateAI = async (index) => {
+    const exp = experiences[index];
+    if (!exp.role || exp.role.trim() === "") {
+      setToast("Please enter a position title first");
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const keywords = `${exp.role} at ${exp.company || 'company'}`;
+      const response = await geminiService.generateContent("work experience", keywords);
+      const formattedResponse = formatResponse(response, exp.descFormat || "default");
+      updateField(index, "desc", formattedResponse);
+      setToast("Professional summary generated successfully!");
+    } catch (error) {
+      console.error("AI generation error:", error);
+      setToast("Failed to generate summary. Please try again.");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
-    <div className="w-full space-y-6">
+    <>
+      {toast && <Toast message={toast} onClose={() => setToast(null)} />}
+      <div className="w-full space-y-6">
 
       {/* Empty View First Time */}
       {experiences.length === 0 && (
@@ -234,13 +285,15 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
 
                         {/* AI Generate Button */}
                         <button
+                          onClick={() => handleGenerateAI(i)}
+                          disabled={isGenerating}
                           className="flex items-center gap-1 px-3 py-1 rounded-full 
                                     bg-gradient-to-r from-purple-400 to-purple-200 
                                     text-[#634BC9] font-medium text-sm shadow-sm 
-                                    hover:opacity-90  transition"
+                                    hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition"
                         >
                           <Sparkles size={14} />
-                          Generate Using AI
+                          {isGenerating ? "Generating..." : "Generate Using AI"}
                         </button>
                       </div>
                       <textarea
@@ -309,5 +362,6 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
       )}
 
     </div>
+    </>
   );
 }

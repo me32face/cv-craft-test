@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { Trash2, Sparkles } from "lucide-react";
+import { geminiService } from "./gemini";
+import Toast from "../../Toast";
 
 
 const debounce = (fn, delay = 120) => {
@@ -28,6 +30,8 @@ export default function SkillsInput({ skills = [], setSkills, onClose, onNext })
   const [format, setFormat] = useState(detectFormat);
   const [localSkills, setLocalSkills] = useState(normalized);
   const [newSkillText, setNewSkillText] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [toast, setToast] = useState(null);
 
 
 
@@ -129,6 +133,37 @@ export default function SkillsInput({ skills = [], setSkills, onClose, onNext })
     setNewSkillText("");
   };
 
+  const handleGenerateAI = async () => {
+    if (!newSkillText.trim()) {
+      setToast("Please enter keywords or job role to generate skills");
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const response = await geminiService.generateContent("skills", newSkillText);
+      const skillsList = response.split("\n").map(s => s.trim()).filter(s => s);
+      
+      let updated;
+      if (format === "percentage") {
+        updated = [...localSkills, ...skillsList.map(skill => ({ name: skill, proficiency: 60 }))];
+      } else if (format === "category") {
+        updated = [...localSkills, { category: newSkillText, skills: skillsList, __collapsed: false }];
+      } else {
+        updated = [...localSkills, ...skillsList];
+      }
+      
+      setLocalSkills(updated);
+      setNewSkillText("");
+      setToast("Skills generated successfully!");
+    } catch (error) {
+      console.error("AI generation error:", error);
+      setToast("Failed to generate skills. Please try again.");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
 
   const formatPill = (key, label) => (
     <button
@@ -143,7 +178,9 @@ export default function SkillsInput({ skills = [], setSkills, onClose, onNext })
 
 
   return (
-    <div className="max-w-3xl mx-auto bg-white rounded-2xl p-6">
+    <>
+      {toast && <Toast message={toast} onClose={() => setToast(null)} />}
+      <div className="max-w-3xl mx-auto bg-white rounded-2xl p-6">
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div>
@@ -323,13 +360,15 @@ export default function SkillsInput({ skills = [], setSkills, onClose, onNext })
 
           {/* AI Generate Button */}
           <button
+            onClick={handleGenerateAI}
+            disabled={isGenerating}
             className="flex items-center gap-1 px-3 py-1 rounded-full 
                  bg-gradient-to-r from-purple-400 to-purple-200 
                  text-[#634BC9] font-medium text-sm shadow-sm 
-                 hover:opacity-90  transition"
+                 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
             <Sparkles size={14}/> 
-            Generate Using AI
+            {isGenerating ? "Generating..." : "Generate Using AI"}
           </button>
         </div>
 
@@ -361,5 +400,6 @@ export default function SkillsInput({ skills = [], setSkills, onClose, onNext })
         </button>
       </div>
     </div>
+    </>
   );
 }
