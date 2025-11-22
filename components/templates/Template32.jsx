@@ -34,7 +34,15 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
     projects: [],
     visibleSections: {},
   };
-  const merged = { ...defaults, ...data };
+  const mergedRaw = { ...defaults, ...data };
+
+  // safe profileImage (avoid empty string src)
+  const profileImage =
+    mergedRaw.profileImage && String(mergedRaw.profileImage).trim()
+      ? mergedRaw.profileImage
+      : defaults.profileImage;
+
+  const merged = { ...mergedRaw, profileImage };
 
   // --- helpers ---
   const toArray = (v) => (!v ? [] : Array.isArray(v) ? v : [v]);
@@ -57,6 +65,88 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
     if (s.includes('@') && !s.startsWith('http') && !s.startsWith('mailto:')) return `mailto:${s}`;
     if (!s.startsWith('http://') && !s.startsWith('https://') && !s.startsWith('mailto:')) return `https://${s}`;
     return s;
+  };
+
+  // Date helpers (from Code 2 style)
+  const isYearString = (s) => typeof s === 'string' && /^\d{4}$/.test(s.trim());
+  const formatDate = (dateStr) => {
+    if (!dateStr && dateStr !== 0) return '';
+    if (isYearString(String(dateStr))) return String(dateStr).trim();
+    try {
+      const d = new Date(dateStr);
+      if (Number.isNaN(d.getTime())) return String(dateStr);
+      return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    } catch {
+      return String(dateStr);
+    }
+  };
+
+  const getDateText = (obj) => {
+    if (!obj) return '';
+    // Accept explicit date/year fields
+    if (typeof obj.date === 'string' && obj.date.trim()) return obj.date.trim();
+    if (typeof obj.year === 'string' && obj.year.trim()) return obj.year.trim();
+
+    if (obj.start || obj.end || obj.current) {
+      const startRaw = obj.start ?? '';
+      const endRaw = obj.end ?? '';
+      const startIsYear = isYearString(String(startRaw));
+      const endIsYear = isYearString(String(endRaw));
+      const start = startRaw ? (startIsYear ? String(startRaw).trim() : formatDate(startRaw)) : '';
+      const end = obj.current ? 'Present' : endRaw ? (endIsYear ? String(endRaw).trim() : formatDate(endRaw)) : '';
+
+      if (start && end) return `${start} - ${end}`;
+      if (start) return start;
+      if (end) return end;
+    }
+
+    // fallback to provided year or date-like fields
+    if (obj.year) return String(obj.year);
+    if (obj.date) return String(obj.date);
+    return '';
+  };
+
+  // Render helpers (bullet lists etc.)
+  const renderBullets = (items) =>
+    items?.length ? (
+      <div className="mt-1.5 space-y-1">
+        {items.map((it, idx) => (
+          <div key={idx} className="text-[11px] text-gray-700 leading-relaxed flex gap-2">
+            <span className="select-none">•</span>
+            <span>{String(it)}</span>
+          </div>
+        ))}
+      </div>
+    ) : null;
+
+  const renderExperienceDesc = (exp) => {
+    if (!exp) return null;
+    const raw = exp.desc ?? exp.description ?? '';
+    let lines = [];
+    if (Array.isArray(raw)) lines = raw;
+    else if (typeof raw === 'string') lines = raw.split('\n').map((l) => l.trim()).filter(Boolean);
+    return renderBullets(lines);
+  };
+
+  const renderProjectDesc = (proj) => {
+    if (!proj) return null;
+    const raw = proj.desc ?? proj.description ?? '';
+    let lines = [];
+    if (Array.isArray(raw)) lines = raw;
+    else if (typeof raw === 'string') lines = raw.split('\n').map((l) => l.trim()).filter(Boolean);
+    return renderBullets(lines);
+  };
+
+  const renderEducationDesc = (edu) => {
+    if (!edu) return null;
+    const raw = edu.description ?? edu.desc ?? edu.notes ?? '';
+    if (!raw) return null;
+    if (Array.isArray(raw)) return renderBullets(raw);
+    if (typeof raw === 'string') {
+      const lines = raw.split('\n').map((l) => l.trim()).filter(Boolean);
+      return renderBullets(lines);
+    }
+    return null;
   };
 
   // language normalizer (compatible with both string and object inputs)
@@ -140,30 +230,34 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
 
   // Render skill item using Bullet spans for alignment
   const renderSkillItem = (s, idx) => {
+    // simple string -> bullet + text with pl-2
     if (typeof s === 'string') {
       return (
-        <div key={idx} className="flex items-start gap-3 mb-2">
+        <div key={idx} className="flex items-start gap-0 mb-2">
           <Bullet size={6} colorClass="bg-gray-700" />
-          <div className="text-[12px] leading-tight">{s}</div>
+          <div className="text-[12px] leading-tight pl-5">{s}</div>
         </div>
       );
     }
+
     const sk = typeof s === 'object' ? s : { name: s };
 
+    // category -> category heading + list where each item has pl-2 after bullet
     if (sk.category && Array.isArray(sk.items)) {
       return (
         <div key={idx} className="mb-2">
           <div className="font-medium text-[12px] mb-1">{safeText(sk.category)}:</div>
           {sk.items.filter(Boolean).map((it, j) => (
-            <div key={j} className="flex items-start gap-3 mb-1">
+            <div key={j} className="flex items-start gap-0 mb-1">
               <Bullet size={5} colorClass="bg-gray-700" />
-              <div className="text-[12px] leading-tight">{it}</div>
+              <div className="text-[12px] leading-tight pl-2">{it}</div>
             </div>
           ))}
         </div>
       );
     }
 
+    // percentage/proficiency -> keep progress bar layout (no bullet)
     if (sk.proficiency !== undefined && sk.proficiency !== null) {
       const p = clamp(sk.proficiency);
       return (
@@ -179,13 +273,15 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
       );
     }
 
+    // fallback - treat like simple item
     return (
-      <div key={idx} className="flex items-start gap-3 mb-2">
+      <div key={idx} className="flex items-start gap-0 mb-2">
         <Bullet size={6} colorClass="bg-gray-700" />
-        <div className="text-[12px] leading-tight">{safeText(sk.name || sk.label, 'Skill')}</div>
+        <div className="text-[12px] leading-tight pl-2">{safeText(sk.name || sk.label, 'Skill')}</div>
       </div>
     );
   };
+
 
   // --- prepared sections ---
   const experiences = toArray(merged.experiences);
@@ -293,11 +389,11 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                 <Icon><GiLaurelsTrophy className="w-4 h-4" /></Icon>
                 <span className='mb-4'>KEY ACHIEVEMENTS</span>
               </div>
-              <div className="text-gray-700 text-[12px] space-y-3 pl-6">
+              <div className="text-gray-700 text-[12px] space-y-3 pl-3">
                 {certificates.length ? certificates.slice(0,4).map((c,i) => (
                   <div key={i} className="flex gap-3 items-start">
                     <span className="w-2 h-2 rounded-full bg-gray-700 mt-2 block" />
-                    <div>
+                    <div className='pl-2'>
                       <div className="font-semibold">{safeText(c.name || c.title, 'Achievement')}</div>
                       {c.issuer && <div className="text-[12px] text-gray-500">{c.issuer} • {c.year || ''}</div>}
                     </div>
@@ -316,8 +412,24 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                 <Icon><AiFillTool className="w-4 h-4"/></Icon>
                 <span className='mb-4'>SKILLS</span>
               </div>
-              <div className="text-gray-700 pl-6">
-                {skills.length ? skills.map((s,i) => renderSkillItem(s,i)) : <div className="text-gray-500">Your top skills</div>}
+
+              <div className="text-gray-700">
+                {skills.length ? skills.map((s, i) => {
+                  const isString = typeof s === 'string';
+                  const isCategory = s && typeof s === 'object' && (s.category && Array.isArray(s.items));
+                  const isPercentage = s && typeof s === 'object' && (s.proficiency !== undefined && s.proficiency !== null);
+
+                  // rule: bullet (string) => pl-6, percentage/category => pl-10
+                  const paddingClass = isString ? 'pl-3.5' : (isPercentage || isCategory ? 'pl-10' : 'pl-10');
+
+                  return (
+                    <div key={i} className={paddingClass}>
+                      {renderSkillItem(s, i)}
+                    </div>
+                  );
+                }) : (
+                  <div className="text-gray-500 text-xs pl-10">Your top skills</div>
+                )}
               </div>
             </div>
           )}
@@ -377,52 +489,41 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
 
               <div className={CONTENT_GUTTER_CLASS}>
                 {projects.length ? projects.map((proj, i) => {
-                  const desc = proj.desc || '';
-                  const lines = desc.split('\n').map(l => l.trim()).filter(Boolean);
+                  const projYear = proj.year || proj.date || '';
+                  const projLink = proj.link || proj.url || proj.website || '';
                   return (
                     <div key={i} className="mb-5 cv-item">
                       <div className="flex justify-between items-start gap-4">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
                             <div className="font-semibold text-gray-800 text-[13px]">{safeText(proj.name || proj.title)}</div>
-                            {proj.link && (
-                              <a href={makeHref(proj.link)} target="_blank" rel="noreferrer" className="text-[12px] no-underline hover:underline text-green-800 break-words">{proj.link}</a>
+                            {projLink && (
+                              <a href={makeHref(projLink)} target="_blank" rel="noreferrer" className="text-[12px] no-underline hover:underline text-green-800 break-words">{projLink}</a>
                             )}
                           </div>
                           {proj.role && <div className="text-[12px] text-green-800 font-medium mt-1">{proj.role}</div>}
                         </div>
-                        <div className="text-[12px] text-gray-500 text-right min-w-[110px]">{safeText(proj.year)}</div>
+                        <div className="text-[12px] text-gray-500 text-right min-w-[110px]">{safeText(projYear)}</div>
                       </div>
 
-                      {proj.descFormat === 'bullet' && lines.length > 0 && (
-                        <div className="mt-3">
-                          {lines.map((ln, idx) => (
-                            <div key={idx} className="flex gap-3 items-start mb-2">
-                              <Bullet size={6} colorClass="bg-gray-700 mt-2" />
-                              <span className="text-gray-700 text-[11px] leading-tight">{ln}</span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {proj.descFormat === 'number' && lines.length > 0 && (
-                        <div className="mt-3">
-                          {lines.map((ln, idx) => (
+                      <div className="mt-3">
+                        {proj.descFormat === 'bullet' || Array.isArray(proj.desc) ? (
+                          renderProjectDesc(proj)
+                        ) : proj.descFormat === 'number' ? (
+                          (proj.desc || '').split('\n').map((line, idx) => line.trim() && (
                             <div key={idx} className="flex gap-3 items-start mb-2">
                               <span className="inline-block mt-1 text-[11px] leading-5 w-4 text-right">{idx+1}.</span>
-                              <span className="text-gray-700 text-[11px] leading-tight">{ln}</span>
+                              <span className="text-gray-700 text-[11px] leading-tight">{line}</span>
                             </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {proj.descFormat !== 'bullet' && proj.descFormat !== 'number' && proj.desc && (
-                        <div className="mt-3 text-gray-700 text-[11px] leading-tight">{proj.desc}</div>
-                      )}
+                          ))
+                        ) : (
+                          proj.desc && <div className="text-gray-700 text-[11px] leading-tight">{proj.desc}</div>
+                        )}
+                      </div>
                     </div>
                   );
                 }) : (
-                  <div className="text-gray-500">Add projects you worked on — include role, year and short impact bullets.</div>
+                  <div className="text-gray-500 text-xs">Add projects you worked on — include role, year and short impact bullets.</div>
                 )}
               </div>
             </section>
@@ -438,47 +539,36 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
 
               <div className={CONTENT_GUTTER_CLASS}>
                 {experiences.length ? experiences.map((exp, i) => {
-                  const desc = exp.desc || '';
-                  const lines = desc.split('\n').map(l=>l.trim()).filter(Boolean);
+                  const dateText = getDateText(exp) || safeText(exp.year, '');
+                  const expLocation = exp.location || exp.place || exp.address || '';
                   return (
                     <div key={i} className="mb-6 cv-item">
                       <div className="flex justify-between items-start gap-4">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
                             <div className="font-semibold text-gray-800 text-[13px]">{exp.company}</div>
-                            {exp.location && <span className="text-[12px] text-gray-500">• {exp.location}</span>}
+                            {expLocation && <span className="text-[12px] text-gray-500">• {expLocation}</span>}
                           </div>
                           <div className="text-[12px] text-green-800 font-medium mt-1">{exp.role}</div>
                         </div>
-                        <div className="text-[12px] text-gray-500 text-right min-w-[110px]">{exp.year}</div>
+                        <div className="text-[12px] text-gray-500 text-right min-w-[110px]">{dateText}</div>
                       </div>
 
                       {/* description */}
-                      {exp.descFormat === 'bullet' && lines.length > 0 && (
-                        <div className="mt-3">
-                          {lines.map((ln, idx) => (
-                            <div key={idx} className="flex gap-3 items-start mb-2">
-                              <Bullet size={6} colorClass="bg-gray-700 mt-2" />
-                              <span className="text-gray-700 text-[11px] leading-tight">{ln}</span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {exp.descFormat === 'number' && lines.length > 0 && (
-                        <div className="mt-3">
-                          {lines.map((ln, idx) => (
+                      <div className="mt-3">
+                        {exp.descFormat === 'bullet' ? (
+                          renderExperienceDesc(exp)
+                        ) : exp.descFormat === 'number' ? (
+                          (exp.desc || '').split('\n').map((line, idx) => line.trim() && (
                             <div key={idx} className="flex gap-3 items-start mb-2">
                               <span className="inline-block mt-1 text-[11px] leading-5 w-4 text-right">{idx+1}.</span>
-                              <span className="text-gray-700 text-[11px] leading-tight">{ln}</span>
+                              <span className="text-gray-700 text-[11px] leading-tight">{line}</span>
                             </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {exp.descFormat !== 'bullet' && exp.descFormat !== 'number' && exp.desc && (
-                        <div className="mt-3 text-gray-700 text-[11px] leading-tight">{exp.desc}</div>
-                      )}
+                          ))
+                        ) : (
+                          exp.desc && <div className="text-gray-700 text-[11px] leading-tight">{exp.desc}</div>
+                        )}
+                      </div>
                     </div>
                   );
                 }) : (
@@ -499,15 +589,24 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
               </div>
 
               <div className={CONTENT_GUTTER_CLASS}>
-                {education.length ? education.map((edu, i) => (
-                  <div key={i} className="cv-item flex justify-between items-start mb-4">
-                    <div>
-                      <div className="font-semibold text-gray-800 text-[14px]">{safeText(edu.course, 'Degree and Field')}</div>
-                      <div className="text-[12px] text-gray-600">{safeText(edu.school, 'School or University')}</div>
+                {education.length ? education.map((edu, i) => {
+                  const dateText = getDateText(edu) || safeText(edu.year, '');
+                  const eduLocation = edu.location || edu.place || edu.address || '';
+                  return (
+                    <div key={i} className="cv-item flex justify-between items-start mb-4">
+                      <div>
+                        <div className="font-semibold text-gray-800 text-[14px]">{safeText(edu.course || edu.degree, 'Degree and Field')}</div>
+                        <div className="text-[12px] text-gray-600">{safeText(edu.school, 'School or University')}</div>
+                        {edu.field && <div className="text-[12px] text-gray-600 mt-1">{edu.field}</div>}
+                        {/* Education description (new: supports arrays and newline strings) */}
+                        <div className="mt-2">
+                          {renderEducationDesc(edu)}
+                        </div>
+                      </div>
+                      <div className="text-[12px] text-gray-500">{dateText}</div>
                     </div>
-                    <div className="text-[12px] text-gray-500">{safeText(edu.year, '')}</div>
-                  </div>
-                )) : (
+                  );
+                }) : (
                   <div className="text-gray-500">Add your education details here.</div>
                 )}
               </div>

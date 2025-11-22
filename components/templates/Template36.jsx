@@ -1,433 +1,497 @@
 'use client';
 import React from 'react';
+import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput'; // kept as-is (we shadow it below)
 
-/*
- Template-PHP-Alt.jsx
- A fresh, unique CV design for a senior PHP developer (now at Amazon).
- JavaScript (not TypeScript). Self-contained sample defaults if `data` is empty.
-*/
-
-export default function TemplatePHPAlt({ data = {}, onClickSection }) {
-  // ---------------------
-  // Helpers
-  // ---------------------
+export default function TemplateGracePerfect({ data = {}, onClickSection }) {
   const toArray = (v) => (!v ? [] : Array.isArray(v) ? v : [v]);
-  const safe = (v, fallback = '') => (v == null ? fallback : String(v));
-  const toText = (val) => {
-    if (val == null) return '';
-    if (typeof val === 'string' || typeof val === 'number') return String(val);
-    if (typeof val === 'object') return val.title || val.name || val.company || val.role || JSON.stringify(val);
-    return '';
-  };
-  const parsePct = (raw) => {
-    if (raw == null) return 0;
-    if (typeof raw === 'number') return Math.max(0, Math.min(100, Math.round(raw)));
-    if (typeof raw === 'string') {
-      const n = parseInt(raw.replace(/[^\d-]/g, ''), 10);
-      return Number.isNaN(n) ? 0 : Math.max(0, Math.min(100, n));
-    }
-    if (typeof raw === 'object') {
-      return parsePct(raw.proficiency ?? raw.level ?? raw.value ?? 0);
-    }
-    return 0;
-  };
-  const initials = (name = '') =>
-    (name || 'PH')
-      .split(' ')
-      .map((p) => (p ? p[0] : ''))
-      .join('')
-      .slice(0, 3)
-      .toUpperCase();
 
-  // Formats period display (prefer year or start/end)
-  const formatPeriod = (exp) => {
-    if (!exp) return '';
-    if (exp.year) return toText(exp.year);
-    const s = exp.start ? toText(exp.start) : '';
-    const e = exp.end ? toText(exp.end) : '';
-    if (s && e) return `${s} — ${e}`;
-    if (s && !e) return `${s} — Present`;
-    if (!s && e) return e;
-    return '';
+  const defaults = {
+    name: 'GRACE JACKSON',
+    title: 'Data Scientist | Advanced Analytics | Machine Learning',
+    phone: '+1-(234)-555-1234',
+    email: 'help@enhancv.com',
+    location: '',
+    profileImage: '/mnt/data/449348cb-7568-45a5-9e8f-ea0cb9114ed7.png',
+    summary: '',
+    experiences: [],
+    projects: [],
+    education: [],
+    skills: [],
+    achievements: [],
+    certificates: [],
+    languages: [],
+    socialLinks: [],
+    visibleSections: {},
   };
 
-  // Description renderer (string with newlines | array | bullets)
-  const renderDescription = (exp) => {
+  // Merge incoming data but keep defaults for missing fields
+  const mergedRaw = { ...defaults, ...data };
+
+  // Safe profile image (avoid empty string src)
+  const profileImage =
+    mergedRaw.profileImage && String(mergedRaw.profileImage).trim()
+      ? mergedRaw.profileImage
+      : defaults.profileImage;
+
+  // Place detection prioritizes 'place' then many fallbacks (important: reads 'address' used by PersonalInfo)
+  const placeText =
+    (mergedRaw.place && String(mergedRaw.place).trim())
+      ? mergedRaw.place
+      : (mergedRaw.city && String(mergedRaw.city).trim())
+        ? mergedRaw.city
+        : (mergedRaw.town && String(mergedRaw.town).trim())
+          ? mergedRaw.town
+          : (mergedRaw.region && String(mergedRaw.region).trim())
+            ? mergedRaw.region
+            : (mergedRaw.address && String(mergedRaw.address).trim())
+              ? mergedRaw.address
+              : (mergedRaw.location && String(mergedRaw.location).trim())
+                ? mergedRaw.location
+                : '';
+
+  // For backward compatibility show header location (address or location)
+  const headerLocation =
+    (mergedRaw.address && String(mergedRaw.address).trim())
+      ? mergedRaw.address
+      : (mergedRaw.location && String(mergedRaw.location).trim())
+        ? mergedRaw.location
+        : '';
+
+  const merged = { ...mergedRaw, profileImage, place: placeText, location: headerLocation };
+
+  // Arrays
+  const experiences = toArray(merged.experiences);
+  const projects = toArray(merged.projects);
+  const education = toArray(merged.education);
+  const skills = toArray(merged.skills);
+  const achievements = toArray(merged.achievements);
+  const certificates = toArray(merged.certificates);
+  const languages = toArray(merged.languages);
+  const socialLinksRaw = merged.socialLinks || merged.social || merged.socialLinksArray || [];
+
+  // Social normalization
+  const detectKnownLinksFromArray = (arr = []) =>
+    (Array.isArray(arr) ? arr : []).filter(Boolean).map((s) => String(s).trim()).filter(Boolean);
+
+  const getSocialArray = () => {
+    if (Array.isArray(socialLinksRaw) && socialLinksRaw.length) return detectKnownLinksFromArray(socialLinksRaw);
+    if (socialLinksRaw && typeof socialLinksRaw === 'object' && !Array.isArray(socialLinksRaw)) {
+      return Object.values(socialLinksRaw).filter(Boolean).map(String).map((s) => s.trim()).filter(Boolean);
+    }
+    const fallback = [];
+    ['linkedin', 'github', 'portfolio', 'twitter'].forEach((k) => {
+      if (merged[k] && String(merged[k]).trim()) fallback.push(String(merged[k]).trim());
+    });
+    return Array.from(new Set(fallback));
+  };
+
+  const socialArray = getSocialArray();
+
+  // Achievements fallback -> promote certificates if achievements empty
+  const achievementsToShow =
+    achievements.length > 0
+      ? achievements
+      : certificates.length > 0
+      ? certificates.map((c) => ({
+          title: c.name || 'Certification',
+          desc:
+            (c.issuer ? `${c.issuer}` : '') +
+            (c.year || c.date ? ` • ${c.year || c.date}` : ''),
+        }))
+      : [];
+
+  // Date helpers (keeps previous flexible parsing)
+  const isYearString = (s) => typeof s === 'string' && /^\d{4}$/.test(s.trim());
+  const formatDate = (dateStr) => {
+    if (!dateStr && dateStr !== 0) return '';
+    if (isYearString(String(dateStr))) return String(dateStr).trim();
+    try {
+      const d = new Date(dateStr);
+      if (Number.isNaN(d.getTime())) return String(dateStr);
+      return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    } catch {
+      return String(dateStr);
+    }
+  };
+
+  const getDateText = (obj) => {
+    if (!obj) return '';
+    if (typeof obj.date === 'string' && obj.date.trim()) return obj.date.trim();
+    if (typeof obj.year === 'string' && obj.year.trim()) return obj.year.trim();
+
+    if (obj.start || obj.end || obj.current) {
+      const startRaw = obj.start ?? '';
+      const endRaw = obj.end ?? '';
+      const startIsYear = isYearString(String(startRaw));
+      const endIsYear = isYearString(String(endRaw));
+      const start = startRaw ? (startIsYear ? String(startRaw).trim() : formatDate(startRaw)) : '';
+      const end = obj.current ? 'Present' : endRaw ? (endIsYear ? String(endRaw).trim() : formatDate(endRaw)) : '';
+
+      if (start && end) return `${start} - ${end}`;
+      if (start) return start;
+      if (end) return end;
+    }
+
+    return '';
+  };
+
+  // Render helpers
+  // Adjusted bullets so wrapped lines align under text (use pl-6, don't use negative indent)
+const renderBullets = (items) =>
+  items?.length ? (
+    <div className="mt-1.5 space-y-1">
+      {items.map((it, idx) => (
+        <div key={idx} className="text-[10px] text-gray-700 leading-relaxed flex gap-2">
+          <span className="select-none">•</span>
+          <span>{String(it)}</span>
+        </div>
+      ))}
+    </div>
+  ) : null;
+
+  const renderExperienceDesc = (exp) => {
     if (!exp) return null;
+    const raw = exp.desc ?? exp.description ?? '';
+    let lines = [];
+    if (Array.isArray(raw)) lines = raw;
+    else if (typeof raw === 'string') lines = raw.split('\n').map((l) => l.trim()).filter(Boolean);
+    return renderBullets(lines);
+  };
 
-    // bullets array has highest priority
-    if (Array.isArray(exp.bullets) && exp.bullets.length) {
-      return (
-        <ul className="mt-2 ml-5 list-disc text-sm">
-          {exp.bullets.map((b, idx) => {
-            const t = toText(b).trim();
-            if (!t) return null;
-            return <li key={idx}>{t}</li>;
-          })}
-        </ul>
-      );
+  const renderEducationDesc = (edu) => {
+    if (!edu) return null;
+    const raw = edu.description ?? edu.desc ?? edu.notes ?? '';
+    if (!raw) return null;
+    if (Array.isArray(raw)) return renderBullets(raw);
+    if (typeof raw === 'string') {
+      const lines = raw.split('\n').map((l) => l.trim()).filter(Boolean);
+      return renderBullets(lines);
     }
-
-    // desc as array
-    if (Array.isArray(exp.desc) && exp.desc.length) {
-      if (exp.descFormat === 'number' || exp.descFormat === 'ordered') {
-        return (
-          <ol className="mt-2 ml-5 list-decimal text-sm">
-            {exp.desc.map((d, idx) => {
-              const t = toText(d).trim();
-              if (!t) return null;
-              return <li key={idx}>{t}</li>;
-            })}
-          </ol>
-        );
-      }
-
-      if (exp.descFormat === 'bullet' || exp.descFormat === 'list') {
-        return (
-          <ul className="mt-2 ml-5 list-disc text-sm">
-            {exp.desc.map((d, idx) => {
-              const t = toText(d).trim();
-              if (!t) return null;
-              return <li key={idx}>{t}</li>;
-            })}
-          </ul>
-        );
-      }
-
-      return (
-        <div className="mt-2 text-sm">
-          {exp.desc.map((d, idx) => {
-            const t = toText(d).trim();
-            if (!t) return null;
-            return <p key={idx} className="mb-1">{t}</p>;
-          })}
-        </div>
-      );
-    }
-
-    // desc as string: split on new lines
-    if (typeof exp.desc === 'string' && exp.desc.trim()) {
-      const lines = exp.desc.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-
-      if (exp.descFormat === 'number' || exp.descFormat === 'ordered') {
-        return (
-          <ol className="mt-2 ml-5 list-decimal text-sm">
-            {lines.map((line, idx) => <li key={idx}>{line}</li>)}
-          </ol>
-        );
-      }
-      if (exp.descFormat === 'bullet' || exp.descFormat === 'list') {
-        return (
-          <ul className="mt-2 ml-5 list-disc text-sm">
-            {lines.map((line, idx) => <li key={idx}>{line}</li>)}
-          </ul>
-        );
-      }
-      return (
-        <div className="mt-2 text-sm">
-          {lines.map((line, idx) => <p key={idx} className="mb-1">{line}</p>)}
-        </div>
-      );
-    }
-
     return null;
   };
 
-  // ---------------------
-  // Data canonicalization & defaults (PHP developer at Amazon sample)
-  // ---------------------
-  const experiences = toArray(data.experiences ?? [
-    {
-      role: 'Senior PHP Developer',
-      company: 'Amazon (AWS Retail Systems)',
-      start: 'Aug 2021',
-      end: 'Present',
-      descFormat: 'bullet',
-      bullets: [
-        'Lead backend services for high-throughput order-processing microservices handling 50k+ TPS during peak.',
-        'Designed and migrated legacy monolith to modular PHP + Lumen microservices; reduced latency by 40%.',
-        'Implemented CI/CD pipelines (GitHub Actions) with zero-downtime deployments across 8 regions.',
-      ],
-    },
-    {
-      role: 'PHP Team Lead',
-      company: 'TechNova Solutions',
-      start: '2017',
-      end: '2021',
-      desc: 'Managed a team of 6 PHP engineers.\nDelivered 12+ client projects including e-commerce, logistics and payment integrations.',
-      descFormat: 'bullet',
-    },
-    {
-      role: 'PHP / Fullstack Developer',
-      company: 'WebCraft Studios',
-      start: '2013',
-      end: '2017',
-      descFormat: 'number',
-      desc: [
-        'Built custom CMS and integrations in Laravel and Symfony.',
-        'Optimised database queries and created caching layers; improved page load by 60%.',
-      ],
-    },
-  ]);
+  const renderProjectDesc = (proj) => {
+    if (!proj) return null;
+    const raw = proj.desc ?? proj.description ?? '';
+    let lines = [];
+    if (Array.isArray(raw)) lines = raw;
+    else if (typeof raw === 'string') lines = raw.split('\n').map((l) => l.trim()).filter(Boolean);
+    return renderBullets(lines);
+  };
 
-  const education = toArray(data.education ?? [
-    { degree: 'B.Sc. Computer Science', school: 'University of Chennai', year: '2013' },
-  ]);
+  // Local renderLanguage: override/shadow imported renderLanguage so we can control font-size/layout in this file
+  const renderLanguage = (langObj, key) => {
+    // normalize
+    const obj = langObj || {};
+    const name = obj.name || '';
+    const displayFormat = obj.displayFormat || (obj.proficiency !== undefined ? 'percentage' : obj.level ? 'level' : 'simple');
+    const proficiency = obj.proficiency ?? null;
+    const level = obj.level ?? '';
 
-  const certificates = toArray(data.certificates ?? [
-    { name: 'AWS Certified Developer – Associate', issuer: 'Amazon', year: '2022' },
-    { name: 'Zend Certified PHP Engineer', issuer: 'Zend', year: '2016' },
-  ]);
+    // small font sizes so languages fit
+    return (
+      <div key={key} className="text-[10px] text-gray-800">
+        <div className="flex justify-between items-start">
+          <span className="font-medium">{name}</span>
 
-  const skills = toArray(data.skills ?? [
-    { name: 'PHP', proficiency: 95 },
-    { name: 'Laravel', proficiency: 90 },
-    { name: 'Symfony', proficiency: 80 },
-    { name: 'MySQL', proficiency: 88 },
-    { name: 'Redis', proficiency: 75 },
-    { name: 'Docker', proficiency: 80 },
-    { name: 'AWS (EC2, RDS, SQS)', proficiency: 85 },
-    'Unit Testing',
-    'REST APIs',
-  ]);
-
-  const languages = toArray(data.languages ?? [
-    { name: 'English', level: 'Native', displayFormat: 'level' },
-    { name: 'Tamil', level: 'Native', displayFormat: 'level' },
-  ]);
-
-  const projects = toArray(data.projects ?? [
-    {
-      title: 'Global Order Service',
-      role: 'Lead Backend Engineer',
-      desc: 'High-availability order processing system for retail platform. Implemented event-driven architecture with SQS and Lambda adapters for asynchronous workflows.',
-      tech: ['PHP', 'Lumen', 'SQS', 'RDS', 'Redis'],
-    },
-  ]);
-
-  const awards = toArray(data.awards ?? ['Amazon Spot Award 2023 — Operational Excellence']);
-  const references = toArray(data.references ?? [{ name: 'R. Srinivasan', title: 'Engineering Manager, Amazon', email: 'rsrin@amazon.com' }]);
-
-  // allow template-level override of basic fields (name/title/contact)
-  const personName = toText(data.name) || 'Karthik R';
-  const personTitle = toText(data.title) || 'Senior PHP Developer';
-  const personEmail = safe(data.email, 'karthik.r@example.com');
-  const personPhone = safe(data.phone, '+91 98765 43210');
-  const personLocation = safe(data.location, 'Bengaluru, India');
-  const profileImage = data.profileImage || null;
-
-  // ---------------------
-  // Rendering
-  // ---------------------
-  return (
-    <div id="cv-preview" className="w-[794px] min-h-[1123px] bg-white mx-auto shadow-lg border font-sans text-gray-900">
-      {/* header with Amazon accent */}
-      <header className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-500 text-gray-900">
-        <div>
-          <div className="text-2xl font-extrabold tracking-tight">{personName}</div>
-          <div className="text-sm font-medium opacity-90">{personTitle} — <span className="italic">PHP & Backend</span></div>
-        </div>
-
-        <div className="flex items-center gap-4">
-          {profileImage ? (
-            <img src={profileImage} alt={personName} className="w-16 h-16 object-cover rounded-full border-2 border-white" />
-          ) : (
-            <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-xl font-bold text-yellow-700">
-              {initials(personName)}
-            </div>
+          {displayFormat === 'level' && (
+            <span className="text-[8px] opacity-70 ml-2">{level}</span>
           )}
-          <div className="text-right text-xs">
-            <div>{personLocation}</div>
-            <div className="mt-1">{personPhone}</div>
-            <div>{personEmail}</div>
+
+          {displayFormat === 'percentage' && (
+            <span className="text-[8px] opacity-70 ml-2 mt-2">{proficiency}%</span>
+          )}
+        </div>
+
+        {displayFormat === 'percentage' && (
+          <div className="w-full bg-gray-200 h-1 rounded-full mt-2">
+            <div
+              className="h-1 rounded-full bg-blue-900"
+              style={{ width: `${Number(proficiency || 0)}%` }}
+            />
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // A4 wrapper style - FIXED: Use proper page break handling
+  const wrapperStyle = {
+    width: '210mm',
+    minHeight: '297mm',
+    boxSizing: 'border-box',
+    background: '#ffffff',
+  };
+
+  // display vars
+  const displayPlace = merged.place || '';
+  const displayLocation = merged.location || '';
+
+  return (
+    <div id="pdf-template" className="mx-auto" style={{ width: '794px', minHeight: '1123px', margin: '0 auto', boxSizing: 'border-box', fontFamily: 'Poppins, Inter, Arial, sans-serif' }}>
+
+      <div className="px-10 py-8" style={{ minHeight: '297mm', height: 'auto' }}>
+        {/* HEADER */}
+        <div className="flex justify-between items-start cv-section">
+          <div className="max-w-[70%]">
+            <h1 className="text-[22px] font-extrabold tracking-tight text-blue-900 leading-tight">{merged.name}</h1>
+            <div className="text-[11px] font-semibold text-orange-500 mt-1">{merged.title}</div>
+
+            {/* header location line (reads address/location from PersonalInfo) */}
+            <div className="mt-1 text-[10px] text-gray-700">{displayLocation}</div>
+
+            <div className="flex flex-wrap items-center gap-1 text-[9px] text-gray-600 mt-2.5">
+              {merged.phone && (
+                <div className="flex items-center gap-1">
+                  <span>📞</span><span>{merged.phone}</span>
+                </div>
+              )}
+              {merged.email && (
+                <div className="flex items-center gap-1">
+                  <span>✉️</span><span>{merged.email}</span>
+                </div>
+              )}
+
+              {socialArray.length > 0 && (
+                <div className="flex flex-wrap items-center gap-3">
+                  {socialArray.map((lnk, i) => {
+                    if (!lnk) return null;
+                    const href = String(lnk).startsWith('http') ? lnk : `https://${lnk}`;
+                    const label = String(lnk).replace(/^https?:\/\//, '');
+                    return <a key={i} href={href} target="_blank" rel="noreferrer" className="text-gray-700 underline text-[9px]">{label}</a>;
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="flex-shrink-0 text-right">
+            <div className="w-24 h-24 overflow-hidden rounded-full border border-gray-200 shadow-sm bg-white mx-auto">
+              {profileImage ? (
+                <img src={profileImage} alt="profile" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-gray-100" />
+              )}
+            </div>
           </div>
         </div>
-      </header>
 
-      <div className="flex">
-        {/* left: profile / quick info */}
-        <aside className="w-72 bg-gray-50 p-6 border-r flex flex-col gap-6">
-          {/* Summary box */}
-          <div>
-            <h3 className="text-sm font-semibold uppercase text-gray-600">Profile</h3>
-            <p className="mt-2 text-sm text-gray-700">
-              {toText(data.headline) ||
-                data.summary ||
-                'Senior PHP developer with 12+ years building scalable backend systems, microservices and integrations. Currently driving backend initiatives at Amazon.'}
-            </p>
-          </div>
+        {/* SUMMARY (always shown) */}
+        <div className="mt-3 cv-section">
+          <h2 className="text-[12px] font-bold text-blue-800 mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection('summary')}>SUMMARY</h2>
+          <p className="text-[10px] text-gray-700 leading-relaxed">{merged.summary || ''}</p>
+        </div>
 
-          {/* Skills compact */}
-          <div>
-            <h3 className="text-sm font-semibold uppercase text-gray-600">Top Skills</h3>
-            <div className="mt-3 space-y-3">
-              {skills.slice(0, 6).map((s, i) => {
-                if (typeof s === 'string') {
-                  return (
-                    <div key={i} className="text-sm bg-white p-2 rounded border">{s}</div>
-                  );
-                }
-                const name = toText(s.name || s.label);
-                const pct = parsePct(s.proficiency ?? s.level ?? s.value);
+        {/* EXPERIENCE */}
+        <div className="mt-3 cv-section">
+          <h2 className="text-[12px] font-bold text-blue-800 mb-3 cursor-pointer" onClick={() => onClickSection && onClickSection('experience')}>EXPERIENCE</h2>
+          <div className="relative">
+            <div className="absolute left-[135px] top-0 bottom-0 w-[2px] bg-[#D0D0D0]" />
+
+            <div className="space-y-6">
+              {(experiences.length ? experiences : [
+                { date: '02/2020 - Present', location: 'San Francisco, CA', role: 'Senior Data Scientist', company: 'Tech Innovations Inc.', desc: ['Led a team to optimize algorithm performance.'] },
+              ]).map((exp, idx) => {
+                const dateText = getDateText(exp);
+                const expLocation = exp.location || exp.place || exp.address || exp.city || '';
+                const rawRef = exp.reference ?? exp.ref ?? exp.references ?? '';
+                let refLines = [];
+                if (Array.isArray(rawRef)) refLines = rawRef.filter(Boolean).map(String);
+                else if (typeof rawRef === 'string') refLines = rawRef.split('\n').map((l) => l.trim()).filter(Boolean);
+
                 return (
-                  <div key={i}>
-                    <div className="flex justify-between text-xs mb-1">
-                      <span>{name}</span>
-                      <span className="opacity-70">{pct}%</span>
+                  <div key={idx} className="grid grid-cols-[150px,1fr] gap-5 items-start cv-item">
+                    <div className="relative">
+                      <div className="text-[10px] font-semibold text-blue-800">{dateText}</div>
+                      <div className="text-[10px] text-orange-500 mt-0.5">{exp.company || ''}</div>
+                      <div className="text-[9px] text-gray-500 mt-0.5">{expLocation}</div>
+                      <div className="absolute right-[-9px] top-[10px] w-3 h-3 bg-blue-900 rounded-full border-2 border-white shadow-sm" />
                     </div>
-                    <div className="w-full bg-white rounded h-2">
-                      <div className="h-2 bg-yellow-500 rounded" style={{ width: `${pct}%` }} />
+
+                    <div>
+                      <div className="text-[11px] font-semibold text-blue-900">{exp.role || exp.title || ''}</div>
+                      <div className="mt-1.5">{renderExperienceDesc(exp)}</div>
+
+                      {/* References -> bullets when multiple lines provided */}
+                      {refLines.length > 0 && (
+                        refLines.length === 1 ? (
+                          <div className="mt-1 text-[10px] text-gray-600 italic">Reference: {refLines[0]}</div>
+                        ) : (
+                          <div className="mt-1">
+                            <div className="text-[10px] font-medium text-gray-700">References:</div>
+                            <ul className="list-disc list-inside mt-1 space-y-0.5">
+                              {refLines.map((r, ri) => <li key={ri} className="text-[10px] text-gray-600">{r}</li>)}
+                            </ul>
+                          </div>
+                        )
+                      )}
                     </div>
                   </div>
                 );
               })}
             </div>
           </div>
+        </div>
 
-          {/* Languages */}
-          <div>
-            <h3 className="text-sm font-semibold uppercase text-gray-600">Languages</h3>
-            <div className="mt-2 space-y-1 text-sm">
-              {languages.map((l, i) => {
-                const name = toText(typeof l === 'string' ? l : l.name || l.language);
-                const level = typeof l === 'object' && (l.level || l.levelText || l.levelLabel);
-                return (
-                  <div key={i} className="flex justify-between">
-                    <span>{name}</span>
-                    <span className="opacity-70">{level || ''}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+        {/* PROJECTS - added directly under EXPERIENCE */}
+        <div className="mt-3 cv-section">
+          <h2 className="text-[12px] font-bold text-blue-800 mb-3 cursor-pointer" onClick={() => onClickSection && onClickSection('projects')}>PROJECTS</h2>
 
-          {/* Certificates */}
-          <div>
-            <h3 className="text-sm font-semibold uppercase text-gray-600">Certifications</h3>
-            <div className="mt-2 space-y-2 text-sm">
-              {certificates.map((c, i) => (
-                <div key={i} className="bg-white p-2 rounded border">
-                  <div className="font-medium">{toText(c.name)}</div>
-                  <div className="text-xs opacity-80">{toText(c.issuer)} • {toText(c.year)}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Contact CTA */}
-          <div className="mt-auto">
-            <div className="text-xs text-gray-500">Available for interviews — Open to relocation</div>
-            <div className="mt-3">
-              <button className="w-full bg-yellow-600 text-white py-2 rounded text-sm font-semibold"
-                onClick={() => onClickSection && onClickSection('contact')}>Contact</button>
-            </div>
-          </div>
-        </aside>
-
-        {/* right: main content */}
-        <main className="flex-1 p-8">
-          {/* Current company banner */}
-          <div className="mb-6 p-4 rounded-lg border-l-4 border-yellow-500 bg-white shadow-sm flex items-center justify-between">
-            <div>
-              <div className="text-sm font-semibold">Current Role</div>
-              <div className="text-lg font-bold">{experiences[0] ? toText(experiences[0].role) : 'Senior PHP Developer'}</div>
-              <div className="text-sm opacity-80">{experiences[0] ? toText(experiences[0].company) : 'Amazon'}</div>
-            </div>
-            <div className="text-xs text-gray-600">{formatPeriod(experiences[0] || {})}</div>
-          </div>
-
-          {/* Experience timeline */}
-          <section className="mb-8">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Experience</h2>
-            </div>
-
-            <div className="mt-4 space-y-6">
-              {experiences.map((exp, idx) => (
-                <article key={idx} className="relative">
-                  <div className="absolute left-0 top-1">
-                    {/* <div className="w-3 h-3 bg-yellow-500 rounded-full border-2 border-white" /> */}
-                    {idx < experiences.length - 1 && <div className="w-px h-full bg-gray-200 mt-2" style={{ height: '80%' }} />}
-                  </div>
-
-                  <div className="bg-white p-4 rounded border shadow-sm">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <div className="font-semibold">{toText(exp.role)}</div>
-                        <div className="text-sm opacity-80">{toText(exp.company)}</div>
-                      </div>
-                      <div className="text-xs text-gray-500">{formatPeriod(exp)}</div>
+          {/* Changed to a 2-column grid. Kept commented code intact as requested. */}
+          <div className="grid grid-cols-2 gap-6">
+            {(projects.length ? projects : [
+              { name: 'Market Trend Predictor', year: '2022', link: '', desc: ['Built a time-series forecasting model used to predict monthly sales.'] }
+            ]).map((proj, pidx) => {
+              const projYear = proj.year || proj.date || '';
+              const projLink = proj.link || proj.url || '';
+              return (
+                <div key={pidx} className="mb-0 cv-item">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <div className="text-[11px] font-semibold text-blue-900">{proj.name || proj.title || 'Project'}</div>
+                      {projLink ? (
+                        <a href={projLink} target="_blank" rel="noreferrer" className="text-[10px] underline">{String(projLink).replace(/^https?:\/\//, '')}</a>
+                      ) : null}
                     </div>
+                    <div className="text-[9px] text-gray-600">{projYear}</div>
+                  </div>
 
-                    {renderDescription(exp)}
-
-                    {/* optional tech tags */}
-                    {exp.tech && exp.tech.length > 0 && (
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {exp.tech.map((t, ti) => <span key={ti} className="text-xs px-2 py-1 bg-gray-100 rounded border">{toText(t)}</span>)}
-                      </div>
+                  <div className="mt-1">
+                    {proj.descFormat === 'bullet' || Array.isArray(proj.desc) ? (
+                      renderProjectDesc(proj)
+                    ) : proj.descFormat === 'number' ? (
+                      (proj.desc || '').split('\n').map((line, li) => line.trim() && <p key={li} className="text-[10px] mt-1"> {li + 1}. {line}</p>)
+                    ) : (
+                      <p className="text-[10px] text-gray-700 mt-1">{proj.desc}</p>
                     )}
                   </div>
-                </article>
-              ))}
-            </div>
-          </section>
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
-          {/* Projects */}
-          {/* <section className="mb-8">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Selected Projects</h2>
-            </div>
-
-            <div className="mt-4 grid grid-cols-2 gap-4">
-              {projects.map((p, i) => (
-                <div key={i} className="p-3 border rounded bg-gray-50">
-                  <div className="font-semibold">{toText(p.title)}</div>
-                  <div className="text-xs opacity-80">{toText(p.role)}</div>
-                  {p.desc && <p className="text-sm mt-2">{toText(p.desc)}</p>}
-                  {p.tech && (
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {p.tech.map((t, ti) => <span key={ti} className="text-xs px-2 py-1 bg-white rounded border">{toText(t)}</span>)}
+        {/* EDUCATION */}
+        <div className="mt-3 cv-section">
+          <h2 className="text-[12px] font-bold text-blue-800 mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection('education')}>EDUCATION</h2>
+          <div className="relative">
+            <div className="absolute left-[135px] top-0 bottom-0 w-[2px] bg-[#D0D0D0]" />
+            <div className="space-y-6">
+              {(education.length ? education : [
+                { date: '01/2012 - 01/2014', location: 'Berkeley, CA', course: 'MSc Applied Mathematics', school: 'University of California, Berkeley' },
+              ]).map((edu, idx) => {
+                const dateText = getDateText(edu);
+                const eduLocation = edu.location || edu.place || edu.address || edu.city || '';
+                return (
+                  <div key={idx} className="grid grid-cols-[150px,1fr] gap-5 items-start cv-item">
+                    <div className="relative">
+                      <div className="text-[10px] font-semibold text-blue-800">{dateText}</div>
+                      <div className="text-[9px] text-gray-500 mt-0.5">{eduLocation}</div>
+                      <div className="absolute right-[-9px] top-[10px] w-3 h-3 bg-blue-900 rounded-full border-2 border-white shadow-sm" />
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </section> */}
 
-          {/* Education & Awards & References */}
-          <section className="grid grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-lg font-semibold">Education</h3>
-              <div className="mt-3 space-y-3">
-                {education.map((e, i) => (
-                  <div key={i} className="p-3 bg-white rounded border">
-                    <div className="font-medium">{toText(e.degree || e.course)}</div>
-                    <div className="text-xs opacity-80">{toText(e.school)} • {toText(e.year)}</div>
+                    <div>
+                      <div className="text-[11px] font-semibold text-blue-900">{edu.course || edu.degree || ''}</div>
+                      <div className="text-[10px] text-orange-500 mt-0.5">{edu.school || ''}</div>
+                      {edu.field && <div className="text-[10px] text-gray-600 mt-1">{edu.field}</div>}
+                      {renderEducationDesc(edu)}
+                    </div>
                   </div>
-                ))}
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* SKILLS */}
+        <div className="mt-3 cv-section">
+          {/* Combined two-column layout for Skills (left) and Languages (right) */}
+          <div className="grid grid-cols-2 gap-6">
+            {/* Left column: SKILLS */}
+            <div>
+              <h2 className="text-[12px] font-bold text-blue-800 mb-3 cursor-pointer" onClick={() => onClickSection && onClickSection('skills')}>SKILLS</h2>
+              <div className="flex flex-wrap gap-1 mt-2 text-[10px] text-gray-700">
+                {(skills.length ? skills : ['Statistical Modeling','Data Visualization','Data Wrangling','R','Python','SQL']).map((s, i) => {
+                  if (typeof s === 'string' || typeof s === 'number') {
+                    return <div key={i} className="px-2.5 py-1.5 border-b border-gray-300">{String(s)}</div>;
+                  }
+                  if (s && typeof s === 'object') {
+                    if (s.category && Array.isArray(s.items || s.skills)) {
+                      const items = Array.isArray(s.items) ? s.items : s.skills;
+                      return <div key={i} className="px-2.5 py-1.5 border-b border-gray-300"><span className="font-medium">{s.category}:</span> {items.filter(Boolean).join(', ')}</div>;
+                    }
+                    if (s.proficiency !== undefined) {
+                      return (
+                        <div key={i} className="w-full mb-2">
+                          <div className="flex justify-between items-center">
+                            <span className="text-[10px] text-gray-800">{s.name || s.label}</span>
+                            <span className="text-[9px] text-gray-500">{String(s.proficiency)}%</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-1 mt-2">
+                            <div className="bg-blue-900 h-1 rounded-full" style={{ width: `${Number(s.proficiency)}%` }} />
+                          </div>
+                        </div>
+                      );
+                    }
+                    return <div key={i} className="px-2.5 py-1.5 border-b border-gray-300">{String(s.name || s.label || 'Skill')}</div>;
+                  }
+                  return <div key={i} className="px-2.5 py-1.5 border-b border-gray-300">Skill</div>;
+                })}
               </div>
             </div>
 
+            {/* Right column: LANGUAGES */}
             <div>
-              <h3 className="text-lg font-semibold">Awards & References</h3>
-              <div className="mt-3 space-y-3">
-                {awards.map((a, i) => <div key={i} className="text-sm p-2 bg-white rounded border">{toText(a)}</div>)}
-                <div className="mt-2">
-                  <div className="text-sm font-medium">References</div>
-                  <div className="mt-2 text-sm">
-                    {references.map((r, i) => (
-                      <div key={i} className="mb-2">
-                        <div className="font-medium">{toText(r.name)}</div>
-                        <div className="text-xs opacity-80">{toText(r.title)} • {toText(r.email)}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+              <h2 className="text-[12px] font-bold text-blue-800 mb-3">LANGUAGES</h2>
+              <div>
+                {languages.length > 0 ? (
+                  languages.map((l, i) => {
+                    let langObj;
+                    if (typeof l === 'string') langObj = { name: l, displayFormat: 'simple' };
+                    else langObj = { ...l };
+                    if (!langObj.displayFormat) {
+                      if (langObj.proficiency !== undefined && langObj.proficiency !== null) langObj.displayFormat = 'percentage';
+                      else if (langObj.level) langObj.displayFormat = 'level';
+                      else langObj.displayFormat = 'simple';
+                    }
+                    return <div key={i} className="mb-1">{renderLanguage(langObj, i)}</div>;
+                  })
+                ) : null}
               </div>
             </div>
-          </section>
-        </main>
+          </div>
+        </div>
+
+        {/* KEY ACHIEVEMENTS */}
+        <div className="mt-3 cv-section">
+          <h2 className="text-[12px] font-bold text-blue-800 mb-3">KEY ACHIEVEMENTS</h2>
+          <div className="grid grid-cols-2 gap-6 text-[10px] text-gray-700">
+            {achievementsToShow.length > 0 ? achievementsToShow.map((a, i) => (
+              <div key={i}>
+                <div className="text-[11px] font-semibold text-blue-900">{a.title}</div>
+                <div className="mt-0.5">{a.desc}</div>
+              </div>
+            )) : <div className="col-span-2 text-[10px] text-gray-500">No achievements provided.</div>}
+          </div>
+        </div>
+
+        {/* CERTIFICATIONS (only when explicit achievements exist) */}
+        {achievements.length > 0 && certificates.length > 0 && (
+          <div className="mt-8 cv-section">
+            <h2 className="text-[12px] font-bold text-blue-800 mb-3">CERTIFICATIONS</h2>
+            <div className="space-y-2 text-[10px] text-gray-700">
+              {certificates.map((c, i) => {
+                const certDate = (c.date && String(c.date).trim()) || (c.year && String(c.year).trim()) || '';
+                return (
+                  <div key={i}>
+                    <div className="font-semibold text-orange-500">{c.name}</div>
+                    <div className="text-[9px] text-gray-500">{c.issuer || ''}{certDate ? ` • ${certDate}` : ''}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

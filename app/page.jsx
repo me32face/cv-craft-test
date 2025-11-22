@@ -52,8 +52,8 @@ export default function Home() {
     {
       id: "Template36",
       name: "Modern Creative",
-      key: "Emily Davis",
-      image: "/template/template34.jpg",
+      key: "Aaradhya Nair",
+      image: "/template/template36.png",
       category: "creative",
     },
     {
