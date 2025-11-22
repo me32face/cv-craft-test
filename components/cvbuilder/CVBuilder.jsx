@@ -160,11 +160,11 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
     ],
     experiences: [
       { role: "Developer", company: "Google", start: "2020", end: "2022" },
-      { role: "Developer", company: "Google", start: "2020", end: "2022" }
+      { role: "Software Engineer", company: "Wipro", start: "2022", end: "2023" }
     ],
     education: [
-      { course: "BCA", school: "Calicut university", start: "2020", end: "2022" },
-      { course: "Bcom", school: "Calicut university", start: "2020", end: "2022" }
+      { degree: "BCA", school: "Calicut university", start: "2020", end: "2022" },
+      { degree: "Bcom", school: "Calicut university", start: "2020", end: "2022" }
     ],
     certificates: [
       { name: "Full Stack Development", issuer: "Tech Academy", year: "2023" },
@@ -397,16 +397,16 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
                   <div className="h-6 sm:h-8 bg-gradient-to-r from-[#4B74F4] to-[#7642EE] rounded-t-xl sm:rounded-t-2xl absolute left-0 right-0 -bottom-3 sm:-bottom-4 z-20"></div>
                 </div>
 
-<div className="w-full overflow-auto bg-gray-50 p-5">
+                <div className="w-full overflow-auto bg-gray-50 p-5">
                   {TemplateComponent ? (
                     <div className="space-y-5">
                       {Array.from({ length: totalPages }).map((_, pageIndex) => (
                         <div
                           key={pageIndex}
                           data-preview-page
-                          style={{ 
-                            height: '1123px', 
-                            width: '794px', 
+                          style={{
+                            height: '1123px',
+                            width: '794px',
                             overflow: 'hidden',
                             position: 'relative'
                           }}
@@ -421,8 +421,8 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
                               ✕
                             </button>
                           )}
-                          <div 
-                            style={{ 
+                          <div
+                            style={{
                               transform: `translateY(-${pageIndex * 1123}px)`,
                               position: 'absolute',
                               top: 0,

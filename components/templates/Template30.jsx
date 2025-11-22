@@ -211,7 +211,6 @@ export default function Template30({ data, onClickSection }) {
         ))}
           </>
         )}
-
         {/* Education */}
         {data?.visibleSections?.education !== false && (
           <div className="">
