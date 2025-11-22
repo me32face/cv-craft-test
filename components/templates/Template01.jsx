@@ -1,873 +1,247 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { Phone, Mail, MapPin, Globe, Briefcase,User, GraduationCap, CopyPlus, Trash2 } from 'lucide-react';
+'use client';
+import React from "react";
+import { renderLanguage } from "../cvbuilder/inputsections/LanguagesInput";
 
-import { useUndoRedo } from '../../contexts/UndoRedoContext';
-import AISparkle from '../AISparkle';
-import { geminiService } from '../../lib/gemini';
-import Image from 'next/image';
-// import '../../styles/ai-sparkle.css';
+export default function Template01({ data, onClickSection }) {
+  const toArray = (v) => (!v ? [] : Array.isArray(v) ? v : [v]);
 
-export default function Template01() {
-  const [profileImage, setProfileImage] = useState(null);
-  const [contentState, setContentState] = useState({});
-  const { saveState } = useUndoRedo();
-
-  const cvRef = useRef(null);
-  const editorContainerRef = useRef(null);
-  const imageRef = useRef(null);
-
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        saveState({ profileImage, contentState });
-        setProfileImage(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
   };
 
-
-
-  const handleBulletListEnter = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      const selection = window.getSelection();
-      let currentLi = selection.anchorNode;
-      
-      while (currentLi && currentLi.tagName !== 'LI') {
-        currentLi = currentLi.parentElement;
-      }
-      
-      if (currentLi) {
-        const newLi = document.createElement('li');
-        newLi.className = 'flex items-start gap-2';
-        newLi.innerHTML = '<span class="w-1 h-1 bg-gray-700 rounded-full mt-1.5 flex-shrink-0"></span><span class="text-xs text-gray-700">\u200B</span>';
-        currentLi.parentNode.insertBefore(newLi, currentLi.nextSibling);
-        
-        const textSpan = newLi.querySelector('.text-xs');
-        const range = document.createRange();
-        range.setStart(textSpan.firstChild, 1);
-        range.collapse(true);
-        selection.removeAllRanges();
-        selection.addRange(range);
-      }
-    }
-  };
-
-  const handleBulletListCleanup = (e) => {
-    const lis = e.currentTarget.querySelectorAll('li');
-    lis.forEach(li => {
-      if (!li.textContent.trim()) li.remove();
-    });
-  };
-
-  const handleSimpleListEnter = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      const selection = window.getSelection();
-      let currentLi = selection.anchorNode;
-      
-      while (currentLi && currentLi.tagName !== 'LI') {
-        currentLi = currentLi.parentElement;
-      }
-      
-      if (currentLi) {
-        const newLi = document.createElement('li');
-        newLi.textContent = '\u200B';
-        currentLi.parentNode.insertBefore(newLi, currentLi.nextSibling);
-        
-        const range = document.createRange();
-        range.setStart(newLi.firstChild, 1);
-        range.collapse(true);
-        selection.removeAllRanges();
-        selection.addRange(range);
-      }
-    }
-  };
-
-  const handleSimpleListCleanup = (e) => {
-    const lis = e.currentTarget.querySelectorAll('li');
-    lis.forEach(li => {
-      if (!li.textContent.trim()) li.remove();
-    });
-  };
-
-
-
-  const handleButtonClick = useCallback((e) => {
-    const button = e.target.closest('button');
-    if (!button) return;
-
-    const action = button.getAttribute('data-action');
-    const section = button.closest('.relative.group');
-    
-    if (!section) return;
-
-    if (action === 'duplicate') {
-      const clone = section.cloneNode(true);
-      section.parentNode.insertBefore(clone, section.nextSibling);
-    } else if (action === 'delete') {
-      section.remove();
-    }
-  }, []);
-
-  const handleAIGenerate = async (section, keywords) => {
-    if (!geminiService.genAI) {
-      const apiKey = prompt('Please enter your Gemini API key:');
-      if (!apiKey) return;
-      geminiService.initialize(apiKey);
-    }
-
-    try {
-      const generatedContent = await geminiService.generateContent(section, keywords);
-
-      // Update the appropriate section based on the section type
-      switch (section.toLowerCase()) {
-        case 'profile':
-        case 'summary':
-          const profileElement = document.getElementById('profile-text');
-          if (profileElement) {
-            // Clean the generated content
-            let cleanedContent = generatedContent
-              // Remove markdown headers (###, ##, #)
-              .replace(/^#{1,6}\s+.+$/gm, '')
-              // Remove markdown bold (**text**)
-              .replace(/\*\*(.+?)\*\*/g, '$1')
-              // Remove markdown italic (*text*)
-              .replace(/\*(.+?)\*/g, '$1')
-              .trim();
-
-            // Split into paragraphs
-            const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
-
-            // Skip introductory paragraphs (like "Of course. Here are...")
-            // Find the first paragraph that doesn't contain phrases like "here are", "options", "choose"
-            const actualSummary = paragraphs.find(p =>
-              !p.toLowerCase().includes('here are') &&
-              !p.toLowerCase().includes('of course') &&
-              !p.toLowerCase().includes('choose the option') &&
-              !p.toLowerCase().includes('pro-tip') &&
-              p.length > 100 // Ensure it's substantial
-            );
-
-            const finalContent = actualSummary?.trim() || paragraphs[0]?.trim() || cleanedContent;
-
-            profileElement.textContent = finalContent;
-          } else {
-            console.error('Profile element not found');
-          }
-          break;
-        case 'skills':
-          const skillsElement = document.querySelector('[data-section="skills"] ul');
-          if (skillsElement) {
-            const skills = generatedContent.split('\n').filter(skill => skill.trim());
-            skillsElement.innerHTML = skills.map(skill =>
-              `<li class="text-xs flex items-start relative group text-gray-700">
-                <span class="mr-2">•</span>
-                <span contentEditable suppressContentEditableWarning>${skill.trim()}</span>
-                <div class="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                  <button data-action="duplicate" class="text-gray-600 rounded p-1 shadow-md">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
-                  </button>
-                  <button data-action="delete" class="text-gray-600 rounded p-1 shadow-md">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-                  </button>
-                </div>
-              </li>`
-            ).join('');
-          }
-          break;
-        case 'work experience':
-          const workExpElement = document.querySelector('[data-section="work-experience"] .space-y-4');
-          if (workExpElement) {
-            const experiences = generatedContent.split('---').filter(exp => exp.trim());
-            workExpElement.innerHTML = experiences.map(exp => {
-              const lines = exp.trim().split('\n').filter(line => line.trim());
-              const company = lines[0] || 'Company Name';
-              const position = lines[1] || 'Position';
-              const period = lines[2] || '2020 - Present';
-              const duties = lines.slice(3).filter(duty => duty.trim());
-
-              return `<div>
-                <div class="flex justify-between items-start mt-4">
-                  <div>
-                    <h3 class="text-sm font-bold text-gray-800">${company}</h3>
-                    <p class="text-xs text-gray-600">${position}</p>
-                  </div>
-                  <span class="text-xs text-gray-500 whitespace-nowrap">${period}</span>
-                </div>
-                <ul class="list-disc list-outside ml-4 text-xs text-gray-700 space-y-0.5 mt-1">
-                  ${duties.map(duty => `<li>${duty.trim()}</li>`).join('')}
-                </ul>
-              </div>`;
-            }).join('');
-          }
-          break;
-        default:
-          console.log('Generated content:', generatedContent);
-      }
-    } catch (error) {
-      alert('Failed to generate content. Please check your API key and try again.');
-    }
-  };
-
-
-  // Save state with debounce for content changes
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      saveState({ profileImage, contentState });
-    }, 1000);
-
-    return () => clearTimeout(timeoutId);
-  }, [contentState, profileImage, saveState]);
-
-  // Handle undo/redo events from Header
-  useEffect(() => {
-    const handleUndoRedo = (event) => {
-      const { state } = event.detail;
-      if (state) {
-        setProfileImage(state.profileImage || null);
-        setContentState(state.contentState || {});
-      }
-    };
-
-    window.addEventListener('undoRedo', handleUndoRedo);
-    return () => window.removeEventListener('undoRedo', handleUndoRedo);
-  }, []);
-
-  // Save initial state only oncee
-  useEffect(() => {
-    saveState({ profileImage: null, contentState: {} });
-  }, []);
-
-
-
-  // This component is defined inside Template01 so it can access 'profileImage'
-  const CVPage = () => {
-    const contactRef = useRef(null);
-    const skillsRef = useRef(null);
-    const languagesRef = useRef(null);
-    const referenceRef = useRef(null);
-    const certificateRef = useRef(null);
-    const workExpRef = useRef(null);
-    const educationRef = useRef(null);
-    const job1Ref = useRef(null);
-    const job2Ref = useRef(null);
-    const job3Ref = useRef(null);
-    const contactContentRef = useRef(null);
-    const referenceContentRef = useRef(null);
-    const certificateContentRef = useRef(null);
-    return (
-
-      <div className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-visible flex" onClick={handleButtonClick} style={{WebkitFontSmoothing: 'antialiased', textRendering: 'geometricPrecision', imageRendering: 'crisp-edges'}}>
-
-        {/* Left Sidebar */}
-        <div className="w-[35%] bg-gray-100 p-6 pl-8">
-          {/* Profile Image */}
-          <div className="mb-6">
-            <div
-              className="w-36 h-36 rounded-full overflow-hidden border-4 border-white shadow-lg mx-auto cursor-pointer hover:opacity-80 transition-opacity"
-              onClick={() => document.getElementById('profileImageInput').click()}
-            >
-              <img ref={imageRef} src={profileImage || '/templateprofile/template01profile.jpg'} alt="Profile" className="w-full h-full object-cover" />
-            </div>
-            <input
-              id="profileImageInput"
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="hidden"
-            />
-          </div>
-
-          {/* Contact Section */}
-          <div className="mb-6">
-              <h3  className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Contact</h3>
-        
-         
-              <div
-                ref={contactContentRef}
-                className="space-y-2 relative group"
-                onKeyDown={(e) => {
-                  if (e.key === 'Backspace') {
-                    const contactItems = e.currentTarget.querySelectorAll('div');
-                    contactItems.forEach(item => {
-                      const span = item.querySelector('span');
-                      if (span && !span.textContent.trim()) {
-                        item.remove();
-                      }
-                    });
-                  }
-                }}
-              >
-                <div className="flex items-start gap-2">
-                  {/* <Phone className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" /> */}
-                  <span
-                    className="text-xs text-gray-700"
-                    contentEditable
-                    suppressContentEditableWarning
-                  >+123-456-7890</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  {/* <Mail className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" /> */}
-                  <span
-                    className="text-xs text-gray-700 break-all"
-                    contentEditable
-                    suppressContentEditableWarning
-
-                  >hello@reallygreatsite.com</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  {/* <MapPin className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" /> */}
-                  <span
-                    className="text-xs text-gray-700"
-                    contentEditable
-                    suppressContentEditableWarning
-                  >123 Anywhere St., Any City</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  {/* <Globe className="w-3 h-3 text-gray-600 mt-0.5 flex-shrink-0" /> */}
-                  <span
-                    className="text-xs text-gray-700 break-all"
-                    contentEditable
-                    suppressContentEditableWarning
-                  >www.reallygreatsite.com</span>
-                </div>
-                <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                  <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
-                    <CopyPlus className="w-4 h-4" />
-                  </button>
-                  <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-      
-          </div>
-
-          {/* Skills Section */}
-          <div className="mb-6 section-container" data-section="skills">
-            <div className="relative flex gap-2  group">
-                <h3  className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Skills</h3>
-       
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity ">
-                <AISparkle className='mt-1' section="Skills" onGenerate={handleAIGenerate} />
-              </div>
-            </div>
-            <ul className="space-y-1.5 text-gray-700" onKeyDown={(e) => {
-              if (e.key === 'Backspace') {
-                const lis = e.currentTarget.querySelectorAll('li');
-                lis.forEach(li => {
-                  const span = li.querySelector('span[contenteditable]');
-                  if (span && !span.textContent.trim()) {
-                    li.remove();
-                  }
-                });
-              }
-            }}>
-                <li className="text-xs flex items-start relative group">
-                  <span className="mr-2">•</span>
-                  <span contentEditable suppressContentEditableWarning>Project Management</span>
-                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                      <CopyPlus className="w-3 h-3" />
-                    </button>
-                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </div>
-                </li>
-                <li className="text-xs flex items-start relative group">
-                  <span className="mr-2">•</span>
-                  <span contentEditable suppressContentEditableWarning>Public Relations</span>
-                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                      <CopyPlus className="w-3 h-3" />
-                    </button>
-                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </div>
-                </li>
-                <li className="text-xs flex items-start relative group">
-                  <span className="mr-2">•</span>
-                  <span contentEditable suppressContentEditableWarning>Teamwork</span>
-                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                      <CopyPlus className="w-3 h-3" />
-                    </button>
-                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </div>
-                </li>
-                <li className="text-xs flex items-start relative group">
-                  <span className="mr-2">•</span>
-                  <span contentEditable suppressContentEditableWarning>Time Management</span>
-                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                      <CopyPlus className="w-3 h-3" />
-                    </button>
-                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </div>
-                </li>
-                <li className="text-xs flex items-start relative group">
-                  <span className="mr-2">•</span>
-                  <span contentEditable suppressContentEditableWarning>Leadership</span>
-                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                      <CopyPlus className="w-3 h-3" />
-                    </button>
-                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </div>
-                </li>
-                <li className="text-xs flex items-start relative group">
-                  <span className="mr-2">•</span>
-                  <span contentEditable suppressContentEditableWarning>Effective Communication</span>
-                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                      <CopyPlus className="w-3 h-3" />
-                    </button>
-                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </div>
-                </li>
-                <li className="text-xs flex items-start relative group">
-                  <span className="mr-2">•</span>
-                  <span contentEditable suppressContentEditableWarning>Critical Thinking</span>
-                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                      <CopyPlus className="w-3 h-3" />
-                    </button>
-                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </div>
-                </li>
-                <li className="text-xs flex items-start relative group">
-                  <span className="mr-2">•</span>
-                  <span contentEditable suppressContentEditableWarning>Digital Marketing</span>
-                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                      <CopyPlus className="w-3 h-3" />
-                    </button>
-                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </div>
-                </li>
-              </ul>
-          </div>
-
-          {/* Languages Section */}
-          <div className="mb-6">
-              <h3 ref={languagesRef} className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Languages</h3>
-            <ul className="space-y-1.5 text-gray-700" onKeyDown={(e) => {
-              if (e.key === 'Backspace') {
-                const lis = e.currentTarget.querySelectorAll('li');
-                lis.forEach(li => {
-                  const span = li.querySelector('span[contenteditable]');
-                  if (span && !span.textContent.trim()) {
-                    li.remove();
-                  }
-                });
-              }
-            }}>
-                <li className="text-xs flex items-start relative group">
-                  <span className="mr-2">•</span>
-                  <span contentEditable suppressContentEditableWarning>English (Fluent)</span>
-                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                      <CopyPlus className="w-3 h-3" />
-                    </button>
-                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </div>
-                </li>
-                <li className="text-xs flex items-start relative group">
-                  <span className="mr-2">•</span>
-                  <span contentEditable suppressContentEditableWarning>French (Fluent)</span>
-                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                      <CopyPlus className="w-3 h-3" />
-                    </button>
-                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </div>
-                </li>
-                <li className="text-xs flex items-start relative group">
-                  <span className="mr-2">•</span>
-                  <span contentEditable suppressContentEditableWarning>German (Basic)</span>
-                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                      <CopyPlus className="w-3 h-3" />
-                    </button>
-                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </div>
-                </li>
-                <li className="text-xs flex items-start relative group">
-                  <span className="mr-2">•</span>
-                  <span contentEditable suppressContentEditableWarning>Spanish (Intermediate)</span>
-                  <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                    <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                      <CopyPlus className="w-3 h-3" />
-                    </button>
-                    <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </div>
-                </li>
-              </ul>
-          </div>
-
-          {/* Reference Section */}
-          <div>
-              <h3  className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Reference</h3>
-              <div  className="text-xs text-gray-700 relative group">
-                <p className="font-semibold mb-1" contentEditable suppressContentEditableWarning>Estelle Darcy</p>
-                <p className="text-gray-600 mb-1" contentEditable suppressContentEditableWarning>Wardiere Inc. / CTO</p>
-                <p className="text-gray-600" contentEditable suppressContentEditableWarning>Phone: 123-456-7890</p>
-                <p className="text-gray-600 break-all" contentEditable suppressContentEditableWarning>Email: hello@reallygreatsite.com</p>
-                <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                  <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
-                    <CopyPlus className="w-4 h-4" />
-                  </button>
-                  <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-          </div>
-
-          {/* Certificate Section */}
-          <div className='mt-5'>
-              <h3  className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide" contentEditable suppressContentEditableWarning>Certificate</h3>
-              <div className="text-xs text-gray-700 relative group">
-                <p className="font-semibold mb-1" contentEditable suppressContentEditableWarning>Project mananagement</p>
-                <p className="text-gray-600 mb-1" contentEditable suppressContentEditableWarning>Project mananagement Institute</p>
-                <p className="font-semibold" contentEditable suppressContentEditableWarning>Risk Management and Mitigation | 2028</p>
-                <p className="text-gray-600 break-all" contentEditable suppressContentEditableWarning>Internal Auditors Team</p>
-                <div className="absolute -right-4 -top-8 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                  <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
-                    <CopyPlus className="w-4 h-4" />
-                  </button>
-                  <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-          </div>
-        </div>
-
-        {/* Right Content */}
-        <div className="w-[65%]  bg-white">
-          {/* Header with dark background */}
-          <div className="bg-slate-700 text-white px-6 py-8">
-            <h1
-              className="text-3xl font-bold mb-1"
-              contentEditable
-              suppressContentEditableWarning
-            >RICHARD SANCHEZ</h1>
-            <p
-              className="text-sm uppercase tracking-widest"
-              contentEditable
-              suppressContentEditableWarning
-            >Marketing Manager</p>
-          </div>
-
-          <div className="px-6 py-5 pt-8">
-            {/* Profile Section */}
-            <div className="mb-5 section-container group" data-section="profile">
-              <div className="flex items-center gap-2 mb-2 relative">
-                <div className="w-6 h-6 bg-slate-700 rounded-full flex  justify-center">
-                <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center flex-shrink-0">
-                    <User className="w-3 h-3 text-white" />
-                  </div>
-                </div>
-                <h2 contentEditable suppressContentEditableWarning className="text-sm font-bold text-gray-800 uppercase tracking-wide">Profile</h2>
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity  ">
-                  <AISparkle section="Profile" onGenerate={handleAIGenerate} />
-                </div>
-              </div>
-              <div className="relative">
-                <div className="absolute left-3 top-0 w-0.5 h-full bg-gray-300"></div>
-                <div className="pl-8 ml-3">
-                  <p id="profile-text" className="text-xs text-gray-700 leading-relaxed" contentEditable suppressContentEditableWarning>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam laboris.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Work Experience Section */}
-            <div className="pt-4 section-container" data-section="work-experience">
-                <div  className="flex items-center gap-2 mb-2 relative">
-                  <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Briefcase className="w-3 h-3 text-white" />
-                  </div>
-                  <h2 contentEditable suppressContentEditableWarning className="text-sm font-bold text-gray-800 uppercase tracking-wide">Work Experience</h2>
-                  {/* <AISparkle section="Work Experience" onGenerate={handleAIGenerate} /> */}
-                </div>
-              <div className="pl-8 border-l-2 border-gray-300 ml-3 space-y-4">
-                {/* Job 1 */}
-                  <div  className="relative group">
-                    <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <CopyPlus className="w-4 h-4" />
-                      </button>
-                      <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                    <div className="flex justify-between items-start mt-4">
-                      <div>
-                        <h3 className="text-sm font-bold text-gray-800" contentEditable suppressContentEditableWarning>Borcelle Studio</h3>
-                        <p className="text-xs text-gray-600" contentEditable suppressContentEditableWarning>Marketing Manager & Specialist</p>
-                      </div>
-                      <span className="text-xs text-gray-500 whitespace-nowrap" contentEditable suppressContentEditableWarning>2030 - PRESENT</span>
-                    </div>
-                    <ul className="ml-4 text-xs text-gray-700 mt-1 space-y-1">
-                      <li className="flex items-start relative group">
-                        <span className="mr-2">•</span>
-                        <span contentEditable suppressContentEditableWarning>Develop and execute comprehensive marketing strategies...</span>
-                        <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                          <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                            <CopyPlus className="w-3 h-3" />
-                          </button>
-                          <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                            <Trash2 className="w-3 h-3" />
-                          </button>
-                        </div>
-                      </li>
-                      <li className="flex items-start relative group">
-                        <span className="mr-2">•</span>
-                        <span contentEditable suppressContentEditableWarning>Lead, mentor, and manage the marketing team...</span>
-                        <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                          <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                            <CopyPlus className="w-3 h-3" />
-                          </button>
-                          <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                            <Trash2 className="w-3 h-3" />
-                          </button>
-                        </div>
-                      </li>
-                      <li className="flex items-start relative group">
-                        <span className="mr-2">•</span>
-                        <span contentEditable suppressContentEditableWarning>Monitor campaign performance...</span>
-                        <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                          <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                            <CopyPlus className="w-3 h-3" />
-                          </button>
-                          <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                            <Trash2 className="w-3 h-3" />
-                          </button>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-
-                {/* Job 2 */}
-                  <div className="relative group">
-                    <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <CopyPlus className="w-4 h-4" />
-                      </button>
-                      <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                    <div className="flex justify-between items-start mb-1">
-                      <div>
-                        <h3 className="text-sm font-bold text-gray-800" contentEditable suppressContentEditableWarning>Fauget Studio</h3>
-                        <p className="text-xs text-gray-600" contentEditable suppressContentEditableWarning>Marketing Manager & Specialist</p>
-                      </div>
-                      <span className="text-xs text-gray-500 whitespace-nowrap" contentEditable suppressContentEditableWarning>2025 - 2029</span>
-                    </div>
-                    <ul className="ml-4 text-xs text-gray-700 mt-1 space-y-1">
-                      <li className="flex items-start relative group">
-                        <span className="mr-2">•</span>
-                        <span contentEditable suppressContentEditableWarning>Create and manage the marketing budget, ensuring efficient allocation of resources and maximizing ROI.</span>
-                        <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                          <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                            <CopyPlus className="w-3 h-3" />
-                          </button>
-                          <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                            <Trash2 className="w-3 h-3" />
-                          </button>
-                        </div>
-                      </li>
-                      <li className="flex items-start relative group">
-                        <span className="mr-2">•</span>
-                        <span contentEditable suppressContentEditableWarning>Oversee market research to identify emerging trends,<br/> customer needs, and competitive intelligence.</span>
-                        <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                          <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                            <CopyPlus className="w-3 h-3" />
-                          </button>
-                          <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                            <Trash2 className="w-3 h-3" />
-                          </button>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-
-                {/* Job 3 */}
-                  <div  className="relative group">
-                    <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <CopyPlus className="w-4 h-4" />
-                      </button>
-                      <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                    <div className="flex justify-between items-start mb-1">
-                      <div>
-                        <h3 className="text-sm font-bold text-gray-800" contentEditable suppressContentEditableWarning>Studio Shodwe</h3>
-                        <p className="text-xs text-gray-600" contentEditable suppressContentEditableWarning>Marketing Manager & Specialist</p>
-                      </div>
-                      <span className="text-xs text-gray-500 whitespace-nowrap" contentEditable suppressContentEditableWarning>2024 - 2025</span>
-                    </div>
-                    <ul className="ml-4 text-xs text-gray-700 mt-1 space-y-1">
-                      <li className="flex items-start relative group">
-                        <span className="mr-2">•</span>
-                        <span contentEditable suppressContentEditableWarning>Develop and maintain strong relationships with partners, agencies, and vendors to support marketing initiatives.</span>
-                        <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                          <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                            <CopyPlus className="w-3 h-3" />
-                          </button>
-                          <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                            <Trash2 className="w-3 h-3" />
-                          </button>
-                        </div>
-                      </li>
-                      <li className="flex items-start relative group">
-                        <span className="mr-2">•</span>
-                        <span contentEditable suppressContentEditableWarning>Monitor and maintain brand consistency across all marketing channels and materials.</span>
-                        <div className="absolute -right-4 -top-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                          <button data-action="duplicate" className="text-gray-600 rounded p-1 shadow-md">
-                            <CopyPlus className="w-3 h-3" />
-                          </button>
-                          <button data-action="delete" className="text-gray-600 rounded p-1 shadow-md">
-                            <Trash2 className="w-3 h-3" />
-                          </button>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-              </div>
-            </div>
-
-            {/* Education Section */}
-              <div  className='mt-8 ' >
-                <div className="flex items-center gap-2 mb-2 ">
-                  <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center flex-shrink-0">
-                    <GraduationCap className="w-3 h-3 text-white" />
-                  </div>
-                  <h2 contentEditable suppressContentEditableWarning className="text-sm font-bold text-gray-800 uppercase tracking-wide">Education</h2>
-                </div>
-
-                <div className="pl-8 border-l-2 border-gray-300 ml-3 space-y-3">
-                  {/* Degree 1 */}
-                  <div className="relative group">
-                    <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <CopyPlus className="w-4 h-4" />
-                      </button>
-                      <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                    <div className="flex justify-between items-start mb-0.5">
-                      <div>
-                        <h3 className="text-sm font-bold text-gray-800" contentEditable suppressContentEditableWarning>Executive MBA (EMBA)</h3>
-                        <p className="text-xs text-gray-600" contentEditable suppressContentEditableWarning>senior-level business | Wardiere University</p>
-                        <p className="text-xs text-gray-500" contentEditable suppressContentEditableWarning>GPA: 3.8 / 4.0</p>
-                      </div>
-                      <span className="text-xs text-gray-500 whitespace-nowrap" contentEditable suppressContentEditableWarning>2029 - 2031</span>
-                    </div>
-                  </div>
-                 {/* Degree 1 */}
-                  <div className="relative group">
-                    <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <CopyPlus className="w-4 h-4" />
-                      </button>
-                      <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                    <div className="flex justify-between items-start mb-0.5">
-                      <div>
-                        <h3 className="text-sm font-bold text-gray-800" contentEditable suppressContentEditableWarning>Master of Business Management</h3>
-                        <p className="text-xs text-gray-600" contentEditable suppressContentEditableWarning>School of business | Wardiere University</p>
-                        <p className="text-xs text-gray-500" contentEditable suppressContentEditableWarning>GPA: 3.8 / 4.0</p>
-                      </div>
-                      <span className="text-xs text-gray-500 whitespace-nowrap" contentEditable suppressContentEditableWarning>2029 - 2031</span>
-                    </div>
-                  </div>
-                  {/* Degree 2 */}
-                  <div className="relative group">
-                    <div className="absolute right-28 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 z-10">
-                      <button data-action="duplicate" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <CopyPlus className="w-4 h-4" />
-                      </button>
-                      <button data-action="delete" className="text-gray-600 rounded p-1.5 shadow-md">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                    <div className="flex justify-between items-start mb-0.5">
-                      <div>
-                        <h3 className="text-sm font-bold text-gray-800" contentEditable suppressContentEditableWarning>Bachelor of Business Management</h3>
-                        <p className="text-xs text-gray-600" contentEditable suppressContentEditableWarning>School of business | Wardiere University</p>
-                        <p className="text-xs text-gray-500" contentEditable suppressContentEditableWarning>GPA: 3.9 / 4.0</p>
-                      </div>
-                      <span className="text-xs text-gray-500 whitespace-nowrap" contentEditable suppressContentEditableWarning>2025 - 2029</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
- // Register PDF function with context
-  // useEffect(() => {
-  //   registerPDFFunction(downloadPDF);
-  // }, [downloadPDF, registerPDFFunction]);
-
-  const memoizedCVPage = useMemo(() => <CVPage />, []);
-
-  useEffect(() => {
-    if (imageRef.current && profileImage) {
-      imageRef.current.src = profileImage;
-    }
-  }, [profileImage]);
+  const experiences = toArray(data?.experiences);
+  const education = toArray(data?.education);
+  const skills = toArray(data?.skills);
+  const languages = toArray(data?.languages);
+  const references = toArray(data?.references);
+  const socialLinks = toArray(data?.socialLinks);
+  const projects = toArray(data?.projects);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-auto cursor-pointer">
-      <div
-        ref={editorContainerRef}
-        data-editor-container
-        className="flex flex-col items-center scale-[0.5] origin-top transition-transform duration-500 pt-24"
-      >
-        <div ref={cvRef} data-cv-page>
-          {memoizedCVPage}
+    <div
+      id="pdf-template"
+      className="w-[794px] min-h-[1123px] bg-white flex"
+      style={{ fontFamily: "Poppins, sans-serif" }}
+    >
+      <div className="w-2/3 p-12" style={{ width: '100%' }}>
+      {/* ================= HEADER ================= */}
+      <div className="flex justify-between">
+        <div>
+          <h1 className="text-4xl font-bold break-words"> {data?.name || "DEEPAL SURVE"} </h1>
+          <p className="text-lg mt-1 break-words"> {data?.title || "Office Manager"} </p>
+        </div>
+
+        <div className="text-sm text-right leading-5">
+          <p className="break-words">{data?.phone || "+123-456-7890"}</p>
+          <p className="break-words">{data?.address || "123 Anywhere St, Any City"}</p>
+          <p className="break-words">{data?.email || "hello@reallygreatsite.com"}</p>
+
+          {data?.visibleSections?.socialLinks !== false && (
+            <>
+              {socialLinks.length > 0 && (
+                <div className="">
+                  {socialLinks.map((link, i) => (
+                    <p key={i} className="text-sm break-all">{link}</p>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
+
+      {/* ================= ABOUT ME ================= */}
+      <h2
+        className="mt-10 mb-2 text-lg font-semibold"
+        onClick={() => onClickSection?.("summary")}
+      >
+        ABOUT ME
+      </h2>
+
+      <p className="text-sm text-justify leading-relaxed break-words">
+        {data?.summary ||
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."}
+      </p>
+
+      {/* ================= TWO COLUMN LAYOUT ================= */}
+      <div className="grid grid-cols-2 gap-10 mt-6">
+
+        {/* LEFT COLUMN */}
+        <div>
+          {/* EDUCATION */}
+          {data?.visibleSections?.education !== false && (
+          <div className="">
+            <h2 className="text-lg font-semibold mt-0 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
+              EDUCATION
+            </h2>
+        {education.map((edu, i) => (
+          <div key={i} className=" mb-3">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="font-semibold !text-sm text-gray-700 break-words">{edu.degree}</p>
+                <p className="text-sm opacity-80 break-words">{edu.school}</p>
+                {edu.field && <p className="text-xs opacity-70 break-words">{edu.field}</p>}
+              </div>
+              <p className="text-xs opacity-60">
+                {edu.start && formatDate(edu.start)}
+                {edu.start && (edu.end || edu.current) && " - "}
+                {edu.current ? "Present" : edu.end && formatDate(edu.end)}
+              </p>
+            </div>
+            {edu.description && <p className="text-sm mt-1 text-gray-700 text-justify break-words">{edu.description}</p>}
+          </div>
+        ))}
+          </div>
+        )}
+
+          {/* SKILL */}
+          {data?.visibleSections?.skills !== false && (
+          <div className="mb-4 mt-4">
+            <h2 className="text-lg font-semibold mb-2 cursor-pointer " onClick={() => onClickSection && onClickSection("skills")}>EXPERTISE</h2>
+          {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation"]).map((s, i) => {
+            if (typeof s === 'string') {
+              return <p key={i} className="text-sm mb-1">• {s}</p>;
+            }
+            
+            if (s.proficiency !== undefined) {
+              return (
+                <div key={i} className="mb-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">{s.name}</span>
+                    <span className="text-xs opacity-70">{s.proficiency}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-1 mt-2">
+                    <div
+                      className="bg-gray-700 h-1 rounded-full transition-all"
+                      style={{ width: `${s.proficiency}%` }}
+                    ></div>
+                  </div>
+                </div>
+              );
+            }
+            
+            if (s.category && s.skills) {
+              return (
+                <p key={i} className="text-sm mb-1">
+                  <span className="font-medium">{s.category}:</span> {s.skills.filter(item => item && item.trim()).join(", ")}
+                </p>
+              );
+            }
+            
+            return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
+          })}
+          </div>
+        )}
+
+          {/* LANGUAGE */}
+          <h2 className="text-lg font-semibold mt-6 mb-3 border-b pb-1">
+            LANGUAGE
+          </h2>
+
+          {(languages.length ? languages : ["Hindi", "English"]).map((lang, i) =>
+            renderLanguage(lang, i, {
+              barContainer: "w-full bg-gray-200 rounded-full h-1 mt-2",
+              bar: "bg-gray-700 h-1 rounded-full transition-all"
+            })
+          )}
+
+          {/* REFERENCE */}
+          <div className="mt-6">
+            <h2 className="text-lg font-semibold mb-3 border-b pb-1">
+              REFERENCE
+            </h2>
+            {(references.length ? references : [
+              {
+                name: "Alexander Aronowitz",
+                title: "Rimberio University",
+                phone: "+123-456-7890",
+                email: "www.reallygreatsite.com",
+              }
+            ]).map((ref, i) => (
+              <div key={i} className="mb-3">
+                <p className="font-bold text-sm break-words">{ref.name}</p>
+                <p className="text-sm break-words">{ref.title}</p>
+                <p className="text-sm break-words">{ref.phone}</p>
+                <p className="text-sm break-words">{ref.email}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* RIGHT COLUMN */}
+        {data?.visibleSections?.experience !== false && (
+          <div>
+
+            <h2
+              className="text-lg font-semibold mb-3 border-b pb-1 cursor-pointer"
+              onClick={() => onClickSection?.("experience")}
+            >
+              WORK EXPERIENCE
+            </h2>
+
+            {experiences.map((exp, i) => (
+              <div key={i} className="cv-item mb-6">
+                <div className="flex justify-between">
+                  <p className="font-bold break-words">{exp.company}</p>
+                  <p className="text-xs opacity-70">
+                    {exp.start}
+                    {exp.start && (exp.end || exp.current) && " - "}
+                    {exp.current ? "Present" : exp.end}
+                  </p>
+                </div>
+
+                <p className="text-sm font-medium break-words">{exp.role}</p>
+                {exp.location && <p className="text-xs opacity-70 break-words">{exp.location}</p>}
+
+                {exp.desc && (
+                  <p className="text-sm mt-1 break-words">{exp.desc}</p>
+                )}
+                {exp.reference && (
+                  <p className="text-xs mt-1 italic text-gray-600 break-words">Reference: {exp.reference}</p>
+                )}
+              </div>
+            ))}
+
+            {/* PROJECTS */}
+            {data?.visibleSections?.projects !== false && projects.length > 0 && (
+              <div className="mt-6">
+                <h2 className="text-lg font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection?.("projects")}>
+                  PROJECTS
+                </h2>
+                {projects.map((project, i) => (
+                  <div key={i} className="mb-4">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-bold text-sm break-words">{project.name}</p>
+                        {project.link && (
+                          <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 break-all">
+                            {project.link}
+                          </a>
+                        )}
+                      </div>
+                      <p className="text-xs opacity-60">{project.year}</p>
+                    </div>
+                    {project.descFormat === "bullet" ? (
+                      project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 break-words">• {line}</p>)
+                    ) : project.descFormat === "number" ? (
+                      project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 break-words">{idx + 1}. {line}</p>)
+                    ) : (
+                      project.desc && <p className="text-sm mt-1 break-words">{project.desc}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+          </div>
+        )}
+      </div>
+
+
+    </div>
+    <div className="cv-sidebar" style={{ width: '0px', minHeight: '100%' }}></div>
     </div>
   );
 }

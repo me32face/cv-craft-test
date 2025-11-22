@@ -29,6 +29,7 @@ export default function PopupEditor({ visible, section, onClose, data, update, o
             onNext={() => onNext("sociallinks")}
           />
         );
+        
 
       case "sociallinks":
         return (

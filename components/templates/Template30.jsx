@@ -38,17 +38,17 @@ export default function Template30({ data, onClickSection }) {
           </div>
         )}
 
-        <h1 className="text-xl font-bold text-center">{data?.name || "Isabel Mercado"}</h1>
-        <p className="text-sm text-center opacity-80">{data?.title || "Marketing Manager"}</p>
+        <h1 className="text-xl font-bold text-center break-words">{data?.name || "Isabel Mercado"}</h1>
+        <p className="text-sm text-center opacity-80 break-words">{data?.title || "Marketing Manager"}</p>
 
         <div className="border-t border-white/40 my-4"></div>
 
         {/* Contact */}
         <div className="mb-4">
           <h2 className="font-semibold text-md mb-2">CONTACT</h2>
-          <p className="text-sm mt-1">📞 {data?.phone || "123-456-7890"}</p>
-          <p className="text-sm mt-1">📧 {data?.email || "hello@email.com"}</p>
-          <p className="text-sm mt-1">📍 {data?.address || "123 Anywhere St., Any City"}</p>
+          <p className="text-sm mt-1 break-words">📞 {data?.phone || "123-456-7890"}</p>
+          <p className="text-sm mt-1 break-words">📧 {data?.email || "hello@email.com"}</p>
+          <p className="text-sm mt-1 break-words">📍 {data?.address || "123 Anywhere St., Any City"}</p>
           {data?.visibleSections?.socialLinks !== false && (
             <>
               {socialLinks.length > 0 && (
@@ -132,7 +132,7 @@ export default function Template30({ data, onClickSection }) {
             <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("summary")}>
              SUMMARY
             </h2>
-            <p className="text-sm text-gray-700 text-justify">{data?.summary || "A dedicated professional with extensive experience in the field."}</p>
+            <p className="text-sm text-gray-700 text-justify break-words">{data?.summary || "A dedicated professional with extensive experience in the field."}</p>
           </div>
         )}
 
@@ -146,9 +146,9 @@ export default function Template30({ data, onClickSection }) {
           <div key={i} className=" mb-3">
             <div className="flex justify-between items-start">
               <div>
-                <p className="font-semibold text-gray-800 !text-sm">{project.name}</p>
+                <p className="font-semibold text-gray-800 !text-sm break-words">{project.name}</p>
                 {project.link && (
-                  <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 ">
+                  <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 break-all">
                     {project.link}
                   </a>
                 )}
@@ -156,11 +156,11 @@ export default function Template30({ data, onClickSection }) {
               <p className="text-xs opacity-60">{project.year}</p>
             </div>
             {project.descFormat === "bullet" ? (
-              project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 text-justify">• {line}</p>)
+              project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 text-justify break-words">• {line}</p>)
             ) : project.descFormat === "number" ? (
-              project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 text-justify">{idx + 1}. {line}</p>)
+              project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 text-justify break-words">{idx + 1}. {line}</p>)
             ) : (
-              <p className="text-sm mt-1 text-gray-700 text-justify">{project.desc}</p>
+              <p className="text-sm mt-1 text-gray-700 text-justify break-words">{project.desc}</p>
             )}
           </div>
         ))}
@@ -177,9 +177,9 @@ export default function Template30({ data, onClickSection }) {
           <div key={i} className=" mb-3">
             <div className="flex justify-between items-start">
               <div>
-                <p className="font-semibold text-gray-800 !text-sm">{exp.role}</p>
-                <p className="text-sm opacity-80">{exp.company}</p>
-                {exp.location && <p className="text-xs opacity-70">{exp.location}</p>}
+                <p className="font-semibold text-gray-800 !text-sm break-words">{exp.role}</p>
+                <p className="text-sm opacity-80 break-words">{exp.company}</p>
+                {exp.location && <p className="text-xs opacity-70 break-words">{exp.location}</p>}
               </div>
               <p className="text-xs opacity-60">
                 {exp.start}
@@ -188,10 +188,10 @@ export default function Template30({ data, onClickSection }) {
               </p>
             </div>
             {exp.desc && (
-              <p className="text-sm mt-1 text-justify text-gray-700">{exp.desc}</p>
+              <p className="text-sm mt-1 text-justify text-gray-700 break-words">{exp.desc}</p>
             )}
             {exp.reference && (
-              <p className="text-xs mt-1 italic text-gray-600">Reference: {exp.reference}</p>
+              <p className="text-xs mt-1 italic text-gray-600 break-words">Reference: {exp.reference}</p>
             )}
           </div>
         ))}
@@ -206,23 +206,19 @@ export default function Template30({ data, onClickSection }) {
             </h2>
         {education.map((edu, i) => (
           <div key={i} className=" mb-3">
-             <div className="flex justify-between items-start">
-                  <div>
-                    <p className="font-semibold !text-sm text-gray-700">{edu.degree}</p>
-                    <p className="text-sm opacity-80">{edu.school}</p>
-                  </div>
-                  <p className="text-xs text-gray-500">
-                    {edu.start
-                      ? `${new Date(edu.start).getFullYear()}${edu.current
-                        ? " - Present"
-                        : edu.end
-                          ? " - " + new Date(edu.end).getFullYear()
-                          : ""
-                      }`
-                      : "Year not set"}
-                  </p>
-                </div>
-            {edu.description && <p className="text-sm mt-1 text-gray-700 text-justify">{edu.description}</p>}
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="font-semibold !text-sm text-gray-700 break-words">{edu.degree}</p>
+                <p className="text-sm opacity-80 break-words">{edu.school}</p>
+                {edu.field && <p className="text-xs opacity-70 break-words">{edu.field}</p>}
+              </div>
+              <p className="text-xs opacity-60">
+                {edu.start && formatDate(edu.start)}
+                {edu.start && (edu.end || edu.current) && " - "}
+                {edu.current ? "Present" : edu.end && formatDate(edu.end)}
+              </p>
+            </div>
+            {edu.description && <p className="text-sm mt-1 text-gray-700 text-justify break-words">{edu.description}</p>}
           </div>
         ))}
           </div>
@@ -241,8 +237,8 @@ export default function Template30({ data, onClickSection }) {
           <div key={i} className=" mb-3">
             <div className="flex justify-between items-start">
               <div>
-                <p className="font-semibold !text-sm text-gray-700">{cert.name}</p>
-                <p className="text-sm opacity-80">{cert.issuer}</p>
+                <p className="font-semibold !text-sm text-gray-700 break-words">{cert.name}</p>
+                <p className="text-sm opacity-80 break-words">{cert.issuer}</p>
               </div>
               <p className="text-xs opacity-60">{cert.year}</p>
             </div>
