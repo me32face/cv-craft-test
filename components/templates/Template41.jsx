@@ -255,20 +255,27 @@ export default function Template41({ data, onClickSection }) {
                     }
                   ]).map((exp, i) => (
                     <div key={i}>
-                      <p className="text-sm font-semibold text-gray-600">{exp.role}</p>
-                      <p className="text-xs text-gray-600 italic mb-1">{exp.company} | {exp.year}</p>
+
+                      <div className="flex justify-between items-start mb-1">
+                        <div>
+                          <p className="text-sm font-semibold text-slate-600">{exp.role}</p>
+                          <p className="text-xs text-slate-600 italic mb-1">{exp.company}</p>
+                        </div>
+                        <p className="text-xs opacity-60">
+                          {exp.start}
+                          {exp.start && (exp.end || exp.current) && " - "}
+                          {exp.current ? "Present" : exp.end}
+                        </p>
+                      </div>
 
                       {exp.desc && (
-                        <ul className="space-y-0.5">
-                          {exp.desc.split('\n').map((line, idx) =>
-                            line.trim() && (
-                              <li key={idx} className="text-xs text-gray-700 flex items-start gap-2">
-                                <span>•</span>
-                                <span>{line.trim()}</span>
-                              </li>
-                            )
-                          )}
-                        </ul>
+                        exp.descFormat === "bullet" ? (
+                          exp.desc.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">• {line}</p>)
+                        ) : exp.descFormat === "number" ? (
+                          exp.desc.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{idx + 1}. {line}</p>)
+                        ) : (
+                          <p className="text-sm mt-1 text-justify text-gray-700 break-words">{exp.desc}</p>
+                        )
                       )}
                     </div>
                   ))}

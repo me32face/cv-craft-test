@@ -112,6 +112,12 @@ export default function Home() {
     { id: 'Template34', name: 'Modern Creative', key: 'Emily Davis', image: '/template/template34.png', category: 'creative' },
     { id: 'Template35', name: 'Elegant Layout', key: 'David Wilson', image: '/template/template35.png', category: 'proffessional' },
     { id: 'Template33', name: 'Olivia Modern ', key: 'Olivia Wilson', image: '/template/template33.png', category: 'proffessional' },
+    {id: 'Template30', name: 'Professional Resume', key: 'John Doe', image: '/template/template30.png', category: 'modern' },
+    {id: 'Template31', name: 'Executive Resume', key: 'Jane Smith', image: '/template/template31.png', category: 'proffessional' },
+    {id: 'Template32', name: 'Clean Two-Column CV', key: 'Michael Brown', image: '/template/template32.png', category: 'simple' },
+    {id: 'Template34', name: 'Modern Creative', key: 'Emily Davis', image: '/template/template34.png', category: 'creative' },
+    {id: 'Template35', name: 'Elegant Layout', key: 'David Wilson', image: '/template/template35.png', category: 'proffessional' },
+    {id: 'Template33', name: 'Olivia Modern ', key: 'Olivia Wilson', image: '/template/template33.png', category: 'proffessional' },
 
 
     {

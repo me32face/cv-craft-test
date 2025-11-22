@@ -180,7 +180,15 @@ export default function Template45({ data, onClickSection }) {
                       {edu.current ? "Present" : edu.end && formatDate(edu.end)}
                     </p>
                   </div>
-                  {edu.description && <p className="text-sm mt-1 text-gray-700 text-justify">{edu.description}</p>}
+                  {edu.description && (
+                    edu.descFormat === "bullet" ? (
+                      edu.description.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 text-justify break-words">• {line}</p>)
+                    ) : edu.descFormat === "number" ? (
+                      edu.description.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 text-justify break-words">{idx + 1}. {line}</p>)
+                    ) : (
+                      <p className="text-sm mt-1 text-gray-700 text-justify break-words">{edu.description}</p>
+                    )
+                  )}
                 </div>
               ))}
             </div>
@@ -283,7 +291,11 @@ export default function Template45({ data, onClickSection }) {
                       <p className="text-sm font-semibold text-slate-700">{exp.role}</p>
                       <p className="text-xs text-slate-600 italic">{exp.company}</p>
                     </div>
-                    <p className="text-xs text-gray-500 ml-4">{exp.year}</p>
+                    <p className="text-xs opacity-60">
+                      {exp.start}
+                      {exp.start && (exp.end || exp.current) && " - "}
+                      {exp.current ? "Present" : exp.end}
+                    </p>
                   </div>
                   {exp.desc && (
                     <div className="mt-1 text-xs text-gray-700 leading-relaxed">

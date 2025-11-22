@@ -1,7 +1,6 @@
 // components/templates/index.js
 
 import Template01 from "./Template01";
-import Template02 from "./Template02";
 import Template30 from "./Template30";
 import Template31 from "./Template31";
 import Template32 from "./Template32";
@@ -40,6 +39,7 @@ export const templates = {
   template44: Template44,
   template45: Template45,
   template46: Template46,
+  template33: Template33,
 };
 
 export const templateInputs = {
@@ -60,6 +60,7 @@ export const templateInputs = {
     project: true,
     socialLinks: true
   },
+ 
 
 
   template34: {

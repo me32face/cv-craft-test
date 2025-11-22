@@ -183,41 +183,7 @@ export default function template39({ data, onClickSection }) {
               </div>
             </div>
           )}
-          {/* Skills */}
-          {/* {data?.visibleSections?.skills !== false && (
-            <div className="mb-4 mt-8">
-              <h2 className="font- text-md mb-2 cursor-pointer border-b-2 border-amber-700 pb-1.5 " onClick={() => onClickSection && onClickSection("skills")}>SKILLS</h2>
-              {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation", "Critical Thinking", "Leadership"]).map((s, i) => {
-                if (typeof s === 'string') {
-                  return <p key={i} className="text-xs mb-1">• {s}</p>;
-                }
-                if (s.proficiency !== undefined) {
-                  return (
-                    <div key={i} className="mb-2">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm">{s.name}</span>
-                        <span className="text-xs opacity-70">{s.proficiency}%</span>
-                      </div>
-                      <div className="w-full bg-white/20 rounded-full h-1 mt-2">
-                        <div
-                          className="bg-amber-700 h-1 rounded-full transition-all"
-                          style={{ width: `${s.proficiency}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                  );
-                }
-                if (s.category && s.items) {
-                  return (
-                    <p key={i} className="text-sm mb-1">
-                      <span className="font-medium text-amber-700">{s.category}:</span> {s.items.filter(item => item && item.trim()).join(", ")}
-                    </p>
-                  );
-                }
-                return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
-              })}
-            </div>
-          )} */}
+
 
           {/* Education */}
           {data?.visibleSections?.education !== false && (
@@ -239,8 +205,15 @@ export default function template39({ data, onClickSection }) {
                       {edu.current ? "Present" : edu.end && formatDate(edu.end)}
                     </p>
                   </div>
-                  {edu.description && <p className="text-sm mt-1 text-gray-700 text-justify">{edu.description}</p>}
-                </div>
+                  {edu.description && (
+                    edu.descFormat === "bullet" ? (
+                      edu.description.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 text-justify break-words">• {line}</p>)
+                    ) : edu.descFormat === "number" ? (
+                      edu.description.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 text-justify break-words">{idx + 1}. {line}</p>)
+                    ) : (
+                      <p className="text-sm mt-1 text-gray-700 text-justify break-words">{edu.description}</p>
+                    )
+                  )}                </div>
               ))}
             </div>
           )}
@@ -302,8 +275,11 @@ export default function template39({ data, onClickSection }) {
                     <p className="text-[14px] font-bold text-gray-800">{exp.role}</p>
                     <div className="flex justify-between items-center mt-0.5">
                       <p className="text-[13px] italic text-gray-600">{exp.company}</p>
-                      <p className="text-[11px] text-gray-500">{exp.year}</p>
-                    </div>
+                      <p className="text-xs opacity-60">
+                        {exp.start}
+                        {exp.start && (exp.end || exp.current) && " - "}
+                        {exp.current ? "Present" : exp.end}
+                      </p>                    </div>
 
                     {exp.desc && (
                       <div className="mt-1.5 text-[12px] text-gray-700 leading-relaxed">

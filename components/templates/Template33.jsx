@@ -2,6 +2,7 @@
 
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
+import { Phone } from "lucide-react";
 
 export default function Template35({ data, onClickSection }) {
   const toArray = (value) => (!value ? [] : Array.isArray(value) ? value : [value]);
@@ -47,7 +48,12 @@ export default function Template35({ data, onClickSection }) {
         <div>
           <div className="mb-4">
             <h2 className="font-semibold text-md mb-2">CONTACT</h2>
-            <p className="text-sm mt-1">📞 {data?.phone || "123-456-7890"}</p>
+            <p className="text-sm mt-1 flex items-center gap-2">
+              <span className="flex-shrink-0 block">
+                <Phone size={14} />
+              </span>
+              {data?.phone}
+            </p>
             <p className="text-sm mt-1">📧 {data?.email || "hello@email.com"}</p>
             <p className="text-sm mt-1">📍 {data?.address || "123 Anywhere St., Any City"}</p>
             {data?.visibleSections?.socialLinks !== false && (
@@ -101,7 +107,6 @@ export default function Template35({ data, onClickSection }) {
                     </p>
                   );
                 }
-
                 return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
               })}
             </div>
@@ -148,7 +153,7 @@ export default function Template35({ data, onClickSection }) {
           onClick={() => onClickSection("personal")}
         >
           <div className="inline-flex flex-col items-center border px-6 py-3 rounded-3xl">
-            <h1 className="text-4xl font-bold text-gray-600 uppercase tracking-wide">
+            <h1 className="text-4xl font-bold text-gray-600 uppercase  tracking-wide">
               {data.name || "YOUR NAME"}
             </h1>
 
@@ -183,7 +188,11 @@ export default function Template35({ data, onClickSection }) {
                     <p className="font-semibold text-gray-800 !text-sm">{exp.role}</p>
                     <p className="text-sm opacity-80">{exp.company}</p>
                   </div>
-                  <p className="text-xs opacity-60">{exp.year}</p>
+                  <p className="text-xs opacity-60">
+                    {exp.start}
+                    {exp.start && (exp.end || exp.current) && " - "}
+                    {exp.current ? "Present" : exp.end}
+                  </p>
                 </div>
                 {exp.descFormat === "bullet" ? (
                   exp.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">• {line}</p>)
@@ -246,7 +255,15 @@ export default function Template35({ data, onClickSection }) {
                     {edu.current ? "Present" : edu.end && formatDate(edu.end)}
                   </p>
                 </div>
-                {edu.description && <p className="text-sm mt-1 text-gray-700 text-justify">{edu.description}</p>}
+                {edu.description && (
+                  edu.descFormat === "bullet" ? (
+                    edu.description.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 text-justify break-words">• {line}</p>)
+                  ) : edu.descFormat === "number" ? (
+                    edu.description.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 text-justify break-words">{idx + 1}. {line}</p>)
+                  ) : (
+                    <p className="text-sm mt-1 text-gray-700 text-justify break-words">{edu.description}</p>
+                  )
+                )}
               </div>
             ))}
           </div>
