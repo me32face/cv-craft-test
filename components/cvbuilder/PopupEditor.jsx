@@ -41,30 +41,6 @@ export default function PopupEditor({ visible, section, onClose, data, update, o
             <label className="flex items-center gap-2 mt-4">
               <input
                 type="checkbox"
-                checked={data.visibleSections?.sociallinks !== false}
-                onChange={(e) =>
-                  update("visibleSections", {
-                    ...data.visibleSections,
-                    sociallinks: e.target.checked,
-                  })
-                }
-              />
-              <span className="text-sm font-medium">Show Social Links</span>
-            </label>
-          </div>
-        );
-
-      case "sociallinks":
-        return (
-          <div>
-            <SocialLinks
-              data={data.socialLinks}
-              setSocialLinks={(v) => update("socialLinks", v)}
-              onClose={onClose} onNext={() => onNext("skills")}
-            />
-            <label className="flex items-center gap-2 mt-4">
-              <input
-                type="checkbox"
                 checked={data.visibleSections?.socialLinks !== false}
                 onChange={(e) =>
                   update("visibleSections", {
