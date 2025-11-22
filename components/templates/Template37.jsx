@@ -3,9 +3,7 @@ import React from "react";
 import { User, Briefcase, GraduationCap } from "lucide-react";
 
 export default function Template37({ data, onClickSection }) {
-  /* ----------------------------------------
-     SAFE HELPERS
-  ----------------------------------------- */
+ 
   const toArray = (v) =>
     !v ? [] : Array.isArray(v) ? v : typeof v === "string" ? [v] : [];
 
@@ -53,23 +51,23 @@ export default function Template37({ data, onClickSection }) {
       ];
 
   // Education
-  const education = toArray(data?.education).length
-    ? toArray(data?.education)
-    : [
-        {
-          course: "Executive MBA (EMBA)",
-          school: "Wardiere University",
-          gpa: "GPA: 3.8 / 4.0",
-          year: "2029 - 2031",
-        },
-        {
-          course: "Bachelor of Business Management",
-          school: "Wardiere University",
-          gpa: "GPA: 3.9 / 4.0",
-          year: "2025 - 2029",
-        },
-      ];
-
+const educationArray = toArray(data?.education);
+const education = educationArray.length
+  ? educationArray
+  : [
+      {
+        course: "Executive MBA (EMBA)",
+        school: "Wardiere University",
+        gpa: "GPA: 3.8 / 4.0",
+        year: "2029 - 2031",
+      },
+      {
+        course: "Bachelor of Business Management",
+        school: "Wardiere University",
+        gpa: "GPA: 3.9 / 4.0",
+        year: "2025 - 2029",
+      },
+    ];
   // Skills
   const skills = toArray(data?.skills);
 
@@ -112,11 +110,12 @@ export default function Template37({ data, onClickSection }) {
 
   return (
     <div
-      id="cv-preview"
-      className="w-[210mm] h-[297mm] bg-white shadow-2xl overflow-visible flex"
+      id="pdf-template"
+      className="w-[210mm] min-h-[297mm]
+ bg-white shadow-2xl overflow-visible flex"
     >
       {/* LEFT SIDEBAR */}
-      <div className="w-[35%] bg-gray-100 p-6 pl-8">
+      <div className="w-[35%] bg-gray-100 p-6 pl-8 ">
         {/* Profile Image */}
         <div
           className={`mb-6 ${
@@ -162,12 +161,12 @@ export default function Template37({ data, onClickSection }) {
                 {safeText(data?.email, "hello@reallygreatsite.com")}
               </p>
               <p>{safeText(data?.address, "123 Anywhere St., Any City")}</p>
-              {visible.social !== false &&
+             {visible.socialLinks !== false &&
                 Array.isArray(data?.socialLinks) &&
                 data.socialLinks.length > 0 && (
                   <div
                     className="mb-6 cursor-pointer"
-                    onClick={() => onClickSection("social")}
+                    onClick={() => onClickSection("socialLinks  ")}
                   >
                     <div className="space-y-2 text-xs break-all">
                       {data.socialLinks.map((link, i) => (
@@ -205,7 +204,7 @@ export default function Template37({ data, onClickSection }) {
               ).map((s, i) => {
                 if (typeof s === "string") {
                   return (
-                    <div key={i} className="flex items-start">
+                    <div key={i} className="flex items-start cv-item">
                       <span className="mr-2">•</span>
                       <span>{s}</span>
                     </div>
@@ -217,7 +216,7 @@ export default function Template37({ data, onClickSection }) {
                 // Proficiency bar
                 if (sk.proficiency !== undefined) {
                   return (
-                    <div key={i}>
+                    <div key={i}  className="cv-item">
                       <div className="flex justify-between">
                         <span>{safeText(sk.name)}</span>
                         <span className="text-[10px] opacity-70">
@@ -271,7 +270,7 @@ export default function Template37({ data, onClickSection }) {
 
                 const lang = safeObj(l);
                 return (
-                  <div key={i}>
+                  <div key={i} className="cv-item" >
                     <div className="flex justify-between">
                       <span>{safeText(lang.name)}</span>
 
@@ -327,7 +326,7 @@ export default function Template37({ data, onClickSection }) {
               ).map((c, i) => {
                 const cert = safeObj(c);
                 return (
-                  <div key={i}>
+                  <div key={i} className="cv-item" >
                     <p className="font-semibold">{safeText(cert.name)}</p>
                     <p className="text-gray-600">
                       {safeText(cert.issuer)} {cert.year && `| ${cert.year}`}
@@ -358,7 +357,7 @@ export default function Template37({ data, onClickSection }) {
       </div>
 
       {/* RIGHT SIDE */}
-      <div className="w-[65%] bg-white">
+      <div className="w-2/3 bg-white cv-sidebar ">
         {/* HEADER */}
         {visible.personal !== false && (
           <div
@@ -425,7 +424,7 @@ export default function Template37({ data, onClickSection }) {
                   const lines = e.desc ? e.desc.split("\n") : [];
 
                   return (
-                    <div key={i}>
+                    <div key={i} className="cv-item" >
                       <div className="flex justify-between items-start mb-1">
                         <div>
                           <h3 className="text-sm font-bold">
@@ -471,46 +470,69 @@ export default function Template37({ data, onClickSection }) {
           )}
 
           {/* EDUCATION */}
-          {visible.education !== false && (
-            <div
-              className="mt-8 cursor-pointer"
-              onClick={() => onClickSection("education")}
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center">
-                  <GraduationCap className="w-3 h-3 text-white" />
-                </div>
-                <h2 className="text-sm font-bold uppercase tracking-wide">
-                  Education
-                </h2>
+{visible.education !== false && (
+  <div
+    className="mt-8 cursor-pointer"
+    onClick={() => onClickSection("education")}
+  >
+    <div className="flex items-center gap-2 mb-2">
+      <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center">
+        <GraduationCap className="w-3 h-3 text-white" />
+      </div>
+      <h2 className="text-sm font-bold uppercase tracking-wide">
+        Education
+      </h2>
+    </div>
+
+    <div className="pl-8 border-l-2 border-gray-300 ml-3 space-y-3 text-xs">
+      {education.map((edu, i) => {
+        const ed = safeObj(edu);
+
+        // Fix duration display
+        const duration = ed.current
+          ? `${ed.start || ""} - Present`
+          : `${ed.start || ""} - ${ed.end || ""}`;
+
+        return (
+          <div key={i} className="cv-item">
+            <div className="flex justify-between items-start">
+              <div>
+                {/* DEGREE / COURSE */}
+                <h3 className="text-sm font-bold">
+                  {safeText(ed.degree) || safeText(ed.course) || "Course Name"}
+                </h3>
+
+                {/* SCHOOL */}
+                <p className="text-xs text-gray-600">
+                  {safeText(ed.school, "School / University")}
+                </p>
+
+                {/* FIELD OF STUDY */}
+                {ed.field && (
+                  <p className="text-xs text-gray-600">
+                    Field: {safeText(ed.field)}
+                  </p>
+                )}
+
+                {/* DESCRIPTION */}
+                {ed.description && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    {safeText(ed.description)}
+                  </p>
+                )}
               </div>
 
-              <div className="pl-8 border-l-2 border-gray-300 ml-3 space-y-3 text-xs">
-                {education.map((edu, i) => {
-                  const ed = safeObj(edu);
-
-                  return (
-                    <div key={i}>
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="text-sm font-bold">
-                            {safeText(ed.course)}
-                          </h3>
-                          <p className="text-xs text-gray-600">
-                            {safeText(ed.school)}
-                          </p>
-                          {ed.gpa && <p className="text-xs">{ed.gpa}</p>}
-                        </div>
-                        <span className="text-xs text-gray-500 whitespace-nowrap">
-                          {safeText(ed.year)}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+              {/* DURATION */}
+              <span className="text-xs text-gray-500 whitespace-nowrap">
+                {duration}
+              </span>
             </div>
-          )}
+          </div>
+        );
+      })}
+    </div>
+  </div>
+)}
 
           {/* PROJECTS */}
           {visible.projects !== false && (
@@ -533,7 +555,7 @@ export default function Template37({ data, onClickSection }) {
                   const lines = pr.desc ? pr.desc.split("\n") : [];
 
                   return (
-                    <div key={i}>
+                    <div key={i} className="cv-item" >
                       <div className="flex justify-between items-start mb-1">
                         <div>
                           <h3 className="text-sm font-bold">

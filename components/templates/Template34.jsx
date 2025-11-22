@@ -131,16 +131,14 @@ export default function Template34({ data, onClickSection }) {
           </section>
 
           {/* SOCIAL LINKS (Works with checkbox toggle) */}
-  {data?.visibleSections?.socialLinks !== false && (
+{data?.visibleSections?.socialLinks !== false && (
   <section
     className="mb-6 cursor-pointer"
     onClick={() => onClickSection && onClickSection("socialLinks")}
   >
-    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
-      Social Links
-    </h3>
+   
 
-    {socialLinks.length > 0 ? (
+    {socialLinks.length > 0 && (
       <div className="text-sm space-y-1">
         {socialLinks.map((link, index) => (
           <a
@@ -154,8 +152,6 @@ export default function Template34({ data, onClickSection }) {
           </a>
         ))}
       </div>
-    ) : (
-      <p className="text-sm text-gray-400">No social links added</p>
     )}
   </section>
 )}
@@ -221,12 +217,12 @@ export default function Template34({ data, onClickSection }) {
                   }
 
                   // Skill category with items
-                  if (skillObj.category && skillObj.items) {
-                    const items = Array.isArray(skillObj.items)
-                      ? skillObj.items.filter(
-                          (it) => it && it.toString().trim()
-                        )
-                      : [];
+                if (skillObj.category && (skillObj.skills || skillObj.items)) {
+  const itemsArray = skillObj.skills || skillObj.items || [];
+  const items = Array.isArray(itemsArray)
+    ? itemsArray.filter((it) => it && it.toString().trim())
+    : [];
+
                     return (
                       <div key={i}>
                         <span className="font-medium">
@@ -370,110 +366,124 @@ export default function Template34({ data, onClickSection }) {
           )}
 
           {/* EXPERIENCE / WORK EXPERIENCE */}
-          {data?.visibleSections?.experience !== false && (
-            <section
-              className="mb-8 cursor-pointer"
-              onClick={() => onClickSection && onClickSection("experience")}
-            >
-              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1">
-                Work Experience
-              </h3>
+         {data?.visibleSections?.experience !== false && (
+  <section
+    className="mb-8 cursor-pointer"
+    onClick={() => onClickSection && onClickSection("experience")}
+  >
+    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1">
+      Work Experience
+    </h3>
 
-              <div className="mt-3 space-y-3 border-l-2 border-gray-300 pl-4">
-                {(experiences.length
-                  ? experiences
-                  : [
-                      {
-                        role: "Senior Sales Executive",
-                        company: "TechnoMart Pvt Ltd",
-                        year: "2021–Present",
-                        desc: "Managed enterprise-level accounts...",
-                      },
-                      {
-                        role: "Sales Executive",
-                        company: "ABC Corp",
-                        year: "2018–2021",
-                        desc: "Achieved 120% of quarterly sales...",
-                      },
-                    ]
-                ).map((exp, i) => {
-                  const e = safeObj(exp);
-                  const desc = e.desc ? e.desc.toString() : "";
-                  const descLines = desc
-                    ? desc.split("\n").map((line) => line.trim())
-                    : [];
+    <div className="mt-3 space-y-3 border-l-2 border-gray-300 pl-4">
+      {(experiences.length ? experiences : []).map((exp, i) => {
+        const e = safeObj(exp);
 
-                  return (
-                    <div key={i} className="cv-item text-sm">
-                      <p className="font-semibold">{safeText(e.role)}</p>
-                      <p className="opacity-70">{safeText(e.company)}</p>
-                      <p className="text-xs opacity-60">{safeText(e.year)}</p>
+        const formatDate = (value) => {
+          if (!value) return "";
+          const date = new Date(value);
+          return date.toLocaleString("en-US", { month: "short", year: "numeric" });
+        };
 
-                      {/* Description formats like Template30 */}
-                      {desc && (
-                        <>
-                          {e.descFormat === "bullet" ? (
-                            <ul className="mt-1 ml-4 list-disc space-y-1">
-                              {descLines.map(
-                                (line, idx) => line && <li key={idx}>{line}</li>
-                              )}
-                            </ul>
-                          ) : e.descFormat === "number" ? (
-                            <ol className="mt-1 ml-4 list-decimal space-y-1">
-                              {descLines.map(
-                                (line, idx) => line && <li key={idx}>{line}</li>
-                              )}
-                            </ol>
-                          ) : (
-                            <p className="mt-1">{desc}</p>
-                          )}
-                        </>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-          )}
+        const dateRange = e.current
+          ? `${formatDate(e.start)} – Present`
+          : `${formatDate(e.start)} – ${formatDate(e.end)}`;
+
+        const desc = e.desc ? e.desc.toString() : "";
+        const descLines = desc
+          ? desc.split("\n").map((line) => line.trim())
+          : [];
+
+        return (
+          <div key={i} className="cv-item text-sm">
+            <p className="font-semibold">{safeText(e.role)}</p>
+            <p className="opacity-70">{safeText(e.company)}</p>
+            {e.location && <p className="opacity-70">{e.location}</p>}
+            <p className="text-xs opacity-60">{dateRange}</p>
+
+            {/* Auto bullet formatting */}
+            {desc && (
+              <>
+                {descLines.length > 1 ? (
+                  <ul className="mt-1 ml-4 list-disc space-y-1">
+                    {descLines.map(
+                      (line, idx) => line && <li key={idx}>{line}</li>
+                    )}
+                  </ul>
+                ) : (
+                  <p className="mt-1">{desc}</p>
+                )}
+              </>
+            )}
+
+            {/* Reference (optional) */}
+            {e.reference && (
+              <p className="text-xs mt-2 opacity-60">
+                <span className="font-semibold">Reference: </span>
+                {e.reference}
+              </p>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  </section>
+)}
 
           {/* EDUCATION */}
-          {data?.visibleSections?.education !== false && (
-            <section
-              className="mb-8 cursor-pointer"
-              onClick={() => onClickSection && onClickSection("education")}
-            >
-              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
-                Education
-              </h3>
+         {data?.visibleSections?.education !== false && (
+  <section
+    className="mb-8 cursor-pointer"
+    onClick={() => onClickSection && onClickSection("education")}
+  >
+    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
+      Education
+    </h3>
 
-              {(education.length
-                ? education
-                : [
-                    {
-                      course: "Bachelor of Commerce (B.Com)",
-                      school: "Wardiere University",
-                      year: "2015–2018",
-                    },
-                    {
-                      course: "Higher Secondary",
-                      school: "St. Mary's Senior School",
-                      year: "2013–2015",
-                    },
-                  ]
-              ).map((edu, i) => {
-                const ed = safeObj(edu);
-                return (
-                  <div key={i} className="cv-item mb-3">
-                    <p className="font-semibold">{safeText(ed.course)}</p>
-                    <p className="text-xs opacity-70">
-                      {safeText(ed.school)} — {safeText(ed.year)}
-                    </p>
-                  </div>
-                );
-              })}
-            </section>
+    {(education.length ? education : []).map((edu, i) => {
+      const ed = safeObj(edu);
+
+      const formatDate = (value) => {
+        if (!value) return "";
+        const date = new Date(value);
+        return date.toLocaleString("en-US", { month: "short", year: "numeric" });
+      };
+
+      const dateRange = ed.current
+        ? `${formatDate(ed.start)} – Present`
+        : `${formatDate(ed.start)} – ${formatDate(ed.end)}`;
+
+      const desc = ed.description ? ed.description.toString() : "";
+      const descLines = desc
+        ? desc.split("\n").map((line) => line.trim())
+        : [];
+
+      return (
+        <div key={i} className="cv-item mb-3 text-sm">
+          <p className="font-semibold">{safeText(ed.degree)}</p>
+          <p className="opacity-70">{safeText(ed.school)}</p>
+          {ed.field && <p className="opacity-70">{safeText(ed.field)}</p>}
+          <p className="text-xs opacity-60">{dateRange}</p>
+
+          {/* Auto bullet formatting */}
+          {desc && (
+            <>
+              {descLines.length > 1 ? (
+                <ul className="mt-1 ml-4 list-disc space-y-1">
+                  {descLines.map(
+                    (line, idx) => line && <li key={idx}>{line}</li>
+                  )}
+                </ul>
+              ) : (
+                <p className="mt-1">{desc}</p>
+              )}
+            </>
           )}
-
+        </div>
+      );
+    })}
+  </section>
+)}
           {/* PROJECTS (replacing References) */}
           {data?.visibleSections?.projects !== false && (
             <section

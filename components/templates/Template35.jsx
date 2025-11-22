@@ -14,62 +14,64 @@ export default function Template35({ data, onClickSection }) {
   const certificates = toArray(data.certificates);
   const references = toArray(data.references);
   const awards = toArray(data.awards);
-const  socialLinks = toArray(data.socialLinks);
+  const socialLinks = toArray(data.socialLinks);
   // visibility logic like Template30
   const visible = data?.visibleSections || {};
 
   return (
     <div
-      id="cv-preview"
+      id="pdf-template"
       className="w-[794px] min-h-[1123px] bg-white mx-auto p-10 font-sans text-gray-900 tracking-tight"
     >
       {/* HEADER */}
       {visible.personal !== false && (
-       <header
-  className="border-b pb-4 mb-6 cursor-pointer"
-  onClick={() => onClickSection("personal")}
->
-  <h1 className="text-4xl font-bold">
-    {data.name || "ALEXANDER REED"}
-  </h1>
+        <header
+          className="border-b pb-4 mb-6 cursor-pointer"
+          onClick={() => onClickSection("personal")}
+        >
+          <h1 className="text-4xl font-bold">
+            {data.name || "ALEXANDER REED"}
+          </h1>
 
-  <p className="text-lg text-gray-600 mt-1">
-    {data.title || "Software Engineer"}
-  </p>
+          <p className="text-lg text-gray-600 mt-1">
+            {data.title || "Software Engineer"}
+          </p>
 
-  <div className="flex flex-wrap gap-6 text-sm mt-3">
-    {/* Phone */}
-    {data.phone && <p>📞 {data.phone}</p>}
+          <div className="flex flex-wrap gap-6 text-sm mt-3">
+            {/* Phone */}
+            {data.phone && <p>📞 {data.phone}</p>}
 
-    {/* Email */}
-    {data.email && <p>✉️ {data.email}</p>}
+            {/* Email */}
+            {data.email && <p>✉️ {data.email}</p>}
 
-    {/* Address */}
-    {data.address && <p>📍 {data.address}</p>}
+            {/* Address */}
+            {data.address && <p>📍 {data.address}</p>}
 
-    {/* Website (OPTIONAL FIELD) */}
-  
-  {/* SOCIAL LINKS (dynamic from SocialLinks.jsx) */}
-{visible.socialLinks !== false && Array.isArray(data?.socialLinks) && data.socialLinks.length > 0 && (
-  <div className="flex flex-wrap gap-4 mt-2 text-sm cursor-pointer"
-       onClick={() => onClickSection("social")}
-  >
-    {data.socialLinks.map((link, i) => (
-      <a
-        key={i}
-        href={link}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-blue-600 underline break-all"
-      >
-        🔗 {link}
-      </a>
-    ))}
-  </div>
-)}
-  </div>
-</header>
+            {/* Website (OPTIONAL FIELD) */}
 
+            {/* SOCIAL LINKS (dynamic from SocialLinks.jsx) */}
+            {visible.socialLinks !== false &&
+              Array.isArray(data?.socialLinks) &&
+              data.socialLinks.length > 0 && (
+                <div
+                  className="flex flex-wrap gap-4 mt-2 text-sm cursor-pointer"
+                  onClick={() => onClickSection("social")}
+                >
+                  {data.socialLinks.map((link, i) => (
+                    <a
+                      key={i}
+                      href={link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 underline break-all"
+                    >
+                      🔗 {link}
+                    </a>
+                  ))}
+                </div>
+              )}
+          </div>
+        </header>
       )}
 
       {/* SUMMARY */}
@@ -88,9 +90,9 @@ const  socialLinks = toArray(data.socialLinks);
         </section>
       )}
 
-      <div className="grid grid-cols-[65%_35%] gap-8">
+      <div className=" cv-sidebar  flex gap-8">
         {/* LEFT COLUMN */}
-        <div>
+        <div className="w-2/3">
           {/* EXPERIENCE */}
           {visible.experience !== false && (
             <section
@@ -107,42 +109,71 @@ const  socialLinks = toArray(data.socialLinks);
                     {
                       role: "Software Developer",
                       company: "TechCorp Pvt Ltd",
-                      year: "2021 – Present",
-                      desc: "Built scalable applications and optimized backend APIs.",
+                      location: "Kozhikode",
+                      start: "2021-01-01",
+                      current: true,
+                      desc: "Built scalable applications.\nOptimized backend APIs.",
+                      reference: "",
                     },
                   ]
               ).map((exp, i) => {
                 const e = safeObj(exp);
+
+                // Format dates (Aug 2021)
+                const formatDate = (value) => {
+                  if (!value) return "";
+                  const d = new Date(value);
+                  return d.toLocaleString("en-US", {
+                    month: "short",
+                    year: "numeric",
+                  });
+                };
+
+                const dateText = e.current
+                  ? `${formatDate(e.start)} – Present`
+                  : `${formatDate(e.start)} – ${formatDate(e.end)}`;
+
                 const desc = e.desc || "";
                 const lines = desc ? desc.split("\n").map((l) => l.trim()) : [];
+                const isMulti = lines.length > 1;
 
                 return (
-                  <div key={i} className="mb-5">
-                    <div className="flex justify-between text-sm">
+                  <div key={i} className="mb-5 text-sm cv-item">
+                    {/* Job title & date */}
+                    <div className="flex justify-between">
                       <p className="font-bold">{e.role}</p>
-                      <p className="opacity-70">{e.year}</p>
+                      <p className="opacity-70">{dateText}</p>
                     </div>
 
-                    <p className="text-sm opacity-80">{e.company}</p>
+                    {/* Company */}
+                    <p className="opacity-80">{e.company}</p>
 
+                    {/* Location */}
+                    {e.location && (
+                      <p className="opacity-70">📍 {e.location}</p>
+                    )}
+
+                    {/* Description */}
                     {desc && (
                       <>
-                        {e.descFormat === "bullet" ? (
-                          <ul className="list-disc pl-6 text-sm mt-1 space-y-1">
+                        {isMulti ? (
+                          <ul className="list-disc pl-5 mt-1 space-y-1">
                             {lines.map(
                               (line, idx) => line && <li key={idx}>{line}</li>
                             )}
                           </ul>
-                        ) : e.descFormat === "number" ? (
-                          <ol className="list-decimal pl-6 text-sm mt-1 space-y-1">
-                            {lines.map(
-                              (line, idx) => line && <li key={idx}>{line}</li>
-                            )}
-                          </ol>
                         ) : (
-                          <p className="text-sm mt-1 leading-relaxed">{desc}</p>
+                          <p className="mt-1 leading-relaxed">{desc}</p>
                         )}
                       </>
+                    )}
+
+                    {/* Reference */}
+                    {e.reference && (
+                      <p className="text-xs mt-2 opacity-60">
+                        <span className="font-semibold">Reference: </span>
+                        {e.reference}
+                      </p>
                     )}
                   </div>
                 );
@@ -170,24 +201,28 @@ const  socialLinks = toArray(data.socialLinks);
                       year: "2023",
                       link: "https://yourportfolio.com",
                       desc: "Built a full personal portfolio using React, Tailwind and Framer Motion.\nIntegrated contact form and dark mode.",
-                      descFormat: "bullet",
                     },
                     {
                       name: "Task Manager App",
                       year: "2022",
                       link: "https://github.com/yourrepo",
                       desc: "Created a task manager with analytics.\nSupports drag & drop and filters.",
-                      descFormat: "number",
                     },
                   ]
               ).map((project, i) => {
                 const p = safeObj(project);
+
                 const desc = p.desc || "";
                 const lines = desc ? desc.split("\n").map((l) => l.trim()) : [];
 
+                // Auto select format:
+                // If multiline → bullets
+                // If single line → paragraph
+                const isMultiLine = lines.length > 1;
+
                 return (
-                  <div key={i} className="mb-5">
-                    <div className="flex justify-between text-sm mb-1">
+                  <div key={i} className="mb-5 text-sm cv-item">
+                    <div className="flex justify-between mb-1">
                       <p className="font-bold">{p.name}</p>
                       <p className="opacity-70">{p.year}</p>
                     </div>
@@ -197,29 +232,24 @@ const  socialLinks = toArray(data.socialLinks);
                       <a
                         href={p.link}
                         target="_blank"
+                        rel="noopener noreferrer"
                         className="text-xs text-blue-600 underline break-all"
                       >
                         {p.link}
                       </a>
                     )}
 
-                    {/* DESCRIPTION FORMATTING */}
+                    {/* DESCRIPTION AUTO-FORMATTED */}
                     {desc && (
                       <>
-                        {p.descFormat === "bullet" ? (
-                          <ul className="list-disc pl-6 text-sm mt-1 space-y-1">
+                        {isMultiLine ? (
+                          <ul className="list-disc pl-6 mt-1 space-y-1">
                             {lines.map(
                               (line, idx) => line && <li key={idx}>{line}</li>
                             )}
                           </ul>
-                        ) : p.descFormat === "number" ? (
-                          <ol className="list-decimal pl-6 text-sm mt-1 space-y-1">
-                            {lines.map(
-                              (line, idx) => line && <li key={idx}>{line}</li>
-                            )}
-                          </ol>
                         ) : (
-                          <p className="text-sm mt-1 leading-relaxed">{desc}</p>
+                          <p className="mt-1 leading-relaxed">{desc}</p>
                         )}
                       </>
                     )}
@@ -243,19 +273,70 @@ const  socialLinks = toArray(data.socialLinks);
                 ? education
                 : [
                     {
-                      course: "Bachelor of Computer Science",
+                      degree: "Bachelor of Computer Science",
                       school: "ABC College",
-                      year: "2018 – 2021",
+                      field: "Computer Science",
+                      start: "2018-06-01",
+                      end: "2021-05-30",
+                      current: false,
+                      description:
+                        "Studied core computer science subjects.\nWorked on mini projects.",
                     },
                   ]
-              ).map((edu, i) => (
-                <div key={i} className="mb-4">
-                  <p className="font-bold">{edu.course}</p>
-                  <p className="text-sm opacity-80">
-                    {edu.school} — {edu.year}
-                  </p>
-                </div>
-              ))}
+              ).map((edu, i) => {
+                const ed = safeObj(edu);
+
+                // Format date → "Aug 2021"
+                const formatDate = (value) => {
+                  if (!value) return "";
+                  const d = new Date(value);
+                  return d.toLocaleString("en-US", {
+                    month: "short",
+                    year: "numeric",
+                  });
+                };
+
+                const dateText = ed.current
+                  ? `${formatDate(ed.start)} – Present`
+                  : `${formatDate(ed.start)} – ${formatDate(ed.end)}`;
+
+                const desc = ed.description || "";
+                const lines = desc ? desc.split("\n").map((l) => l.trim()) : [];
+
+                const isMultiLine = lines.length > 1;
+
+                return (
+                  <div key={i} className="mb-4 text-sm cv-item">
+                    {/* Degree */}
+                    <p className="font-bold">
+                      {ed.degree || "Course / Degree"}
+                    </p>
+
+                    {/* School + Field */}
+                    <p className="opacity-80">
+                      {ed.school} {ed.field ? ` — ${ed.field}` : ""}
+                    </p>
+
+                    {/* Date */}
+                    <p className="text-xs opacity-60">{dateText}</p>
+
+                    {/* Description */}
+                    {desc && (
+                      <>
+                        {isMultiLine ? (
+                          <ul className="list-disc pl-5 mt-1 space-y-1">
+                            {lines.map(
+                              (line, idx) => line && <li key={idx}>{line}</li>
+                            )}
+                          </ul>
+                        ) : (
+                          <p className="mt-1">{desc}</p>
+                        )}
+                      </>
+                    )}
+                  </div>
+                );
+              })}
             </section>
           )}
 
@@ -312,7 +393,7 @@ const  socialLinks = toArray(data.socialLinks);
         </div>
 
         {/* RIGHT COLUMN */}
-        <div>
+        <div className="w-[w-2/3">
           {/* SKILLS */}
           {visible.skills !== false && (
             <section
@@ -334,7 +415,7 @@ const  socialLinks = toArray(data.socialLinks);
 
                   if (sk.proficiency !== undefined) {
                     return (
-                      <div key={i}>
+                      <div key={i} cv-item>
                         <div className="flex justify-between text-sm">
                           <span>{sk.name}</span>
                           <span className="text-xs opacity-70">
@@ -384,7 +465,7 @@ const  socialLinks = toArray(data.socialLinks);
                     const lang = safeObj(l);
 
                     return (
-                      <div key={i}>
+                      <div key={i} cv-item>
                         <div className="flex justify-between">
                           <span>{lang.name}</span>
 
@@ -438,7 +519,7 @@ const  socialLinks = toArray(data.socialLinks);
                     },
                   ]
               ).map((ref, i) => (
-                <div key={i} className="mb-3 text-sm">
+                <div key={i} className="mb-3 text-sm cv-item">
                   <p className="font-semibold">{ref.name}</p>
                   <p className="opacity-80">{ref.title}</p>
                   <p>{ref.phone}</p>
