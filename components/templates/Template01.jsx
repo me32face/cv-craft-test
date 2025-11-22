@@ -90,7 +90,15 @@ export default function Template01({ data, onClickSection }) {
                 {edu.current ? "Present" : edu.end && formatDate(edu.end)}
               </p>
             </div>
-            {edu.description && <p className="text-sm mt-1 text-gray-700 text-justify break-words">{edu.description}</p>}
+            {edu.description && (
+              edu.descFormat === "bullet" ? (
+                edu.description.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 text-justify break-words">• {line}</p>)
+              ) : edu.descFormat === "number" ? (
+                edu.description.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 text-justify break-words">{idx + 1}. {line}</p>)
+              ) : (
+                <p className="text-sm mt-1 text-gray-700 text-justify break-words">{edu.description}</p>
+              )
+            )}
           </div>
         ))}
           </div>
@@ -196,7 +204,13 @@ export default function Template01({ data, onClickSection }) {
                 {exp.location && <p className="text-xs opacity-70 break-words">{exp.location}</p>}
 
                 {exp.desc && (
-                  <p className="text-sm mt-1 break-words">{exp.desc}</p>
+                  exp.descFormat === "bullet" ? (
+                    exp.desc.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 break-words">• {line}</p>)
+                  ) : exp.descFormat === "number" ? (
+                    exp.desc.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 break-words">{idx + 1}. {line}</p>)
+                  ) : (
+                    <p className="text-sm mt-1 break-words">{exp.desc}</p>
+                  )
                 )}
                 {exp.reference && (
                   <p className="text-xs mt-1 italic text-gray-600 break-words">Reference: {exp.reference}</p>

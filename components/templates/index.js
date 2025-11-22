@@ -58,6 +58,7 @@ export const templateInputs = {
     education: true,
     certificates: false,
     project: true,
+    socialLinks: true
   },
 
 
@@ -102,6 +103,8 @@ export const templateInputs = {
     education: true,
     certificates: true,
     project: true,
+    socialLinks:true
+
   },
 
   template31: {

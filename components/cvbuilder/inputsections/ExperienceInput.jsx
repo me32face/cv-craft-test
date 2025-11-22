@@ -13,6 +13,7 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
     end: "",
     current: false,
     desc: "",
+    descFormat: "default",
     reference: "",
   };
 
@@ -209,6 +210,22 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                         onChange={(e) => updateField(i, "current", e.target.checked)}
                       />
                       <span>I currently work here</span>
+                    </div>
+
+                    <div className="flex gap-2 mt-4">
+                      {["default", "bullet", "number"].map((format) => (
+                        <button
+                          key={format}
+                          onClick={() => updateField(i, "descFormat", format)}
+                          className={`px-3 py-1 rounded text-xs font-medium ${
+                            exp.descFormat === format
+                              ? "bg-[#634BC9] text-white"
+                              : "bg-gray-200"
+                          }`}
+                        >
+                          {format.charAt(0).toUpperCase() + format.slice(1)}
+                        </button>
+                      ))}
                     </div>
 
                     <div className="mt-4">

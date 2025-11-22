@@ -326,6 +326,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
           <div>
             <button
               onClick={() => router.push('/')}
+              title="Back to Home Page"
               className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-2 py-1.5 sm:py-2 
               rounded-lg bg-white/80 text-[#634BC9] hover:bg-[#634BC9] hover:text-white transition text-xs sm:text-sm"
             >
