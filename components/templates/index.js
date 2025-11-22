@@ -70,8 +70,9 @@ export const templateInputs = {
     experiences: true,
     education: true,
     about: true,
-    profileImage: false,
+    profileImage: true,
     skills: true,
+    socialLinks: true,  
   },
 
   template35: {
@@ -237,7 +238,7 @@ export const templateInputs = {
   template40: {
     name: true,
     title: true,
-    profileImage: false,
+    profileImage: true,
     phone: true,
     email: true,
     address: true,
