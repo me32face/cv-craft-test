@@ -58,7 +58,9 @@ export const templateInputs = {
     education: true,
     certificates: false,
     project: true,
-    socialLinks: true
+    socialLinks: true,
+    references: false,
+    awards:true,    
   },
  
 

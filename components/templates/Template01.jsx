@@ -18,6 +18,7 @@ export default function Template01({ data, onClickSection }) {
   const references = toArray(data?.references);
   const socialLinks = toArray(data?.socialLinks);
   const projects = toArray(data?.projects);
+  const Awards = toArray(data?.awards); 
 
   return (
     <div
@@ -156,6 +157,7 @@ export default function Template01({ data, onClickSection }) {
           )}
 
           {/* REFERENCE */}
+           {data?.visibleSections?.references !== false && (
           <div className="mt-6">
             <h2 className="text-lg font-semibold mb-3 border-b pb-1">
               REFERENCE
@@ -176,6 +178,7 @@ export default function Template01({ data, onClickSection }) {
               </div>
             ))}
           </div>
+        )}
         </div>
 
         {/* RIGHT COLUMN */}
@@ -229,16 +232,19 @@ export default function Template01({ data, onClickSection }) {
             ))}
 
             {/* PROJECTS */}
-            {data?.visibleSections?.projects !== false && projects.length > 0 && (
+            {data?.visibleSections?.projects !== false && (
               <div className="mt-6">
                 <h2 className="text-lg font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection?.("projects")}>
                   PROJECTS
                 </h2>
-                {projects.map((project, i) => (
+                {(projects.length ? projects : [
+                  { name: "E-Commerce Website", desc: "Built a full-stack e-commerce platform with React and Node.js", year: "2023" },
+                  { name: "Task Management App", desc: "Developed a task management application with real-time updates", year: "2022" }
+                ]).map((project, i) => (
                   <div key={i} className="mb-4">
                     <div className="flex justify-between items-start">
                       <div>
-                        <p className="font-bold text-sm break-words">{project.name}</p>
+                        <p className="font-bold text-sm break-words">{project.name || "E-Commerce"}</p>
                         {project.link && (
                           <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 break-all">
                             {project.link}
@@ -253,6 +259,32 @@ export default function Template01({ data, onClickSection }) {
                       project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 break-words">{idx + 1}. {line}</p>)
                     ) : (
                       project.desc && <p className="text-sm mt-1 break-words">{project.desc}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* AWARDS */}
+            {data?.visibleSections?.awards !== false && (
+              <div className="mt-6">
+                <h2 className="text-lg font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection?.("awards")}>
+                  AWARDS
+                </h2>
+                {(Awards.length ? Awards : [
+                  { name: "Employee of the Year", issuer: "Tech Company", year: "2023" },
+                  { name: "Best Innovation Award", issuer: "Industry Association", year: "2022" }
+                ]).map((award, i) => (
+                  <div key={i} className="mb-3">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-bold text-sm break-words">{award.name}</p>
+                        <p className="text-sm opacity-80 break-words">{award.issuer}</p>
+                      </div>
+                      <p className="text-xs opacity-60">{award.year}</p>
+                    </div>
+                    {award.description && (
+                      <p className="text-sm mt-1 break-words">{award.description}</p>
                     )}
                   </div>
                 ))}

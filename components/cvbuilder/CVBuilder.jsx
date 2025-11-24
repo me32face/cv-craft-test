@@ -176,6 +176,10 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
       { name: "Full Stack Development", issuer: "Tech Academy", year: "2023" },
       { name: "Data Structures & Algorithms", issuer: "Code Institute", year: "2022" }
     ],
+    projects: [
+      { name: "E-Commerce Website", desc: "Built a full-stack e-commerce platform with React and Node.js", year: "2023", link: "https://github.com/example" },
+      { name: "Task Management App", desc: "Developed a task management application with real-time updates", year: "2022" }
+    ],
     references: [],
     awards: []
   });
@@ -222,12 +226,15 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
     return allMenuItems.filter(item => config[item.inputKey] !== false);
   }, [template]);
 
-  const additionalMenuItems = [
-    { name: "Awards", key: "awards", icon: FileText },
-    { name: "References", key: "references", icon: Users, inputKey: "references" },
-    { name: "Certificates", key: "certificates", icon: Award, inputKey: "certificates" },
-
-  ];
+  const additionalMenuItems = useMemo(() => {
+    const config = templateInputs[template] || {};
+    const items = [
+      { name: "Awards", key: "awards", icon: FileText, inputKey: "awards" },
+      { name: "References", key: "references", icon: Users, inputKey: "references" },
+      { name: "Certificates", key: "certificates", icon: Award, inputKey: "certificates" },
+    ];
+    return items.filter(item => !item.inputKey || config[item.inputKey] !== false);
+  }, [template]);
 
   const ChevronDown = ({ className }) => (
     <svg className={className} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
