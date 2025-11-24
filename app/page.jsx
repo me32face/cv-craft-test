@@ -145,6 +145,13 @@ export default function Home() {
       category: "modern",
     },
     {
+      id: "Template46",
+      name: "Modern Creative",
+      key: "Emily Davis",
+      image: "/template/AUGUSTUS AXEL.png",
+      category: "modern",
+    },
+    {
       id: "Template02",
       name: "Modern Minimal",
       key: "Olivia Wilson",
