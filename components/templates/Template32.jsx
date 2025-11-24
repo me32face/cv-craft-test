@@ -453,16 +453,11 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
           <header className="mb-6">
             <h1 className="text-2xl font-semibold text-gray-900 pl-3">{safeText(merged.name, 'YOUR NAME')}</h1>
             <div className="inline-block mt-3 ">
-              <motion.div
-                initial={{ opacity: 0, y: -4 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.28 }}
-                className="inline-block bg-green-100 rounded-full"
-              >
+              <div>
                 <span className="text-green-800 font-semibold text-[12px] px-4 py-1 inline-block text-left mb-4">
                   {safeText(merged.title, 'THE ROLE YOU ARE APPLYING FOR')}
                 </span>
-              </motion.div>
+              </div>
             </div>
           </header>
 
