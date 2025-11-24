@@ -3,13 +3,14 @@
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
 
-export default function Template45({ data, onClickSection }) {
+
+export default function Template45({ data = {}, onClickSection }) {
   const toArray = (value) => (!value ? [] : Array.isArray(value) ? value : [value]);
 
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    return date.toLocaleDateString('en-US', { year: 'numeric' });
   };
 
   const experiences = toArray(data?.experiences);
@@ -21,71 +22,48 @@ export default function Template45({ data, onClickSection }) {
   const interests = toArray(data?.interests);
   const socialLinks = toArray(data?.socialLinks);
 
-  const themeColor = "#2c2c2c"; // Dark gray/black
-
   return (
     <div
       id="cv-preview"
-      className="w-[794px] min-h-[1123px] bg-gray-50 mx-auto font-sans relative overflow-hidden flex text-slate-800"
+      className="w-[794px] min-h-[1123px] bg-white mx-auto font-sans relative overflow-hidden flex text-slate-800"
     >
-      {/* SVG Background Design - Top */}
+      {/* SVG Background Design - Soft organic shapes */}
       <svg
         className="absolute left-0 top-0 w-full h-full z-0 pointer-events-none"
         viewBox="0 0 794 1123"
         preserveAspectRatio="none"
       >
-        {/* Large diagonal shape in top left */}
-        <path
-          d="M 244 0 L 0 0 L 0 450 Q 104 380, 244 320 Z"
-          fill="#e7e6e6"
-          opacity="0.5"
-        />
-        {/* Subtle curved accent top left */}
-        <path
-          d="M 144 0 Q 44 180, 0 320 L 0 0 Z"
-          fill="#a59f9f"
-          opacity="0.4"
-        />
-        {/* Additional top layer (left) */}
-        <path
-          d="M 94 0 L 0 0 L 0 250 Q 44 220, 94 180 Z"
-          fill="#8f8b8b"
-          opacity="0.3"
-        />
-      </svg>
 
-      {/* SVG Background Design - Right */}
-      <svg
-        className="absolute right-0 bottom-0 w-full h-full z-0 pointer-events-none"
-        viewBox="0 0 794 1123"
-        preserveAspectRatio="none"
-      >
-        {/* Large diagonal shape on right */}
+        {/* Top right soft blob - peach/pink */}
         <path
-          d="M 794 1123 L 794 643 Q 794 850, 304 1153 L 854 1123 Z"
-          fill="#e7e6e6"
+          d="
+      M 294 0 
+      C 420 100, 700 80, 520 75 
+      C 770 100, 704 350, 854 360
+      C 954 0, 780 90, 794 0
+      Z"    fill="#c8e6dc"
           opacity="0.5"
         />
-        {/* Subtle curved accent right */}
+        {/* Bottom right large organic shape - light gray */}
         <path
-          d="M 794 1123 L 794 703 Q 784 920, 444 1150 L 794 1123 Z"
-          fill="#a59f9f"
+          d="
+    M 794 980
+    C 900 650, 700 950, 680 1020
+    C 580 1080, 480 1023, 450 1223
+    C 960 1123, 750 1100, 794 1123
+    Z
+  "
+          fill="#c8e6dc"
           opacity="0.4"
-        />
-        {/* Additional right layer */}
-        <path
-          d="M 794 1123 L 794 823 Q 774 980, 554 1150 L 794 1123 Z"
-          fill="#8f8b8b"
-          opacity="0.3"
         />
       </svg>
 
       {/* --- LEFT COLUMN (Sidebar) --- */}
-      <div className="w-[38%] relative z-10 flex flex-col pt-16 pb-10 bg-[#]">
-        {/* Profile Image with circular border */}
-        <div className="flex justify-center mb-12 px-8">
-          <div
-            className="cursor-pointer"
+      <div className="w-[32%] relative z-10 flex flex-col pt-12 pb-10 bg-[#e9efed] ">
+        {/* Profile Image with border */}
+        <div className="flex justify-center mb-5 px-6">
+         <div
+            className="mb-8"
             onClick={() => onClickSection && onClickSection("personal")}
           >
             {data?.profileImage && (
@@ -109,60 +87,49 @@ export default function Template45({ data, onClickSection }) {
         </div>
 
         {/* Sidebar Content */}
-        <div className="px-8 flex flex-col gap-8">
+        <div className="px-6 flex flex-col gap-7">
           {/* Profile Section */}
-          <section className="mb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("personal")}>
-            <h2 className="text-sm font-bold text-slate-600 mb-3 uppercase tracking-wide pb-2 border-b-2 border-[#d4d2db]">
+           <section className="mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("personal")}>
+            <h2 className="text-base font-bold text-gray-600 mb-3 uppercase tracking-wide pb-2 border-b border-[#c8e6dc]">
               Contact
             </h2>
-            <div className="flex flex-wrap gap-x-2 gap-y-1 text-gray-500 text-xs">
-              {/* Phone */}
+            <div className="flex flex-wrap gap-x-1 gap-y-1 text-gray-700 text-sm">
               <div className="flex items-center gap-1.5">
-                <span>📞</span>
+                <span >📞</span>
                 <span>{data?.phone || "+123-456-7890"}</span>
               </div>
-              {/* Email */}
               <div className="flex items-center gap-1.5">
-                <span>✉️</span>
+                <span >✉️</span>
                 <span>{data?.email || "hello@reallygreatsite.com"}</span>
               </div>
-              {/* Address */}
               <div className="flex items-center gap-1.5">
                 <span>📍</span>
                 <span>{data?.address || "123 Anywhere St., Any City"}</span>
               </div>
-              {/* SOCIAL LINKS → always bottom line */}
-              {data?.visibleSections?.socialLinks !== false && socialLinks.length > 0 && (
-                <div className="w-full flex flex-col gap-1 mt-1">
-                  {socialLinks.map((link, i) => (
-                    <div key={i} className="flex items-center gap-1.5 text-xs break-all">
-                      <span>🔗</span>
-                      <span>{link}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <div className="flex items-center gap-1.5">
+                {data?.visibleSections?.socialLinks !== false && (
+                  <>
+                    {socialLinks.length > 0 && (
+                      <div className="">
+                        {socialLinks.map((link, i) => (
+                          <p key={i} className="text-sm  break-all">
+                            <span >🔗</span>
+                            <span className="ml-1">{link}</span>
+
+                          </p>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
             </div>
           </section>
 
-          {/* Languages */}
-          {data?.visibleSections?.languages !== false && (
-            <section className="mb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("languages")}>
-              <h2 className="text-sm font-bold text-slate-600 mb-3 uppercase tracking-wide pb-2 border-b-2 border-[#d4d2db]">
-                Languages
-              </h2>
-              <div className="space-y-1">
-                {(data?.languages?.length ? data.languages : ["Spanish", "Arabic", "English"]).map((l, i) =>
-                  renderLanguage(l, i)
-                )}
-              </div>
-            </section>
-          )}
-
-          {/* Education */}
+            {/* Education */}
           {data?.visibleSections?.education !== false && (
             <div className="">
-              <h2 className="text-md text-slate-600 font-semibold mt-2 mb-3 border-b-2 border-[#d4d2db] pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
+              <h2 className="text-md text-gray-600 font-bold mt-2 mb-3 border-b border-[#c8e6dc] pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
                 EDUCATION
               </h2>
               {education.map((edu, i) => (
@@ -187,17 +154,17 @@ export default function Template45({ data, onClickSection }) {
                     ) : (
                       <p className="text-sm mt-1 text-gray-700 text-justify break-words">{edu.description}</p>
                     )
-                  )}
-                </div>
+                  )}                
+                  </div>
               ))}
             </div>
           )}
 
-          {/* Skills */}
+           {/* Skills */}
           {data?.visibleSections?.skills !== false && (
             <div className="mb-4">
               <div className="mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("skills")}>
-                <h2 className="text-sm font-semibold text-slate-600 mb-3 pb-2 border-b-2 border-[#d4d2db]">
+                <h2 className="text-md text-gray-600 font-bold  mb-3 pb-2 border-b border-[#c8e6dc]">
                   SKILLS
                 </h2>          {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation"]).map((s, i) => {
                   if (typeof s === 'string') {
@@ -234,26 +201,39 @@ export default function Template45({ data, onClickSection }) {
               </div>
             </div>
           )}
+             {/* Languages */}
+          {data?.visibleSections?.languages !== false && (
+            <section className="mb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("languages")}>
+              <h2 className="text-md font-bold text-gray-600 mb-3 uppercase tracking-wide pb-2 border-b border-[#c8e6dc]">
+                Languages
+              </h2>
+              <div className="space-y-1">
+                {(data?.languages?.length ? data.languages : ["Spanish", "Arabic", "English"]).map((l, i) =>
+                  renderLanguage(l, i)
+                )}
+              </div>
+            </section>
+          )}
         </div>
       </div>
 
       {/* --- RIGHT COLUMN (Main Content) --- */}
-      <div className="w-[62%] pt-16 pr-12 pl-8 pb-10 flex flex-col gap-8">
+      <div className="w-[68%] pt-12 pr-10 pl-10 pb-10 flex flex-col gap-6 relative z-10">
 
         {/* Header */}
         <header onClick={() => onClickSection && onClickSection("personal")} className="cursor-pointer mb-2">
-          <h1 className="text-5xl font-bold uppercase mb-2 ml-8 tracking-wide" >
-            {data?.name || "NAME SURNAME"}
+          <h1 className="text-4xl font-bold uppercase mb-1 tracking-wide text-gray-900">
+            {data?.name || "LORENA ROBERTSON"}
           </h1>
-          <p className="text-sm ml-14 font-bold tracking-widest uppercase text-[#787677]">
-            {data?.title || "JOB TITLE"}
+          <p className="text-sm font-normal tracking-widest uppercase text-gray-600">
+            {data?.title || "GRAPHIC DESIGNER"}
           </p>
         </header>
 
         {/* Profile / Summary */}
         {data?.visibleSections?.summary !== false && (
           <section onClick={() => onClickSection && onClickSection("summary")} className="cursor-pointer">
-            <h2 className="text-sm font-bold tracking-widest uppercase mb-3  pb-2 border-b-2 border-[#d4d2db]" style={{ color: themeColor }}>
+            <h2 className="text-md font-bold tracking-widest uppercase mb-3 text-gray-600 pb-2 border-b-2 border-[#E4F3EE]" >
               Profile
             </h2>
             <p className="text-xs leading-relaxed text-slate-700 text-justify">
@@ -262,10 +242,11 @@ export default function Template45({ data, onClickSection }) {
           </section>
         )}
 
+
         {/* Professional Experience */}
         {data?.visibleSections?.experience !== false && (
-          <section className="mb-0 cursor-pointer" onClick={() => onClickSection && onClickSection("experience")}>
-            <h2 className="text-sm font-bold text-[#475569] mb-4 pb-2 border-b-2 border-[#d4d2db]">
+          <section className="mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("experience")}>
+            <h2 className="text-md font-bold text-gray-600 mb-4 pb-2 border-b-2 border-[#E4F3EE]">
               WORK EXPERIENCE
             </h2>
             <div className="space-y-5">
@@ -321,13 +302,13 @@ export default function Template45({ data, onClickSection }) {
           </section>
         )}
 
-        {/* Projects */}
+     {/* Projects */}
         {data?.visibleSections?.projects !== false && (
           <section
-            className="cursor-pointer -mb-1 "
+            className="cursor-pointer "
             onClick={() => onClickSection && onClickSection("projects")}
           >
-            <h2 className="text-sm uppercase font-bold text-[#475569] mb-4 pb-2 border-b-2 border-[#d4d2db]">
+            <h2 className="text-md uppercase font-bold text-gray-600 mb-4 pb-2 border-b-2 border-[#E4F3EE]">
               Projects
             </h2>
             <div className="space-y-4 ">
@@ -371,11 +352,10 @@ export default function Template45({ data, onClickSection }) {
             </div>
           </section>
         )}
-
         {/* Certifications */}
         {data?.visibleSections?.certificates !== false && (
           <section className="mb-6 cursor-pointer" onClick={() => onClickSection && onClickSection("certificates")}>
-            <h2 className="text-sm font-bold text-[#475569] mb-3 pb-2 border-b-2 border-[#d4d2db]">
+            <h2 className="text-md font-bold text-gray-600 mb-3 pb-2 border-b-2 border-[#E4F3EE]">
               CERTIFICATIONS
             </h2>
             <div className="space-y-3">

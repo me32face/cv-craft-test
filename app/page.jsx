@@ -39,6 +39,17 @@ export default function Home() {
       image: "/template/template30.png",
       category: "modern",
     },
+      
+    { id: 'Template43', name: 'Stylish Layout', key: 'Emily Davis', image: '/template/VORTEXION ZAYNIX.png', category: 'modern' },
+    { id: 'Template44', name: 'proffessional ', key: 'Emily Davis', image: '/template/ASTROLON.png', category: 'modern' },
+    { id: 'Template46', name: 'Creative Classic', key: 'Emily Davis', image: '/template/AUGUSTUS AXEL.png', category: 'modern' },
+    { id: 'Template45', name: 'Modern Creative ', key: 'Emily Davis', image: '/template/RAVENOR.png', category: 'modern' },
+    { id: "Template33", name: "Olivia Modern ", key: "Olivia Wilson", image: "/template/template33.png", category: "proffessional"},
+    { id: "Template38", name: "Modern Creative", key: "Emily Davis", image: "/template/template38.png", category: "creative"},
+    { id: "Template39", name: "Clean Creative", key: "Emily Davis", image: "/template/LEONARDOX NERO-1.png", category: "professional"},
+    { id: "Template41", name: "Stylish Classic", key: "Emily Davis", image: "/template/ARTHAVION BLAZE.png", category: "modern" },   
+    { id: 'Template42', name: 'Creative Classic', key: 'Emily Davis', image: '/template/TITANUS ZORIN.png', category: 'creative' },
+
     {
       id: "Template31",
       name: "Executive Resume",
