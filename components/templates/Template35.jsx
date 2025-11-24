@@ -393,7 +393,7 @@ export default function Template35({ data, onClickSection }) {
         </div>
 
         {/* RIGHT COLUMN */}
-        <div className="w-[w-2/3">
+       <div className="w-1/3">
           {/* SKILLS */}
           {visible.skills !== false && (
             <section
@@ -415,7 +415,7 @@ export default function Template35({ data, onClickSection }) {
 
                   if (sk.proficiency !== undefined) {
                     return (
-                      <div key={i} cv-item>
+                      <div key={i}  className="cv-item">
                         <div className="flex justify-between text-sm">
                           <span>{sk.name}</span>
                           <span className="text-xs opacity-70">

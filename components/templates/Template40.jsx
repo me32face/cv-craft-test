@@ -1,11 +1,9 @@
 "use client";
 import React from "react";
+import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
 
 export default function Template40({ data, onClickSection }) {
-  /** -------------------------------
-   * DEFAULT INITIAL CONTENT
-   * Auto-fill CV when no user data
-   --------------------------------*/
+ 
   const defaultData = {
     name: "SARAH WILLIAMS",
     title: "Graphic Designer | Visual Creative",
@@ -228,6 +226,21 @@ export default function Template40({ data, onClickSection }) {
             <div className="space-y-3">
               {skills.map((s, i) => {
                 const skillObj = safeObj(s);
+
+                if (skillObj.category && Array.isArray(skillObj.skills)) {
+    return (
+      <div key={i} className="cv-item text-sm">
+        <p className="font-semibold text-indigo-700">{skillObj.category}</p>
+        <ul className="ml-4 list-disc text-gray-700">
+          {skillObj.skills.map((sk, idx) => (
+            <li key={idx}>{sk}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
+
                 return (
                   <div key={i} className="cv-item text-sm">
                     <div className="flex justify-between items-center mb-1">
@@ -252,22 +265,27 @@ export default function Template40({ data, onClickSection }) {
           </section>
 
           {/* LANGUAGES */}
-          <section
-            className="mb-6 cursor-pointer"
-            onClick={() => onClickSection("languages")}
-          >
-            <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
-              Languages
-            </h3>
+         <section
+  className="mb-6 cursor-pointer"
+  onClick={() => onClickSection("languages")}
+>
+  <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
+    Languages
+  </h3>
 
-            <div className="space-y-2 text-sm">
-              {languages.map((l, i) => (
-                <p key={i} className="cv-item">
-                  {safeText(l)}
-                </p>
-              ))}
-            </div>
-          </section>
+  <div className="space-y-2 text-sm">
+    {languages.map((l, i) =>
+      renderLanguage(l, i, {
+        container: "mb-2",
+        name: "text-sm text-gray-800 font-medium",
+        level: "text-xs text-gray-500",
+        percentage: "text-xs text-gray-500",
+        barContainer: "bg-gray-200 rounded-full h-1 mt-2",
+        bar: "bg-indigo-600 h-1 rounded-full"
+      })
+    )}
+  </div>
+</section>
 
           {/* CERTIFICATIONS */}
           <section
