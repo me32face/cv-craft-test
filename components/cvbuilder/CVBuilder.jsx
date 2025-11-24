@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { templates, templateInputs } from "../templates";
-import { User, Camera, Link2, Code, GraduationCap, Briefcase, Globe, Award, Printer, Share2, Download, ZoomIn, ZoomOut, Expand, Sparkles, ChevronLeft, Menu, FolderCode, X, Home } from "lucide-react";
+import { User, Camera, Link2, Code, GraduationCap, Briefcase, Globe, Award, Printer, Share2, Download, ZoomIn, ZoomOut, Expand, Sparkles, ChevronLeft, Menu, FolderCode, X, Home, FileText, Users } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import PopupEditor from "./PopupEditor"; // reusable popup
@@ -16,6 +16,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
   const [scale, setScale] = useState(1);
   const [collapsed, setCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [additionalOpen, setAdditionalOpen] = useState(false);
   const router = useRouter();
 
 
@@ -169,7 +170,9 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
     certificates: [
       { name: "Full Stack Development", issuer: "Tech Academy", year: "2023" },
       { name: "Data Structures & Algorithms", issuer: "Code Institute", year: "2022" }
-    ]
+    ],
+    references: [],
+    awards: []
   });
 
   // Apply page breaks in real-time preview
@@ -206,7 +209,6 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
     { name: "Education", key: "education", icon: GraduationCap, inputKey: "education" },
     { name: "Work Experience", key: "experience", icon: Briefcase, inputKey: "experiences" },
     { name: "Languages", key: "languages", icon: Globe, inputKey: "languages" },
-    { name: "Certificates", key: "certificates", icon: Award, inputKey: "certificates" },
     { name: "projects", key: "projects", icon: FolderCode, inputKey: "project" },
   ];
 
@@ -214,6 +216,19 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
     const config = templateInputs[template] || {};
     return allMenuItems.filter(item => config[item.inputKey] !== false);
   }, [template]);
+
+  const additionalMenuItems = [
+    { name: "Awards", key: "awards", icon: FileText },
+    { name: "References", key: "references", icon: Users, inputKey: "references" },
+    { name: "Certificates", key: "certificates", icon: Award, inputKey: "certificates" },
+
+  ];
+
+  const ChevronDown = ({ className }) => (
+    <svg className={className} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  );
 
   return (
     <div className="h-screen flex bg-[#F6F5F6] text-gray-800 overflow-hidden">
@@ -296,15 +311,50 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
           </div>
 
           {!collapsed && (
-            <div className="mt-6 p-4 bg-[#F4EEFF] rounded-xl">
-              <h3 className="text-sm font-semibold text-[#6C4CCF]">Quick Tips</h3>
-              <ul className="mt-2 text-xs text-[#6C4CCF] leading-relaxed space-y-1">
-                <li>• Click any section to start editing</li>
-                <li>• Changes save automatically</li>
-                <li>• Download as PDF when ready</li>
-                <li>• Try different templates</li>
-              </ul>
-            </div>
+            <>
+              <div className="mt-4">
+                <button
+                  onClick={() => setAdditionalOpen(!additionalOpen)}
+                  className="flex items-center justify-between w-full gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-full transition-all text-xs sm:text-sm font-medium bg-white text-indigo-700 border border-indigo-200 hover:bg-indigo-50"
+                >
+                  <span className="truncate">Additional Section</span>
+                  <ChevronDown className={`transition-transform ${additionalOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {additionalOpen && (
+                  <div className="flex flex-col gap-2 sm:gap-3 mt-2 ml-2">
+                    {additionalMenuItems.map(item => (
+                      <button
+                        key={item.key}
+                        onClick={() => handleMenuItemClick(item.key)}
+                        title={item.name}
+                        className={`
+                          flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-full
+                          transition-all text-xs sm:text-sm font-medium
+                          ${selectedMenu === item.key
+                            ? "bg-gradient-to-r from-[#4B74F4] to-[#7642EE] text-white shadow-md scale-[1.02]"
+                            : "bg-white text-indigo-700 border border-indigo-200 hover:bg-indigo-50"
+                          }
+                        `}
+                      >
+                        <item.icon size={18} />
+                        <span className="truncate">{item.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="p-4 bg-[#F4EEFF] rounded-xl mt-4">
+                <h3 className="text-sm font-semibold text-[#6C4CCF]">Quick Tips</h3>
+                <ul className="mt-2 text-xs text-[#6C4CCF] leading-relaxed space-y-1">
+                  <li>• Click any section to start editing</li>
+                  <li>• Changes save automatically</li>
+                  <li>• Download as PDF when ready</li>
+                  <li>• Try different templates</li>
+                </ul>
+              </div>
+            </>
           )}
         </nav>
       </aside>

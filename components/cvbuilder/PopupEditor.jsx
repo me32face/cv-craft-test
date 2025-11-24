@@ -8,7 +8,9 @@ import EducationInput from "./inputsections/EducationInput";
 import CertificatesInput from "./inputsections/CertificatesInput";
 import ProjectInput from "./inputsections/ProjectInput";
 import SocialLinks from "./inputsections/SocialLinks";
-import SkillsInput from "./inputsections/SkillsInput"
+import SkillsInput from "./inputsections/SkillsInput";
+import ReferenceInput from "./inputsections/ReferenceInput";
+import AwardInput from "./inputsections/AwardInput"
 
 export default function PopupEditor({ visible, section, onClose, data, update, onNext }) {
   if (!visible || !section) return null;
@@ -159,9 +161,55 @@ export default function PopupEditor({ visible, section, onClose, data, update, o
           </div>
         );
 
+      case "references":
+        return (
+          <div>
+            <ReferenceInput
+              references={data.references}
+              setReferences={(v) => update("references", v)}
+              onClose={onClose}
+              onNext={onClose}
+            />
+            <label className="flex items-center gap-2 mt-4">
+              <input
+                type="checkbox"
+                checked={data.visibleSections?.references !== false}
+                onChange={(e) =>
+                  update("visibleSections", {
+                    ...data.visibleSections,
+                    references: e.target.checked,
+                  })
+                }
+              />
+              <span className="text-sm font-medium">Show References</span>
+            </label>
+          </div>
+        );
 
-
-
+      case "awards":
+        return (
+          <div>
+            <AwardInput
+              awards={data.awards}
+              setAwards={(v) => update("awards", v)}
+              onClose={onClose}
+              onNext={onClose}
+            />
+            <label className="flex items-center gap-2 mt-4">
+              <input
+                type="checkbox"
+                checked={data.visibleSections?.awards !== false}
+                onChange={(e) =>
+                  update("visibleSections", {
+                    ...data.visibleSections,
+                    awards: e.target.checked,
+                  })
+                }
+              />
+              <span className="text-sm font-medium">Show Awards</span>
+            </label>
+          </div>
+        );
 
       default:
         return <div className="text-gray-500">Select a section to edit</div>;
