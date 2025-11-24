@@ -17,6 +17,8 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [additionalOpen, setAdditionalOpen] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
+
   const router = useRouter();
 
 
@@ -34,6 +36,9 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
 
   // --- Download CV as PDF with Smart Page Break Detection ---
   const handleDownload = async () => {
+
+    document.body.classList.remove("print-mode");
+
     const element = document.getElementById("pdf-template");
     if (!element) return;
 
@@ -230,6 +235,21 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
     </svg>
   );
 
+  const handlePrint = () => {
+    document.body.classList.add("print-mode");
+
+    setTimeout(() => {
+      window.print();
+
+      setTimeout(() => {
+        document.body.classList.remove("print-mode");
+      }, 200);
+    }, 200);
+  };
+
+
+
+
   return (
     <div className="h-screen flex bg-[#F6F5F6] text-gray-800 overflow-hidden">
       {/* MOBILE MENU BUTTON */}
@@ -389,7 +409,9 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
 
           {/* RIGHT → OTHER ACTION BUTTONS */}
           <div className="flex items-center justify-end gap-2 sm:gap-4">
-            <button className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm">
+            <button
+              onClick={handlePrint}
+              className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm">
               <Printer size={14} className="sm:w-3 sm:h-3" />
               <span className="hidden sm:inline">Print</span>
             </button>
@@ -440,7 +462,9 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
                     >
                       <ZoomOut size={14} className="sm:w-4 sm:h-4 text-[#7B61FF]" />
                     </button>
-                    <button className="hidden sm:flex p-1.5 sm:p-2 rounded-full border border-[#C7BFF3] hover:bg-white transition">
+                    <button
+                      onClick={() => setPreviewOpen(true)}
+                      className="hidden sm:flex p-1.5 sm:p-2 rounded-full border border-[#C7BFF3] hover:bg-white transition">
                       <Expand size={14} className="sm:w-4 sm:h-4 text-[#7B61FF]" />
                     </button>
                   </div>
@@ -449,16 +473,23 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
 
                 <div className="w-full overflow-auto bg-gray-50 p-5">
                   {TemplateComponent ? (
-                    <div className="space-y-5">
+                    <div
+                      className="space-y-5"
+                      style={{
+                        transform: `scale(${scale})`,
+                        transformOrigin: "top center",
+                        transition: "transform 0.2s ease-in-out",
+                      }}
+                    >
                       {Array.from({ length: totalPages }).map((_, pageIndex) => (
                         <div
                           key={pageIndex}
                           data-preview-page
                           style={{
-                            height: '1123px',
-                            width: '794px',
-                            overflow: 'hidden',
-                            position: 'relative'
+                            height: "1123px",
+                            width: "794px",
+                            overflow: "hidden",
+                            position: "relative",
                           }}
                           className="bg-white shadow-xl mx-auto"
                         >
@@ -471,13 +502,13 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
                               ✕
                             </button>
                           )}
+
                           <div
                             style={{
-                              transform: `translateY(-${pageIndex * 1123}px)`,
-                              position: 'absolute',
+                              position: "absolute",
                               top: 0,
                               left: 0,
-                              width: '100%'
+                              width: "100%",
                             }}
                           >
                             <TemplateComponent data={data} />
@@ -489,6 +520,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
                     <p className="p-5 text-red-500">Template not found.</p>
                   )}
                 </div>
+
               </div>
             </div>
           </div>
@@ -509,10 +541,45 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
       />
 
       {/* Hidden PDF template */}
-      <div id="pdf-template" className="fixed -top-[9999px] -left-[9999px]">
+      <div
+        id="pdf-template"
+        className="fixed top-0 left-0 m-0 p-0"
+        style={{
+          width: "794px",
+          minHeight: "1123px",
+          overflow: "hidden",
+          position: "absolute",
+          top: "-99999px",
+          left: "-99999px",
+          background: "white",
+        }}
+      >
+
         {TemplateComponent && <TemplateComponent data={data} />}
       </div>
-    </div>
 
+      {previewOpen && (
+        <div className="absolute inset-0 bg-black bg-opacity-60 z-[9999] flex justify-center py-6  overflow-auto">
+          {/* Template wrapper */}
+          <div
+            className="bg-white rounded-lg shadow-lg relative   "
+            style={{ width: "794px" }}
+          >
+            {/* Close button */}
+            <button
+              onClick={() => setPreviewOpen(false)}
+              className="absolute top-3 right-3 z-50 bg-white text-black p-1 rounded-full shadow-lg hover:bg-gray-100"
+            >
+              <X size={20} />
+            </button>
+
+            {/* Template */}
+            <TemplateComponent data={data} />
+          </div>
+        </div>
+      )}
+
+
+    </div>
   );
 }

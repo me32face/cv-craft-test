@@ -23,7 +23,7 @@ export default function Template30({ data, onClickSection }) {
   const socialLinks = toArray(data?.socialLinks);
 
   return (
-    <div id="pdf-template" className="w-[794px] min-h-[1123px] bg-white flex pb-8" style={{ fontFamily: 'Poppins, sans-serif' }}>
+    <div  className="w-[794px] min-h-[1123px] bg-white flex " style={{ fontFamily: 'Poppins, sans-serif ,margin: 0, padding: 0' }}>
 
       {/* LEFT SIDEBAR */}
 
