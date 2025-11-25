@@ -2,6 +2,7 @@
 
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
+import { Phone, Mail, MapPin, Link } from "lucide-react";
 
 export default function Template42({ data, onClickSection }) {
   const toArray = (value) => (!value ? [] : Array.isArray(value) ? value : [value]);
@@ -20,7 +21,7 @@ export default function Template42({ data, onClickSection }) {
   const references = toArray(data?.references);
   const projects = toArray(data?.projects);
   const socialLinks = toArray(data?.socialLinks);
-  const Awards = toArray(data?.awards); 
+  const Awards = toArray(data?.awards);
 
   return (
     <div
@@ -56,18 +57,18 @@ export default function Template42({ data, onClickSection }) {
             </p>
             <div className="flex flex-wrap gap-x-4 gap-y-1 text-white text-xs">
               {/* Phone */}
-              <div className="flex items-center gap-1.5">
-                <span>📞</span>
+              <div className="flex items-center gap-1.5 leading-[1.4]">
+                <Phone size={15} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.phone || "+123-456-7890"}</span>
               </div>
               {/* Email */}
-              <div className="flex items-center gap-1.5">
-                <span>✉️</span>
+              <div className="flex items-center gap-1.5 leading-[1.4]">
+                <Mail size={15} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.email || "hello@reallygreatsite.com"}</span>
               </div>
               {/* Address */}
-              <div className="flex items-center gap-1.5">
-                <span>📍</span>
+              <div className="flex items-center gap-1.5 leading-[1.4]">
+                <MapPin size={15} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.address || "123 Anywhere St., Any City"}</span>
               </div>
               {/* SOCIAL LINKS */}
@@ -75,8 +76,8 @@ export default function Template42({ data, onClickSection }) {
                 {data?.visibleSections?.socialLinks !== false && socialLinks.length > 0 && (
                   <div className="flex items-center gap-1.5">
                     {socialLinks.map((link, i) => (
-                      <div key={i} className="flex items-center gap-1.5">
-                        <span>🔗</span>
+                      <div key={i} className="flex items-center gap-1.5 leading-[1.4]">
+                        <Link size={15} className="shrink-0 translate-y-[-1px]" />
                         <span className="text-xs break-all">{link}</span>
                       </div>
                     ))}
@@ -173,8 +174,8 @@ export default function Template42({ data, onClickSection }) {
                     ) : (
                       <p className="text-sm mt-1 text-gray-700 text-justify break-words">{edu.description}</p>
                     )
-                  )}                
-                  </div>
+                  )}
+                </div>
               ))}
             </div>
           )}
@@ -222,7 +223,7 @@ export default function Template42({ data, onClickSection }) {
             </section>
           )}
 
-            {/* AWARDS */}
+          {/* AWARDS */}
           {data?.visibleSections?.awards !== false && Awards.length > 0 && (
             <div className="mt-6">
               <h2 className="text-base uppercase font-bold text-slate-800 mb-4 pb-2 border-b-2 " onClick={() => onClickSection?.("awards")}>

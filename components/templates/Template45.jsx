@@ -2,6 +2,7 @@
 
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
+import { Phone, Mail, MapPin, Link } from "lucide-react";
 
 export default function Template45({ data, onClickSection }) {
   const toArray = (value) => (!value ? [] : Array.isArray(value) ? value : [value]);
@@ -9,7 +10,7 @@ export default function Template45({ data, onClickSection }) {
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', {  year: 'numeric' });
+    return date.toLocaleDateString('en-US', { year: 'numeric' });
   };
 
   const experiences = toArray(data?.experiences);
@@ -20,7 +21,7 @@ export default function Template45({ data, onClickSection }) {
   const projects = toArray(data?.projects);
   const interests = toArray(data?.interests);
   const socialLinks = toArray(data?.socialLinks);
-  const Awards = toArray(data?.awards); 
+  const Awards = toArray(data?.awards);
   const references = toArray(data?.references);
 
   const themeColor = "#2c2c2c"; // Dark gray/black
@@ -120,25 +121,25 @@ export default function Template45({ data, onClickSection }) {
             <div className="flex flex-wrap gap-x-2 gap-y-1 text-gray-500 text-xs">
               {/* Phone */}
               <div className="flex items-center gap-1.5">
-                <span>📞</span>
+                <Phone size={15} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.phone || "+123-456-7890"}</span>
-              </div>
+              </div><br />
               {/* Email */}
-              <div className="flex items-center gap-1.5">
-                <span>✉️</span>
+              <div className="flex items-center gap-1.5  leading-[1.4]">
+                <Mail size={15} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.email || "hello@reallygreatsite.com"}</span>
               </div>
               {/* Address */}
-              <div className="flex items-center gap-1.5">
-                <span>📍</span>
+              <div className="flex items-center gap-1.5 leading-[1.4]">
+                <MapPin size={15} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.address || "123 Anywhere St., Any City"}</span>
               </div>
               {/* SOCIAL LINKS → always bottom line */}
               {data?.visibleSections?.socialLinks !== false && socialLinks.length > 0 && (
                 <div className="w-full flex flex-col gap-1 mt-1">
                   {socialLinks.map((link, i) => (
-                    <div key={i} className="flex items-center gap-1.5 text-xs break-all">
-                      <span>🔗</span>
+                    <div key={i} className="flex items-center gap-1.5 text-xs break-all leading-[1.4]">
+                      <Link size={15} className="shrink-0 translate-y-[-1px]" />
                       <span>{link}</span>
                     </div>
                   ))}
@@ -236,7 +237,7 @@ export default function Template45({ data, onClickSection }) {
               </div>
             </div>
           )}
-           {/* AWARDS */}
+          {/* AWARDS */}
           {data?.visibleSections?.awards !== false && Awards.length > 0 && (
             <div className="">
               <h2 className="text-sm font-semibold text-slate-600 mb-2 pb-2 border-b-2 border-[#d4d2db]" onClick={() => onClickSection?.("awards")}>
@@ -380,27 +381,27 @@ export default function Template45({ data, onClickSection }) {
             </h2>
             <div className="space-y-4 ">
               {projects.map((project, i) => (
-              <div key={i} className="mb-3">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="font-semibold text-gray-800 !text-sm">{project.name}</p>
-                    {project.link && (
-                      <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline">
-                        {project.link}
-                      </a>
-                    )}
+                <div key={i} className="mb-3">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="font-semibold text-gray-800 !text-sm">{project.name}</p>
+                      {project.link && (
+                        <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline">
+                          {project.link}
+                        </a>
+                      )}
+                    </div>
+                    <p className="text-xs opacity-60">{project.year}</p>
                   </div>
-                  <p className="text-xs opacity-60">{project.year}</p>
+                  {project.descFormat === "bullet" ? (
+                    project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">• {line}</p>)
+                  ) : project.descFormat === "number" ? (
+                    project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">{idx + 1}. {line}</p>)
+                  ) : (
+                    <p className="text-sm mt-1 text-gray-700">{project.desc}</p>
+                  )}
                 </div>
-                {project.descFormat === "bullet" ? (
-                  project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">• {line}</p>)
-                ) : project.descFormat === "number" ? (
-                  project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">{idx + 1}. {line}</p>)
-                ) : (
-                  <p className="text-sm mt-1 text-gray-700">{project.desc}</p>
-                )}
-              </div>
-            ))}
+              ))}
             </div>
           </section>
         )}

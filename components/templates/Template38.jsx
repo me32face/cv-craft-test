@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
+import { Phone, Mail, MapPin, Link } from "lucide-react";
 
 export default function Template38({ data, onClickSection }) {
   const toArray = (v) => !v ? [] : Array.isArray(v) ? v : typeof v === "string" ? [v] : [];
@@ -39,20 +40,32 @@ export default function Template38({ data, onClickSection }) {
 
       <div className="grid grid-cols-[38%_62%] min-h-screen">
         {/* LEFT COLUMN */}
-        <div className="bg-gray-50 px-8 py-8">
+        <div className="bg-gray-200 px-8 py-8">
           {/* Contact */}
           <div>
             <div className="mb-4">
               <h2 className="font-semibold text-md mb-2">CONTACT</h2>
-              <p className="text-sm mt-1">📞 {data?.phone || "123-456-7890"}</p>
-              <p className="text-sm mt-1">📧 {data?.email || "hello@email.com"}</p>
-              <p className="text-sm mt-1">📍 {data?.address || "123 Anywhere St., Any City"}</p>
+              <div className="flex items-center gap-2 leading-[1.4]">
+                <Phone size={15} className="shrink-0 translate-y-[-1px]" />
+                <span>{data?.phone || "123-456-7890"}</span>
+              </div>
+
+              <div className="flex items-center gap-2 leading-[1.4]">
+                <Mail size={15} className="shrink-0 translate-y-[-1px]" />
+                <span>{data?.email || "hello@email.com"}</span>
+              </div>
+
+              <div className="flex items-center gap-2 leading-[1.4]">
+                <MapPin size={15} className="shrink-0 translate-y-[-1px]" />
+                <span>{data?.address || "123 Anywhere St., Any City"}</span>
+              </div>
               {data?.visibleSections?.socialLinks !== false && (
                 <>
                   {socialLinks.length > 0 && (
                     <div className="">
                       {socialLinks.map((link, i) => (
-                        <p key={i} className="text-xs mt-1 break-all"> <span >🔗</span>
+                        <p key={i} className="text-sm mt-1 break-all leading-[1.4]">
+                          <Link size={15} className="shrink-0 translate-y-[-1px]" />
                           <span className="ml-1">{link}</span>
                         </p>
                       ))}

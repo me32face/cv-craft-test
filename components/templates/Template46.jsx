@@ -2,6 +2,7 @@
 
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
+import { Phone, Mail, MapPin, Link } from "lucide-react";
 
 
 export default function Template45({ data = {}, onClickSection }) {
@@ -21,7 +22,7 @@ export default function Template45({ data = {}, onClickSection }) {
   const projects = toArray(data?.projects);
   const interests = toArray(data?.interests);
   const socialLinks = toArray(data?.socialLinks);
-  const Awards = toArray(data?.awards); 
+  const Awards = toArray(data?.awards);
   const references = toArray(data?.references);
 
   return (
@@ -64,7 +65,7 @@ export default function Template45({ data = {}, onClickSection }) {
       <div className="w-[32%] relative z-10 flex flex-col pt-12 pb-10 bg-[#e9efed] ">
         {/* Profile Image with border */}
         <div className="flex justify-center mb-5 px-6">
-         <div
+          <div
             className="mb-8"
             onClick={() => onClickSection && onClickSection("personal")}
           >
@@ -91,44 +92,42 @@ export default function Template45({ data = {}, onClickSection }) {
         {/* Sidebar Content */}
         <div className="px-6 flex flex-col gap-7">
           {/* Profile Section */}
-           <section className="mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("personal")}>
+          <section className="mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("personal")}>
             <h2 className="text-base font-bold text-gray-600 mb-3 uppercase tracking-wide pb-2 border-b border-[#c8e6dc]">
               Contact
             </h2>
-            <div className="flex flex-wrap gap-x-1 gap-y-1 text-gray-700 text-sm">
-              <div className="flex items-center gap-1.5">
-                <span >📞</span>
-                <span>{data?.phone || "+123-456-7890"}</span>
+            <div className="mb-4 text-gray-700 text-xs flex flex-wrap gap-x-1 gap-y-1 ">
+              <div className="flex items-center gap-2 leading-[1.4]">
+                <Phone size={15} className="shrink-0 translate-y-[-1px]" />
+                <span>{data?.phone || "123-456-7890"}</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <span >✉️</span>
-                <span>{data?.email || "hello@reallygreatsite.com"}</span>
+
+              <div className="flex items-center gap-2 leading-[1.4]">
+                <Mail size={15} className="shrink-0 translate-y-[-1px]" />
+                <span>{data?.email || "hello@email.com"}</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <span>📍</span>
+
+              <div className="flex items-center gap-2 leading-[1.4]">
+                <MapPin size={15} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.address || "123 Anywhere St., Any City"}</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                {data?.visibleSections?.socialLinks !== false && (
-                  <>
-                    {socialLinks.length > 0 && (
-                      <div className="">
-                        {socialLinks.map((link, i) => (
-                          <p key={i} className="text-sm  break-all">
-                            <span >🔗</span>
-                            <span className="ml-1">{link}</span>
-
-                          </p>
-                        ))}
-                      </div>
-                    )}
-                  </>
-                )}
-              </div>
+              {data?.visibleSections?.socialLinks !== false && (
+                <>
+                  {socialLinks.length > 0 && (
+                    <div className="">
+                      {socialLinks.map((link, i) => (
+                        <p key={i} className="text-sm mt-1 break-all leading-[1.4]">
+                          <Link size={15} className="shrink-0 translate-y-[-1px]" />
+                          <span className="ml-1">{link}</span>
+                        </p>))}
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           </section>
 
-            {/* Education */}
+          {/* Education */}
           {data?.visibleSections?.education !== false && (
             <div className="">
               <h2 className="text-md text-gray-600 font-bold mt-2 mb-3 border-b border-[#c8e6dc] pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
@@ -156,13 +155,13 @@ export default function Template45({ data = {}, onClickSection }) {
                     ) : (
                       <p className="text-sm mt-1 text-gray-700 text-justify break-words">{edu.description}</p>
                     )
-                  )}                
-                  </div>
+                  )}
+                </div>
               ))}
             </div>
           )}
 
-           {/* Skills */}
+          {/* Skills */}
           {data?.visibleSections?.skills !== false && (
             <div className="mb-4">
               <div className="mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("skills")}>
@@ -203,7 +202,7 @@ export default function Template45({ data = {}, onClickSection }) {
               </div>
             </div>
           )}
-             {/* Languages */}
+          {/* Languages */}
           {data?.visibleSections?.languages !== false && (
             <section className="mb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("languages")}>
               <h2 className="text-md font-bold text-gray-600 mb-3 uppercase tracking-wide pb-2 border-b border-[#c8e6dc]">
@@ -217,7 +216,7 @@ export default function Template45({ data = {}, onClickSection }) {
             </section>
           )}
 
-          
+
           {/* AWARDS */}
           {data?.visibleSections?.awards !== false && Awards.length > 0 && (
             <div className="">
@@ -352,7 +351,7 @@ export default function Template45({ data = {}, onClickSection }) {
           </section>
         )}
 
-     {/* Projects */}
+        {/* Projects */}
         {data?.visibleSections?.projects !== false && (
           <section
             className="cursor-pointer "

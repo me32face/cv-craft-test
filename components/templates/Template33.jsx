@@ -2,7 +2,7 @@
 
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
-import { Phone } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
 
 export default function Template35({ data, onClickSection }) {
   const toArray = (value) => (!value ? [] : Array.isArray(value) ? value : [value]);
@@ -48,9 +48,20 @@ export default function Template35({ data, onClickSection }) {
         <div>
           <div className="mb-4">
             <h2 className="font-semibold text-md mb-2">CONTACT</h2>
-            <p className="text-sm mt-1 ">📞 {data?.phone}</p>
-            <p className="text-sm mt-1">📧 {data?.email || "hello@email.com"}</p>
-            <p className="text-sm mt-1">📍 {data?.address || "123 Anywhere St., Any City"}</p>
+            <div className="flex items-center gap-2 leading-[1.4]">
+              <Phone size={15} className="shrink-0 translate-y-[-1px]" />
+              <span>{data?.phone || "123-456-7890"}</span>
+            </div>
+
+            <div className="flex items-center gap-2 leading-[1.4]">
+              <Mail size={15} className="shrink-0 translate-y-[-1px]" />
+              <span>{data?.email || "hello@email.com"}</span>
+            </div>
+
+            <div className="flex items-center gap-2 leading-[1.4]">
+              <MapPin size={15} className="shrink-0 translate-y-[-1px]" />
+              <span>{data?.address || "123 Anywhere St., Any City"}</span>
+            </div>
             {data?.visibleSections?.socialLinks !== false && (
               <>
                 {socialLinks.length > 0 && (

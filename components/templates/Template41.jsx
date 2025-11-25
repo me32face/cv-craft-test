@@ -2,6 +2,7 @@
 
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
+import { Phone, Mail, MapPin, Link } from "lucide-react";
 
 // const renderLanguage = (lang, index) => {
 //   if (typeof lang === 'string') {
@@ -33,13 +34,13 @@ export default function Template41({ data, onClickSection }) {
   const certificates = toArray(data?.certificates);
   const projects = toArray(data?.projects);
   const socialLinks = toArray(data?.socialLinks);
-  const Awards = toArray(data?.awards); 
+  const Awards = toArray(data?.awards);
   const references = toArray(data.references);
 
   return (
     <div
       id="cv-preview"
-      className="cv-sidebar w-[794px] min-h-[1123px] bg-gray-50 mx-auto font-sans"
+      className="cv-sidebar w-[794px] min-h-[1123px]  mx-auto font-sans"
     >
       {/* Header Section */}
       <div className="flex items-center justify-between  px-10 pt-5 pb-5">
@@ -102,15 +103,27 @@ export default function Template41({ data, onClickSection }) {
               </div>
               <div>
                 <div className="mb-4">
-                  <p className="text-sm mt-1">📞 {data?.phone || "123-456-7890"}</p>
-                  <p className="text-sm mt-1">📧 {data?.email || "hello@email.com"}</p>
-                  <p className="text-sm mt-1">📍 {data?.address || "123 Anywhere St., Any City"}</p>
+                  <div className="flex items-center gap-2 leading-[1.4]">
+                    <Phone size={15} className="shrink-0 translate-y-[-1px]" />
+                    <span>{data?.phone || "123-456-7890"}</span>
+                  </div>
+
+                  <div className="flex items-center gap-2 leading-[1.4]">
+                    <Mail size={15} className="shrink-0 translate-y-[-1px]" />
+                    <span>{data?.email || "hello@email.com"}</span>
+                  </div>
+
+                  <div className="flex items-center gap-2 leading-[1.4]">
+                    <MapPin size={15} className="shrink-0 translate-y-[-1px]" />
+                    <span>{data?.address || "123 Anywhere St., Any City"}</span>
+                  </div>
                   {data?.visibleSections?.socialLinks !== false && (
                     <>
                       {socialLinks.length > 0 && (
                         <div className="">
                           {socialLinks.map((link, i) => (
-                            <p key={i} className="text-xs mt-1 break-all"> <span >🔗</span>
+                            <p key={i} className="text-sm mt-1 break-all leading-[1.4]">
+                              <Link size={15} className="shrink-0 translate-y-[-1px]" />
                               <span className="ml-1">{link}</span>
                             </p>))}
                         </div>
@@ -207,53 +220,53 @@ export default function Template41({ data, onClickSection }) {
             )}
 
             {/* AWARDS */}
-          {data?.visibleSections?.awards !== false && Awards.length > 0 && (
-            <div className="mt-6"  onClick={() => onClickSection?.("awards")}>
-               <div className="flex items-start gap-3 mb-2">
+            {data?.visibleSections?.awards !== false && Awards.length > 0 && (
+              <div className="mt-6" onClick={() => onClickSection?.("awards")}>
+                <div className="flex items-start gap-3 mb-2">
                   <div className="w-1 h-5 bg-gray-600"></div>
                   <h2 className="text-sm font-semibold text-gray-700 uppercase">AWARDS</h2>
                 </div>
-              {(Awards.length ? Awards : [
-                { name: "Employee of the Year", issuer: "Tech Company", year: "2023" },
-                { name: "Best Innovation Award", issuer: "Industry Association", year: "2022" }
-              ]).map((award, i) => (
-                <div key={i} className="mb-3">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="font-bold text-sm break-words">{award.name}</p>
-                      <p className="text-sm opacity-80 break-words">{award.issuer}</p>
+                {(Awards.length ? Awards : [
+                  { name: "Employee of the Year", issuer: "Tech Company", year: "2023" },
+                  { name: "Best Innovation Award", issuer: "Industry Association", year: "2022" }
+                ]).map((award, i) => (
+                  <div key={i} className="mb-3">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-bold text-sm break-words">{award.name}</p>
+                        <p className="text-sm opacity-80 break-words">{award.issuer}</p>
+                      </div>
+                      <p className="text-xs opacity-60">{award.year}</p>
                     </div>
-                    <p className="text-xs opacity-60">{award.year}</p>
+                    {award.description && (
+                      <p className="text-sm mt-1 break-words">{award.description}</p>
+                    )}
                   </div>
-                  {award.description && (
-                    <p className="text-sm mt-1 break-words">{award.description}</p>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
 
-          {/*References*/}
-          {data?.visibleSections?.references !== false && references.length > 0 && (
-            <>
-             <div className="flex items-start gap-3 mb-2">
+            {/*References*/}
+            {data?.visibleSections?.references !== false && references.length > 0 && (
+              <>
+                <div className="flex items-start gap-3 mb-2">
                   <div className="w-1 h-5 bg-gray-600"></div>
                   <h2 className="text-sm font-semibold text-gray-700 uppercase">References</h2>
                 </div>
-              {(references.length ? references : [
-                { name: "Harumi Kobayashi", title: "CEO", phone: "123-456-7890", email: "hello@reality.com" },
-                { name: "Bailey Dupont", title: "CEO", phone: "123-456-7890", email: "hello@reality.com" }
-              ]).map((r, i) => (
-                <div key={i} className="mb-3">
-                  <p className="font-semibold  !text-sm text-gray-700">{r.name}</p>
-                  <p className="text-sm ">{r.title}</p>
-                  <p className="text-sm ">{r.company}</p>
-                  <p className="text-sm text-gray-700">Phone: {r.phone}</p>
-                  <p className="text-sm text-gray-700">Email: {r.email}</p>
-                </div>
-              ))}
-            </>
-          )}
+                {(references.length ? references : [
+                  { name: "Harumi Kobayashi", title: "CEO", phone: "123-456-7890", email: "hello@reality.com" },
+                  { name: "Bailey Dupont", title: "CEO", phone: "123-456-7890", email: "hello@reality.com" }
+                ]).map((r, i) => (
+                  <div key={i} className="mb-3">
+                    <p className="font-semibold  !text-sm text-gray-700">{r.name}</p>
+                    <p className="text-sm ">{r.title}</p>
+                    <p className="text-sm ">{r.company}</p>
+                    <p className="text-sm text-gray-700">Phone: {r.phone}</p>
+                    <p className="text-sm text-gray-700">Email: {r.email}</p>
+                  </div>
+                ))}
+              </>
+            )}
           </div>
 
           {/* RIGHT SIDE */}

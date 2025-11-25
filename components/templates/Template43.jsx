@@ -2,6 +2,7 @@
 
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
+import { Phone, Mail, MapPin, Link } from "lucide-react";
 
 export default function Template43({ data, onClickSection }) {
   const toArray = (value) => (!value ? [] : Array.isArray(value) ? value : [value]);
@@ -21,7 +22,7 @@ export default function Template43({ data, onClickSection }) {
   const projects = toArray(data?.projects);
   const interests = toArray(data?.interests);
   const socialLinks = toArray(data?.socialLinks);
-  const Awards = toArray(data?.awards); 
+  const Awards = toArray(data?.awards);
 
   return (
     <div
@@ -87,33 +88,34 @@ export default function Template43({ data, onClickSection }) {
             <h2 className="text-sm font-bold text-slate-600 mb-3 uppercase tracking-wide pb-2 border-b-2 border-[#8f8c9f]">
               Contact
             </h2>
-            <div className="flex flex-wrap gap-x-1 gap-y-1 text-gray-500 text-xs">
-              <div className="flex items-center gap-1.5">
-                <span >📞</span>
-                <span>{data?.phone || "+123-456-7890"}</span>
+            <div className="mb-4 text-gray-600 text-sm">
+              <div className="flex items-center gap-2 leading-[1.4]">
+                <Phone size={15} className="shrink-0 translate-y-[-1px]" />
+                <span>{data?.phone || "123-456-7890"}</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <span >✉️</span>
-                <span>{data?.email || "hello@reallygreatsite.com"}</span>
+
+              <div className="flex items-center gap-2 leading-[1.4]">
+                <Mail size={15} className="shrink-0 translate-y-[-1px]" />
+                <span>{data?.email || "hello@email.com"}</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <span>📍</span>
+
+              <div className="flex items-center gap-2 leading-[1.4]">
+                <MapPin size={15} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.address || "123 Anywhere St., Any City"}</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                {data?.visibleSections?.socialLinks !== false && (
-                  <>
-                    {socialLinks.length > 0 && (
-                      <div className="">
-                        {socialLinks.map((link, i) => (
-                          <p key={i} className="text-xs break-all"> <span >🔗</span>
-                            <span className="ml-1">{link}</span>
-                          </p>
-                        ))}
-                      </div>
-                    )}
-                  </>
-                )} </div>
+              {data?.visibleSections?.socialLinks !== false && (
+                <>
+                  {socialLinks.length > 0 && (
+                    <div className="">
+                      {socialLinks.map((link, i) => (
+                        <p key={i} className="text-sm mt-1 break-all leading-[1.4]">
+                          <Link size={15} className="shrink-0 translate-y-[-1px]" />
+                          <span className="ml-1">{link}</span>
+                        </p>))}
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           </section>
 
@@ -201,7 +203,7 @@ export default function Template43({ data, onClickSection }) {
             </section>
           )}
 
-           {/* AWARDS */}
+          {/* AWARDS */}
           {data?.visibleSections?.awards !== false && Awards.length > 0 && (
             <div className="mt-6">
               <h2 className="text-sm font-bold text-slate-600 mb-3 pb-2 border-b-2 border-[#8f8c9f]" onClick={() => onClickSection?.("awards")}>
