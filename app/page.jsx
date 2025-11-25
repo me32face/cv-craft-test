@@ -33,6 +33,13 @@ export default function Home() {
       category: "modern",
     },
     {
+      id: "Template47",
+      name: "Classic",
+      key: "Richard",
+      image: "/template/template01n.png",
+      category: "modern",
+    },
+    {
       id: "Template30",
       name: "Professional Resume",
       key: "John Doe",

@@ -141,7 +141,7 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                   data.imageShape === 'circle' ? 'rounded-full' : 'rounded-lg'
                 } bg-green-50`}
               >
-                <span className="text-2xl text-gray-400 font-bold mb-4">
+                <span className="text-2xl text-gray-400 font-bold">
                   {(data?.name || 'YN')
                     .split(' ')
                     .map((n) => n[0])
@@ -154,11 +154,11 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
 
           {/* Contacts */}
           <div className="mb-5">
-            <div className="flex items-center gap-2 text-green-700 font-semibold">
+            <div className="flex items-center gap-2 text-green-700 font-semibold pb-2">
               <Icon>
                 <FiMail className="w-4 h-4" />
               </Icon>
-              <span className="mb-4">CONTACTS</span>
+              <span>CONTACTS</span>
             </div>
             <div className="text-gray-700 text-[12px] space-y-2 pl-2">
               <div className="flex items-center gap-2">
@@ -252,11 +252,11 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
           {/* Awards*/}
           {data?.visibleSections?.awards !== false && (
             <div className="mb-5">
-              <div className="flex items-center gap-2 text-green-700 font-semibold">
+              <div className="flex items-center gap-2 text-green-700 font-semibold pb-2">
                 <Icon>
                   <GiLaurelsTrophy className="w-4 h-4" />
                 </Icon>
-                <span className="mb-4">AWARDS</span>
+                <span>AWARDS</span>
               </div>
 
               <div className="text-gray-700 text-[12px] space-y-3 pl-3">
@@ -308,12 +308,12 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
           {/* Certificates / Key Achievements */}
           {data?.visibleSections?.certificates !== false && (
             <div className="mb-5">
-              <div className="flex items-center gap-2 text-green-700 font-semibold">
+              <div className="flex items-center gap-2 text-green-700 font-semibold pb-2">
                 <Icon>
                   <GiLaurelsTrophy className="w-4 h-4" />
                 </Icon>
                 <span
-                  className="mb-4 cursor-pointer"
+                  className="cursor-pointer"
                   onClick={() => handleClick('certificates')}
                 >
                   KEY ACHIEVEMENTS
@@ -346,11 +346,11 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
           {/* Skills */}
           {data?.visibleSections?.skills !== false && (
             <div className="mb-5">
-              <div className="flex items-center gap-2 text-green-700 font-semibold">
+              <div className="flex items-center gap-2 text-green-700 font-semibold pb-2">
                 <Icon>
                   <AiFillTool className="w-4 h-4" />
                 </Icon>
-                <span className="mb-4">SKILLS</span>
+                <span>SKILLS</span>
               </div>
 
               <div className="text-gray-700 pl-3.5">
@@ -423,11 +423,11 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
           {/* Languages */}
           {data?.visibleSections?.languages !== false && (
             <div>
-              <div className="flex items-center gap-2 text-green-700 font-semibold">
+              <div className="flex items-center gap-2 text-green-700 font-semibold pb-2">
                 <Icon>
                   <MdOutlineLanguage className="w-4 h-4" />
                 </Icon>
-                <span className="mb-4">LANGUAGES</span>
+                <span>LANGUAGES</span>
               </div>
               <div className="text-gray-700 pl-10">
                 {(languages.length
@@ -440,14 +440,14 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
         </aside>
 
         {/* RIGHT */}
-        <main className="w-2/3 pl-3">
+        <main className="w-2/3 pl-3 mt-6">
           <header className="mb-6">
             <h1 className="text-2xl font-semibold text-gray-900 pl-3">
               {data?.name || 'YOUR NAME'}
             </h1>
             <div className="inline-block mt-3 ">
               <div>
-                <span className="text-green-800 font-semibold text-[12px] px-4 py-1 inline-block text-left mb-4">
+                <span className="text-green-800 font-semibold text-[12px] px-4 py-1 inline-block text-left">
                   {data?.title || 'THE ROLE YOU ARE APPLYING FOR'}
                 </span>
               </div>
@@ -457,12 +457,12 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
           {/* Summary */}
           {data?.visibleSections?.summary !== false && (
             <section className="mb-6 cv-item">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 pb-2">
                 <Icon>
                   <FiMail className="w-4 h-4" />
                 </Icon>
                 <div
-                  className="text-green-700 font-semibold cursor-pointer mb-4"
+                  className="text-green-700 font-semibold cursor-pointer"
                   onClick={() => handleClick('summary')}
                 >
                   SUMMARY
@@ -480,12 +480,12 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
           {/* Projects */}
           {data?.visibleSections?.projects !== false && (
             <section className="mb-6">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 pb-2">
                 <Icon>
                   <FiLink className="w-4 h-4" />
                 </Icon>
                 <div
-                  className="text-green-700 font-semibold cursor-pointer mb-4"
+                  className="text-green-700 font-semibold cursor-pointer"
                   onClick={() => handleClick('projects')}
                 >
                   PROJECTS
@@ -530,12 +530,12 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
           {/* Experience */}
           {data?.visibleSections?.experience !== false && (
             <section className="mb-6">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 pb-2">
                 <Icon>
                   <BsFillBriefcaseFill className="w-4 h-4" />
                 </Icon>
                 <div
-                  className="text-green-700 font-semibold cursor-pointer mb-4"
+                  className="text-green-700 font-semibold cursor-pointer"
                   onClick={() => handleClick('experience')}
                 >
                   EXPERIENCE
@@ -588,7 +588,7 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
           {/* Education */}
           {data?.visibleSections?.education !== false && (
             <section className="mb-6">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 pb-2">
                 <Icon>
                   <svg
                     className="w-4 h-4"
@@ -600,7 +600,7 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                   </svg>
                 </Icon>
                 <div
-                  className="text-green-700 font-semibold cursor-pointer mb-4"
+                  className="text-green-700 font-semibold cursor-pointer"
                   onClick={() => handleClick('education')}
                 >
                   EDUCATION
@@ -644,11 +644,11 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
           {/* References */}
           {data?.visibleSections?.references !== false && (
             <section className="mt-3">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 pb-2">
                 <Icon>
                   <FiPhone className="w-4 h-4" />
                 </Icon>
-                <div className="text-green-700 font-semibold mb-4">
+                <div className="text-green-700 font-semibold">
                   REFERENCES
                 </div>
               </div>
