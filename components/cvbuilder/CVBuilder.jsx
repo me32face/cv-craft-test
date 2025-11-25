@@ -513,7 +513,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
                           <div
                             style={{
                               position: "absolute",
-                              top: 0,
+                              top: -(pageIndex * 1123),
                               left: 0,
                               width: "100%",
                             }}
