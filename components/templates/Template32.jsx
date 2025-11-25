@@ -86,7 +86,7 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
     </span>
   );
 
-  const CONTENT_GUTTER_CLASS = 'pl-14';
+  const CONTENT_GUTTER_CLASS = 'pl-11';
 
   const defaultAwards = [
     'Oct 2024 | Employee of the Year',
@@ -113,7 +113,7 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
   return (
     <div
       id="pdf-template"
-      className="mx-auto bg-white border shadow-sm print:shadow-none print:border-0"
+      className="mx-auto bg-white shadow-sm print:shadow-none print:border-0"
       style={{
         width: '794px',
         minHeight: '1123px',
@@ -165,13 +165,13 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                 <IconSmall>
                   <FiPhone className="w-4 h-4" />
                 </IconSmall>
-                <span>{data?.phone || 'Phone'}</span>
+                <span className='pl-1.5'>{data?.phone || 'Phone'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <IconSmall>
                   <FiMail className="w-4 h-4" />
                 </IconSmall>
-                <span>{data?.email || 'Email'}</span>
+                <span className='pl-1.5'>{data?.email || 'Email'}</span>
               </div>
               {data?.linkedin && (
                 <div className="flex items-center gap-2">
@@ -179,7 +179,7 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                     <FiLinkedin className="w-4 h-4" />
                   </IconSmall>
                   <a
-                    className="no-underline hover:underline text-green-800 break-words"
+                    className="pl-1.5 no-underline hover:underline text-green-800 break-words"
                     href={data.linkedin}
                     target="_blank"
                     rel="noreferrer"
@@ -194,7 +194,7 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                     <FaGithub className="w-4 h-4" />
                   </IconSmall>
                   <a
-                    className="no-underline hover:underline text-green-800 break-words"
+                    className="no-underline hover:underline text-green-800 break-words pl-1.5"
                     href={data.github}
                     target="_blank"
                     rel="noreferrer"
@@ -209,7 +209,7 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                     <FiLink className="w-4 h-4" />
                   </IconSmall>
                   <a
-                    className="no-underline hover:underline text-green-800 break-words"
+                    className="no-underline hover:underline text-green-800 break-words pl-1.5"
                     href={data.portfolio}
                     target="_blank"
                     rel="noreferrer"
@@ -222,7 +222,7 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                   <IconSmall>
                     <FiMapPin className="w-4 h-4" />
                   </IconSmall>
-                  <span>{data?.address || 'Location'}</span>
+                  <span className='pl-1.5'>{data?.address || 'Location'}</span>
                 </div>
               )}
 
@@ -235,7 +235,7 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                           <FiLink className="w-4 h-4" />
                         </IconSmall>
                         <a
-                          className="no-underline hover:underline text-green-800 break-words"
+                          className="no-underline hover:underline text-green-800 break-words pl-1.5"
                           href={link}
                           target="_blank"
                           rel="noreferrer"

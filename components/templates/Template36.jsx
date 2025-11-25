@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import { Phone, Mail } from 'lucide-react';
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput'; // kept as-is (we shadow it below)
 
 export default function TemplateGracePerfect({ data = {}, onClickSection }) {
@@ -306,13 +307,13 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
             <div className="flex flex-wrap items-center gap-1 text-[9px] text-gray-600 mt-2.5">
               {merged.phone && (
                 <div className="flex items-center gap-1">
-                  <span>📞</span>
+                  <Phone className="w-3 h-3" />
                   <span>{merged.phone}</span>
                 </div>
               )}
               {merged.email && (
                 <div className="flex items-center gap-1">
-                  <span>✉️</span>
+                  <Mail className="w-3 h-3" />
                   <span>{merged.email}</span>
                 </div>
               )}
