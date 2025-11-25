@@ -121,13 +121,11 @@ body {
 
 /* ---------- GLOBAL PDF STABILITY FIX ---------- */
 
-/* =============================================
-   1) GLOBAL STABILIZER (normal view + download)
-============================================= */
+
 * {
   -webkit-print-color-adjust: exact !important;
   print-color-adjust: exact !important;
-  line-height: 1.35 !important;   /* SAFE GLOBAL FIX */
+  line-height: 1.35 !important;  
 }
 
 /* Icons never move up (except absolute positioned ones) */

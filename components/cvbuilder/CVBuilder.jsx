@@ -39,7 +39,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
     if (!element) return;
 
     // Freeze alignment ONLY during PDF
-   element.classList.remove("freeze-layout");
+    element.classList.remove("freeze-layout");
 
     const canvas = await html2canvas(element, {
       scale: 2,
@@ -447,13 +447,13 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
                   <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-4 pb-1 sm:pb-2">
                     <button
                       onClick={handleZoomIn}
-                      className="p-1.5 sm:p-2 rounded-full border border-[#C7BFF3] hover:bg-white transition"
+                      className="flex p-1.5 sm:p-2 rounded-full border border-[#C7BFF3] hover:bg-white transition"
                     >
                       <ZoomIn size={14} className="sm:w-4 sm:h-4 text-[#7B61FF]" />
                     </button>
                     <button
                       onClick={handleZoomOut}
-                      className="p-1.5 sm:p-2 rounded-full border border-[#C7BFF3] hover:bg-white transition"
+                      className="flex p-1.5 sm:p-2 rounded-full border border-[#C7BFF3] hover:bg-white transition"
                     >
                       <ZoomOut size={14} className="sm:w-4 sm:h-4 text-[#7B61FF]" />
                     </button>
