@@ -130,11 +130,11 @@ body {
   line-height: 1.35 !important;   /* SAFE GLOBAL FIX */
 }
 
-/* Icons never move up */
-svg, img {
+/* Icons never move up (except absolute positioned ones) */
+svg:not(.absolute):not([class*="absolute"]), 
+img:not(.absolute):not([class*="absolute"]) {
   display: inline-block !important;
   vertical-align: middle !important;
-  position: relative !important;
   top: 0 !important;
 }
 
@@ -160,16 +160,15 @@ h1, h2, h3, h4, h5, h6 {
 .freeze-layout * {
   -webkit-print-color-adjust: exact !important;
   print-color-adjust: exact !important;
-  position: relative !important;
-  top: 0 !important;
 }
 
 /* Icons stay perfectly aligned */
-.freeze-layout svg,
-.freeze-layout img {
+.freeze-layout svg:not(.absolute):not([class*="absolute"]),
+.freeze-layout img:not(.absolute):not([class*="absolute"]) {
   vertical-align: middle !important;
   display: inline-block !important;
   margin-right: 4px !important;
+  top: 0 !important;
 }
 
 /* Prevent heading from shifting */
