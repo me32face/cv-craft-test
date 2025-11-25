@@ -59,7 +59,7 @@ export const templateInputs = {
     certificates: false,
     project: true,
     socialLinks: true,
-    references: false,
+    references: true,
     awards:true,    
   },
  

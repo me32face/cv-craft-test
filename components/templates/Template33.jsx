@@ -30,7 +30,7 @@ export default function Template35({ data, onClickSection }) {
       id="cv-preview"
       className="w-[794px] min-h-[1123px] bg-white mx-auto font-sans text-gray-700 tracking-tight flex" >
       {/* LEFT SIDEBAR */}
-      <div className="w-[280px] bg-gradient-to-b from-green-50 to-green-200 p-8 flex-shrink-0">
+      <div className="cv-sidebar w-[280px] bg-gradient-to-b from-green-50 to-green-200 p-8 flex-shrink-0">
         {/* PROFILE IMAGE */}
         <div className="mb-10 relative">
           {/* Profile Image */}
@@ -146,7 +146,7 @@ export default function Template35({ data, onClickSection }) {
       </div>
 
       {/* RIGHT CONTENT */}
-      <div className="flex-1 p-10">
+      <div className="w-2/3 p-10">
         {/* HEADER */}
         <header
           className="mb-12 cursor-pointer"

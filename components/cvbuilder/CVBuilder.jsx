@@ -75,14 +75,11 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
 
   // Smart page break detection
   const adjustLayoutForPageBreaks = (element) => {
-    const totalHeight = element.scrollHeight;
     const pageHeight = 1123;
 
-    console.log('Element height before adjustments:', totalHeight);
-
-    // Calculate sidebar height first (before any early returns)
+    // Calculate sidebar height first
     const sidebar = element.querySelector('.cv-sidebar');
-    const mainContent = element.querySelector('.w-2\\/3');
+    const mainContent = element.querySelector('[class*="w-2/3"]');
     let totalPages = 1;
 
     if (sidebar && mainContent) {
@@ -92,14 +89,17 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
       totalPages = Math.ceil(maxHeight / pageHeight);
       const fullPagesHeight = totalPages * pageHeight;
 
-      // Always set sidebar to full pages height
       sidebar.style.minHeight = `${fullPagesHeight}px`;
-
-      console.log('Content:', contentHeight, 'Sidebar:', sidebarHeight, 'Pages:', totalPages, 'Sidebar set to:', fullPagesHeight);
+      console.log('Content:', contentHeight, 'Sidebar:', sidebarHeight, 'Pages:', totalPages);
+    } else {
+      // Fallback if no sidebar layout
+      const totalHeight = element.scrollHeight;
+      totalPages = Math.ceil(totalHeight / pageHeight);
+      console.log('No sidebar found, total height:', totalHeight, 'Pages:', totalPages);
     }
 
     // Only run smart breaks if content exceeds 1 page
-    if (totalHeight <= pageHeight * 1.05) {
+    if (totalPages <= 1) {
       console.log('Content fits on 1 page, skipping smart breaks');
       return totalPages;
     }
