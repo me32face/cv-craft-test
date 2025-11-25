@@ -278,7 +278,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
   return (
     <div
       id="pdf-template"
-      className="mx-auto"
+      className="mx-auto bg-white"
       style={{
         width: '794px',
         minHeight: '1123px',
