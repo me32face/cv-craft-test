@@ -1,6 +1,8 @@
 'use client';
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
+import { Phone, Mail, MapPin } from "lucide-react";
+
 
 export default function Template30({ data, onClickSection }) {
   // Safety conversion
@@ -23,7 +25,7 @@ export default function Template30({ data, onClickSection }) {
   const socialLinks = toArray(data?.socialLinks);
 
   return (
-    <div  className="w-[794px] min-h-[1123px] bg-white flex " style={{ fontFamily: 'Poppins, sans-serif ,margin: 0, padding: 0' }}>
+    <div className="w-[794px] min-h-[1123px] bg-white flex " style={{ fontFamily: 'Poppins, sans-serif ,margin: 0, padding: 0' }}>
 
       {/* LEFT SIDEBAR */}
 
@@ -46,9 +48,22 @@ export default function Template30({ data, onClickSection }) {
         {/* Contact */}
         <div className="mb-4">
           <h2 className="font-semibold text-md mb-2">CONTACT</h2>
-          <p className="text-sm mt-1 break-words">📞 {data?.phone || "123-456-7890"}</p>
-          <p className="text-sm mt-1 break-words">📧 {data?.email || "hello@email.com"}</p>
-          <p className="text-sm mt-1 break-words">📍 {data?.address || "123 Anywhere St., Any City"}</p>
+          <div className="flex items-center gap-2 leading-[1.4]">
+            <Phone size={15} className="shrink-0 translate-y-[-1px]" />
+            <span>{data?.phone || "123-456-7890"}</span>
+          </div>
+
+          <div className="flex items-center gap-2 leading-[1.4]">
+            <Mail size={15} className="shrink-0 translate-y-[-1px]" />
+            <span>{data?.email || "hello@email.com"}</span>
+          </div>
+
+          <div className="flex items-center gap-2 leading-[1.4]">
+            <MapPin size={15} className="shrink-0 translate-y-[-1px]" />
+            <span>{data?.address || "123 Anywhere St., Any City"}</span>
+          </div>
+
+
           {data?.visibleSections?.socialLinks !== false && (
             <>
               {socialLinks.length > 0 && (

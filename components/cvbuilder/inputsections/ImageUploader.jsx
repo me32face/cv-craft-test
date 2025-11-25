@@ -173,8 +173,28 @@ export default function ImageUploader({ image, setImage, setShape, setAlign, onC
               <img src={image} className="object-cover w-full h-full" />
             </div>
           ) : (
-            <div className="w-48 h-48 rounded-full bg-[#634BC9]"></div>
+            <div
+              className="relative w-48 h-48 overflow-hidden border-4 border-indigo-200 shadow-md flex"
+              style={{
+                borderRadius:
+                  selectedShape === "circle"
+                    ? "50%"
+                    : selectedShape === "rounded"
+                      ? "1.5rem"
+                      : "0",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <img
+                src="/placeholder.png" // replace with your placeholder image path
+                alt="Placeholder"
+                className="object-cover w-full h-full"
+              />
+            </div>
           )}
+
+          
         </div>
 
         {/* Shape & Alignment */}

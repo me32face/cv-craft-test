@@ -121,7 +121,7 @@ export default function EducationInput({
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <ChevronDown className="text-xl" />
+                      <ChevronDown className="text-xl text-gray-500" />
 
                       <button
                         onClick={(e) => {
@@ -148,7 +148,7 @@ export default function EducationInput({
 
                     <div
                       onClick={() => toggleOpen(index)}
-                      className="absolute top-3 left-3 text-gray-500 text-xl cursor-pointer"
+                      className="absolute top-3 right-9 text-gray-500 text-xl cursor-pointer"
                     >
                       <ChevronDown className="rotate-180" />
                     </div>

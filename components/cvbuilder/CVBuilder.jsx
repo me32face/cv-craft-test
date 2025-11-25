@@ -34,44 +34,32 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
   const handleZoomIn = () => setScale(prev => Math.min(prev + 0.1, 2));
   const handleZoomOut = () => setScale(prev => Math.max(prev - 0.1, 0.5));
 
-  // --- Download CV as PDF with Smart Page Break Detection ---
   const handleDownload = async () => {
-
-    document.body.classList.remove("print-mode");
-
     const element = document.getElementById("pdf-template");
     if (!element) return;
 
-    // Adjust layout to prevent content splitting
-    const calculatedPages = adjustLayoutForPageBreaks(element);
+    // Freeze alignment ONLY during PDF
+   element.classList.remove("freeze-layout");
 
-    const canvas = await html2canvas(element, { scale: 2 });
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true
+    });
+
     const imgData = canvas.toDataURL("image/png");
-
     const pdf = new jsPDF("p", "mm", "a4");
     const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-
-    const imgWidth = pageWidth;
     const imgHeight = (canvas.height * pageWidth) / canvas.width;
 
-    // Use calculated pages from layout adjustment
-    const totalPages = calculatedPages;
+    pdf.addImage(imgData, "PNG", 0, 0, pageWidth, imgHeight);
 
-    console.log('Canvas height:', canvas.height);
-    console.log('Total pages:', totalPages);
-
-    for (let page = 0; page < totalPages; page++) {
-      if (page > 0) pdf.addPage();
-      const yOffset = -(page * pageHeight);
-      pdf.addImage(imgData, "PNG", 0, yOffset, imgWidth, imgHeight);
-    }
-
-    // Reset layout
-    resetLayout(element);
+    // Restore UI
+    element.classList.remove("freeze-layout");
 
     pdf.save(`${data.name || "cv"}.pdf`);
   };
+
+
 
   // Smart page break detection
   const adjustLayoutForPageBreaks = (element) => {
@@ -478,7 +466,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
                   <div className="h-6 sm:h-8 bg-gradient-to-r from-[#4B74F4] to-[#7642EE] rounded-t-xl sm:rounded-t-2xl absolute left-0 right-0 -bottom-3 sm:-bottom-4 z-20"></div>
                 </div>
 
-                <div className="w-full overflow-auto bg-gray-50 p-5">
+                <div className="w-full overflow-auto bg-gray-50 pt-4">
                   {TemplateComponent ? (
                     <div
                       className="space-y-5"

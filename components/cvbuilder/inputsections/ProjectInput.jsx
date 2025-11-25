@@ -85,7 +85,7 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
                 {/* Collapse button */}
                 <div
                   onClick={() => toggle(index)}
-                  className="absolute top-3 left-3 text-gray-500 text-xl cursor-pointer"
+                  className="absolute top-3 right-9 text-gray-500 text-xl cursor-pointer"
                 >
                   <ChevronDown className="rotate-180" />
                 </div>
