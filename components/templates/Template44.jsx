@@ -10,7 +10,7 @@ export default function Template44({ data, onClickSection }) {
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    return date.toLocaleDateString('en-US', {  year: 'numeric' });
   };
 
   const experiences = toArray(data?.experiences);
@@ -21,6 +21,8 @@ export default function Template44({ data, onClickSection }) {
   const projects = toArray(data?.projects);
   const interests = toArray(data?.interests);
   const socialLinks = toArray(data?.socialLinks);
+  const Awards = toArray(data?.awards); 
+  const references = toArray(data?.references);
 
   // Theme color from image
   const themeColor = "#855e9e"; // Muted Purple
@@ -28,7 +30,7 @@ export default function Template44({ data, onClickSection }) {
   return (
     <div
       id="cv-preview"
-      className="w-[794px] min-h-[1123px] bg-white mx-auto font-sans relative overflow-hidden flex text-slate-800"
+      className="cv-sidebar w-[794px] min-h-[1123px] bg-white mx-auto font-sans relative overflow-hidden flex text-slate-800"
     >
       {/* --- BACKGROUND SVG WAVE --- */}
       <div className="absolute left-0 top-0 h-full w-full z-0 pointer-events-none">
@@ -90,7 +92,7 @@ export default function Template44({ data, onClickSection }) {
         <div className="pl-[60px] pr-6 flex flex-col gap-8">
           {/* Profile Section */}
           <section className="mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("personal")}>
-            <h2 className="text-sm font-bold text-black mb-3 uppercase tracking-wide pb-2 border-b border-[#dfc3f1]">
+            <h2 className="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide pb-2 border-b border-[#dfc3f1]">
               Contact
             </h2>
             <div className="flex flex-wrap gap-x-1 gap-y-1 text-gray-700 text-xs">
@@ -167,13 +169,14 @@ export default function Template44({ data, onClickSection }) {
                     ) : (
                       <p className="text-sm mt-1 text-gray-700 text-justify break-words">{edu.description}</p>
                     )
-                  )}                </div>
+                  )}            
+               </div>
               ))}
             </div>
           )}
           {/* Skills */}
           {data?.visibleSections?.skills !== false && (
-            <div className="mb-4">
+            <div className="mb-0">
               <div className="mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("skills")}>
                 <h2 className="text-sm text-[#83549f] font-semibold  mb-3 pb-2 border-b-2 border-[#dfc3f1]">
                   SKILLS
@@ -210,6 +213,53 @@ export default function Template44({ data, onClickSection }) {
                   return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
                 })}
               </div>
+            </div>
+          )}
+
+          {/* AWARDS */}
+          {data?.visibleSections?.awards !== false && Awards.length > 0 && (
+            <div className="">
+              <h2 className="text-md text-[#83549f] font-semibold mt-2 mb-2 border-b-2 border-[#dfc3f1] pb-1 cursor-pointer" onClick={() => onClickSection?.("awards")}>
+                AWARDS
+              </h2>
+              {(Awards.length ? Awards : [
+                { name: "Employee of the Year", issuer: "Tech Company", year: "2023" },
+                { name: "Best Innovation Award", issuer: "Industry Association", year: "2022" }
+              ]).map((award, i) => (
+                <div key={i} className="mb-0">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="font-bold text-sm break-words">{award.name}</p>
+                      <p className="text-sm opacity-80 break-words">{award.issuer}</p>
+                    </div>
+                    <p className="text-xs opacity-60">{award.year}</p>
+                  </div>
+                  {award.description && (
+                    <p className="text-sm mt-1 break-words">{award.description}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/*References*/}
+          {data?.visibleSections?.references !== false && references.length > 0 && (
+            <div className="">
+              <h2 className="text-md text-[#83549f] font-semibold mt-2 mb-2 uppercase border-b-2 border-[#dfc3f1] pb-1 cursor-pointer">
+                references
+              </h2>
+              {(references.length ? references : [
+                { name: "Harumi Kobayashi", title: "CEO", phone: "123-456-7890", email: "hello@reality.com" },
+                { name: "Bailey Dupont", title: "CEO", phone: "123-456-7890", email: "hello@reality.com" }
+              ]).map((r, i) => (
+                <div key={i} className="">
+                  <p className="font-semibold  !text-sm text-gray-700">{r.name}</p>
+                  <p className="text-sm ">{r.title}</p>
+                  <p className="text-sm ">{r.company}</p>
+                  <p className="text-sm text-gray-700">Phone: {r.phone}</p>
+                  <p className="text-sm text-gray-700">Email: {r.email}</p>
+                </div>
+              ))}
             </div>
           )}
         </div>

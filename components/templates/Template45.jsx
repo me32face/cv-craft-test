@@ -9,7 +9,7 @@ export default function Template45({ data, onClickSection }) {
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    return date.toLocaleDateString('en-US', {  year: 'numeric' });
   };
 
   const experiences = toArray(data?.experiences);
@@ -20,13 +20,15 @@ export default function Template45({ data, onClickSection }) {
   const projects = toArray(data?.projects);
   const interests = toArray(data?.interests);
   const socialLinks = toArray(data?.socialLinks);
+  const Awards = toArray(data?.awards); 
+  const references = toArray(data?.references);
 
   const themeColor = "#2c2c2c"; // Dark gray/black
 
   return (
     <div
       id="cv-preview"
-      className="w-[794px] min-h-[1123px] bg-gray-50 mx-auto font-sans relative overflow-hidden flex text-slate-800"
+      className="cv-sidebar w-[794px] min-h-[1123px] bg-gray-50 mx-auto font-sans relative overflow-hidden flex text-slate-800"
     >
       {/* SVG Background Design - Top */}
       <svg
@@ -234,6 +236,52 @@ export default function Template45({ data, onClickSection }) {
               </div>
             </div>
           )}
+           {/* AWARDS */}
+          {data?.visibleSections?.awards !== false && Awards.length > 0 && (
+            <div className="">
+              <h2 className="text-sm font-semibold text-slate-600 mb-2 pb-2 border-b-2 border-[#d4d2db]" onClick={() => onClickSection?.("awards")}>
+                AWARDS
+              </h2>
+              {(Awards.length ? Awards : [
+                { name: "Employee of the Year", issuer: "Tech Company", year: "2023" },
+                { name: "Best Innovation Award", issuer: "Industry Association", year: "2022" }
+              ]).map((award, i) => (
+                <div key={i} className="mb-3">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="font-bold text-sm break-words">{award.name}</p>
+                      <p className="text-sm opacity-80 break-words">{award.issuer}</p>
+                    </div>
+                    <p className="text-xs opacity-60">{award.year}</p>
+                  </div>
+                  {award.description && (
+                    <p className="text-sm mt-1 break-words">{award.description}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/*References*/}
+          {data?.visibleSections?.references !== false && references.length > 0 && (
+            <div>
+              <h2 className="text-sm font-semibold text-slate-600 mb-3 pb-2 border-b-2 border-[#d4d2db] uppercase">
+                references
+              </h2>
+              {(references.length ? references : [
+                { name: "Harumi Kobayashi", title: "CEO", phone: "123-456-7890", email: "hello@reality.com" },
+                { name: "Bailey Dupont", title: "CEO", phone: "123-456-7890", email: "hello@reality.com" }
+              ]).map((r, i) => (
+                <div key={i} className="mb-3">
+                  <p className="font-semibold  !text-sm text-gray-700">{r.name}</p>
+                  <p className="text-sm ">{r.title}</p>
+                  <p className="text-sm ">{r.company}</p>
+                  <p className="text-sm text-gray-700">Phone: {r.phone}</p>
+                  <p className="text-sm text-gray-700">Email: {r.email}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -332,42 +380,27 @@ export default function Template45({ data, onClickSection }) {
             </h2>
             <div className="space-y-4 ">
               {projects.map((project, i) => (
-                <div key={i}>
-                  <p className="text-[15px] font-semibold text-gray-700">{project.name}</p>
-                  {project.link && (
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[12px] text-blue-600 underline block mt-0.5"
-                    >
-                      {project.link}
-                    </a>
-                  )}
-                  {project.year && (
-                    <p className="text-[12px] text-gray-500 mt-0.5">{project.year}</p>
-                  )}
-                  {project.desc && (
-                    <div className="mt-1.5 text-[12px] text-gray-700 leading-relaxed">
-                      {project.descFormat === "bullet" ? (
-                        project.desc.split('\n').map((line, idx) =>
-                          line.trim() && (
-                            <p key={idx} className="mb-0.5">• {line.trim()}</p>
-                          )
-                        )
-                      ) : project.descFormat === "number" ? (
-                        project.desc.split('\n').map((line, idx) =>
-                          line.trim() && (
-                            <p key={idx} className="mb-0.5">{idx + 1}. {line.trim()}</p>
-                          )
-                        )
-                      ) : (
-                        <p>{project.desc}</p>
-                      )}
-                    </div>
-                  )}
+              <div key={i} className="mb-3">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="font-semibold text-gray-800 !text-sm">{project.name}</p>
+                    {project.link && (
+                      <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline">
+                        {project.link}
+                      </a>
+                    )}
+                  </div>
+                  <p className="text-xs opacity-60">{project.year}</p>
                 </div>
-              ))}
+                {project.descFormat === "bullet" ? (
+                  project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">• {line}</p>)
+                ) : project.descFormat === "number" ? (
+                  project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">{idx + 1}. {line}</p>)
+                ) : (
+                  <p className="text-sm mt-1 text-gray-700">{project.desc}</p>
+                )}
+              </div>
+            ))}
             </div>
           </section>
         )}

@@ -18,17 +18,17 @@ export default function template39({ data, onClickSection }) {
   const languages = toArray(data.languages);
   const certificates = toArray(data.certificates);
   const references = toArray(data.references);
-  const awards = toArray(data.awards);
   const courses = toArray(data.courses);
   const interests = toArray(data.interests);
   const projects = toArray(data?.projects);
   const socialLinks = toArray(data?.socialLinks);
+  const Awards = toArray(data?.awards); 
 
 
   return (
     <div
       id="cv-preview"
-      className="w-[794px] min-h-[1123px] bg-white mx-auto font-sans text-gray-700"
+      className="cv-sidebar w-[794px] min-h-[1123px] bg-white mx-auto font-sans text-gray-700"
     >
       {/* TOP HEADER WITH IMAGE AND NAME */}
       <div className="flex items-start gap-5 px-8 pt-8 pb-6 border-b border-gray-200">
@@ -213,7 +213,8 @@ export default function template39({ data, onClickSection }) {
                     ) : (
                       <p className="text-sm mt-1 text-gray-700 text-justify break-words">{edu.description}</p>
                     )
-                  )}                </div>
+                  )}               
+                   </div>
               ))}
             </div>
           )}
@@ -226,6 +227,52 @@ export default function template39({ data, onClickSection }) {
                 renderLanguage(l, i)
               )}
             </div>
+          )}
+        {/* AWARDS */}
+          {data?.visibleSections?.awards !== false && Awards.length > 0 && (
+            <div className="mt-6">
+              <h2 className="text-md font-semibold mt-2 mb-3 border-b-2 border-amber-700 pb-1 cursor-pointer" onClick={() => onClickSection?.("awards")}>
+                AWARDS
+              </h2>
+              {(Awards.length ? Awards : [
+                { name: "Employee of the Year", issuer: "Tech Company", year: "2023" },
+                { name: "Best Innovation Award", issuer: "Industry Association", year: "2022" }
+              ]).map((award, i) => (
+                <div key={i} className="mb-3">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="font-bold text-sm break-words">{award.name}</p>
+                      <p className="text-sm opacity-80 break-words">{award.issuer}</p>
+                    </div>
+                    <p className="text-xs opacity-60">{award.year}</p>
+                  </div>
+                  {award.description && (
+                    <p className="text-sm mt-1 break-words">{award.description}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/*References*/}
+          {data?.visibleSections?.references !== false && references.length > 0 && (
+            <>
+              <h2 className="text-md font-semibold mt-2 mb-3 border-b-2 border-amber-700 pb-1 cursor-pointer">
+                references
+              </h2>
+              {(references.length ? references : [
+                { name: "Harumi Kobayashi", title: "CEO", phone: "123-456-7890", email: "hello@reality.com" },
+                { name: "Bailey Dupont", title: "CEO", phone: "123-456-7890", email: "hello@reality.com" }
+              ]).map((r, i) => (
+                <div key={i} className="mb-3">
+                  <p className="font-semibold  !text-sm text-gray-700">{r.name}</p>
+                  <p className="text-sm ">{r.title}</p>
+                  <p className="text-sm ">{r.company}</p>
+                  <p className="text-sm text-gray-700">Phone: {r.phone}</p>
+                  <p className="text-sm text-gray-700">Email: {r.email}</p>
+                </div>
+              ))}
+            </>
           )}
         </div>
 

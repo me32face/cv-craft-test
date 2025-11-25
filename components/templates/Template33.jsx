@@ -19,11 +19,11 @@ export default function Template35({ data, onClickSection }) {
   const languages = toArray(data.languages);
   const certificates = toArray(data.certificates);
   const references = toArray(data.references);
-  const awards = toArray(data.awards);
   const courses = toArray(data.courses);
   const interests = toArray(data.interests);
   const projects = toArray(data?.projects);
   const socialLinks = toArray(data?.socialLinks);
+  const Awards = toArray(data?.awards);
 
   return (
     <div
@@ -48,12 +48,7 @@ export default function Template35({ data, onClickSection }) {
         <div>
           <div className="mb-4">
             <h2 className="font-semibold text-md mb-2">CONTACT</h2>
-            <p className="text-sm mt-1 flex items-center gap-2">
-              <span className="flex-shrink-0 block">
-                <Phone size={14} />
-              </span>
-              {data?.phone}
-            </p>
+            <p className="text-sm mt-1 ">📞 {data?.phone}</p>
             <p className="text-sm mt-1">📧 {data?.email || "hello@email.com"}</p>
             <p className="text-sm mt-1">📍 {data?.address || "123 Anywhere St., Any City"}</p>
             {data?.visibleSections?.socialLinks !== false && (
@@ -121,6 +116,32 @@ export default function Template35({ data, onClickSection }) {
             )}
           </div>
         )}
+        {/* AWARDS */}
+        {data?.visibleSections?.awards !== false && Awards.length > 0 && (
+          <div className="mt-6">
+            <h2 className="text-md  font-semibold  mb-3 " onClick={() => onClickSection?.("awards")}>
+              AWARDS
+            </h2>
+            {(Awards.length ? Awards : [
+              { name: "Employee of the Year", issuer: "Tech Company", year: "2023" },
+              { name: "Best Innovation Award", issuer: "Industry Association", year: "2022" }
+            ]).map((award, i) => (
+              <div key={i} className="mb-3">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="font-bold text-sm break-words">{award.name}</p>
+                    <p className="text-sm opacity-80 break-words">{award.issuer}</p>
+                  </div>
+                  <p className="text-xs opacity-60">{award.year}</p>
+                </div>
+                {award.description && (
+                  <p className="text-sm mt-1 break-words">{award.description}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Certifications */}
         {data?.visibleSections?.certificates !== false && (
           <>
@@ -143,6 +164,26 @@ export default function Template35({ data, onClickSection }) {
             ))}
           </>
         )}
+        {/*References*/}
+        {data?.visibleSections?.references !== false && references.length > 0 && (
+          <>
+            <h2 className="text-md  font-semibold  mb-3 uppercase ">
+              references
+            </h2>
+            {(references.length ? references : [
+              { name: "Harumi Kobayashi", title: "CEO", phone: "123-456-7890", email: "hello@reality.com" },
+              { name: "Bailey Dupont", title: "CEO", phone: "123-456-7890", email: "hello@reality.com" }
+            ]).map((r, i) => (
+              <div key={i} className="mb-3">
+                <p className="font-semibold  !text-sm text-gray-700">{r.name}</p>
+                <p className="text-sm ">{r.title}</p>
+                <p className="text-sm ">{r.company}</p>
+                <p className="text-sm text-gray-700">Phone: {r.phone}</p>
+                <p className="text-sm text-gray-700">Email: {r.email}</p>
+              </div>
+            ))}
+          </>
+        )}
       </div>
 
       {/* RIGHT CONTENT */}
@@ -152,7 +193,7 @@ export default function Template35({ data, onClickSection }) {
           className="mb-12 cursor-pointer"
           onClick={() => onClickSection("personal")}
         >
-          <div className="inline-flex flex-col items-center border px-6 py-3 rounded-3xl">
+          <div className="inline-flex flex-col items-center border px-6  py-3 rounded-3xl">
             <h1 className="text-4xl font-bold text-gray-600 uppercase  tracking-wide">
               {data.name || "YOUR NAME"}
             </h1>
@@ -268,6 +309,7 @@ export default function Template35({ data, onClickSection }) {
             ))}
           </div>
         )}
+
       </div>
     </div>
   )

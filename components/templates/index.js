@@ -19,6 +19,7 @@ import Template43 from "./Template43";
 import Template44 from "./Template44";
 import Template45 from "./Template45";
 import Template46 from "./Template46";
+import Template47 from "./Template47";
 
 export const templates = {
   template01: Template01,
@@ -39,7 +40,7 @@ export const templates = {
   template44: Template44,
   template45: Template45,
   template46: Template46,
-  template33: Template33,
+  template47: Template47,
 };
 
 export const templateInputs = {
@@ -146,6 +147,8 @@ export const templateInputs = {
     experiences: true,
     education: true,
     certificates: true,
+    references: true,
+    awards:true, 
   },
 
   template36: {
@@ -162,19 +165,6 @@ export const templateInputs = {
     certificates: true,
   },
 
-  template33: {
-    name: true,
-    title: true,
-    profileImage: true,
-    phone: true,
-    email: true,
-    address: true,
-    languages: true,
-    Summary: true,
-    experiences: true,
-    education: true,
-    certificates: true,
-  },
 
   template36: {
     name: true,
@@ -220,7 +210,8 @@ export const templateInputs = {
     skills: true,
     languages: true,
     certificates: true,
-    references: false,
+    references: true,
+    awards:true, 
   },
   template39: {
     name: true,
@@ -235,7 +226,8 @@ export const templateInputs = {
     skills: true,
     languages: true,
     certificates: true,
-    references: false,
+    references: true,
+    awards:true, 
   },
   template40: {
     name: true,
@@ -266,7 +258,8 @@ export const templateInputs = {
     skills: true,
     languages: true,
     certificates: true,
-    references: false,
+   references: true,
+    awards:true, 
   },
   template42: {
     name: true,
@@ -281,7 +274,8 @@ export const templateInputs = {
     skills: true,
     languages: true,
     certificates: true,
-    references: false,
+    references: true,
+    awards:true, 
   },
   template43: {
     name: true,
@@ -296,7 +290,8 @@ export const templateInputs = {
     skills: true,
     languages: true,
     certificates: true,
-    references: false,
+   references: true,
+    awards:true, 
   },
 
   template44: {
@@ -312,7 +307,8 @@ export const templateInputs = {
     skills: true,
     languages: true,
     certificates: true,
-    references: false,
+    references: true,
+    awards:true, 
   },
   template45: {
     name: true,
@@ -327,9 +323,26 @@ export const templateInputs = {
     skills: true,
     languages: true,
     certificates: true,
-    references: false,
+    references: true,
+    awards:true, 
   },
   template46: {
+    name: true,
+    title: true,
+    profileImage: true,
+    phone: true,
+    email: true,
+    address: true,
+    summary: true,
+    experiences: true,
+    education: true,
+    skills: true,
+    languages: true,
+    certificates: true,
+    references: true,
+    awards:true, 
+  },
+   template47: {
     name: true,
     title: true,
     profileImage: true,
