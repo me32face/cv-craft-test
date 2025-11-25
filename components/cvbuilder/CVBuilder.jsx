@@ -40,6 +40,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
 
     // Freeze alignment ONLY during PDF
     element.classList.remove("freeze-layout");
+    const calculatedPages = adjustLayoutForPageBreaks(element);
 
     const canvas = await html2canvas(element, {
       scale: 2,
@@ -49,13 +50,17 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
     const imgData = canvas.toDataURL("image/png");
     const pdf = new jsPDF("p", "mm", "a4");
     const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const imgWidth = pageWidth;
     const imgHeight = (canvas.height * pageWidth) / canvas.width;
 
-    pdf.addImage(imgData, "PNG", 0, 0, pageWidth, imgHeight);
+    for (let page = 0; page < calculatedPages; page++) {
+      if (page > 0) pdf.addPage();
+      const yOffset = -(page * pageHeight);
+      pdf.addImage(imgData, "PNG", 0, yOffset, imgWidth, imgHeight);
+    }
 
-    // Restore UI
-    element.classList.remove("freeze-layout");
-
+    resetLayout(element);
     pdf.save(`${data.name || "cv"}.pdf`);
   };
 
