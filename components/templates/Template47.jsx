@@ -368,7 +368,7 @@ const Template47 = ({ data = {}, onClickSection }) => {
               style={{ color: darkText, borderColor: navyAccent }}
               onClick={() => onClickSection && onClickSection('summary')}
             >
-              Professional Profile
+              Profile
             </h3>
             <p className="text-sm text-gray-700 leading-relaxed italic">
               {merged.summary ||
