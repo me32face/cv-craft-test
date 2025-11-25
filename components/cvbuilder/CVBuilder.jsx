@@ -43,11 +43,11 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
     const calculatedPages = adjustLayoutForPageBreaks(element);
 
     const canvas = await html2canvas(element, {
-      scale: 2,
+      scale: 1.5,
       useCORS: true
     });
 
-    const imgData = canvas.toDataURL("image/png");
+    const imgData = canvas.toDataURL("image/jpeg", 0.85);
     const pdf = new jsPDF("p", "mm", "a4");
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
@@ -57,7 +57,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
     for (let page = 0; page < calculatedPages; page++) {
       if (page > 0) pdf.addPage();
       const yOffset = -(page * pageHeight);
-      pdf.addImage(imgData, "PNG", 0, yOffset, imgWidth, imgHeight);
+      pdf.addImage(imgData, "JPEG", 0, yOffset, imgWidth, imgHeight);
     }
 
     resetLayout(element);
