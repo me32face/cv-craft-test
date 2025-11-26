@@ -66,20 +66,20 @@ export default function template39({ data, onClickSection }) {
             {data?.title || "Professional Marketing Manager"}
           </p>
           {/* Contact Icons Row */}
-          <div className="flex flex-wrap gap-x-1 gap-y-1 text-black text-xs">
+          <div className="flex flex-wrap gap-x-1 gap-y-1 text-gray-600 text-xs">
             {/* Phone */}
-            <div className="flex items-center gap-1.5 leading-[1.4]">
-              <Phone size={15} className="shrink-0 translate-y-[-1px]" />
+            <div className="flex items-center gap-1.5 leading-[1.4] text-sm">
+              <Phone size={14} className="shrink-0 translate-y-[-1px]" />
               <span>{data?.phone || "+123-456-7890"}</span>
             </div>
             {/* Email */}
-            <div className="flex items-center gap-1.5 leading-[1.4]">
-              <Mail size={15} className="shrink-0 translate-y-[-1px]" />
+            <div className="flex items-center gap-1.5 leading-[1.4] text-sm">
+              <Mail size={14} className="shrink-0 translate-y-[-1px]" />
               <span>{data?.email || "hello@reallygreatsite.com"}</span>
             </div>
             {/* Address */}
-            <div className="flex items-center gap-1.5 leading-[1.4]">
-              <MapPin size={15} className="shrink-0 translate-y-[-1px]" />
+            <div className="flex items-center gap-1.5 leading-[1.4] text-sm">
+              <MapPin size={14} className="shrink-0 translate-y-[-1px]" />
               <span>{data?.address || "123 Anywhere St., Any City"}</span>
             </div>
             {/* Social Links */}
@@ -87,8 +87,8 @@ export default function template39({ data, onClickSection }) {
               {data?.visibleSections?.socialLinks !== false && socialLinks.length > 0 && (
                 <div className="flex items-center gap-1.5">
                   {socialLinks.map((link, i) => (
-                    <div key={i} className="flex items-center gap-1.5 leading-[1.4]">
-                      <Link size={15} className="shrink-0 translate-y-[-1px]" />
+                    <div key={i} className="flex items-center gap-1.5 leading-[1.4] text-sm">
+                      <Link size={14} className="shrink-0 translate-y-[-1px]" />
                       <span className="text-xs break-all">{link}</span>
                     </div>
                   ))}

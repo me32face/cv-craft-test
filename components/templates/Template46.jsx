@@ -98,17 +98,17 @@ export default function Template45({ data = {}, onClickSection }) {
             </h2>
             <div className="mb-4 text-gray-700 text-xs flex flex-wrap gap-x-1 gap-y-1 ">
               <div className="flex items-center gap-2 leading-[1.4]">
-                <Phone size={15} className="shrink-0 translate-y-[-1px]" />
+                <Phone size={14} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.phone || "123-456-7890"}</span>
               </div>
 
               <div className="flex items-center gap-2 leading-[1.4]">
-                <Mail size={15} className="shrink-0 translate-y-[-1px]" />
+                <Mail size={14} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.email || "hello@email.com"}</span>
               </div>
 
               <div className="flex items-center gap-2 leading-[1.4]">
-                <MapPin size={15} className="shrink-0 translate-y-[-1px]" />
+                <MapPin size={14} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.address || "123 Anywhere St., Any City"}</span>
               </div>
               {data?.visibleSections?.socialLinks !== false && (
@@ -116,8 +116,8 @@ export default function Template45({ data = {}, onClickSection }) {
                   {socialLinks.length > 0 && (
                     <div className="">
                       {socialLinks.map((link, i) => (
-                        <p key={i} className="text-sm mt-1 break-all leading-[1.4]">
-                          <Link size={15} className="shrink-0 translate-y-[-1px]" />
+                        <p key={i} className=" mt-1 break-all leading-[1.4]">
+                          <Link size={14} className="shrink-0 translate-y-[-1px]" />
                           <span className="ml-1">{link}</span>
                         </p>))}
                     </div>

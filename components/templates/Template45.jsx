@@ -121,17 +121,17 @@ export default function Template45({ data, onClickSection }) {
             <div className="flex flex-wrap gap-x-2 gap-y-1 text-gray-500 text-xs">
               {/* Phone */}
               <div className="flex items-center gap-1.5">
-                <Phone size={15} className="shrink-0 translate-y-[-1px]" />
+                <Phone size={14} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.phone || "+123-456-7890"}</span>
               </div><br />
               {/* Email */}
               <div className="flex items-center gap-1.5  leading-[1.4]">
-                <Mail size={15} className="shrink-0 translate-y-[-1px]" />
+                <Mail size={14} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.email || "hello@reallygreatsite.com"}</span>
               </div>
               {/* Address */}
               <div className="flex items-center gap-1.5 leading-[1.4]">
-                <MapPin size={15} className="shrink-0 translate-y-[-1px]" />
+                <MapPin size={14} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.address || "123 Anywhere St., Any City"}</span>
               </div>
               {/* SOCIAL LINKS → always bottom line */}
@@ -139,7 +139,7 @@ export default function Template45({ data, onClickSection }) {
                 <div className="w-full flex flex-col gap-1 mt-1">
                   {socialLinks.map((link, i) => (
                     <div key={i} className="flex items-center gap-1.5 text-xs break-all leading-[1.4]">
-                      <Link size={15} className="shrink-0 translate-y-[-1px]" />
+                      <Link size={14} className="shrink-0 translate-y-[-1px]" />
                       <span>{link}</span>
                     </div>
                   ))}
@@ -302,7 +302,7 @@ export default function Template45({ data, onClickSection }) {
         {/* Profile / Summary */}
         {data?.visibleSections?.summary !== false && (
           <section onClick={() => onClickSection && onClickSection("summary")} className="cursor-pointer">
-            <h2 className="text-sm font-bold tracking-widest uppercase mb-3  pb-2 border-b-2 border-[#d4d2db]" style={{ color: themeColor }}>
+            <h2 className="text-sm font-bold text-slate-600 tracking-widest uppercase mb-3  pb-2 border-b-2 border-[#d4d2db]" >
               Profile
             </h2>
             <p className="text-xs leading-relaxed text-slate-700 text-justify">
