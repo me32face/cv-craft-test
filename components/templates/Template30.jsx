@@ -48,17 +48,17 @@ export default function Template30({ data, onClickSection }) {
         {/* Contact */}
         <div className="mb-4">
           <h2 className="font-semibold text-md mb-2">CONTACT</h2>
-          <div className="flex items-center gap-2 leading-[1.4]">
+          <div className="flex items-center gap-2 leading-[1.4] text-sm">
             <Phone size={15} className="shrink-0 translate-y-[-1px]" />
             <span>{data?.phone || "123-456-7890"}</span>
           </div>
 
-          <div className="flex items-center gap-2 leading-[1.4]">
+          <div className="flex items-center gap-2 leading-[1.4] text-sm mt-1">
             <Mail size={15} className="shrink-0 translate-y-[-1px]" />
             <span>{data?.email || "hello@email.com"}</span>
           </div>
 
-          <div className="flex items-center gap-2 leading-[1.4]">
+          <div className="flex items-center gap-2 leading-[1.4] text-sm mt-1">
             <MapPin size={15} className="shrink-0 translate-y-[-1px]" />
             <span>{data?.address || "123 Anywhere St., Any City"}</span>
           </div>
@@ -67,7 +67,7 @@ export default function Template30({ data, onClickSection }) {
           {data?.visibleSections?.socialLinks !== false && (
             <>
               {socialLinks.length > 0 && (
-                <div className="">
+                <div className="text-sm mt-1">
                   {socialLinks.map((link, i) => (
                     <p key={i} className="text-sm break-all">🔗 {link}</p>
                   ))}
