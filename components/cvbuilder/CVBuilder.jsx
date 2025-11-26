@@ -579,45 +579,90 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
             <div className="relative">
               <button
                 onClick={() => setShareMenuOpen(prev => !prev)}
-                className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm"
+                className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm shadow-sm"
               >
                 <Share2 size={14} className="sm:w-3 sm:h-3" />
                 <span className="hidden sm:inline">Share</span>
               </button>
 
               {shareMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-20 text-xs sm:text-sm">
+                <div className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur border border-indigo-100 rounded-2xl shadow-xl z-30 text-xs sm:text-sm overflow-hidden">
+                  {/* Top label */}
+                  <div className="px-3 py-2 bg-gradient-to-r from-[#F3F0FF] to-[#E9F1FF] border-b border-indigo-50">
+                    <p className="text-[11px] sm:text-xs font-medium text-[#5B46C8]">
+                      Share your resume
+                    </p>
+                    <p className="text-[10px] text-[#8E7FD9]">
+                      Choose how you want to send it
+                    </p>
+                  </div>
+
+                  {/* Share as PDF */}
                   <button
                     onClick={() => {
                       setShareMenuOpen(false);
                       handleSharePdf();
                     }}
-                    className="block w-full text-left px-3 py-2 hover:bg-indigo-50"
+                    className="flex w-full items-center gap-2 px-3 py-2.5 hover:bg-indigo-50/70 transition text-left"
                   >
-                    Share as PDF
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100">
+                      <Download size={14} className="text-[#634BC9]" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-medium text-[#342768] text-[11px] sm:text-xs">
+                        Share as PDF
+                      </span>
+                      <span className="text-[10px] text-[#8E7FD9]">
+                        Perfect for email & print
+                      </span>
+                    </div>
                   </button>
+
+                  {/* Share URL */}
                   <button
                     onClick={() => {
                       setShareMenuOpen(false);
                       handleShareUrl();
                     }}
-                    className="block w-full text-left px-3 py-2 hover:bg-indigo-50"
+                    className="flex w-full items-center gap-2 px-3 py-2.5 hover:bg-indigo-50/70 transition text-left"
                   >
-                    Share URL
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-50">
+                      <Link2 size={14} className="text-emerald-600" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-medium text-[#342768] text-[11px] sm:text-xs">
+                        Share URL
+                      </span>
+                      <span className="text-[10px] text-[#8E7FD9]">
+                        Open resume directly in browser
+                      </span>
+                    </div>
                   </button>
+
+                  {/* Copy link */}
                   <button
                     onClick={() => {
                       setShareMenuOpen(false);
                       handleCopyLink();
                     }}
-                    className="block w-full text-left px-3 py-2 hover:bg-indigo-50"
+                    className="flex w-full items-center gap-2 px-3 py-2.5 hover:bg-indigo-50/70 transition text-left border-t border-dashed border-indigo-100"
                   >
-                    Copy link
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#FFF7E6]">
+                      <Share2 size={14} className="text-amber-500" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-medium text-[#342768] text-[11px] sm:text-xs">
+                        Copy link
+                      </span>
+                      <span className="text-[10px] text-[#8E7FD9]">
+                        Paste into WhatsApp, Mail, etc.
+                      </span>
+                    </div>
                   </button>
                 </div>
               )}
             </div>
-
+            
             {/* Export PDF */}
             <button
               onClick={handleDownload}
