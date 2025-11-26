@@ -116,11 +116,17 @@ export default function PersonalInfo({ data, update, onClose, onNext, onSave }) 
             disabled={isGenerating}
             className="flex items-center gap-1 px-3 py-1 rounded-full 
                  bg-gradient-to-r from-purple-400 to-purple-200 
-                 text-[#634BC9] font-medium text-sm shadow-sm 
+                 font-medium text-sm shadow-sm 
                  hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
-            <Sparkles size={14}/> 
-            {isGenerating ? "Generating..." : "Generate Using AI"}
+            <Sparkles 
+              size={15} 
+              className=""
+              style={{
+                animation: 'spin 3s linear infinite, zoom 2s ease-in-out infinite'
+              }}
+            /> 
+            <span className="text-[#7247EF]">{isGenerating ? "Generating..." : "Generate Using AI"}</span>
           </button>
         </div>
 

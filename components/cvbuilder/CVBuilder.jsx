@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { templates, templateInputs } from "../templates";
@@ -8,6 +8,8 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import PopupEditor from "./PopupEditor"; // reusable popup
 import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from "lz-string";
+
+import Toast from "../Toast";
 
 export default function CVBuilder({ initialTemplate = "template31", onBack }) {
   const [template, setTemplate] = useState(initialTemplate.toLowerCase());
@@ -20,6 +22,8 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
   const [additionalOpen, setAdditionalOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
+  const [toast, setToast] = useState(null);
+  const shareMenuRef = useRef(null);
 
   const router = useRouter();
 
@@ -35,6 +39,22 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
 
   const handleZoomIn = () => setScale(prev => Math.min(prev + 0.1, 2));
   const handleZoomOut = () => setScale(prev => Math.max(prev - 0.1, 0.5));
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (shareMenuRef.current && !shareMenuRef.current.contains(event.target)) {
+        setShareMenuOpen(false);
+      }
+    };
+
+    if (shareMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [shareMenuOpen]);
 
 
   const generatePdf = async () => {
@@ -135,7 +155,7 @@ linkElements.forEach(el => {
     try {
       const shareUrl = buildShareUrlWithData(data);
       if (!shareUrl) {
-        alert("Could not build share URL.");
+        setToast("Could not build share URL.");
         return;
       }
 
@@ -149,14 +169,14 @@ linkElements.forEach(el => {
         // fallback: copy link
         if (navigator.clipboard && window.isSecureContext) {
           await navigator.clipboard.writeText(shareUrl);
-          alert("Link copied to clipboard!");
+          setToast("Link copied to clipboard!");
         } else {
-          alert("Sharing is not supported in this browser.");
+          setToast("Sharing is not supported in this browser.");
         }
       }
     } catch (error) {
       console.error("Error sharing URL:", error);
-      alert("Could not share the link. Please try again.");
+      setToast("Could not share the link. Please try again.");
     }
   };
 
@@ -164,26 +184,26 @@ linkElements.forEach(el => {
     try {
       const shareUrl = buildShareUrlWithData(data);
       if (!shareUrl) {
-        alert("Could not build share URL.");
+        setToast("Could not build share URL.");
         return;
       }
 
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(shareUrl);
-        alert("Link copied to clipboard! You can paste it into WhatsApp, Email, etc.");
+        setToast("Link copied to clipboard! You can paste it into WhatsApp, Email, etc.");
       } else {
-        alert("Copy to clipboard is not supported in this browser.");
+        setToast("Copy to clipboard is not supported in this browser.");
       }
     } catch (error) {
       console.error("Error copying link:", error);
-      alert("Could not copy the link. Please try again.");
+      setToast("Could not copy the link. Please try again.");
     }
   };
   const handleSharePdf = async () => {
     try {
       const pdf = await generatePdf();
       if (!pdf) {
-        alert("Could not create PDF to share.");
+        setToast("Could not create PDF to share.");
         return;
       }
 
@@ -198,11 +218,11 @@ linkElements.forEach(el => {
           files: [file],
         });
       } else {
-        alert("Your browser does not support sharing files. Please use 'Export PDF' and share it manually.");
+        setToast("Your browser does not support sharing files. Please use 'Export PDF' and share it manually.");
       }
     } catch (error) {
       console.error("Error sharing PDF:", error);
-      alert("Could not share the PDF. Please try again.");
+      setToast("Could not share the PDF. Please try again.");
     }
   };
 
@@ -423,7 +443,9 @@ linkElements.forEach(el => {
 
 
   return (
-    <div className="h-screen flex bg-[#F6F5F6] text-gray-800 overflow-hidden">
+    <>
+      {toast && <Toast message={toast} onClose={() => setToast(null)} />}
+      <div className="h-screen flex bg-[#F6F5F6] text-gray-800 overflow-hidden">
       {/* MOBILE MENU BUTTON */}
       <button
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -590,7 +612,7 @@ linkElements.forEach(el => {
             </button>
 
             {/* Share dropdown (URL / Copy / PDF) */}
-            <div className="relative">
+            <div ref={shareMenuRef} className="relative">
               <button
                 onClick={() => setShareMenuOpen(prev => !prev)}
                 className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm shadow-sm"
@@ -699,7 +721,7 @@ linkElements.forEach(el => {
                 <div className="h-14 sm:h-16 lg:h-20 rounded-t-xl sm:rounded-t-2xl bg-[#F2F5FC] border border-[#E4DEF3] border-b-0 flex items-center justify-between px-3 sm:px-4 lg:px-6 relative z-10">
                   <div className="flex items-center gap-1.5 sm:gap-2 pb-1 sm:pb-2">
                     <span className="text-[#7B61FF]">
-                      <Sparkles size={18} className="sm:w-5 sm:h-5 lg:w-[22px] lg:h-[22px]" />
+                      <Sparkles size={18} className="sm:w-5 sm:h-5 lg:w-[22px] lg:h-[22px] animate-[spin_3s_linear_infinite,zoom_2s_ease-in-out_infinite]" />
                     </span>
                     <h2 className="text-sm sm:text-base lg:text-xl font-semibold text-[#9C90DD] whitespace-nowrap">
                       AI Generated Preview
@@ -817,7 +839,7 @@ linkElements.forEach(el => {
       </div>
 
       {previewOpen && (
-        <div className="absolute inset-0 bg-black bg-opacity-60 z-[9999] flex justify-center py-6  overflow-auto">
+        <div className="absolute inset-0 bg-black bg-opacity-80 z-[9999] flex justify-center py-6  overflow-auto">
           {/* Template wrapper */}
           <div
             className="bg-white rounded-lg shadow-lg relative   "
@@ -838,6 +860,7 @@ linkElements.forEach(el => {
       )}
 
 
-    </div>
+      </div>
+    </>
   );
 }

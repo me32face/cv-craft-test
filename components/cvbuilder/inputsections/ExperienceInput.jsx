@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { ChevronDown, Sparkles } from "lucide-react";
+import { ChevronDown, Sparkles, List, ListOrdered, AlignLeft } from "lucide-react";
 import { geminiService } from "./gemini";
 import Toast from "../../Toast";
 
@@ -62,6 +62,56 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
     }
 
     return text;
+  };
+
+  const formatText = (text, format) => {
+    if (!text) return text;
+    const lines = text.split('\n');
+    
+    if (format === 'bullet') {
+      return lines.map(line => {
+        const trimmed = line.trim();
+        if (!trimmed) return '';
+        const cleaned = trimmed.replace(/^[•\-*]\s*/, '').replace(/^\d+\.\s*/, '');
+        return `• ${cleaned}`;
+      }).join('\n');
+    }
+    
+    if (format === 'number') {
+      let count = 0;
+      return lines.map(line => {
+        const trimmed = line.trim();
+        if (!trimmed) return '';
+        count++;
+        const cleaned = trimmed.replace(/^[•\-*]\s*/, '').replace(/^\d+\.\s*/, '');
+        return `${count}. ${cleaned}`;
+      }).join('\n');
+    }
+    
+    return lines.map(line => {
+      const trimmed = line.trim();
+      if (!trimmed) return '';
+      return trimmed.replace(/^[•\-*]\s*/, '').replace(/^\d+\.\s*/, '');
+    }).join('\n');
+  };
+
+  const handleDescriptionChange = (i, value) => {
+    const format = experiences[i].descFormat || 'default';
+    if (format !== 'default') {
+      const formatted = formatText(value, format);
+      updateField(i, 'desc', formatted);
+    } else {
+      updateField(i, 'desc', value);
+    }
+  };
+
+  const handleFormatChange = (i, newFormat) => {
+    const currentDesc = experiences[i].desc || '';
+    const formatted = formatText(currentDesc, newFormat);
+    updateField(i, 'descFormat', newFormat);
+    if (currentDesc) {
+      updateField(i, 'desc', formatted);
+    }
   };
 
   const handleGenerateAI = async (index) => {
@@ -263,21 +313,6 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                         <span>I currently work here</span>
                       </div>
 
-                      <div className="flex gap-2 mt-4">
-                        {["default", "bullet", "number"].map((format) => (
-                          <button
-                            key={format}
-                            onClick={() => updateField(i, "descFormat", format)}
-                            className={`px-3 py-1 rounded text-xs font-medium ${exp.descFormat === format
-                              ? "bg-[#634BC9] text-white"
-                              : "bg-gray-200"
-                              }`}
-                          >
-                            {format.charAt(0).toUpperCase() + format.slice(1)}
-                          </button>
-                        ))}
-                      </div>
-
                       <div className="mt-4">
                         <div className="flex items-center justify-between mb-1">
                           <label className="block text-sm font-semibold">Professional Summary</label>
@@ -295,13 +330,47 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                             {isGenerating ? "Generating..." : "Generate Using AI"}
                           </button>
                         </div>
-                        <textarea
-                          className="mt-1 w-full p-3 rounded-xl border"
-                          rows={4}
-                          value={exp.desc ?? ""}
-                          onChange={(e) => updateField(i, "desc", e.target.value)}
-                          placeholder="Describe your roles and responsibilities"
-                        />
+                        <div className="relative">
+                          <div className="flex gap-1 mb-2 border-b pb-2">
+                            <button
+                              type="button"
+                              onClick={() => handleFormatChange(i, "default")}
+                              className={`p-2 rounded ${
+                                exp.descFormat === "default" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                              }`}
+                              title="Default"
+                            >
+                              <AlignLeft size={18} />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleFormatChange(i, "bullet")}
+                              className={`p-2 rounded ${
+                                exp.descFormat === "bullet" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                              }`}
+                              title="Bullet List"
+                            >
+                              <List size={18} />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleFormatChange(i, "number")}
+                              className={`p-2 rounded ${
+                                exp.descFormat === "number" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                              }`}
+                              title="Numbered List"
+                            >
+                              <ListOrdered size={18} />
+                            </button>
+                          </div>
+                          <textarea
+                            className="w-full p-3 rounded-xl border"
+                            rows={4}
+                            value={exp.desc ?? ""}
+                            onChange={(e) => handleDescriptionChange(i, e.target.value)}
+                            placeholder="Describe your roles and responsibilities"
+                          />
+                        </div>
                       </div>
 
                       <div className="mt-4">

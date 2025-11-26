@@ -2,7 +2,7 @@
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
 import { Phone, Mail, MapPin } from "lucide-react";
-
+import SocialLinkDisplay from "../SocialLinkDisplay"; 
 
 export default function Template30({ data, onClickSection }) {
   // Safety conversion
@@ -66,8 +66,12 @@ export default function Template30({ data, onClickSection }) {
             <>
               {socialLinks.length > 0 && (
                 <div className="text-sm mt-1">
-                  {socialLinks.map((link, i) => (
+                  {/* {socialLinks.map((link, i) => (
                     <p key={i} className="text-sm break-all">🔗 {link}</p>
+                  ))} */}
+
+                  {data.socialLinks.map((link, i) => (
+                    <SocialLinkDisplay key={i} link={link} />
                   ))}
                 </div>
               )}

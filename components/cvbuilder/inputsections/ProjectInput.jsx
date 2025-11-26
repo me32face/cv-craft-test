@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, List, ListOrdered, AlignLeft } from "lucide-react";
 
 export default function ProjectInput({ projects = [], setProjects, onClose }) {
   const [openIndex, setOpenIndex] = useState(null);
@@ -18,6 +18,56 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
     const updated = [...projects];
     updated[index] = { ...updated[index], [field]: value };
     setProjects(updated);
+  };
+
+  const formatText = (text, format) => {
+    if (!text) return text;
+    const lines = text.split('\n');
+    
+    if (format === 'bullet') {
+      return lines.map(line => {
+        const trimmed = line.trim();
+        if (!trimmed) return '';
+        const cleaned = trimmed.replace(/^[•\-*]\s*/, '').replace(/^\d+\.\s*/, '');
+        return `• ${cleaned}`;
+      }).join('\n');
+    }
+    
+    if (format === 'number') {
+      let count = 0;
+      return lines.map(line => {
+        const trimmed = line.trim();
+        if (!trimmed) return '';
+        count++;
+        const cleaned = trimmed.replace(/^[•\-*]\s*/, '').replace(/^\d+\.\s*/, '');
+        return `${count}. ${cleaned}`;
+      }).join('\n');
+    }
+    
+    return lines.map(line => {
+      const trimmed = line.trim();
+      if (!trimmed) return '';
+      return trimmed.replace(/^[•\-*]\s*/, '').replace(/^\d+\.\s*/, '');
+    }).join('\n');
+  };
+
+  const handleDescriptionChange = (index, value) => {
+    const format = projects[index].descFormat || 'default';
+    if (format !== 'default') {
+      const formatted = formatText(value, format);
+      updateProject(index, 'desc', formatted);
+    } else {
+      updateProject(index, 'desc', value);
+    }
+  };
+
+  const handleFormatChange = (index, newFormat) => {
+    const currentDesc = projects[index].desc || '';
+    const formatted = formatText(currentDesc, newFormat);
+    updateProject(index, 'descFormat', newFormat);
+    if (currentDesc) {
+      updateProject(index, 'desc', formatted);
+    }
   };
 
   const removeProject = (index) => {
@@ -129,35 +179,49 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
                   </div>
                 </div>
 
-                {/* Description Format Buttons */}
-                <div className="flex gap-2 mt-4">
-                  {["default", "bullet", "number"].map((format) => (
-                    <button
-                      key={format}
-                      onClick={() =>
-                        updateProject(index, "descFormat", format)
-                      }
-                      className={`px-3 py-1 rounded text-xs font-medium ${project.descFormat === format
-                          ? "bg-[#634BC9] text-white"
-                          : "bg-gray-200"
-                        }`}
-                    >
-                      {format.charAt(0).toUpperCase() + format.slice(1)}
-                    </button>
-                  ))}
-                </div>
-
                 {/* Description */}
                 <div className="mt-4">
                   <label className="font-medium">Project Description</label>
-                  <textarea
-                    className="mt-1 w-full p-3 rounded-xl border"
-                    rows={4}
-                    value={project.desc ?? ""}
-                    onChange={(e) =>
-                      updateProject(index, "desc", e.target.value)
-                    }
-                  />
+                  <div className="relative">
+                    <div className="flex gap-1 mb-2 border-b pb-2">
+                      <button
+                        type="button"
+                        onClick={() => handleFormatChange(index, "default")}
+                        className={`p-2 rounded ${
+                          project.descFormat === "default" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                        }`}
+                        title="Default"
+                      >
+                        <AlignLeft size={18} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleFormatChange(index, "bullet")}
+                        className={`p-2 rounded ${
+                          project.descFormat === "bullet" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                        }`}
+                        title="Bullet List"
+                      >
+                        <List size={18} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleFormatChange(index, "number")}
+                        className={`p-2 rounded ${
+                          project.descFormat === "number" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                        }`}
+                        title="Numbered List"
+                      >
+                        <ListOrdered size={18} />
+                      </button>
+                    </div>
+                    <textarea
+                      className="w-full p-3 rounded-xl border"
+                      rows={4}
+                      value={project.desc ?? ""}
+                      onChange={(e) => handleDescriptionChange(index, e.target.value)}
+                    />
+                  </div>
                 </div>
               </div>
             )}
