@@ -36,7 +36,7 @@ export default function Home() {
       id: "Template47",
       name: "Classic",
       key: "Richard",
-      image: "/template/template01n.png",
+      image: "/template/template47.png",
       category: "modern",
     },
     {

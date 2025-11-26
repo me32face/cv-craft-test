@@ -335,7 +335,7 @@ const Template47 = ({ data = {}, onClickSection }) => {
   // ---- RENDER ----
   return (
     <div className="min-h-screen bg-white p-4 sm:p-6 flex justify-center font-sans text-gray-900">
-      <div className="w-full max-w-4xl bg-white p-6 md:p-8">
+      <div className="w-full max-w-4xl bg-white p-6 md:p-4">
         {/* HEADER */}
         <header
           className="mb-4 text-center pb-2 border-b-4"
