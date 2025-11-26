@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 
+
 export default function Template34({ data, onClickSection }) {
   const safeText = (item) => {
     if (!item) return "";
@@ -35,6 +36,7 @@ export default function Template34({ data, onClickSection }) {
   const awards = toArray(data?.awards);
   const projects = toArray(data?.projects);
   const socialLinks = toArray(data?.socialLinks);
+  const references = toArray(data?.references);
   
   const getSummaryText = () => {
     if (!data?.summary) return "";
@@ -327,6 +329,30 @@ export default function Template34({ data, onClickSection }) {
             </section>
           )}
 
+
+          {data?.visibleSections?.references !== false && (
+  <section
+    className="mb-8 cursor-pointer"
+    onClick={() => onClickSection && onClickSection("references")}
+  >
+    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
+      References
+    </h3>
+
+    {(references.length ? references : []).map((ref, i) => {
+      const r = safeObj(ref);
+      return (
+        <div key={i} className="text-sm mb-3">
+          <p className="font-semibold">{safeText(r.name)}</p>
+          <p className="opacity-70">{safeText(r.title)} — {safeText(r.company)}</p>
+          {r.phone && <p className="opacity-70">{safeText(r.phone)}</p>}
+          {r.email && <p className="opacity-70 break-all">{safeText(r.email)}</p>}
+        </div>
+      );
+    })}
+  </section>
+)}
+
           {/* AWARDS – only if data.awards exists */}
           {awards.length > 0 && (
             <section
@@ -339,7 +365,13 @@ export default function Template34({ data, onClickSection }) {
 
               <ul className="text-sm space-y-1">
                 {awards.map((a, i) => (
-                  <li key={i}>{safeText(a)}</li>
+                 <li key={i}>
+  <span className="font-semibold">{a.title}</span>
+  {a.issuer && ` — ${a.issuer}`}
+  {a.date && ` (${a.date})`}
+  {a.description && <div className="text-xs mt-1 opacity-70">{a.description}</div>}
+</li>
+
                 ))}
               </ul>
             </section>

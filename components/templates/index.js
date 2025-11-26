@@ -91,7 +91,7 @@ export const templateInputs = {
     skills: true,
     languages: true,
     certificates: true,
-    references: false,
+    references: true,
   },
 
   template30: {
@@ -195,7 +195,7 @@ export const templateInputs = {
     skills: true,
     languages: true,
     certificates: true,
-    references: false,
+    references: true,
   },
   template38: {
     name: true,
@@ -242,7 +242,7 @@ export const templateInputs = {
     skills: true,
     languages: true,
     certificates: true,
-    references: false,
+    references: true,
   },
 
   template41: {

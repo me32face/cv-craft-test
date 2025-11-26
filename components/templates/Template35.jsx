@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { Phone, Mail, MapPin } from "lucide-react"; 
 
 export default function Template35({ data, onClickSection }) {
   const toArray = (v) =>
@@ -15,6 +16,7 @@ export default function Template35({ data, onClickSection }) {
   const references = toArray(data.references);
   const awards = toArray(data.awards);
   const socialLinks = toArray(data.socialLinks);
+ 
   // visibility logic like Template30
   const visible = data?.visibleSections || {};
 
@@ -38,14 +40,24 @@ export default function Template35({ data, onClickSection }) {
           </p>
 
           <div className="flex flex-wrap gap-6 text-sm mt-3">
-            {/* Phone */}
-            {data.phone && <p>📞 {data.phone}</p>}
+          {data.phone && (
+  <p className="flex items-center gap-1">
+    <Phone size={14} /> {data.phone}
+  </p>
+)}
 
-            {/* Email */}
-            {data.email && <p>✉️ {data.email}</p>}
+{data.email && (
+  <p className="flex items-center gap-1">
+    <Mail size={14} /> {data.email}
+  </p>
+)}
 
-            {/* Address */}
-            {data.address && <p>📍 {data.address}</p>}
+{data.address && (
+  <p className="flex items-center gap-1">
+    <MapPin size={14} /> {data.address}
+  </p>
+)}
+
 
             {/* Website (OPTIONAL FIELD) */}
 
@@ -390,7 +402,11 @@ export default function Template35({ data, onClickSection }) {
               </ul>
             </section>
           )}
+
+          
         </div>
+
+
 
         {/* RIGHT COLUMN */}
        <div className="w-1/3">

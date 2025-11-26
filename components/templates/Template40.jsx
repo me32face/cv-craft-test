@@ -84,6 +84,7 @@ export default function Template40({ data, onClickSection }) {
 
   /** MERGE DEFAULTS + USER DATA */
   const finalData = { ...defaultData, ...data };
+  const visible = finalData.visibleSections || {};
 
   /** Utility functions */
   const safeText = (item) => {
@@ -117,6 +118,8 @@ export default function Template40({ data, onClickSection }) {
   const languages = toArray(finalData.languages);
   const projects = toArray(finalData.projects);
   const socialLinks = toArray(finalData.socialLinks);
+  const references = toArray(finalData.references);
+  const awards = toArray(finalData.awards);
 
   const getSummaryText = () => {
     if (!finalData.summary) return "";
@@ -305,6 +308,69 @@ export default function Template40({ data, onClickSection }) {
               ))}
             </ul>
           </section>
+    
+
+    {/* AWARDS */}
+{visible.awards !== false && awards.length > 0 && (
+  <section
+    className="mb-6 cursor-pointer"
+    onClick={() => onClickSection("awards")}
+  >
+    <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
+      Awards
+    </h3>
+
+    <div className="space-y-2 text-sm">
+      {awards.map((a, i) => {
+        const award = safeObj(a);
+        return (
+          <div key={i} className="cv-item">
+            <p className="font-semibold">{safeText(award.title)}</p>
+            <p className="text-xs text-gray-600">
+              {safeText(award.issuer)} {award.date && `• ${award.date}`}
+            </p>
+            {award.description && (
+              <p className="text-xs text-gray-600 mt-1">
+                {safeText(award.description)}
+              </p>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  </section>
+)}
+
+
+{/* REFERENCES */}
+{visible.references !== false && references.length > 0 && (
+  <section
+    className="mb-6 cursor-pointer"
+    onClick={() => onClickSection("references")}
+  >
+    <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
+      References
+    </h3>
+
+    <div className="space-y-3 text-sm">
+      {references.map((ref, i) => {
+        const r = safeObj(ref);
+        return (
+          <div key={i} className="cv-item">
+            <p className="font-semibold">{safeText(r.name)}</p>
+            <p className="text-xs text-gray-600">
+              {safeText(r.title)} — {safeText(r.company)}
+            </p>
+            {r.phone && <p className="text-xs text-gray-600">{r.phone}</p>}
+            {r.email && (
+              <p className="text-xs text-gray-600 break-all">{r.email}</p>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  </section>
+)}
 
         
         
