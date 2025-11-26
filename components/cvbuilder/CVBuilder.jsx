@@ -7,6 +7,7 @@ import { User, Camera, Link2, Code, GraduationCap, Briefcase, Globe, Award, Prin
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import PopupEditor from "./PopupEditor"; // reusable popup
+import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from "lz-string";
 
 export default function CVBuilder({ initialTemplate = "template31", onBack }) {
   const [template, setTemplate] = useState(initialTemplate.toLowerCase());
@@ -18,6 +19,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [additionalOpen, setAdditionalOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [shareMenuOpen, setShareMenuOpen] = useState(false);
 
   const router = useRouter();
 
@@ -34,9 +36,10 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
   const handleZoomIn = () => setScale(prev => Math.min(prev + 0.1, 2));
   const handleZoomOut = () => setScale(prev => Math.max(prev - 0.1, 0.5));
 
-  const handleDownload = async () => {
+
+  const generatePdf = async () => {
     const element = document.getElementById("pdf-template");
-    if (!element) return;
+    if (!element) return null;
 
     // Freeze alignment ONLY during PDF
     element.classList.remove("freeze-layout");
@@ -44,7 +47,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
 
     const canvas = await html2canvas(element, {
       scale: 1.5,
-      useCORS: true
+      useCORS: true,
     });
 
     const imgData = canvas.toDataURL("image/jpeg", 0.85);
@@ -61,9 +64,133 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
     }
 
     resetLayout(element);
+    return pdf;
+  };
+
+
+
+  const handleDownload = async () => {
+    const pdf = await generatePdf();
+    if (!pdf) return;
     pdf.save(`${data.name || "cv"}.pdf`);
   };
 
+  const encodeDataForUrl = (payload) => {
+    try {
+      const json = JSON.stringify(payload);
+      // Compress and make it URL-safe
+      return compressToEncodedURIComponent(json);
+    } catch (e) {
+      console.error("Error encoding data for URL:", e);
+      return "";
+    }
+  };
+
+  const decodeDataFromUrl = (encoded) => {
+    try {
+      if (!encoded) return null;
+      const json = decompressFromEncodedURIComponent(encoded);
+      if (!json) return null;
+      return JSON.parse(json);
+    } catch (e) {
+      console.error("Error decoding data from URL:", e);
+      return null;
+    }
+  };
+
+  const buildShareUrlWithData = (data) => {
+    if (typeof window === "undefined") return "";
+
+    const url = new URL(window.location.origin + "/resume-view");
+    const shareId =
+      Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    const payload = {
+      shareId,
+      template, // from state: const [template, setTemplate] = useState(...)
+      data,
+    };
+
+    const encoded = encodeDataForUrl(payload);
+    if (!encoded) return url.toString();
+
+    url.searchParams.set("cv", encoded);
+    return url.toString();
+  };
+
+  const handleShareUrl = async () => {
+    try {
+      const shareUrl = buildShareUrlWithData(data);
+      if (!shareUrl) {
+        alert("Could not build share URL.");
+        return;
+      }
+
+      if (navigator.share) {
+        await navigator.share({
+          title: `${data.name || "My"} CV`,
+          text: "Here is my resume.",
+          url: shareUrl,
+        });
+      } else {
+        // fallback: copy link
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(shareUrl);
+          alert("Link copied to clipboard!");
+        } else {
+          alert("Sharing is not supported in this browser.");
+        }
+      }
+    } catch (error) {
+      console.error("Error sharing URL:", error);
+      alert("Could not share the link. Please try again.");
+    }
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      const shareUrl = buildShareUrlWithData(data);
+      if (!shareUrl) {
+        alert("Could not build share URL.");
+        return;
+      }
+
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(shareUrl);
+        alert("Link copied to clipboard! You can paste it into WhatsApp, Email, etc.");
+      } else {
+        alert("Copy to clipboard is not supported in this browser.");
+      }
+    } catch (error) {
+      console.error("Error copying link:", error);
+      alert("Could not copy the link. Please try again.");
+    }
+  };
+  const handleSharePdf = async () => {
+    try {
+      const pdf = await generatePdf();
+      if (!pdf) {
+        alert("Could not create PDF to share.");
+        return;
+      }
+
+      const blob = pdf.output("blob");
+      const fileName = `${data.name || "cv"}.pdf`;
+      const file = new File([blob], fileName, { type: "application/pdf" });
+
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          title: `${data.name || "My"} CV`,
+          text: "Here is my resume.",
+          files: [file],
+        });
+      } else {
+        alert("Your browser does not support sharing files. Please use 'Export PDF' and share it manually.");
+      }
+    } catch (error) {
+      console.error("Error sharing PDF:", error);
+      alert("Could not share the PDF. Please try again.");
+    }
+  };
 
 
   // Smart page break detection
@@ -150,34 +277,42 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
       experience: true,
       education: true,
       certificates: true,
-      socialLinks: true
+      socialLinks: true,
     },
 
     languages: [
       { name: "English", proficiency: 90 },
-      { name: "Hindi", proficiency: 85 }
+      { name: "Hindi", proficiency: 85 },
     ],
     experiences: [
       { role: "Developer", company: "Google", start: "2020", end: "2022" },
-      { role: "Software Engineer", company: "Wipro", start: "2022", end: "2023" }
+      { role: "Software Engineer", company: "Wipro", start: "2022", end: "2023" },
     ],
     education: [
       { degree: "BCA", school: "Calicut university", start: "2020", end: "2022" },
-      { degree: "Bcom", school: "Calicut university", start: "2020", end: "2022" }
+      { degree: "Bcom", school: "Calicut university", start: "2020", end: "2022" },
     ],
     certificates: [
       { name: "Full Stack Development", issuer: "Tech Academy", year: "2023" },
-      { name: "Data Structures & Algorithms", issuer: "Code Institute", year: "2022" }
+      { name: "Data Structures & Algorithms", issuer: "Code Institute", year: "2022" },
     ],
     projects: [
-      { name: "E-Commerce Website", desc: "Built a full-stack e-commerce platform with React and Node.js", year: "2023", link: "https://github.com/example" },
-      { name: "Task Management App", desc: "Developed a task management application with real-time updates", year: "2022" }
+      {
+        name: "E-Commerce Website",
+        desc: "Built a full-stack e-commerce platform with React and Node.js",
+        year: "2023",
+        link: "https://github.com/example",
+      },
+      {
+        name: "Task Management App",
+        desc: "Developed a task management application with real-time updates",
+        year: "2022",
+      },
     ],
     references: [],
-    awards: []
+    awards: [],
   });
 
-  // Apply page breaks in real-time preview
   useEffect(() => {
     const element = document.getElementById('pdf-template');
     if (element) {
@@ -202,6 +337,29 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
     }, 100);
   }, [data]);
 
+  // Load shared data from URL if present
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const encoded = params.get("cv");
+      if (!encoded) return;
+
+      const payload = decodeDataFromUrl(encoded);
+      if (!payload) return;
+
+      // We encoded as { shareId, data }
+      if (payload.data) {
+        setData(payload.data);
+      } else {
+        // fallback in case we ever encode just data
+        setData(payload);
+      }
+    } catch (e) {
+      console.error("Failed to load shared CV data from URL:", e);
+    }
+  }, []);
 
   const allMenuItems = [
     { name: "Personal Details", key: "personal", icon: User, inputKey: "name" },
@@ -409,6 +567,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
 
           {/* RIGHT → OTHER ACTION BUTTONS */}
           <div className="flex items-center justify-end gap-2 sm:gap-4">
+            {/* Print */}
             <button
               onClick={handlePrint}
               className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm">
@@ -416,11 +575,50 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
               <span className="hidden sm:inline">Print</span>
             </button>
 
-            <button className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm">
-              <Share2 size={14} className="sm:w-3 sm:h-3" />
-              <span className="hidden sm:inline">Share</span>
-            </button>
+            {/* Share dropdown (URL / Copy / PDF) */}
+            <div className="relative">
+              <button
+                onClick={() => setShareMenuOpen(prev => !prev)}
+                className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm"
+              >
+                <Share2 size={14} className="sm:w-3 sm:h-3" />
+                <span className="hidden sm:inline">Share</span>
+              </button>
 
+              {shareMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-20 text-xs sm:text-sm">
+                  <button
+                    onClick={() => {
+                      setShareMenuOpen(false);
+                      handleSharePdf();
+                    }}
+                    className="block w-full text-left px-3 py-2 hover:bg-indigo-50"
+                  >
+                    Share as PDF
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShareMenuOpen(false);
+                      handleShareUrl();
+                    }}
+                    className="block w-full text-left px-3 py-2 hover:bg-indigo-50"
+                  >
+                    Share URL
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShareMenuOpen(false);
+                      handleCopyLink();
+                    }}
+                    className="block w-full text-left px-3 py-2 hover:bg-indigo-50"
+                  >
+                    Copy link
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Export PDF */}
             <button
               onClick={handleDownload}
               className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm"
