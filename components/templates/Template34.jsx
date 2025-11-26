@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import SocialLinkDisplay from "../SocialLinkDisplay";
 
 
 export default function Template34({ data, onClickSection }) {
@@ -142,17 +143,11 @@ export default function Template34({ data, onClickSection }) {
 
     {socialLinks.length > 0 && (
       <div className="text-sm space-y-1">
-        {socialLinks.map((link, index) => (
-          <a
-            key={index}
-            href={link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-700 underline break-all block"
-          >
-            {link}
-          </a>
-        ))}
+       {socialLinks.map((link, i) => (
+  <SocialLinkDisplay key={i} link={link} />
+  
+  
+))}
       </div>
     )}
   </section>

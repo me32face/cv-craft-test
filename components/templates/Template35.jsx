@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Phone, Mail, MapPin } from "lucide-react"; 
-
+import SocialLinkDisplay from "../SocialLinkDisplay";
 export default function Template35({ data, onClickSection }) {
   const toArray = (v) =>
     !v ? [] : Array.isArray(v) ? v : typeof v === "string" ? [v] : [];
@@ -69,17 +69,10 @@ export default function Template35({ data, onClickSection }) {
                   className="flex flex-wrap gap-4 mt-2 text-sm cursor-pointer"
                   onClick={() => onClickSection("social")}
                 >
-                  {data.socialLinks.map((link, i) => (
-                    <a
-                      key={i}
-                      href={link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 underline break-all"
-                    >
-                      🔗 {link}
-                    </a>
-                  ))}
+                 {data.socialLinks.map((link, i) => (
+  <SocialLinkDisplay key={i} link={link} />
+))}
+
                 </div>
               )}
           </div>

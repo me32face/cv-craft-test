@@ -2,6 +2,7 @@
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
 import { Phone, Mail, MapPin } from "lucide-react";
+import SocialLinkDisplay from "../SocialLinkDisplay";
 export default function Template40({ data, onClickSection }) {
  
   const defaultData = {
@@ -212,17 +213,9 @@ export default function Template40({ data, onClickSection }) {
                 >
                   <h4 className="text-sm font-semibold">Social Links</h4>
                   <div className="space-y-1 text-sm">
-                    {socialLinks.map((link, i) => (
-                      <a
-                        key={i}
-                        href={link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-700 underline block break-all"
-                      >
-                        {link}
-                      </a>
-                    ))}
+                   {socialLinks.map((link, i) => (
+  <SocialLinkDisplay key={i} link={link} />
+))}
                   </div>
                 </div>
               )}

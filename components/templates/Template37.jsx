@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { User, Briefcase, GraduationCap } from "lucide-react";
+import SocialLinkDisplay from "../SocialLinkDisplay";
 
 export default function Template37({ data, onClickSection }) {
  
@@ -173,16 +174,8 @@ const education = educationArray.length
                   >
                     <div className="space-y-2 text-xs break-all">
                       {data.socialLinks.map((link, i) => (
-                        <a
-                          key={i}
-                          href={link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="underline text-blue-600 block"
-                        >
-                          🔗 {link}
-                        </a>
-                      ))}
+  <SocialLinkDisplay key={i} link={link} />
+))}
                     </div>
                   </div>
                 )}
