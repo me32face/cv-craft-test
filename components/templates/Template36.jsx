@@ -2,6 +2,7 @@
 import React from 'react';
 import { Phone, Mail } from 'lucide-react';
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput'; // kept as-is (we shadow it below)
+import SocialLinkDisplay from "../SocialLinkDisplay";
 
 export default function TemplateGracePerfect({ data = {}, onClickSection }) {
   const toArray = (v) => (!v ? [] : Array.isArray(v) ? v : [v]);
@@ -116,7 +117,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
         return (
           <p
             key={idx}
-            className="text-[10px] text-gray-700 leading-relaxed mt-1.5"
+            className="text-[12px] text-gray-700 leading-relaxed mt-1.5"
           >
             {text}
           </p>
@@ -132,7 +133,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
         return (
           <p
             key={idx}
-            className="text-[10px] text-gray-700 leading-relaxed mt-1.5"
+            className="text-[12px] text-gray-700 leading-relaxed mt-1.5"
           >
             {text}
           </p>
@@ -143,7 +144,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
     // Plain text behavior
     if (typeof raw === 'string') {
       return (
-        <p className="text-[10px] text-gray-700 leading-relaxed mt-1.5">
+        <p className="text-[12px] text-gray-700 leading-relaxed mt-1.5">
           {raw}
         </p>
       );
@@ -152,7 +153,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
     return lines.map((line, idx) => (
       <p
         key={idx}
-        className="text-[10px] text-gray-700 leading-relaxed mt-1.5"
+        className="text-[12px] text-gray-700 leading-relaxed mt-1.5"
       >
         {line}
       </p>
@@ -183,7 +184,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
     }
     if (typeof raw === 'string' && raw.trim()) {
       return (
-        <p className="text-[10px] text-gray-700 mt-1">
+        <p className="text-[12px] text-gray-700 mt-1">
           {raw}
         </p>
       );
@@ -206,16 +207,16 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
     const level = obj.level ?? '';
 
     return (
-      <div key={key} className="text-[10px] text-gray-800">
+      <div key={key} className="text-[12px] text-gray-800">
         <div className="flex justify-between items-start">
           <span className="font-medium">{name}</span>
 
           {displayFormat === 'level' && (
-            <span className="text-[8px] opacity-70 ml-2">{level}</span>
+            <span className="text-[10px] opacity-70 ml-2">{level}</span>
           )}
 
           {displayFormat === 'percentage' && (
-            <span className="text-[8px] opacity-70 ml-2 mt-2">
+            <span className="text-[10px] opacity-70 ml-2 mt-2">
               {proficiency}%
             </span>
           )}
@@ -292,19 +293,19 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
         {/* HEADER */}
         <div className="flex justify-between items-start cv-section">
           <div className="max-w-[70%]">
-            <h1 className="text-[22px] font-extrabold tracking-tight text-blue-900 leading-tight">
+            <h1 className="text-[28px] font-extrabold tracking-tight text-blue-900 leading-tight">
               {merged.name}
             </h1>
-            <div className="text-[11px] font-semibold text-orange-500 mt-1">
+            <div className="text-[13px] font-semibold text-orange-500 mt-1">
               {merged.title}
             </div>
 
             {/* header location line */}
-            <div className="mt-1 text-[10px] text-gray-700">
+            <div className="mt-1 text-[12px] text-gray-700">
               {displayLocation}
             </div>
 
-            <div className="flex flex-wrap items-center gap-1 text-[9px] text-gray-600 mt-2.5">
+            <div className="flex flex-wrap items-center gap-1 text-[11px] text-gray-600 mt-2.5">
               {merged.phone && (
                 <div className="flex items-center gap-1">
                   <Phone className="w-3 h-3" />
@@ -319,23 +320,10 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
               )}
 
               {isSectionVisible('socialLinks') && socialArray.length > 0 && (
-                <div className="flex flex-wrap items-center gap-3">
-                  {socialArray.map((lnk, i) => {
-                    if (!lnk) return null;
-                    const href = String(lnk).startsWith('http') ? lnk : `https://${lnk}`;
-                    const label = String(lnk).replace(/^https?:\/\//, '');
-                    return (
-                      <a
-                        key={i}
-                        href={href}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-gray-700 underline text-[9px]"
-                      >
-                        {label}
-                      </a>
-                    );
-                  })}
+                <div className="pt-2 space-y-1 pl-0.5">
+                  {socialArray.map((link, i) => (
+                    <SocialLinkDisplay key={i} link={link} />
+                  ))}
                 </div>
               )}
             </div>
@@ -361,12 +349,12 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
         {isSectionVisible('summary') && (
           <div className="mt-3 cv-section">
             <h2
-              className="text-[12px] font-bold text-blue-800 mb-2 cursor-pointer"
+              className="text-[14px] font-bold text-blue-800 mb-2 cursor-pointer"
               onClick={() => onClickSection && onClickSection('summary')}
             >
               SUMMARY
             </h2>
-            <p className="text-[10px] text-gray-700 leading-relaxed">
+            <p className="text-[12px] text-gray-700 leading-relaxed">
               {merged.summary ||
                 'A dedicated professional with extensive experience in the field.'}
             </p>
@@ -377,7 +365,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
         {isSectionVisible('experience') && (
           <div className="mt-3 cv-section">
             <h2
-              className="text-[12px] font-bold text-blue-800 mb-3 cursor-pointer"
+              className="text-[14px] font-bold text-blue-800 mb-3 cursor-pointer"
               onClick={() => onClickSection && onClickSection('experience')}
             >
               EXPERIENCE
@@ -418,22 +406,22 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                       className="grid grid-cols-[150px,1fr] gap-5 items-start cv-item"
                     >
                       <div className="relative">
-                        <div className="text-[10px] font-semibold text-blue-800">
+                        <div className="text-[12px] font-semibold text-blue-800">
                           {dateText}
                         </div>
-                        <div className="text-[10px] text-orange-500 mt-0.5">
+                        <div className="text-[12px] text-orange-500 mt-0.5">
                           {exp.company || ''}
                         </div>
-                        <div className="text-[9px] text-gray-500 mt-0.5">
+                        <div className="text-[11px] text-gray-500 mt-0.5">
                           {expLocation}
                         </div>
-                        <span className="absolute right-[-10px] top-[-10px] text-blue-900 text-[35px] leading-none">
+                        <span className="absolute right-[-10px] top-[-15px] text-blue-900 text-[35px] leading-none">
                           •
                         </span>
                       </div>
 
                       <div>
-                        <div className="text-[11px] font-semibold text-blue-900">
+                        <div className="text-[13px] font-semibold text-blue-900">
                           {exp.role || exp.title || ''}
                         </div>
                         <div className="mt-1.5">
@@ -442,19 +430,19 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
 
                         {refLines.length > 0 && (
                           refLines.length === 1 ? (
-                            <div className="mt-1 text-[10px] text-gray-600 italic">
+                            <div className="mt-1 text-[12px] text-gray-600 italic">
                               Reference: {refLines[0]}
                             </div>
                           ) : (
                             <div className="mt-1">
-                              <div className="text-[10px] font-medium text-gray-700">
+                              <div className="text-[12px] font-medium text-gray-700">
                                 References:
                               </div>
                               <ul className="list-disc list-inside mt-1 space-y-0.5">
                                 {refLines.map((r, ri) => (
                                   <li
                                     key={ri}
-                                    className="text-[10px] text-gray-600"
+                                    className="text-[12px] text-gray-600"
                                   >
                                     {r}
                                   </li>
@@ -476,7 +464,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
         {isSectionVisible('projects') && (
           <div className="mt-3 cv-section">
             <h2
-              className="text-[12px] font-bold text-blue-800 mb-3 cursor-pointer"
+              className="text-[14px] font-bold text-blue-800 mb-3 cursor-pointer"
               onClick={() => onClickSection && onClickSection('projects')}
             >
               PROJECTS
@@ -502,7 +490,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                   <div key={pidx} className="mb-0 cv-item">
                     <div className="flex justify-between items-start">
                       <div>
-                        <div className="text-[11px] font-semibold text-blue-900">
+                        <div className="text-[13px] font-semibold text-blue-900">
                           {proj.name || proj.title || 'Project'}
                         </div>
                         {projLink ? (
@@ -510,13 +498,13 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                             href={projLink}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-[10px] underline"
+                            className="text-[12px] underline"
                           >
                             {String(projLink).replace(/^https?:\/\//, '')}
                           </a>
                         ) : null}
                       </div>
-                      <div className="text-[9px] text-gray-600">
+                      <div className="text-[11px] text-gray-600">
                         {projYear}
                       </div>
                     </div>
@@ -535,7 +523,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
         {isSectionVisible('education') && (
           <div className="mt-3 cv-section">
             <h2
-              className="text-[12px] font-bold text-blue-800 mb-2 cursor-pointer"
+              className="text-[14px] font-bold text-blue-800 mb-2 cursor-pointer"
               onClick={() => onClickSection && onClickSection('education')}
             >
               EDUCATION
@@ -563,10 +551,10 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                       className="grid grid-cols-[150px,1fr] gap-5 items-start cv-item"
                     >
                       <div className="relative">
-                        <div className="text-[10px] font-semibold text-blue-800">
+                        <div className="text-[12px] font-semibold text-blue-800">
                           {dateText}
                         </div>
-                        <div className="text-[9px] text-gray-500 mt-0.5">
+                        <div className="text-[11px] text-gray-500 mt-0.5">
                           {eduLocation}
                         </div>
                         <span className="absolute right-[-10px] top-[-10px] text-blue-900 text-[35px] leading-none">
@@ -575,14 +563,14 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                       </div>
 
                       <div>
-                        <div className="text-[11px] font-semibold text-blue-900">
+                        <div className="text-[13px] font-semibold text-blue-900">
                           {edu.course || edu.degree || ''}
                         </div>
-                        <div className="text-[10px] text-orange-500 mt-0.5">
+                        <div className="text-[12px] text-orange-500 mt-0.5">
                           {edu.school || ''}
                         </div>
                         {edu.field && (
-                          <div className="text-[10px] text-gray-600 mt-1">
+                          <div className="text-[12px] text-gray-600 mt-1">
                             {edu.field}
                           </div>
                         )}
@@ -603,12 +591,12 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
               {isSectionVisible('skills') && (
                 <div>
                   <h2
-                    className="text-[12px] font-bold text-blue-800 mb-3 cursor-pointer"
+                    className="text-[14px] font-bold text-blue-800 mb-3 cursor-pointer"
                     onClick={() => onClickSection && onClickSection('skills')}
                   >
                     SKILLS
                   </h2>
-                  <div className="flex flex-wrap gap-1 mt-2 text-[10px] text-gray-700">
+                  <div className="flex flex-wrap gap-1 mt-2 text-[12px] text-gray-700">
                     {(skills.length
                       ? skills
                       : [
@@ -651,10 +639,10 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                           return (
                             <div key={i} className="w-full mb-2">
                               <div className="flex justify-between items-center">
-                                <span className="text-[10px] text-gray-800">
+                                <span className="text-[12px] text-gray-800">
                                   {s.name || s.label}
                                 </span>
-                                <span className="text-[9px] text-gray-500">
+                                <span className="text-[11px] text-gray-500">
                                   {String(s.proficiency)}%
                                 </span>
                               </div>
@@ -693,7 +681,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
 
               {isSectionVisible('languages') && (
                 <div>
-                  <h2 className="text-[12px] font-bold text-blue-800 mb-3">
+                  <h2 className="text-[14px] font-bold text-blue-800 mb-3">
                     LANGUAGES
                   </h2>
                   <div>
@@ -729,10 +717,10 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
         {/* AWARDS (from Template30, now shows issuer/description too) */}
         {isSectionVisible('awards') && (
           <div className="mt-3 cv-section">
-            <h2 className="text-[12px] font-bold text-blue-800 mb-3">
+            <h2 className="text-[14px] font-bold text-blue-800 mb-3">
               AWARDS
             </h2>
-            <div className="space-y-1 text-[10px] text-gray-700">
+            <div className="space-y-1 text-[12px] text-gray-700">
               {awardsToShow.map((a, i) => {
                 if (typeof a === 'string') {
                   // Simple string awards like Template30
@@ -753,14 +741,14 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                       {title}
                     </div>
                     {(issuer || date) && (
-                      <div className="text-[9px] text-gray-600">
+                      <div className="text-[11px] text-gray-600">
                         {issuer}
                         {issuer && date ? ' • ' : ''}
                         {date}
                       </div>
                     )}
                     {description && (
-                      <div className="text-[9px] text-gray-700 mt-0.5">
+                      <div className="text-[11px] text-gray-700 mt-0.5">
                         {description}
                       </div>
                     )}
@@ -774,13 +762,13 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
         {/* KEY ACHIEVEMENTS */}
         {isSectionVisible('achievements') && achievementsToShow.length > 0 && (
           <div className="mt-3 cv-section">
-            <h2 className="text-[12px] font-bold text-blue-800 mb-3">
+            <h2 className="text-[14px] font-bold text-blue-800 mb-3">
               KEY ACHIEVEMENTS
             </h2>
-            <div className="grid grid-cols-2 gap-6 text-[10px] text-gray-700">
+            <div className="grid grid-cols-2 gap-6 text-[12px] text-gray-700">
               {achievementsToShow.map((a, i) => (
                 <div key={i}>
-                  <div className="text-[11px] font-semibold text-blue-900">
+                  <div className="text-[13px] font-semibold text-blue-900">
                     {a.title}
                   </div>
                   <div className="mt-0.5">{a.desc}</div>
@@ -793,10 +781,10 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
         {/* CERTIFICATIONS (like Template30, no achievements dependency) */}
         {isSectionVisible('certificates') && certificates.length > 0 && (
           <div className="mt-8 cv-section">
-            <h2 className="text-[12px] font-bold text-blue-800 mb-3">
+            <h2 className="text-[14px] font-bold text-blue-800 mb-3">
               CERTIFICATIONS
             </h2>
-            <div className="space-y-2 text-[10px] text-gray-700">
+            <div className="space-y-2 text-[12px] text-gray-700">
               {certificates.map((c, i) => {
                 const certDate =
                   (c.date && String(c.date).trim()) ||
@@ -807,7 +795,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                     <div className="font-semibold text-orange-500">
                       {c.name}
                     </div>
-                    <div className="text-[9px] text-gray-500">
+                    <div className="text-[11px] text-gray-500">
                       {c.issuer || ''}
                       {certDate ? ` • ${certDate}` : ''}
                     </div>
@@ -821,28 +809,28 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
         {/* REFERENCES (from Template30) */}
         {isSectionVisible('references') && (
           <div className="mt-3 cv-section">
-            <h2 className="text-[12px] font-bold text-blue-800 mb-3">
+            <h2 className="text-[14px] font-bold text-blue-800 mb-3">
               REFERENCES
             </h2>
-            <div className="grid grid-cols-2 gap-6 text-[10px] text-gray-700">
+            <div className="grid grid-cols-2 gap-6 text-[12px] text-gray-700">
               {referencesToShow.map((r, i) => (
                 <div key={i} className="mb-3">
                   <div className="font-semibold text-blue-900">
                     {r.name}
                   </div>
                   {r.title && (
-                    <div className="text-[10px]">{r.title}</div>
+                    <div className="text-[12px]">{r.title}</div>
                   )}
                   {r.company && (
-                    <div className="text-[10px]">{r.company}</div>
+                    <div className="text-[12px]">{r.company}</div>
                   )}
                   {r.phone && (
-                    <div className="text-[10px] text-gray-700">
+                    <div className="text-[12px] text-gray-700">
                       Phone: {r.phone}
                     </div>
                   )}
                   {r.email && (
-                    <div className="text-[10px] text-gray-700">
+                    <div className="text-[12px] text-gray-700">
                       Email: {r.email}
                     </div>
                   )}

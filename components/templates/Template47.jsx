@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import { Phone, Mail, Globe, MapPin } from 'lucide-react';
+import SocialLinkDisplay from "../SocialLinkDisplay";
 
 // --- Static Resume Data (kept as sample defaults) ---
 const resumeData = {

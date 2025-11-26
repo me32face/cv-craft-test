@@ -7,6 +7,7 @@ import { AiFillTool } from 'react-icons/ai';
 import { MdOutlineLanguage } from 'react-icons/md';
 import { FaGithub } from 'react-icons/fa';
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
+import SocialLinkDisplay from "../SocialLinkDisplay";
 
 export default function TemplateFromRefs({ data = {}, onClickSection }) {
   const toArray = (value) =>
@@ -228,21 +229,9 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
 
               {data?.visibleSections?.socialLinks !== false &&
                 socialLinks.length > 0 && (
-                  <div className="pt-2 space-y-1">
-                    {socialLinks.map((link, i) => (
-                      <div key={i} className="flex items-center gap-2">
-                        <IconSmall>
-                          <FiLink className="w-4 h-4" />
-                        </IconSmall>
-                        <a
-                          className="no-underline hover:underline text-green-800 break-words pl-1.5"
-                          href={link}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          {link}
-                        </a>
-                      </div>
+                  <div className="pt-2 space-y-1 pl-0.5">
+                    {data.socialLinks.map((link, i) => (
+                      <SocialLinkDisplay key={i} link={link} />
                     ))}
                   </div>
                 )}
