@@ -81,6 +81,9 @@ const education = educationArray.length
 
   // Awards
   const awards = toArray(data?.awards);
+  const references = toArray(data?.references);
+
+
 
   // Projects
   const projects = toArray(data?.projects).length
@@ -354,6 +357,41 @@ const education = educationArray.length
             </ul>
           </div>
         )}
+
+
+        {/* REFERENCES */}
+{visible.references !== false && references.length > 0 && (
+  <div
+    className="mt-5 cursor-pointer"
+    onClick={() => onClickSection("references")}
+  >
+    <h3 className="text-sm font-bold mb-3 uppercase tracking-wide">
+      References
+    </h3>
+
+    <div className="text-xs space-y-3">
+      {references.map((ref, i) => {
+        const r = safeObj(ref);
+        return (
+          <div key={i}>
+            <p className="font-semibold">{safeText(r.name)}</p>
+            <p className="text-gray-600">
+              {safeText(r.title)} — {safeText(r.company)}
+            </p>
+            {r.phone && <p className="text-gray-600">{r.phone}</p>}
+            {r.email && (
+              <p className="text-gray-600 break-all">{r.email}</p>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  </div>
+)}
+
+
+
+
       </div>
 
       {/* RIGHT SIDE */}
