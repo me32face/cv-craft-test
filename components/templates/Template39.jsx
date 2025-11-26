@@ -102,7 +102,7 @@ export default function template39({ data, onClickSection }) {
       {/* TWO COLUMN LAYOUT */}
       <div className="flex">
         {/* LEFT COLUMN - Light Gray Background */}
-        <div className="w-[280px] min-h-[960px] px-6 py-6 flex-shrink-0">
+        <div className="w-[280px] min-h-[952px] px-6 py-6 flex-shrink-0">
           {/* Certifications */}
           {data?.visibleSections?.certificates !== false && (
             <section
@@ -258,7 +258,7 @@ export default function template39({ data, onClickSection }) {
           {/*References*/}
           {data?.visibleSections?.references !== false && references.length > 0 && (
             <>
-              <h2 className="text-md font-semibold mt-2 mb-3 border-b-2 border-amber-700 pb-1 cursor-pointer">
+              <h2 className="text-md uppercase font-semibold mt-2 mb-3 border-b-2 border-amber-700 pb-1 cursor-pointer">
                 references
               </h2>
               {(references.length ? references : [
