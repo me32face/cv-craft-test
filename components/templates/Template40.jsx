@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
-
+import { Phone, Mail, MapPin } from "lucide-react";
 export default function Template40({ data, onClickSection }) {
  
   const defaultData = {
@@ -189,9 +189,21 @@ export default function Template40({ data, onClickSection }) {
             </h3>
 
             <div className="space-y-2 text-sm text-gray-700">
-              <p>📱 {safeText(finalData.phone)}</p>
-              <p className="break-all">✉️ {safeText(finalData.email)}</p>
-              <p>📍 {safeText(finalData.address)}</p>
+                   {data.phone && (
+               <p className="flex items-center gap-1">
+                 <Phone size={14} /> {data.phone}
+               </p>
+             )}
+             {data.email && (
+               <p className="flex items-center gap-1">
+                 <Mail size={14} /> {data.email}
+               </p>
+             )}
+             {data.address && (
+               <p className="flex items-center gap-1">
+                 <MapPin size={14} /> {data.address}
+               </p>
+             )}
 
               {socialLinks.length > 0 && (
                 <div
