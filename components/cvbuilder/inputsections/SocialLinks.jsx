@@ -7,37 +7,46 @@ export default function SocialLinks({ data, setSocialLinks, onClose, onNext }) {
 
   const [newLink, setNewLink] = useState("");
   const [message, setMessage] = useState("");
-
+const [newLabel, setNewLabel] = useState("");
+const [useIconOption, setUseIconOption] = useState(false);
   const validUrl = /^https?:\/\/[^\s/$.?#].[^\s]*$/i;
 
-  const handleAdd = () => {
-    const trimmed = newLink.trim();
+const handleAdd = () => {
+  const trimmed = newLink.trim();
 
-    if (!trimmed) {
-      setMessage("Please enter a valid URL before adding.");
-      return;
-    }
+  if (!trimmed) {
+    setMessage("Please enter a valid URL before adding.");
+    return;
+  }
 
-    let formatted = trimmed;
-    if (!/^https?:\/\//i.test(formatted)) {
-      formatted = "https://" + formatted;
-    }
+  let formatted = trimmed;
+  if (!/^https?:\/\//i.test(formatted)) {
+    formatted = "https://" + formatted;
+  }
 
-    if (!validUrl.test(formatted)) {
-      setMessage("Invalid URL format. Please enter a valid link.");
-      return;
-    }
+  if (!validUrl.test(formatted)) {
+    setMessage("Invalid URL format. Please enter a valid link.");
+    return;
+  }
 
-    if (links.includes(formatted)) {
-      setMessage("This link is already added.");
-      return;
-    }
+  if (links.some(l => l.url === formatted)) {
+    setMessage("This link is already added.");
+    return;
+  }
+setSocialLinks([
+  ...links,
+  {
+    url: formatted,
+    label: newLabel || detectPlatform(formatted),
+    useIcon: useIconOption   
+  }
+]);
 
-    setSocialLinks([...links, formatted]);
-    setNewLink("");
-    setMessage("Link added successfully!");
-    setTimeout(() => setMessage(""), 2000);
-  };
+  setNewLink("");
+  setNewLabel("");
+  setMessage("Link added successfully!");
+  setTimeout(() => setMessage(""), 2000);
+};
 
   const handleRemove = (index) => {
     const updated = links.filter((_, i) => i !== index);
@@ -74,62 +83,81 @@ export default function SocialLinks({ data, setSocialLinks, onClose, onNext }) {
         </p>
       ) : (
         <div className="space-y-2">
-          {links.map((link, i) => (
-            <div
-              key={i}
-              className="flex justify-between items-center bg-gray-50 p-2 rounded  hover:shadow-sm transition"
-            >
-              <div>
-                <p className="text-sm font-medium text-gray-700 truncate max-w-[220px]">
-                  {link}
-                </p>
-                <p className="text-xs text-gray-500">
-                  {detectPlatform(link)}
-                </p>
-              </div>
-              <button
-                onClick={() => handleRemove(i)}
-                className="text-xs text-red-500 font-medium hover:underline"
-              >
-                Remove
-              </button>
-            </div>
-          ))}
+{links.map((link, i) => (
+  <div key={i} className="flex justify-between items-center bg-gray-50 p-2 rounded">
+
+    <div>
+      <p className="text-sm font-medium text-gray-700 truncate max-w-[220px]">
+        {link.label}
+      </p>
+      <p className="text-xs text-gray-500">
+        {detectPlatform(link.url)}
+      </p>
+
+      <label className="text-xs text-gray-600 flex items-center gap-1 mt-1">
+        <input
+          type="checkbox"
+          checked={link.useIcon || false}
+          onChange={() => {
+            const updated = [...links];
+            updated[i].useIcon = !updated[i].useIcon;
+            setSocialLinks(updated);
+          }}
+        />
+        Show icon
+      </label>
+    </div>
+
+    <button
+      onClick={() => handleRemove(i)}
+      className="text-xs text-red-500 font-medium hover:underline"
+    >
+      Remove
+    </button>
+  </div>
+))}
+
+
         </div>
       )}
 
       {/* Input Section */}
-      <div className="space-y-2">
-        <label className="text-sm  text-gray-700">
-          Add New Link <span className="text-red-500">*</span>
-        </label>
+     <div className="flex space-x-3">
+  <input
+    type="text"
+    placeholder="Display Name (e.g. LinkedIn)"
+    className="w-1/3 border border-gray-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-purple-400 outline-none"
+    value={newLabel}
+    onChange={(e) => setNewLabel(e.target.value)}
+  />
 
-        <div className="flex space-x-3">
-          <input
-            type="url"
-            placeholder="https://linkedin.com/in/yourprofile"
-            className="w-full border border-gray-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-purple-400 outline-none"
-            value={newLink}
-            onChange={(e) => setNewLink(e.target.value)}
-          />
-          <button
-            type="button"
-            onClick={handleAdd}
-            className="px-8 py-2 bg-[#634BC9] text-white hover:bg-[#553fb2] transition rounded-xl"
-          >
-            +Add
-          </button>
-        </div>
+  <input
+    type="url"
+    placeholder="https://your-link.com/profile"
+    className="w-2/3 border border-gray-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-purple-400 outline-none"
+    value={newLink}
+    onChange={(e) => setNewLink(e.target.value)}
+  />
 
-        {message && (
-          <p
-            className={`text-xs ${message.startsWith("✅") ? "text-green-600" : "text-red-500"
-              }`}
-          >
-            {message}
-          </p>
-        )}
-      </div>
+
+<div className="flex items-center gap-2 mt-2">
+  <input
+    type="checkbox"
+    checked={useIconOption}
+    onChange={() => setUseIconOption(!useIconOption)}
+  />
+  <label className="text-xs text-gray-600">Show icon instead of text</label>
+</div>
+ 
+  <button
+    type="button"
+    onClick={handleAdd}
+    className="px-8 py-2 bg-[#634BC9] text-white hover:bg-[#553fb2] transition rounded-xl"
+  >
+    +Add
+  </button>
+</div>
+
 
       {/* Footer Buttons */}
       <div className="flex items-center justify-between pt-4 text-sm">
