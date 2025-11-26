@@ -222,9 +222,9 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
   const additionalMenuItems = useMemo(() => {
     const config = templateInputs[template] || {};
     const items = [
-      { name: "Awards", key: "awards", icon: FileText, inputKey: "awards" },
-      { name: "References", key: "references", icon: Users, inputKey: "references" },
       { name: "Certificates", key: "certificates", icon: Award, inputKey: "certificates" },
+      { name: "References", key: "references", icon: Users, inputKey: "references" },
+      { name: "Awards", key: "awards", icon: FileText, inputKey: "awards" },
     ];
     return items.filter(item => !item.inputKey || config[item.inputKey] !== false);
   }, [template]);
@@ -532,6 +532,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
         visible={!!openSection}
         section={openSection}
         onClose={() => setOpenSection(null)}
+        selectedTemplate={template}
         data={data}
         update={update}
         onNext={(nextSection) => {

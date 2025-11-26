@@ -1,5 +1,6 @@
 'use client';
 import React from "react";
+import { templateInputs } from "../templates";
 import PersonalInfo from "./inputsections/PersonalInfo";
 import ImageUploader from "./inputsections/ImageUploader";
 import LanguagesInput from "./inputsections/LanguagesInput";
@@ -10,15 +11,103 @@ import ProjectInput from "./inputsections/ProjectInput";
 import SocialLinks from "./inputsections/SocialLinks";
 import SkillsInput from "./inputsections/SkillsInput";
 import ReferenceInput from "./inputsections/ReferenceInput";
-import AwardInput from "./inputsections/AwardInput"
+import AwardInput from "./inputsections/AwardInput";
 
-export default function PopupEditor({ visible, section, onClose, data, update, onNext }) {
-  if (!visible || !section) return null;
+export default function PopupEditor({ visible, section, onClose, data, update, onNext, selectedTemplate }) {
+  if (!visible) return null;
+
+  const mainSections = [
+    "personal",
+    "image",
+    "sociallinks",
+    "skills",
+    "education",
+    "experience",
+    "languages",
+    "projects"
+  ];
+
+  const additionalSections = [
+    "certificates",
+    "references",
+    "awards"
+  ];
+
+
+  const sectionKeyMap = {
+    personal: "personal",
+    image: "profileImage",
+    sociallinks: "socialLinks",
+    skills: "skills",
+    education: "education",
+    experience: "experiences",
+    languages: "languages",
+    certificates: "certificates",
+    projects: "project",
+    references: "references",
+    awards: "awards",
+  };
+
+  const templateKey = selectedTemplate;
+  const allowedSections = templateInputs[templateKey] || {};
+
+
+  const getNextAvailableSection = (current) => {
+    const sections = additionalSections.includes(current)
+      ? additionalSections
+      : mainSections;
+
+    const currentIndex = sections.indexOf(current);
+
+    for (let i = currentIndex + 1; i < sections.length; i++) {
+      const sec = sections[i];
+      const mappedKey = sectionKeyMap[sec];
+
+      if (allowedSections[mappedKey] === false) continue;
+      if (data.visibleSections?.[mappedKey] === false) continue;
+
+      return sec;
+    }
+
+    return null;
+  };
+
+
+  const renderSectionWithToggle = (component, sec, label) => (
+    <div>
+      {component}
+      <label className="flex items-center gap-2 mt-4">
+        <input
+          type="checkbox"
+          checked={data.visibleSections?.[sec] ?? true}
+          onChange={(e) =>
+            update("visibleSections", {
+              ...data.visibleSections,
+              [sec]: e.target.checked,
+            })
+          }
+        />
+        <span className="text-sm font-medium">{label}</span>
+      </label>
+    </div>
+  );
 
   const renderContent = () => {
+    if (!section) {
+      return <div className="text-gray-500">No sections available to edit</div>;
+    }
+
+
     switch (section) {
       case "personal":
-        return <PersonalInfo data={data} update={update} onClose={onClose} onNext={() => onNext("image")} />;
+        return (
+          <PersonalInfo
+            data={data}
+            update={update}
+            onClose={onClose}
+            onNext={() => onNext(getNextAvailableSection("personal"))}
+          />
+        );
 
       case "image":
         return (
@@ -28,191 +117,120 @@ export default function PopupEditor({ visible, section, onClose, data, update, o
             setShape={(v) => update("imageShape", v)}
             setAlign={(v) => update("imageAlign", v)}
             onClose={onClose}
-            onNext={() => onNext("sociallinks")}
+            onNext={() => onNext(getNextAvailableSection("image"))}
           />
         );
-        
 
       case "sociallinks":
-        return (
-          <div>
-            <SocialLinks
-              data={data.socialLinks}
-              setSocialLinks={(v) => update("socialLinks", v)}
-              onClose={onClose} onNext={() => onNext("skills")}
-            />
-            <label className="flex items-center gap-2 mt-4">
-              <input
-                type="checkbox"
-                checked={data.visibleSections?.socialLinks !== false}
-                onChange={(e) =>
-                  update("visibleSections", {
-                    ...data.visibleSections,
-                    socialLinks: e.target.checked,
-                  })
-                }
-              />
-              <span className="text-sm font-medium">Show Social Links</span>
-            </label>
-          </div>
+        return renderSectionWithToggle(
+          <SocialLinks
+            data={data.socialLinks}
+            setSocialLinks={(v) => update("socialLinks", v)}
+            onClose={onClose}
+            onNext={() => onNext(getNextAvailableSection("sociallinks"))}
+          />,
+          "sociallinks",
+          "Show Social Links"
         );
 
       case "skills":
-        return <SkillsInput skills={data.skills} setSkills={(v) => update("skills", v)} onClose={onClose} onNext={() => onNext("education")} />;
-
+        return renderSectionWithToggle(
+          <SkillsInput
+            skills={data.skills}
+            setSkills={(v) => update("skills", v)}
+            onClose={onClose}
+            onNext={() => onNext(getNextAvailableSection("skills"))}
+          />,
+          "skills",
+          "Show Skills"
+        );
 
       case "education":
-        return (
-          <div>
-            <EducationInput
-              education={data.education}
-              setEducation={(v) => update("education", v)}
-              onClose={onClose} onNext={() => onNext("experience")}
-            />
-            <label className="flex items-center gap-2 mt-4">
-              <input
-                type="checkbox"
-                checked={data.visibleSections?.education !== false}
-                onChange={(e) =>
-                  update("visibleSections", {
-                    ...data.visibleSections,
-                    education: e.target.checked,
-                  })
-                }
-              />
-              <span className="text-sm font-medium">Show Education</span>
-            </label>
-          </div>
+        return renderSectionWithToggle(
+          <EducationInput
+            education={data.education}
+            setEducation={(v) => update("education", v)}
+            onClose={onClose}
+            onNext={() => onNext(getNextAvailableSection("education"))}
+          />,
+          "education",
+          "Show Education"
         );
 
       case "experience":
-        return (
-          <div>
-            <ExperienceInput
-              experiences={data.experiences}
-              setExperiences={(v) => update("experiences", v)}
-              onClose={onClose} onNext={() => onNext("languages")}
-            />
-            <label className="flex items-center gap-2 mt-4">
-              <input
-                type="checkbox"
-                checked={data.visibleSections?.experience !== false}
-                onChange={(e) =>
-                  update("visibleSections", {
-                    ...data.visibleSections,
-                    experience: e.target.checked,
-                  })
-                }
-              />
-              <span className="text-sm font-medium">Show Experience</span>
-            </label>
-          </div>
+        return renderSectionWithToggle(
+          <ExperienceInput
+            experiences={data.experiences}
+            setExperiences={(v) => update("experiences", v)}
+            onClose={onClose}
+            onNext={() => onNext(getNextAvailableSection("experience"))}
+          />,
+          "experience",
+          "Show Experience"
         );
 
-
       case "languages":
-        return <LanguagesInput languages={data.languages} setLanguages={(v) => update("languages", v)} onClose={onClose} onNext={() => onNext("certificates")} />;
+        return renderSectionWithToggle(
+          <LanguagesInput
+            languages={data.languages}
+            setLanguages={(v) => update("languages", v)}
+            onClose={onClose}
+            onNext={() => onNext(getNextAvailableSection("languages"))}
+          />,
+          "languages",
+          "Show Languages"
+        );
 
       case "certificates":
-        return (
-          <div>
-            <CertificatesInput
-              certificates={data.certificates}
-              setCertificates={(v) => update("certificates", v)}
-               onClose={onClose} onNext={() => onNext("projects")}
-            />
-            <label className="flex items-center gap-2 mt-4">
-              <input
-                type="checkbox"
-                checked={data.visibleSections?.certificates !== false}
-                onChange={(e) =>
-                  update("visibleSections", {
-                    ...data.visibleSections,
-                    certificates: e.target.checked,
-                  })
-                }
-              />
-              <span className="text-sm font-medium">Show Certificates</span>
-            </label>
-          </div>
+        return renderSectionWithToggle(
+          <CertificatesInput
+            certificates={data.certificates}
+            setCertificates={(v) => update("certificates", v)}
+            onClose={onClose}
+            onNext={() => onNext(getNextAvailableSection("certificates"))}
+          />,
+          "certificates",
+          "Show Certificates"
         );
 
       case "projects":
-        return (
-          <div>
-            <ProjectInput
-              projects={data.projects}
-              setProjects={(v) => update("projects", v)}
-              onClose={onClose}
-            />
-            <label className="flex items-center gap-2 mt-4">
-              <input
-                type="checkbox"
-                checked={data.visibleSections?.projects !== false}
-                onChange={(e) =>
-                  update("visibleSections", {
-                    ...data.visibleSections,
-                    projects: e.target.checked,
-                  })
-                }
-              />
-              <span className="text-sm font-medium">Show Projects</span>
-            </label>
-          </div>
+        return renderSectionWithToggle(
+          <ProjectInput
+            projects={data.projects}
+            setProjects={(v) => update("projects", v)}
+            onClose={onClose}
+            onNext={() => onNext(getNextAvailableSection("projects"))}
+          />,
+          "projects",
+          "Show Projects"
         );
 
       case "references":
-        return (
-          <div>
-            <ReferenceInput
-              references={data.references}
-              setReferences={(v) => update("references", v)}
-              onClose={onClose}
-              onNext={onClose}
-            />
-            <label className="flex items-center gap-2 mt-4">
-              <input
-                type="checkbox"
-                checked={data.visibleSections?.references !== false}
-                onChange={(e) =>
-                  update("visibleSections", {
-                    ...data.visibleSections,
-                    references: e.target.checked,
-                  })
-                }
-              />
-              <span className="text-sm font-medium">Show References</span>
-            </label>
-          </div>
+        return renderSectionWithToggle(
+          <ReferenceInput
+            references={data.references}
+            setReferences={(v) => update("references", v)}
+            onClose={onClose}
+            onNext={() => onNext(getNextAvailableSection("references"))}
+          />,
+          "references",
+          "Show References"
         );
 
       case "awards":
-        return (
-          <div>
-            <AwardInput
-              awards={data.awards}
-              setAwards={(v) => update("awards", v)}
-              onClose={onClose}
-              onNext={onClose}
-            />
-            <label className="flex items-center gap-2 mt-4">
-              <input
-                type="checkbox"
-                checked={data.visibleSections?.awards !== false}
-                onChange={(e) =>
-                  update("visibleSections", {
-                    ...data.visibleSections,
-                    awards: e.target.checked,
-                  })
-                }
-              />
-              <span className="text-sm font-medium">Show Awards</span>
-            </label>
-          </div>
+        return renderSectionWithToggle(
+          <AwardInput
+            awards={data.awards}
+            setAwards={(v) => update("awards", v)}
+            onClose={onClose}
+            onNext={() => onNext(getNextAvailableSection("awards"))}
+          />,
+          "awards",
+          "Show Awards"
         );
 
       default:
-        return <div className="text-gray-500">Select a section to edit</div>;
+        return <div className="text-gray-500">No sections available to edit</div>;
     }
   };
 
@@ -222,13 +240,10 @@ export default function PopupEditor({ visible, section, onClose, data, update, o
       onClick={onClose}
     >
       <div
-        className="bg-white w-full max-w-[90vw] sm:max-w-2xl rounded-2xl shadow-2xl overflow-auto max-h-[90vh] flex flex-col"
+        className="bg-white w-full max-w-[90vw] sm:max-w-2xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* CONTENT */}
-        <div className="p-8 overflow-y-auto">
-          {renderContent(onClose)}
-        </div>
+        <div className="p-8 overflow-y-auto flex-1">{renderContent()}</div>
       </div>
     </div>
   );
