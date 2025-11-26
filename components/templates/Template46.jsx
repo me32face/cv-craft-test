@@ -3,6 +3,7 @@
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
 import { Phone, Mail, MapPin, Link } from "lucide-react";
+import SocialLinkDisplay from "../SocialLinkDisplay";
 
 
 export default function Template45({ data = {}, onClickSection }) {
@@ -115,11 +116,13 @@ export default function Template45({ data = {}, onClickSection }) {
                 <>
                   {socialLinks.length > 0 && (
                     <div className="">
-                      {socialLinks.map((link, i) => (
-                        <p key={i} className=" mt-1 break-all leading-[1.4]">
-                          <Link size={14} className="shrink-0 translate-y-[-1px]" />
-                          <span className="ml-1">{link}</span>
-                        </p>))}
+                      {socialLinks.length > 0 && (
+                        <div className="">
+                          {data.socialLinks.map((link, i) => (
+                            <SocialLinkDisplay key={i} link={link} />
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
                 </>
@@ -215,8 +218,6 @@ export default function Template45({ data = {}, onClickSection }) {
               </div>
             </section>
           )}
-
-
           {/* AWARDS */}
           {data?.visibleSections?.awards !== false && Awards.length > 0 && (
             <div className="">

@@ -3,6 +3,7 @@
 import React from "react";
 import { Phone, Mail, MapPin, Link } from "lucide-react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
+import SocialLinkDisplay from "../SocialLinkDisplay";
 
 // const renderLanguage = (lang, index) => {
 //   if (typeof lang === 'string') {
@@ -86,9 +87,8 @@ export default function Template41({ data, onClickSection }) {
                 {socialLinks.length > 0 && (
                   <div className="space-y-3 mt-4">
                     {socialLinks.map((link, i) => (
-                      <div key={i} className="flex items-start gap-3 break-all leading-[1.4]">
-                        <Link size={14} className="shrink-0 translate-y-[-1px] text-[#c5a0e7]" />
-                        <span className="break-all text-xs">{link}</span>
+                      <div key={i} className="flex items-start gap-3 break-all leading-[1.4] ">
+                         <SocialLinkDisplay key={i} link={link} />
                       </div>
                     ))}
                   </div>

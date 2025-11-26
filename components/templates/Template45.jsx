@@ -3,6 +3,7 @@
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
 import { Phone, Mail, MapPin, Link } from "lucide-react";
+import SocialLinkDisplay from "../SocialLinkDisplay";
 
 export default function Template45({ data, onClickSection }) {
   const toArray = (value) => (!value ? [] : Array.isArray(value) ? value : [value]);
@@ -137,12 +138,13 @@ export default function Template45({ data, onClickSection }) {
               {/* SOCIAL LINKS → always bottom line */}
               {data?.visibleSections?.socialLinks !== false && socialLinks.length > 0 && (
                 <div className="w-full flex flex-col gap-1 mt-1">
-                  {socialLinks.map((link, i) => (
-                    <div key={i} className="flex items-center gap-1.5 text-xs break-all leading-[1.4]">
-                      <Link size={14} className="shrink-0 translate-y-[-1px]" />
-                      <span>{link}</span>
-                    </div>
-                  ))}
+                  {socialLinks.length > 0 && (
+                                      <div className="">
+                                        {data.socialLinks.map((link, i) => (
+                                          <SocialLinkDisplay key={i} link={link} />
+                                        ))}
+                                      </div>
+                                    )}
                 </div>
               )}
             </div>

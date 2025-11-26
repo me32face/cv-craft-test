@@ -120,7 +120,7 @@ export default function Home() {
       id: "Template41",
       name: "Stylish Classic",
       key: "Emily Davis",
-      image: "/template/ARTHAVION BLAZE.png",
+      image: "/template/ARTHAVION.png",
       category: "modern",
     },
     {

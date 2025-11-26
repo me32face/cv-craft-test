@@ -2,7 +2,8 @@
 
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
-import { Phone, Mail, MapPin,Link } from "lucide-react";
+import { Phone, Mail, MapPin, Link } from "lucide-react";
+import SocialLinkDisplay from "../SocialLinkDisplay";
 
 export default function Template35({ data, onClickSection }) {
   const toArray = (value) => (!value ? [] : Array.isArray(value) ? value : [value]);
@@ -66,21 +67,8 @@ export default function Template35({ data, onClickSection }) {
               <>
                 {socialLinks.length > 0 && (
                   <div className="">
-                    {socialLinks.map((link, i) => (
-                      // <p key={i} className="text-[11px] mt-1 break-all leading-[1.4]">
-                        // <Link size={14} className="shrink-0 translate-y-[-1px]" />
-                      //   <span className="ml-1">{link}</span>
-                      // </p>
-                       <a
-                        key={i}
-                        href={link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className=" text-xs underline block break-all"
-                      >
-                        <Link size={14} className="shrink-0 translate-y-[-1px]" />
-                        {link}
-                      </a>
+                    {data.socialLinks.map((link, i) => (
+                      <SocialLinkDisplay key={i} link={link} />
                     ))}
                   </div>
                 )}
@@ -95,8 +83,8 @@ export default function Template35({ data, onClickSection }) {
             <div className="mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("skills")}>
               <h2 className="text-md  font-semibold  mb-3  ">
                 SKILLS
-              </h2>   
-               {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation"]).map((s, i) => {
+              </h2>
+              {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation"]).map((s, i) => {
                 if (typeof s === 'string') {
                   return <p key={i} className="text-sm mb-1">• {s}</p>;
                 }
@@ -187,7 +175,7 @@ export default function Template35({ data, onClickSection }) {
             ))}
           </>
         )}
-        
+
         {/*References*/}
         {data?.visibleSections?.references !== false && references.length > 0 && (
           <>
