@@ -30,6 +30,7 @@ export default function template39({ data, onClickSection }) {
   return (
     <div
       id="cv-preview"
+      // id="pdf-template"
       className="cv-sidebar w-[794px] min-h-[1123px] bg-white mx-auto font-sans text-gray-700"
     >
       {/* TOP HEADER WITH IMAGE AND NAME */}
@@ -102,9 +103,9 @@ export default function template39({ data, onClickSection }) {
       </div>
 
       {/* TWO COLUMN LAYOUT */}
-      <div className="flex">
+      <div className=" flex">
         {/* LEFT COLUMN - Light Gray Background */}
-        <div className="w-[280px] min-h-[952px] px-6 py-6 flex-shrink-0">
+        <div className="cv-sidebar w-1/3 min-h-[952px] px-6 py-6 flex-shrink-0">
           {/* Certifications */}
           {data?.visibleSections?.certificates !== false && (
             <section
@@ -151,11 +152,11 @@ export default function template39({ data, onClickSection }) {
               <div className="mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("skills")}>
                 <h2 className="text-md font-semibold  mb-3 pb-2  border-b-2 border-amber-700">
                   SKILLS
-                </h2>          {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation"]).map((s, i) => {
+                </h2>
+                {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation"]).map((s, i) => {
                   if (typeof s === 'string') {
                     return <p key={i} className="text-sm mb-1">• {s}</p>;
                   }
-
                   if (s.proficiency !== undefined) {
                     return (
                       <div key={i} className="mb-2">
@@ -172,7 +173,6 @@ export default function template39({ data, onClickSection }) {
                       </div>
                     );
                   }
-
                   if (s.category && s.skills) {
                     return (
                       <p key={i} className="text-sm mb-1">
@@ -180,14 +180,11 @@ export default function template39({ data, onClickSection }) {
                       </p>
                     );
                   }
-
                   return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
                 })}
               </div>
             </div>
           )}
-
-
           {/* Education */}
           {data?.visibleSections?.education !== false && (
             <div className="">
@@ -221,7 +218,6 @@ export default function template39({ data, onClickSection }) {
               ))}
             </div>
           )}
-
           {/* Languages */}
           {data?.visibleSections?.languages !== false && (
             <div className="mb-4">
@@ -256,7 +252,6 @@ export default function template39({ data, onClickSection }) {
               ))}
             </div>
           )}
-
           {/*References*/}
           {data?.visibleSections?.references !== false && references.length > 0 && (
             <>
@@ -280,7 +275,7 @@ export default function template39({ data, onClickSection }) {
         </div>
 
         {/* RIGHT COLUMN - White Background */}
-        <div className="flex-1 px-6 py-6 bg-gray-100">
+        <div className="cv-sidebar w-2/3 flex-1 px-6 py-6 bg-gray-100">
           {/* Professional Summary */}
           {data?.visibleSections?.summary !== false && (
             <section
@@ -296,7 +291,6 @@ export default function template39({ data, onClickSection }) {
               </p>
             </section>
           )}
-
           {/* Professional Experience */}
           {data?.visibleSections?.experience !== false && (
             <section
@@ -355,7 +349,6 @@ export default function template39({ data, onClickSection }) {
               </div>
             </section>
           )}
-
           {/* Projects */}
           {data?.visibleSections?.projects !== false && (
             <section
@@ -374,9 +367,11 @@ export default function template39({ data, onClickSection }) {
                         href={project.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[12px] text-blue-600 underline block mt-0.5"
+                        className="text-xs text-blue-600 underline project-link"
                       >
-                        {project.link}
+                        {project.useCustomLabel
+                          ? project.linkLabel
+                          : project.link}
                       </a>
                     )}
                     {project.year && (

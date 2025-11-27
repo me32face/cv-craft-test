@@ -41,7 +41,7 @@ export default function Template38({ data, onClickSection }) {
 
       <div className="grid grid-cols-[38%_62%] min-h-screen">
         {/* LEFT COLUMN */}
-        <div className="bg-gray-200 px-8 py-8">
+        <div className="cv-sidebar  bg-gray-200 px-8 py-8">
           {/* Contact */}
           <div>
             <div className="mb-4">
@@ -50,12 +50,10 @@ export default function Template38({ data, onClickSection }) {
                 <Phone size={14} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.phone || "123-456-7890"}</span>
               </div>
-
               <div className="flex items-center gap-2 leading-[1.4] text-sm">
                 <Mail size={14} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.email || "hello@email.com"}</span>
               </div>
-
               <div className="flex items-center gap-2 leading-[1.4] text-sm">
                 <MapPin size={14} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.address || "123 Anywhere St., Any City"}</span>
@@ -103,11 +101,11 @@ export default function Template38({ data, onClickSection }) {
               <div className="mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("skills")}>
                 <h2 className="text-md  font-semibold  mb-3 pb-2 ">
                   SKILLS
-                </h2>          {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation"]).map((s, i) => {
+                </h2>
+                {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation"]).map((s, i) => {
                   if (typeof s === 'string') {
                     return <p key={i} className="text-sm mb-1">• {s}</p>;
                   }
-
                   if (s.proficiency !== undefined) {
                     return (
                       <div key={i} className="mb-2">
@@ -124,7 +122,6 @@ export default function Template38({ data, onClickSection }) {
                       </div>
                     );
                   }
-
                   if (s.category && s.skills) {
                     return (
                       <p key={i} className="text-sm mb-1">
@@ -132,7 +129,6 @@ export default function Template38({ data, onClickSection }) {
                       </p>
                     );
                   }
-
                   return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
                 })}
               </div>
@@ -163,7 +159,6 @@ export default function Template38({ data, onClickSection }) {
               ))}
             </div>
           )}
-
           {/* Languages */}
           {data?.visibleSections?.languages !== false && (
             <div className="mb-4 mt-6">
@@ -173,7 +168,6 @@ export default function Template38({ data, onClickSection }) {
               )}
             </div>
           )}
-
           {/*References*/}
           {data?.visibleSections?.references !== false && references.length > 0 && (
             <>
@@ -197,7 +191,7 @@ export default function Template38({ data, onClickSection }) {
         </div>
 
         {/* RIGHT COLUMN */}
-        <div className="px-8 py-8">
+        <div className="cv-sidebar px-8 py-8">
           {/* Summary */}
           {data?.visibleSections?.summary !== false && (
             <>
@@ -207,7 +201,6 @@ export default function Template38({ data, onClickSection }) {
               <p className="text-xs mb-4 text-gray-700">{data?.summary || "A dedicated professional with extensive experience in the field."}</p>
             </>
           )}
-
           {/* Projects */}
           {data?.visibleSections?.projects !== false && (
             <>
@@ -220,8 +213,15 @@ export default function Template38({ data, onClickSection }) {
                     <div>
                       <p className="font-semibold text-gray-800 !text-sm">{project.name}</p>
                       {project.link && (
-                        <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline">
-                          {project.link}
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-600 underline project-link"
+                        >
+                          {project.useCustomLabel
+                            ? project.linkLabel
+                            : project.link}
                         </a>
                       )}
                     </div>
@@ -238,7 +238,6 @@ export default function Template38({ data, onClickSection }) {
               ))}
             </>
           )}
-
           {/* Experience */}
           {data?.visibleSections?.experience !== false && (
             <>
@@ -301,7 +300,8 @@ export default function Template38({ data, onClickSection }) {
                     ) : (
                       <p className="text-sm mt-1 text-gray-700 text-justify break-words">{edu.description}</p>
                     )
-                  )}                </div>
+                  )}
+                </div>
               ))}
             </div>
           )}

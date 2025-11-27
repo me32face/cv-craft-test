@@ -28,7 +28,7 @@ export default function Template45({ data = {}, onClickSection }) {
 
   return (
     <div
-      id="cv-preview"
+      id="pdf-template"
       className="cv-sidebar w-[794px] min-h-[1123px] bg-white mx-auto font-sans relative overflow-hidden flex text-slate-800"
     >
       {/* SVG Background Design - Soft organic shapes */}
@@ -37,33 +37,27 @@ export default function Template45({ data = {}, onClickSection }) {
         viewBox="0 0 794 1123"
         preserveAspectRatio="none"
       >
-
         {/* Top right soft blob - peach/pink */}
         <path
           d="
-      M 294 0 
-      C 420 100, 700 80, 520 75 
-      C 770 100, 704 350, 854 360
-      C 954 0, 780 90, 794 0
-      Z"    fill="#c8e6dc"
+            M 294 0 
+            C 420 100, 700 80, 520 75 
+            C 770 100, 704 350, 854 360
+            C 954 0, 780 90, 794 0
+            Z"
+          fill="#c8e6dc"
           opacity="0.5"
         />
         {/* Bottom right large organic shape - light gray */}
         <path
-          d="
-    M 794 980
-    C 900 650, 700 950, 680 1020
-    C 580 1080, 480 1023, 450 1223
-    C 960 1123, 750 1100, 794 1123
-    Z
-  "
+          d="  M 794 980  C 900 650, 700 950, 680 1020 C 580 1080, 480 1023, 450 1223 C 960 1123, 750 1100, 794 1123 Z "
           fill="#c8e6dc"
           opacity="0.4"
         />
       </svg>
 
       {/* --- LEFT COLUMN (Sidebar) --- */}
-      <div className="w-[32%] relative z-10 flex flex-col pt-12 pb-10 bg-[#e9efed] ">
+      <div className="cv-sidebar w-1/3 relative z-10 flex flex-col pt-12 pb-10 bg-[#e9efed] ">
         {/* Profile Image with border */}
         <div className="flex justify-center mb-5 px-6">
           <div
@@ -89,47 +83,39 @@ export default function Template45({ data = {}, onClickSection }) {
             )}
           </div>
         </div>
-
         {/* Sidebar Content */}
-        <div className="px-6 flex flex-col gap-7">
+        <div className="px-6 cv-sidebar flex flex-col gap-7">
           {/* Profile Section */}
           <section className="mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("personal")}>
             <h2 className="text-base font-bold text-gray-600 mb-3 uppercase tracking-wide pb-2 border-b border-[#c8e6dc]">
               Contact
             </h2>
-            <div className="mb-4 text-gray-700 text-xs flex flex-wrap gap-x-1 gap-y-1 ">
-              <div className="flex items-center gap-2 leading-[1.4]">
+            <div className="mb-4 text-gray-700 text-xs flex flex-wrap gap-x-2 gap-y-1 w-full">
+              {/* Phone */}
+              <div className="flex items-center gap-1 leading-[1.4]">
                 <Phone size={14} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.phone || "123-456-7890"}</span>
               </div>
-
-              <div className="flex items-center gap-2 leading-[1.4]">
+              {/* Email */}
+              <div className="flex items-center gap-1 leading-[1.4]">
                 <Mail size={14} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.email || "hello@email.com"}</span>
               </div>
-
-              <div className="flex items-center gap-2 leading-[1.4]">
+              {/* Address */}
+              <div className="flex items-center gap-1 leading-[1.4]">
                 <MapPin size={14} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.address || "123 Anywhere St., Any City"}</span>
               </div>
-              {data?.visibleSections?.socialLinks !== false && (
-                <>
-                  {socialLinks.length > 0 && (
-                    <div className="">
-                      {socialLinks.length > 0 && (
-                        <div className="">
-                          {data.socialLinks.map((link, i) => (
-                            <SocialLinkDisplay key={i} link={link} />
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </>
+              {/* Social Links (always next line) */}
+              {data?.visibleSections?.socialLinks !== false && socialLinks.length > 0 && (
+                <div className="flex items-center gap-2 leading-[1.4] w-full mt-1">
+                  {socialLinks.map((link, i) => (
+                    <SocialLinkDisplay key={i} link={link} />
+                  ))}
+                </div>
               )}
             </div>
           </section>
-
           {/* Education */}
           {data?.visibleSections?.education !== false && (
             <div className="">
@@ -163,18 +149,17 @@ export default function Template45({ data = {}, onClickSection }) {
               ))}
             </div>
           )}
-
           {/* Skills */}
           {data?.visibleSections?.skills !== false && (
             <div className="mb-4">
               <div className="mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("skills")}>
                 <h2 className="text-md text-gray-600 font-bold  mb-3 pb-2 border-b border-[#c8e6dc]">
                   SKILLS
-                </h2>          {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation"]).map((s, i) => {
+                </h2>
+                {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation"]).map((s, i) => {
                   if (typeof s === 'string') {
                     return <p key={i} className="text-sm mb-1">• {s}</p>;
                   }
-
                   if (s.proficiency !== undefined) {
                     return (
                       <div key={i} className="mb-2">
@@ -191,7 +176,6 @@ export default function Template45({ data = {}, onClickSection }) {
                       </div>
                     );
                   }
-
                   if (s.category && s.skills) {
                     return (
                       <p key={i} className="text-sm mb-1">
@@ -199,7 +183,6 @@ export default function Template45({ data = {}, onClickSection }) {
                       </p>
                     );
                   }
-
                   return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
                 })}
               </div>
@@ -243,7 +226,6 @@ export default function Template45({ data = {}, onClickSection }) {
               ))}
             </div>
           )}
-
           {/*References*/}
           {data?.visibleSections?.references !== false && references.length > 0 && (
             <div className="">
@@ -266,10 +248,8 @@ export default function Template45({ data = {}, onClickSection }) {
           )}
         </div>
       </div>
-
       {/* --- RIGHT COLUMN (Main Content) --- */}
-      <div className="w-[68%] pt-12 pr-10 pl-10 pb-10 flex flex-col gap-6 relative z-10">
-
+      <div className="w-2/3 cv-sidebar pt-12 pr-10 pl-10 pb-10 flex flex-col gap-6 relative z-10">
         {/* Header */}
         <header onClick={() => onClickSection && onClickSection("personal")} className="cursor-pointer mb-2">
           <h1 className="text-4xl font-bold uppercase mb-1 tracking-wide text-gray-900">
@@ -279,7 +259,6 @@ export default function Template45({ data = {}, onClickSection }) {
             {data?.title || "GRAPHIC DESIGNER"}
           </p>
         </header>
-
         {/* Profile / Summary */}
         {data?.visibleSections?.summary !== false && (
           <section onClick={() => onClickSection && onClickSection("summary")} className="cursor-pointer">
@@ -291,8 +270,6 @@ export default function Template45({ data = {}, onClickSection }) {
             </p>
           </section>
         )}
-
-
         {/* Professional Experience */}
         {data?.visibleSections?.experience !== false && (
           <section className="mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("experience")}>
@@ -351,7 +328,6 @@ export default function Template45({ data = {}, onClickSection }) {
             </div>
           </section>
         )}
-
         {/* Projects */}
         {data?.visibleSections?.projects !== false && (
           <section
@@ -370,9 +346,11 @@ export default function Template45({ data = {}, onClickSection }) {
                       href={project.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[12px] text-blue-600 underline block mt-0.5"
+                      className="text-xs text-blue-600 underline project-link"
                     >
-                      {project.link}
+                      {project.useCustomLabel
+                        ? project.linkLabel
+                        : project.link}
                     </a>
                   )}
                   {project.year && (
