@@ -144,12 +144,36 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
         .map((v) => String(v).trim())
         .filter(Boolean);
     }
+
     if (typeof raw === 'string') {
-      return raw
+      const s = raw.trim();
+      if (!s) return [];
+
+      // First: split by real line breaks
+      const byNewline = s
         .split('\n')
         .map((l) => l.trim())
         .filter(Boolean);
+      if (byNewline.length > 1) return byNewline;
+
+      // Single line but contains multiple bullets: "• a • b • c"
+      const bulletParts = s
+        .split('•')
+        .map((l) => l.trim())
+        .filter(Boolean);
+      if (bulletParts.length > 1) return bulletParts;
+
+      // Single line but contains multiple numbers: "1. a 2. b 3. c"
+      const numberedParts = s
+        .split(/\d+\.\s*/)
+        .map((l) => l.trim())
+        .filter(Boolean);
+      if (numberedParts.length > 1) return numberedParts;
+
+      // Fallback: just one line
+      return [s];
     }
+
     return [];
   };
 
@@ -157,39 +181,42 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
     const lines = splitLines(raw);
     if (!lines.length) return null;
 
-    // Numbered
-    if (format === 'number') {
-      return lines.map((line, idx) => {
-        const hasPrefix = line.startsWith('•') || /^\d+\./.test(line);
-        const text = hasPrefix ? line : `${idx + 1}. ${line}`;
-        return (
-          <p
-            key={idx}
-            className="text-[12px] text-gray-700 leading-relaxed mt-1.5"
-          >
-            {text}
-          </p>
-        );
-      });
-    }
-
-    // Bulleted
     if (format === 'bullet') {
-      return lines.map((line, idx) => {
-        const hasPrefix = line.startsWith('•') || /^\d+\./.test(line);
-        const text = hasPrefix ? line : `• ${line}`;
-        return (
-          <p
-            key={idx}
-            className="text-[12px] text-gray-700 leading-relaxed mt-1.5"
-          >
-            {text}
-          </p>
-        );
-      });
+      return (
+        <ul className="mt-1.5 space-y-0.5 pl-4 list-disc list-outside">
+          {lines.map((line, idx) => (
+            <li
+              key={idx}
+              className="text-[12px] text-gray-700 leading-relaxed"
+            >
+              {line
+                .replace(/^•\s*/, '')
+                .replace(/^\d+\.\s*/, '')}
+            </li>
+          ))}
+        </ul>
+      );
     }
 
-    // Plain text behavior
+    // ---- NUMBERED LIST ----
+    if (format === 'number') {
+      return (
+        <ol className="mt-1.5 space-y-0.5 pl-4 list-decimal list-outside">
+          {lines.map((line, idx) => (
+            <li
+              key={idx}
+              className="text-[12px] text-gray-700 leading-relaxed"
+            >
+              {line
+                .replace(/^\d+\.\s*/, '')
+                .replace(/^•\s*/, '')}
+            </li>
+          ))}
+        </ol>
+      );
+    }
+
+    // ---- PLAIN TEXT (no bullets) ----
     if (typeof raw === 'string') {
       return (
         <p className="text-[12px] text-gray-700 leading-relaxed mt-1.5">
@@ -226,10 +253,22 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
   const renderProjectDesc = (proj) => {
     if (!proj) return null;
     const raw = proj.desc ?? proj.description ?? '';
-    const format = proj.descFormat || (Array.isArray(raw) ? 'bullet' : undefined);
+
+    const looksNumbered =
+      typeof raw === 'string' && /\d+\.\s*\S/.test(raw);
+    const looksBulleted =
+      typeof raw === 'string' && raw.includes('•');
+
+    let format = proj.descFormat;
+    if (!format) {
+      if (looksNumbered) format = 'number';
+      else if (looksBulleted || Array.isArray(raw)) format = 'bullet';
+    }
+
     if (format === 'number' || format === 'bullet') {
       return renderLinesWithFormat(raw, format);
     }
+
     if (typeof raw === 'string' && raw.trim()) {
       return (
         <p className="text-[12px] text-gray-700 mt-1">
@@ -532,6 +571,11 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
               ).map((proj, pidx) => {
                 const projYear = proj.year || proj.date || '';
                 const projLink = proj.link || proj.url || '';
+                const linkLabel =
+                  proj.useCustomLabel && proj.linkLabel
+                    ? proj.linkLabel
+                    : projLink;
+
                 return (
                   <div key={pidx} className="mb-0 cv-item">
                     <div className="flex justify-between items-start">
@@ -539,16 +583,6 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                         <div className="text-[13px] font-semibold text-blue-900">
                           {proj.name || proj.title || 'Project'}
                         </div>
-                        {projLink ? (
-                          <a
-                            href={projLink}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-[12px] underline"
-                          >
-                            {String(projLink).replace(/^https?:\/\//, '')}
-                          </a>
-                        ) : null}
                       </div>
                       <div className="text-[11px] text-gray-600">
                         {projYear}
@@ -558,6 +592,19 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                     <div className="mt-1">
                       {renderProjectDesc(proj)}
                     </div>
+
+                    {projLink && (
+                      <div className="mt-1.5">
+                        <a
+                          href={projLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[11px] text-blue-700 underline project-link"
+                        >
+                          {linkLabel}
+                        </a>
+                      </div>
+                    )}
                   </div>
                 );
               })}
