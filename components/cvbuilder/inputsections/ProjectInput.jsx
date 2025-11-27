@@ -8,7 +8,9 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
   const addProject = () => {
     const updated = [
       ...projects,
-      { name: '', year: '', desc: '', descFormat: 'default', link: '' }
+    { name: '', year: '', desc: '', descFormat: 'default', link: '', linkLabel: '', useCustomLabel: false }
+
+
     ];
     setProjects(updated);
     setOpenIndex(updated.length - 1); // open newly added
@@ -103,6 +105,11 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
                   <p className="text-sm text-gray-600">
                     {project.year || "Year not specified"}
                   </p>
+                  {project.link && (
+    <p className="text-xs text-blue-600">
+      {project.useCustomLabel ? project.linkLabel : project.link}
+    </p>
+  )}
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -168,14 +175,36 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
 
                   {/* Live Link */}
                   <div className="col-span-2">
-                    <label className="font-medium">Live Link (optional)</label>
-                    <input
-                      className="mt-1 w-full p-3 rounded-xl border"
-                      value={project.link ?? ""}
-                      onChange={(e) =>
-                        updateProject(index, "link", e.target.value)
-                      }
-                    />
+                  <label className="font-medium mt-3 block">Live Link (optional)</label>
+<input
+  className="mt-1 w-full p-3 rounded-xl border"
+  value={project.link ?? ""}
+  placeholder="https://project.com"
+  onChange={(e) => updateProject(index, "link", e.target.value)}
+/>
+
+<label className="flex items-center gap-2 mt-3">
+  <input
+    type="checkbox"
+    checked={project.useCustomLabel || false}
+    onChange={() => updateProject(index, "useCustomLabel", !project.useCustomLabel)}
+  />
+  <span className="text-sm">Use custom name instead of URL</span>
+</label>
+
+{project.useCustomLabel && (
+  <>
+    <label className="font-medium mt-2 block">Custom Link Name</label>
+    <input
+      className="mt-1 w-full p-3 rounded-xl border"
+      placeholder="Live / Demo / View / Repo"
+      value={project.linkLabel ?? ""}
+      onChange={(e) => updateProject(index, "linkLabel", e.target.value)}
+    />
+  </>
+)}
+
+
                   </div>
                 </div>
 

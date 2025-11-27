@@ -11,6 +11,10 @@ const [newLabel, setNewLabel] = useState("");
 const [useIconOption, setUseIconOption] = useState(false);
   const validUrl = /^https?:\/\/[^\s/$.?#].[^\s]*$/i;
 
+  const [editIndex, setEditIndex] = useState(null);
+const [editedUrl, setEditedUrl] = useState("");
+const [editedLabel, setEditedLabel] = useState("");
+
 const handleAdd = () => {
   const trimmed = newLink.trim();
 
@@ -86,34 +90,88 @@ setSocialLinks([
 {links.map((link, i) => (
   <div key={i} className="flex justify-between items-center bg-gray-50 p-2 rounded">
 
-    <div>
-      <p className="text-sm font-medium text-gray-700 truncate max-w-[220px]">
-        {link.label}
-      </p>
-      <p className="text-xs text-gray-500">
-        {detectPlatform(link.url)}
-      </p>
+    {editIndex === i ? (
+      <>
+        <div className="flex flex-col w-full">
+          <input
+            className="border p-2 rounded mb-2"
+            value={editedLabel}
+            onChange={(e) => setEditedLabel(e.target.value)}
+          />
+          <input
+            className="border p-2 rounded"
+            value={editedUrl}
+            onChange={(e) => setEditedUrl(e.target.value)}
+          />
+        </div>
 
-      <label className="text-xs text-gray-600 flex items-center gap-1 mt-1">
-        <input
-          type="checkbox"
-          checked={link.useIcon || false}
-          onChange={() => {
-            const updated = [...links];
-            updated[i].useIcon = !updated[i].useIcon;
-            setSocialLinks(updated);
-          }}
-        />
-        Show icon
-      </label>
-    </div>
+        <div className="flex flex-col gap-2">
+          <button
+            className="text-xs text-green-600"
+            onClick={() => {
+              const updated = [...links];
+              updated[i].label = editedLabel;
+              updated[i].url = editedUrl;
+              setSocialLinks(updated);
+              setEditIndex(null);
+            }}
+          >
+            Save
+          </button>
 
-    <button
-      onClick={() => handleRemove(i)}
-      className="text-xs text-red-500 font-medium hover:underline"
-    >
-      Remove
-    </button>
+          <button
+            className="text-xs text-gray-500"
+            onClick={() => setEditIndex(null)}
+          >
+            Cancel
+          </button>
+        </div>
+      </>
+    ) : (
+      <>
+        <div>
+          <p className="text-sm font-medium text-gray-700 truncate max-w-[220px]">
+            {link.label}
+          </p>
+          <p className="text-xs text-gray-500">
+            {detectPlatform(link.url)}
+          </p>
+
+          <label className="text-xs text-gray-600 flex items-center gap-1 mt-1">
+            <input
+              type="checkbox"
+              checked={link.useIcon || false}
+              onChange={() => {
+                const updated = [...links];
+                updated[i].useIcon = !updated[i].useIcon;
+                setSocialLinks(updated);
+              }}
+            />
+            Show icon
+          </label>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <button
+            onClick={() => {
+              setEditIndex(i);
+              setEditedLabel(link.label);
+              setEditedUrl(link.url);
+            }}
+            className="text-xs text-blue-500 hover:underline"
+          >
+            Edit
+          </button>
+
+          <button
+            onClick={() => handleRemove(i)}
+            className="text-xs text-red-500 hover:underline"
+          >
+            Remove
+          </button>
+        </div>
+      </>
+    )}
   </div>
 ))}
 

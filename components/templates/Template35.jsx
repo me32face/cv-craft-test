@@ -233,16 +233,14 @@ export default function Template35({ data, onClickSection }) {
                     </div>
 
                     {/* Project link */}
-                    {p.link && (
-                      <a
-                        href={p.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-blue-600 underline break-all"
-                      >
-                        {p.link}
-                      </a>
-                    )}
+                   <a
+    href={p.link}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-xs text-blue-600 underline project-link"
+  >
+   {p.useCustomLabel && p.linkLabel ? p.linkLabel : p.link}
+  </a>
 
                     {/* DESCRIPTION AUTO-FORMATTED */}
                     {desc && (
