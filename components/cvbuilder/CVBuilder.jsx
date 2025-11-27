@@ -81,17 +81,19 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
       if (page > 0) pdf.addPage();
       const yOffset = -(page * pageHeight);
       pdf.addImage(imgData, "JPEG", 0, yOffset, imgWidth, imgHeight);
-      const linkElements = element.querySelectorAll(".social-link");
+      const linkElements = element.querySelectorAll(".social-link,.project-link");
 
 linkElements.forEach(el => {
   const rect = el.getBoundingClientRect();
   const parentRect = element.getBoundingClientRect();
 
   // Calculate positions in PDF space
-  const x = (rect.left - parentRect.left) * (pageWidth / element.scrollWidth);
-  const y = (rect.top - parentRect.top) * (pageWidth / element.scrollWidth);
-  const w = rect.width * (pageWidth / element.scrollWidth);
-  const h = rect.height * (pageWidth / element.scrollWidth);
+  const pxPerMM = element.offsetWidth / pageWidth;
+
+const x = (rect.left - parentRect.left) / pxPerMM;
+const y = (rect.top - parentRect.top) / pxPerMM;
+const w = rect.width / pxPerMM;
+const h = rect.height / pxPerMM;
 
   pdf.link(x, y - pageHeight * page, w, h, { url: el.href });
 });

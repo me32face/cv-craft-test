@@ -593,15 +593,16 @@ const education = educationArray.length
                             {safeText(pr.name)}
                           </h3>
 
-                          {pr.link && (
-                            <a
-                              href={pr.link}
-                              target="_blank"
-                              className="text-[10px] text-blue-600 underline break-all"
-                            >
-                              {pr.link}
-                            </a>
-                          )}
+                                     {/* Project link */}
+                   <a
+    href={p.link}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-xs text-blue-600 underline project-link"
+  >
+   {p.useCustomLabel && p.linkLabel ? p.linkLabel : p.link}
+  </a>
+
                         </div>
 
                         <span className="text-xs text-gray-500 whitespace-nowrap">

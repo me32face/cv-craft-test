@@ -553,16 +553,16 @@ export default function Template34({ data, onClickSection }) {
                         <p className="font-semibold">
                           {safeText(p.name) || "Project Title"}
                         </p>
-                        {p.link && (
-                          <a
-                            href={p.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs text-blue-600 underline break-all"
-                          >
-                            {p.link}
-                          </a>
-                        )}
+                      {p.link && (
+  <a
+    href={p.link}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-xs text-blue-600 underline project-link"
+  >
+   {p.useCustomLabel && p.linkLabel ? p.linkLabel : p.link}
+  </a>
+)}
                       </div>
                       <p className="text-xs opacity-60">{safeText(p.year)}</p>
                     </div>

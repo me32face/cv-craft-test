@@ -494,15 +494,14 @@ export default function Template40({ data, onClickSection }) {
                     </span>
                   </div>
 
-                  {p.link && (
-                    <a
-                      href={p.link}
-                      className="text-xs text-indigo-600 underline break-all"
-                    >
-                      {p.link}
-                    </a>
-                  )}
-
+                               <a
+    href={p.link}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-xs text-blue-600 underline project-link"
+  >
+   {p.useCustomLabel && p.linkLabel ? p.linkLabel : p.link}
+  </a>
                   {p.desc && (
                     <p className="mt-2 text-gray-700">{safeText(p.desc)}</p>
                   )}
