@@ -61,6 +61,54 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
   const references = toArray(merged.references);
   const socialArray = toArray(merged.socialLinks);
 
+  // 🔹 Normalize social links for SocialLinkDisplay
+  const normalizedSocialLinks = socialArray
+    .filter(Boolean)
+    .map((item) => {
+      // String -> treat as URL
+      if (typeof item === 'string') {
+        const url = item.trim();
+        if (!url) return null;
+        const clean = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+        return {
+          url,
+          label: clean,
+          useIcon: true,
+        };
+      }
+
+      // Object with various possible keys
+      if (typeof item === 'object') {
+        const url =
+          item.url ||
+          item.link ||
+          item.value ||
+          item.href ||
+          '';
+
+        if (!url) return null;
+
+        const clean = String(url)
+          .replace(/^https?:\/\//, '')
+          .replace(/\/$/, '');
+
+        const label =
+          item.label ||
+          item.platform ||
+          item.type ||
+          item.name ||
+          clean;
+
+        const useIcon =
+          typeof item.useIcon === 'boolean' ? item.useIcon : true;
+
+        return { url, label, useIcon };
+      }
+
+      return null;
+    })
+    .filter(Boolean);
+
   // Achievements (no more auto-promoting certificates)
   const achievementsToShow = achievements;
 
@@ -125,7 +173,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
       });
     }
 
-    // Bulleted (like Template30 but with consistent spacing)
+    // Bulleted
     if (format === 'bullet') {
       return lines.map((line, idx) => {
         const hasPrefix = line.startsWith('•') || /^\d+\./.test(line);
@@ -305,7 +353,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
               {displayLocation}
             </div>
 
-            <div className="flex flex-wrap items-center gap-1 text-[11px] text-gray-600 mt-2.5">
+            <div className="flex flex-wrap items-center gap-3 text-[11px] text-gray-600 mt-2.5 cv-header-contacts">
               {merged.phone && (
                 <div className="flex items-center gap-1">
                   <Phone className="w-3 h-3" />
@@ -319,13 +367,11 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                 </div>
               )}
 
-              {isSectionVisible('socialLinks') && socialArray.length > 0 && (
-                <div className="pt-2 space-y-1 pl-0.5">
-                  {socialArray.map((link, i) => (
-                    <SocialLinkDisplay key={i} link={link} />
-                  ))}
-                </div>
-              )}
+              {isSectionVisible('socialLinks') &&
+                normalizedSocialLinks.length > 0 &&
+                normalizedSocialLinks.map((link, i) => (
+                  <SocialLinkDisplay key={i} link={link} />
+                ))}
             </div>
           </div>
 
@@ -714,7 +760,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
           </div>
         )}
 
-        {/* AWARDS (from Template30, now shows issuer/description too) */}
+        {/* AWARDS */}
         {isSectionVisible('awards') && (
           <div className="mt-3 cv-section">
             <h2 className="text-[14px] font-bold text-blue-800 mb-3">
@@ -723,11 +769,9 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
             <div className="space-y-1 text-[12px] text-gray-700">
               {awardsToShow.map((a, i) => {
                 if (typeof a === 'string') {
-                  // Simple string awards like Template30
                   return <div key={i}>{a}</div>;
                 }
 
-                // Object-based awards (so your "AA fields" show)
                 const title =
                   a.title || a.name || a.award || 'Award';
                 const issuer = a.issuer || a.organization || a.company || '';
@@ -778,7 +822,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
           </div>
         )}
 
-        {/* CERTIFICATIONS (like Template30, no achievements dependency) */}
+        {/* CERTIFICATIONS */}
         {isSectionVisible('certificates') && certificates.length > 0 && (
           <div className="mt-8 cv-section">
             <h2 className="text-[14px] font-bold text-blue-800 mb-3">
@@ -806,7 +850,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
           </div>
         )}
 
-        {/* REFERENCES (from Template30) */}
+        {/* REFERENCES */}
         {isSectionVisible('references') && (
           <div className="mt-3 cv-section">
             <h2 className="text-[14px] font-bold text-blue-800 mb-3">
@@ -840,6 +884,30 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
           </div>
         )}
       </div>
+
+      {/* Global styles for header social links */}
+      <style jsx global>{`
+        .cv-header-contacts a.social-link {
+          display: inline-flex !important;
+          align-items: center !important;
+          font-size: 11px !important;
+          color: #1f2937 !important; /* gray-800 */
+          gap: 0.3rem !important;    /* spacing between icon & text */
+          line-height: 1.25 !important;
+        }
+
+        .cv-header-contacts a.social-link span {
+          font-size: 11px !important;
+          color: #1f2937 !important;
+          line-height: 1.25 !important;
+        }
+
+        .cv-header-contacts a.social-link svg {
+          width: 14px !important;
+          height: 14px !important;
+          stroke: #4b5563 !important; /* gray-600 */
+        }
+      `}</style>
     </div>
   );
 }
