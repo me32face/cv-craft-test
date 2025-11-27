@@ -227,14 +227,15 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                 </div>
               )}
 
-              {data?.visibleSections?.socialLinks !== false &&
-                socialLinks.length > 0 && (
-                  <div className="pt-2 space-y-1 pl-0.5">
-                    {data.socialLinks.map((link, i) => (
-                      <SocialLinkDisplay key={i} link={link} />
-                    ))}
-                  </div>
-                )}
+            {data?.visibleSections?.socialLinks !== false &&
+              socialLinks.length > 0 && (
+                <div className="pt-0 flex flex-col gap-1 pl-0.5">
+                  {socialLinks.map((link, i) => (
+                    <SocialLinkDisplay key={i} link={link} />
+                  ))}
+                </div>
+              )
+            }
             </div>
           </div>
 
@@ -673,6 +674,44 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
           )}
         </main>
       </div>
+      <style jsx global>{`
+        /* SOCIAL LINKS — make them match the other contact rows */
+        .cv-sidebar a.social-link {
+          display: flex !important;
+          align-items: center !important;
+          font-size: 0.75rem !important;      /* 12px, like other contacts */
+          color: #374151 !important;          /* gray-700 */
+          line-height: 1.25 !important;
+          gap: 0 !important;                  /* we'll control spacing manually */
+          text-decoration: none !important;
+        }
+
+        /* First span = icon container (behave like IconSmall) */
+        .cv-sidebar a.social-link > span:first-child {
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          width: 1.25rem !important;          /* 20px, like IconSmall w-5 */
+          height: 1.25rem !important;
+          flex-shrink: 0 !important;
+        }
+
+        /* Second span = label text (behave like pl-1.5) */
+        .cv-sidebar a.social-link > span:last-child {
+          margin-left: 0.75rem !important;   /* pl-1.5 ≈ 6px */
+          font-size: 0.75rem !important;      /* 12px */
+          color: #374151 !important;          /* gray-700 */
+          line-height: 2 !important;
+        }
+
+        /* Icon itself */
+        .cv-sidebar a.social-link svg {
+          width: 1rem !important;             /* 16px, like w-4 */
+          height: 1rem !important;
+          stroke: #4a5568 !important;         /* gray-500, same tone as others */
+          flex-shrink: 0 !important;
+        }
+      `}</style>
     </div>
   );
 }

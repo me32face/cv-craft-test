@@ -216,6 +216,51 @@ const Template47 = ({ data = {}, onClickSection }) => {
   const mergedRaw = { ...defaults, ...data };
   const merged = { ...mergedRaw };
 
+    // --- Normalize social links into the shape SocialLinkDisplay expects ---
+  const rawSocialLinks = toArray(merged.socialLinks);
+
+  const normalizedSocialLinks = rawSocialLinks
+    .filter(Boolean)
+    .map((item) => {
+      // If it's just a string, treat it as the URL
+      if (typeof item === "string") {
+        const url = item.trim();
+        if (!url) return null;
+        return {
+          url,
+          label: url,
+          useIcon: true,
+        };
+      }
+
+      if (typeof item === "object") {
+        // try common field names for the URL
+        const url =
+          item.url ||
+          item.link ||
+          item.value ||
+          item.href ||
+          "";
+
+        if (!url) return null;
+
+        const label =
+          item.label ||
+          item.platform ||
+          item.type ||
+          item.name ||
+          url;
+
+        const useIcon =
+          typeof item.useIcon === "boolean" ? item.useIcon : true;
+
+        return { url, label, useIcon };
+      }
+
+      return null;
+    })
+    .filter(Boolean);
+
   const isSectionVisible = (key) =>
     merged.visibleSections?.[key] !== false;
 
@@ -359,6 +404,15 @@ const Template47 = ({ data = {}, onClickSection }) => {
           <ContactItem icon={Mail} text={merged.email} />
           <ContactItem icon={Globe} text={merged.website} />
           <ContactItem icon={MapPin} text={headerLocation} />
+
+          {/* SOCIAL LINKS – inline with others, wrap when needed */}
+          {normalizedSocialLinks.length > 0 &&
+            normalizedSocialLinks.map((link, idx) => (
+              <div key={idx} className="flex items-center text-xs mx-3 text-gray-700">
+                <SocialLinkDisplay link={link} />
+              </div>
+            ))
+          }
         </div>
 
         {/* SUMMARY */}
@@ -559,6 +613,26 @@ const Template47 = ({ data = {}, onClickSection }) => {
           </section>
         )}
       </div>
+      <style jsx global>{`
+        /* Make social link text same size & color as other contact items */
+        a.social-link {
+          font-size: 0.75rem !important;          /* text-xs */
+          color: #374151 !important;              /* gray-700 */
+        }
+
+        a.social-link span {
+          font-size: 0.75rem !important;          /* override inline 14px */
+          line-height: 1rem !important;
+          color: #374151 !important;              /* gray-700 */
+        }
+
+        /* Icon color & size like other contact icons */
+        a.social-link svg {
+          width: 0.75rem;                         /* 12px */
+          height: 0.75rem;
+          stroke: ${navyAccent};
+        }
+      `}</style>
     </div>
   );
 };
