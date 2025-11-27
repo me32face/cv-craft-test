@@ -26,9 +26,9 @@ export default function SocialLinkDisplay({ link }) {
       target="_blank"
       rel="noopener noreferrer"
       data-link={link.url}
-      className="social-link flex items-center gap-2"
+      className="social-link flex items-center gap-1 text-blue-600"
       style={{
-        display: "inline-flex",
+        display: "",
         alignItems: "center",
         verticalAlign: "middle",
         whiteSpace: "nowrap",
@@ -38,8 +38,8 @@ export default function SocialLinkDisplay({ link }) {
       {link.useIcon && (
         <span
           style={{
-            width: "16px",
-            height: "16px",
+            width: "14px",
+            height: "14px",
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
@@ -49,7 +49,7 @@ export default function SocialLinkDisplay({ link }) {
           {iconMap[platform]}
         </span>
       )}
-      <span style={{ fontSize: "14px", display: "inline-block", lineHeight: "16px" }}>
+      <span style={{ fontSize: "12px", display: "inline-block", lineHeight: "16px"  }}>
         {link.label}
       </span>
     </a>
