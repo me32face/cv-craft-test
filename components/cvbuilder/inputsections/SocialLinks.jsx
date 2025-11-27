@@ -146,7 +146,7 @@ setSocialLinks([
     checked={useIconOption}
     onChange={() => setUseIconOption(!useIconOption)}
   />
-  <label className="text-xs text-gray-600">Show icon instead of text</label>
+  <label className="text-xs text-gray-600">Show icon</label>
 </div>
  
   <button
