@@ -108,7 +108,7 @@ export default function Template45({ data = {}, onClickSection }) {
               </div>
               {/* Social Links (always next line) */}
               {data?.visibleSections?.socialLinks !== false && socialLinks.length > 0 && (
-                <div className="flex items-center gap-2 leading-[1.4] w-full mt-1">
+                <div className="flex flex-col gap-2 leading-[1.4] w-full mt-1">
                   {socialLinks.map((link, i) => (
                     <SocialLinkDisplay key={i} link={link} />
                   ))}

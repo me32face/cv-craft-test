@@ -85,11 +85,11 @@ export default function template39({ data, onClickSection }) {
               <span>{data?.address || "123 Anywhere St., Any City"}</span>
             </div>
             {/* Social Links */}
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
               {data?.visibleSections?.socialLinks !== false && socialLinks.length > 0 && (
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-2">
                   {socialLinks.length > 0 && (
-                    <div className="">
+                    <div className="flex gap-3">
                       {data.socialLinks.map((link, i) => (
                         <SocialLinkDisplay key={i} link={link} />
                       ))}

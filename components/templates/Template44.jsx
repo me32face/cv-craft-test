@@ -111,20 +111,12 @@ export default function Template44({ data, onClickSection }) {
                 <MapPin size={14} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.address || "123 Anywhere St., Any City"}</span>
               </div>
-              {data?.visibleSections?.socialLinks !== false && (
-                <>
-                  {socialLinks.length > 0 && (
-                    <div className="">
-                      {socialLinks.length > 0 && (
-                        <div className="">
-                          {data.socialLinks.map((link, i) => (
-                            <SocialLinkDisplay key={i} link={link} />
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </>
+              {data?.visibleSections?.socialLinks !== false && socialLinks.length > 0 && (
+                <div className="flex flex-col gap-2 leading-[1.4] w-full mt-1">
+                  {socialLinks.map((link, i) => (
+                    <SocialLinkDisplay key={i} link={link} />
+                  ))}
+                </div>
               )}
             </div>
           </section>

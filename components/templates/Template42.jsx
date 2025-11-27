@@ -78,7 +78,7 @@ export default function Template42({ data, onClickSection }) {
                 {data?.visibleSections?.socialLinks !== false && socialLinks.length > 0 && (
                   <div className="flex items-center gap-1.5">
                     {socialLinks.length > 0 && (
-                      <div className="">
+                      <div className="flex gap-3">
                         {data.socialLinks.map((link, i) => (
                           <SocialLinkDisplay key={i} link={link} />
                         ))}
