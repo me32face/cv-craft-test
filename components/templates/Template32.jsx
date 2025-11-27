@@ -32,40 +32,47 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
   const renderDescription = (text, format) => {
     if (!text) return null;
 
-    if (format === 'bullet') {
-      return text.split('\n').map((line, idx) => {
-        const trimmed = line.trim();
-        if (!trimmed) return null;
-        const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
-        return (
-          <p
-            key={idx}
-            className="text-[11px] mt-1 text-justify text-gray-700 break-words"
-          >
-            {hasPrefix ? trimmed : `• ${trimmed}`}
-          </p>
-        );
-      });
+    const hasBulletChar = text.includes("•");
+    const looksNumbered = /^\s*\d+\./m.test(text);
+
+    let lines = text.split(/\r?\n/);
+
+    if (lines.length === 1 && hasBulletChar) {
+      lines = text.split("•");
     }
 
-    if (format === 'number') {
-      return text.split('\n').map((line, idx) => {
-        const trimmed = line.trim();
-        if (!trimmed) return null;
-        const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
-        return (
-          <p
-            key={idx}
-            className="text-[11px] mt-1 text-justify text-gray-700 break-words"
-          >
-            {hasPrefix ? trimmed : `${idx + 1}. ${trimmed}`}
-          </p>
-        );
-      });
+    lines = lines
+      .map(line => line.trim())
+      .filter(line => line.length > 0);
+
+    if (!lines.length) return null;
+
+    if (format === "bullet" || (!format && hasBulletChar)) {
+      return (
+        <ul className="mt-1 text-[11px] text-gray-700 leading-relaxed list-disc list-outside pl-5 space-y-1">
+          {lines.map((line, idx) => (
+            <li key={idx} className="break-words">
+              {line.replace(/^•\s*/, "")}
+            </li>
+          ))}
+        </ul>
+      );
+    }
+
+    if (format === "number" || (!format && looksNumbered)) {
+      return (
+        <ol className="mt-1 text-[11px] text-gray-700 leading-relaxed list-decimal list-outside pl-5 space-y-1">
+          {lines.map((line, idx) => (
+            <li key={idx} className="break-words">
+              {line.replace(/^\d+\.\s*/, "")}
+            </li>
+          ))}
+        </ol>
+      );
     }
 
     return (
-      <p className="text-[11px] mt-1 text-gray-700 text-justify break-words">
+      <p className="text-[11px] mt-1 text-gray-700 leading-relaxed break-words">
         {text}
       </p>
     );
@@ -491,16 +498,6 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                           <div className="font-semibold text-gray-800 text-[13px]">
                             {project.name}
                           </div>
-                          {project.link && (
-                            <a
-                              href={project.link}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-[12px] no-underline hover:underline text-green-800 break-words"
-                            >
-                              {project.link}
-                            </a>
-                          )}
                         </div>
                       </div>
                       <div className="text-[12px] text-gray-500 text-right min-w-[110px]">
@@ -511,6 +508,19 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                     <div className="mt-3">
                       {renderDescription(project.desc, project.descFormat)}
                     </div>
+
+                    {project.link && (
+                      <div className="mt-2">
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-600 underline project-link"
+                        >
+                          {project.useCustomLabel ? project.linkLabel : project.link}
+                        </a>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

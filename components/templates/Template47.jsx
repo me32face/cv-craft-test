@@ -155,6 +155,24 @@ const renderEducationItems = (edu) => {
   return renderListItemsWithFormat(raw, format);
 };
 
+// NEW: project description → bullets/numbers
+const renderProjectItems = (proj) => {
+  if (!proj) return null;
+  const raw = proj.desc ?? proj.description ?? '';
+  if (!raw) return null;
+
+  // auto-detect if not explicitly set
+  let format = proj.descFormat;
+  if (!format && typeof raw === 'string') {
+    if (raw.includes('•')) format = 'bullet';
+    else if (/\d+\.\s*\S/.test(raw)) format = 'number';
+    else format = 'bullet';
+  }
+  if (!format) format = 'bullet';
+
+  return renderListItemsWithFormat(raw, format);
+};
+
 // --- Main component ---
 const Template47 = ({ data = {}, onClickSection }) => {
   // Defaults built from static resumeData
@@ -204,6 +222,7 @@ const Template47 = ({ data = {}, onClickSection }) => {
 
     awards: resumeData.awards,
 
+    // these can come from the builder
     projects: [],
     achievements: [],
     certificates: [],
@@ -216,13 +235,12 @@ const Template47 = ({ data = {}, onClickSection }) => {
   const mergedRaw = { ...defaults, ...data };
   const merged = { ...mergedRaw };
 
-    // --- Normalize social links into the shape SocialLinkDisplay expects ---
+  // --- Normalize social links into the shape SocialLinkDisplay expects ---
   const rawSocialLinks = toArray(merged.socialLinks);
 
   const normalizedSocialLinks = rawSocialLinks
     .filter(Boolean)
     .map((item) => {
-      // If it's just a string, treat it as the URL
       if (typeof item === "string") {
         const url = item.trim();
         if (!url) return null;
@@ -234,14 +252,12 @@ const Template47 = ({ data = {}, onClickSection }) => {
       }
 
       if (typeof item === "object") {
-        // try common field names for the URL
         const url =
           item.url ||
           item.link ||
           item.value ||
           item.href ||
           "";
-
         if (!url) return null;
 
         const label =
@@ -268,6 +284,7 @@ const Template47 = ({ data = {}, onClickSection }) => {
   const education = toArray(merged.education);
   const skillsArray = toArray(merged.skills);
   const awardsArray = toArray(merged.awards);
+  const projectsArray = toArray(merged.projects);   // <-- NEW
 
   const headerLocation =
     (merged.address && String(merged.address).trim()) ||
@@ -432,6 +449,71 @@ const Template47 = ({ data = {}, onClickSection }) => {
           </section>
         )}
 
+        {/* PROJECTS – NEW SECTION */}
+        {isSectionVisible('projects') && projectsArray.length > 0 && (
+          <section className="mb-6">
+            <h3
+              className="text-base font-extrabold tracking-wider uppercase pb-0.5 mb-3 border-b-2 cursor-pointer"
+              style={{ color: darkText, borderColor: navyAccent }}
+              onClick={() => onClickSection && onClickSection('projects')}
+            >
+              Projects
+            </h3>
+
+            {projectsArray.map((proj, index) => {
+              const projYear = getDateText(proj) || proj.year || proj.date || '';
+              const projLink = proj.link || proj.url || proj.github || '';
+              const linkLabel =
+                proj.useCustomLabel && proj.linkLabel
+                  ? proj.linkLabel
+                  : projLink;
+
+              return (
+                <div key={index} className="mb-4 pb-2">
+                  <div className="flex justify-between items-baseline mb-0.5">
+                    <h4 className="text-sm font-bold uppercase">
+                      {proj.name || proj.title || 'Project'}
+                    </h4>
+                    {projYear && (
+                      <p
+                        className="text-xs font-semibold whitespace-nowrap"
+                        style={{ color: navyAccent }}
+                      >
+                        {projYear}
+                      </p>
+                    )}
+                  </div>
+
+                  {proj.company && (
+                    <p className="text-xs italic text-gray-600 mb-0.5">
+                      {proj.company}
+                    </p>
+                  )}
+
+                  {projLink && (
+                    <p className="text-xs mb-1">
+                      <a
+                        href={projLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-blue-700 underline project-link"
+                      >
+                        {linkLabel}
+                      </a>
+                    </p>
+                  )}
+
+                  {renderProjectItems(proj) && (
+                    <ul className=" list-outside ml-2 space-y-0.5 text-xs text-gray-700 leading-snug">
+                      {renderProjectItems(proj)}
+                    </ul>
+                  )}
+                </div>
+              );
+            })}
+          </section>
+        )}
+
         {/* EXPERIENCE */}
         {isSectionVisible('experience') && (
           <section className="mb-6">
@@ -538,11 +620,9 @@ const Template47 = ({ data = {}, onClickSection }) => {
               <div className="space-y-3 text-[13px] text-gray-700 leading-snug">
                 {awardsToShow.map((a, i) => {
                   if (typeof a === 'string') {
-                    // simple string awards
                     return <div key={i}>{a}</div>;
                   }
 
-                  // object-based awards (TemplateGracePerfect-style)
                   const title = a.title || a.name || a.award || 'Award';
                   const issuer =
                     a.issuer || a.organization || a.company || '';
@@ -616,19 +696,19 @@ const Template47 = ({ data = {}, onClickSection }) => {
       <style jsx global>{`
         /* Make social link text same size & color as other contact items */
         a.social-link {
-          font-size: 0.75rem !important;          /* text-xs */
-          color: #374151 !important;              /* gray-700 */
+          font-size: 0.75rem !important;
+          color: #374151 !important;
         }
 
         a.social-link span {
-          font-size: 0.75rem !important;          /* override inline 14px */
+          font-size: 0.75rem !important;
           line-height: 1rem !important;
-          color: #374151 !important;              /* gray-700 */
+          color: #374151 !important;
         }
 
         /* Icon color & size like other contact icons */
         a.social-link svg {
-          width: 0.75rem;                         /* 12px */
+          width: 0.75rem;
           height: 0.75rem;
           stroke: ${navyAccent};
         }
