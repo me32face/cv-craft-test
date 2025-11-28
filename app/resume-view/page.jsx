@@ -1,7 +1,6 @@
-
 'use client';
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { templates } from "@/components/templates";
 import { decompressFromEncodedURIComponent } from "lz-string";
@@ -19,7 +18,7 @@ const decodeDataFromUrl = (encoded) => {
   }
 };
 
-export default function ResumeViewPage() {
+function ResumeViewContent() {
   const searchParams = useSearchParams();
   const [templateKey, setTemplateKey] = useState("template31");
   const [data, setData] = useState(null);
@@ -31,7 +30,6 @@ export default function ResumeViewPage() {
     const payload = decodeDataFromUrl(encoded);
     if (!payload) return;
 
-    // We encoded as: { shareId, template, data }
     if (payload.template) {
       setTemplateKey(payload.template.toLowerCase());
     }
@@ -39,7 +37,6 @@ export default function ResumeViewPage() {
     if (payload.data) {
       setData(payload.data);
     } else {
-      // fallback if we ever encode plain data
       setData(payload);
     }
   }, [searchParams]);
@@ -63,5 +60,13 @@ export default function ResumeViewPage() {
         <TemplateComponent data={data} />
       </div>
     </div>
+  );
+}
+
+export default function ResumeViewPage() {
+  return (
+    <Suspense fallback={<div>Loading resume...</div>}>
+      <ResumeViewContent />
+    </Suspense>
   );
 }
