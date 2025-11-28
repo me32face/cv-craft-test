@@ -31,14 +31,14 @@ export default function Home() {
       name: "Professional Classic",
       key: "Richard Sanchez",
       image: "/template/template01n.png",
-      category: "modern",
+      category: "simple",
     },
     {
       id: "Template47",
       name: "Classic",
       key: "Richard",
       image: "/template/template47.png",
-      category: "modern",
+      category: "simple",
     },
     {
       id: "Template30",
@@ -94,7 +94,7 @@ export default function Home() {
       name: "Stylish Resume",
       key: "Sophia Lee",
       image: "/template/template37.jpg",
-      category: "modern",
+      category: "proffessional",
     },
     {
       id: "Template38",
@@ -108,7 +108,7 @@ export default function Home() {
       name: "Clean Creative",
       key: "Emily Davis",
       image: "/template/LEONARDOX NERO-1.png",
-      category: "professional",
+      category: "proffessional",
     },
     {
       id: "Template40",
