@@ -29,7 +29,7 @@ export default function Template30({ data, onClickSection }) {
 
       {/* LEFT SIDEBAR */}
 
-      <div className="cv-sidebar w-1/3 bg-[#2C3E50] text-white p-6 flex flex-col">
+      <div className="cv-sidebar w-1/3 bg-[#2C3E50] text-white p-6 flex flex-col ">
         {/* Profile Image */}
         <div
           className={`overflow-hidden mb-6 ${data?.imageShape === "circle" ? "rounded-full" : data?.imageShape === "rounded" ? "rounded-xl" : ""}`}
@@ -37,10 +37,10 @@ export default function Template30({ data, onClickSection }) {
         >
           <img src={data?.profileImage || "/templateprofile/template30profile.webp"} className="w-full h-full object-cover" alt="profile" />
         </div>
-
+        <div className="mt-2">
         <h1 className="text-xl font-bold text-center break-words">{data?.name || "Isabel Mercado"}</h1>
         <p className="text-sm text-center opacity-80 break-words">{data?.title || "Marketing Manager"}</p>
-
+      </div>
         <div className="border-t border-white/40 my-4"></div>
 
         {/* Contact */}
