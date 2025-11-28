@@ -16,7 +16,7 @@ export default function TemplateSelector({
       <div className="w-[550px] bg-white h-full animate-slideLeft px-5 py-4 overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-[#634BC9]">Select Template</h2>
-          <button onClick={onClose} className="bg-gray-200 p-1 rounded-full">✕</button>
+          <button onClick={onClose} className="bg-gray-200 w-8 h-8 rounded-full flex items-center justify-center">✕</button>
         </div>
 
         <div className="grid grid-cols-2 gap-4">

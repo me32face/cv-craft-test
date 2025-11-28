@@ -17,7 +17,7 @@ export default function WhyChooseUs() {
     },
     {
       icon: FileText,
-      title: "Export to PDF & Word",
+      title: "Export to PDF",
       description: "Download your resume in multiple formats, fully editable and ready for any application.",
       bgColor: "bg-[#F5FAFB]"
     },
