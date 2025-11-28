@@ -26,7 +26,7 @@ export default function SocialLinkDisplay({ link }) {
       target="_blank"
       rel="noopener noreferrer"
       data-link={link.url}
-      className="social-link flex items-center gap-1 text-blue-600"
+      className="social-link flex items-center gap-2"
       style={{
         display: "",
         alignItems: "center",
@@ -49,7 +49,7 @@ export default function SocialLinkDisplay({ link }) {
           {iconMap[platform]}
         </span>
       )}
-      <span style={{ fontSize: "12px", display: "inline-block", lineHeight: "16px"  }}>
+      <span style={{ display: "inline-block" }}>
         {link.label}
       </span>
     </a>

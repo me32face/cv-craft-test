@@ -114,19 +114,19 @@ export default function PersonalInfo({ data, update, onClose, onNext, onSave }) 
           <button
             onClick={handleGenerateAI}
             disabled={isGenerating}
-            className="flex items-center gap-1 px-3 py-1 rounded-full 
-                 bg-gradient-to-r from-purple-400 to-purple-200 
-                 font-medium text-sm shadow-sm 
-                 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            className="group relative flex items-center gap-2 px-4 py-2 rounded-full 
+                 bg-gradient-to-r from-[#7C3AED] via-[#A78BFA] to-[#7C3AED] bg-[length:200%_100%]
+                 font-semibold text-sm text-white shadow-lg shadow-purple-300/50
+                 hover:shadow-xl hover:shadow-purple-400/60 hover:scale-105
+                 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
+                 transition-all duration-300 ease-out
+                 animate-gradient"
           >
             <Sparkles 
-              size={15} 
-              className=""
-              style={{
-                animation: 'spin 3s linear infinite, zoom 2s ease-in-out infinite'
-              }}
+              size={16} 
+              className="animate-sparkle group-hover:animate-sparkle-fast"
             /> 
-            <span className="text-[#7247EF]">{isGenerating ? "Generating..." : "Generate Using AI"}</span>
+            <span>{isGenerating ? "Generating..." : "Generate with AI"}</span>
           </button>
         </div>
 
@@ -137,7 +137,7 @@ export default function PersonalInfo({ data, update, onClose, onNext, onSave }) 
           rows="5"
           value={data.summary || ""}
           onChange={(e) => update("summary", e.target.value)}
-          placeholder="A brief description of your professional background and key strengths..."
+          placeholder="✨ Click 'Generate with AI' to create a professional summary tailored to your title, or write your own..."
         />
       </div>
 

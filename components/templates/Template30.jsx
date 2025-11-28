@@ -65,13 +65,11 @@ export default function Template30({ data, onClickSection }) {
           {data?.visibleSections?.socialLinks !== false && (
             <>
               {socialLinks.length > 0 && (
-                <div className="text-sm mt-1">
-                  {/* {socialLinks.map((link, i) => (
-                    <p key={i} className="text-sm break-all">🔗 {link}</p>
-                  ))} */}
-
+                <div className="">
                   {data.socialLinks.map((link, i) => (
-                    <SocialLinkDisplay key={i} link={link} />
+                    <div key={i} className="text-sm" style={{ color: 'inherit' }}>
+                      <SocialLinkDisplay link={link} />
+                    </div>
                   ))}
                 </div>
               )}
