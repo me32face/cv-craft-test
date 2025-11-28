@@ -40,11 +40,11 @@ export default function Template41({ data, onClickSection }) {
 
   return (
     <div
-      id="cv-preview"
+      id="pdf-template"
       className="cv-sidebar w-[794px] min-h-[1123px] mx-auto font-sans bg-white flex"
     >
       {/* LEFT SIDEBAR - Dark Background */}
-      <div className="w-[280px] bg-gradient-to-b from-slate-700 via-slate-800 to-slate-900 text-white  p-8 flex-shrink-0">
+      <div className="cv-sidebar w-1/3 bg-gradient-to-b from-slate-700 via-slate-800 to-slate-900 text-white  p-8 flex-shrink-0">
         {/* Profile Image */}
         <div className="mb-8 cursor-pointer" onClick={() => onClickSection && onClickSection("personal")}>
           {data?.profileImage && (
@@ -88,7 +88,7 @@ export default function Template41({ data, onClickSection }) {
                   <div className="space-y-3 mt-4">
                     {socialLinks.map((link, i) => (
                       <div key={i} className="flex items-start gap-3 break-all leading-[1.4] ">
-                         <SocialLinkDisplay key={i} link={link} />
+                        <SocialLinkDisplay key={i} link={link} />
                       </div>
                     ))}
                   </div>
@@ -137,7 +137,6 @@ export default function Template41({ data, onClickSection }) {
             </div>
           </div>
         )}
-
         {data?.visibleSections?.languages !== false && (
           <div className="mb-4">
             <h2 className="font-semibold text-md mb-2 border-b border-[#c3c3c3] pb-1.5">LANGUAGE</h2>
@@ -170,7 +169,7 @@ export default function Template41({ data, onClickSection }) {
       </div>
 
       {/* RIGHT CONTENT AREA - White Background */}
-      <div className="flex-1 p-10">
+      <div className="cv-sidebar w-2/3 flex-1 p-10">
         {/* Header */}
         <div className="mb-8 cursor-pointer" onClick={() => onClickSection && onClickSection("personal")}>
           <h1 className="text-5xl font-black text-slate-900 mb-2 tracking-tight uppercase">
@@ -284,7 +283,6 @@ export default function Template41({ data, onClickSection }) {
           </div>
         )}
 
-
         {/* Projects */}
         {data?.visibleSections?.projects !== false && (
           <section className="mb-8 cursor-pointer" onClick={() => onClickSection && onClickSection("projects")}>
@@ -299,8 +297,15 @@ export default function Template41({ data, onClickSection }) {
                     <div>
                       <p className="font-semibold text-gray-800 !text-sm">{project.name}</p>
                       {project.link && (
-                        <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline">
-                          {project.link}
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-600 underline project-link"
+                        >
+                          {project.useCustomLabel
+                            ? project.linkLabel
+                            : project.link}
                         </a>
                       )}
                     </div>

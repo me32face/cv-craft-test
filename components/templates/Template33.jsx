@@ -44,7 +44,6 @@ export default function Template35({ data, onClickSection }) {
             </div>
           )}
         </div>
-
         {/* Contact */}
         <div>
           <div className="mb-4">
@@ -53,12 +52,10 @@ export default function Template35({ data, onClickSection }) {
               <Phone size={14} className="shrink-0 translate-y-[-1px]" />
               <span>{data?.phone || "123-456-7890"}</span>
             </div>
-
             <div className="flex items-center gap-2 leading-[1.4] text-sm">
               <Mail size={14} className="shrink-0 translate-y-[-1px]" />
               <span>{data?.email || "hello@email.com"}</span>
             </div>
-
             <div className="flex items-center gap-2 leading-[1.4] text-sm">
               <MapPin size={14} className="shrink-0 translate-y-[-1px]" />
               <span>{data?.address || "123 Anywhere St., Any City"}</span>
@@ -88,7 +85,6 @@ export default function Template35({ data, onClickSection }) {
                 if (typeof s === 'string') {
                   return <p key={i} className="text-sm mb-1">• {s}</p>;
                 }
-
                 if (s.proficiency !== undefined) {
                   return (
                     <div key={i} className="mb-2">
@@ -105,7 +101,6 @@ export default function Template35({ data, onClickSection }) {
                     </div>
                   );
                 }
-
                 if (s.category && s.skills) {
                   return (
                     <p key={i} className="text-sm mb-1">
@@ -270,8 +265,15 @@ export default function Template35({ data, onClickSection }) {
                   <div>
                     <p className="font-semibold text-gray-800 !text-sm">{project.name}</p>
                     {project.link && (
-                      <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline">
-                        {project.link}
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-blue-600 underline project-link"
+                      >
+                        {project.useCustomLabel
+                          ? project.linkLabel
+                          : project.link}
                       </a>
                     )}
                   </div>
@@ -321,7 +323,6 @@ export default function Template35({ data, onClickSection }) {
             ))}
           </div>
         )}
-
       </div>
     </div>
   )

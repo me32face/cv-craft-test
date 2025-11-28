@@ -27,7 +27,8 @@ export default function Template43({ data, onClickSection }) {
 
   return (
     <div
-      id="cv-preview"
+      id='cv-preview'
+      // id="pdf-template"
       className="cv-sidebar w-[794px] min-h-[1123px] bg-white mx-auto font-sans relative overflow-hidden"
     >
       {/* Diagonal Header Design */}
@@ -35,10 +36,8 @@ export default function Template43({ data, onClickSection }) {
         {/* Dark blue diagonal section */}
         <svg viewBox="0 0 794 180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
           <polygon points="0,0 794,0 394,120 100,200 0,200" fill="#aeacbc" />
-
           <polygon points="100,0 794,0 794,200 418,190" fill="#8f8c9f" />
         </svg>
-
         {/* Profile Image */}
         <div className="absolute left-8 top-8 z-10">
           {data?.profileImage && (
@@ -59,7 +58,6 @@ export default function Template43({ data, onClickSection }) {
             </div>
           )}
         </div>
-
         {/* Name and Job Title */}
         <div className="absolute right-16 top-14 text-right cursor-pointer" onClick={() => onClickSection && onClickSection("personal")}>
           <h1 className="text-4xl font-bold text-slate-100 mb-1">
@@ -70,20 +68,18 @@ export default function Template43({ data, onClickSection }) {
           </p>
         </div>
       </div>
-
       {/* Profile Summary - Full Width */}
       {data?.visibleSections?.summary !== false && (
         <div className="px-10 py-1 mb-5 cursor-pointer" onClick={() => onClickSection && onClickSection("summary")}>
           <p className="text-xs leading-relaxed text-gray-700 text-justify">
-            {data?.summary || "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."}
+            {data?.summary || "Results-oriented Full Stack Developer with a proven ability to design,Results-oriented Full Stack Developer with a proven ability to design, develop, and deploy robust web applications. Proficient in both front-end and back-end technologies, consistently delivering high-quality, scalable solutions. Seeking to leverage comprehensive development expertise in a challenging and innovative environment.Results-oriented Full Stack Developer with a proven ability to design, develop, and deploy robust web applications. Proficient in both front-end and back-end technologies, consistently delivering high-quality, scalable solutions. Seeking to leverage comprehensive development expertise in a challenging and innovative environment. develop, and deploy robust web applications. Proficient in both front-end and back-end technologies, consistently delivering high-quality, scalable solutions. Seeking to leverage comprehensive development expertise in a challenging and innovative environment.."}
           </p>
         </div>
       )}
-
       {/* Two Column Layout */}
-      <div className="flex">
+      <div className="cv-sidebar flex">
         {/* Left Sidebar */}
-        <div className="w-[300px] bg-[#f1eff7] px-8 py-6 flex-shrink-0">
+        <div className="cv-sidebar w-1/3 bg-[#f1eff7] px-8 rounded-2xl ml-5 py-6 flex-shrink-0">
           {/* Profile Section */}
           <section className="mb-6 cursor-pointer" onClick={() => onClickSection && onClickSection("personal")}>
             <h2 className="text-sm font-bold text-slate-600 mb-3 uppercase tracking-wide pb-2 border-b-2 border-[#8f8c9f]">
@@ -94,12 +90,10 @@ export default function Template43({ data, onClickSection }) {
                 <Phone size={14} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.phone || "123-456-7890"}</span>
               </div>
-
               <div className="flex items-center gap-2 leading-[1.4] text-sm ">
                 <Mail size={14} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.email || "hello@email.com"}</span>
               </div>
-
               <div className="flex items-center gap-2 leading-[1.4] text-sm">
                 <MapPin size={14} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.address || "123 Anywhere St., Any City"}</span>
@@ -109,19 +103,18 @@ export default function Template43({ data, onClickSection }) {
                   {socialLinks.length > 0 && (
                     <div className="">
                       {socialLinks.length > 0 && (
-                                          <div className="">
-                                            {data.socialLinks.map((link, i) => (
-                                              <SocialLinkDisplay key={i} link={link} />
-                                            ))}
-                                          </div>
-                                        )}
+                        <div className="">
+                          {data.socialLinks.map((link, i) => (
+                            <SocialLinkDisplay key={i} link={link} />
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
                 </>
               )}
             </div>
           </section>
-
           {/* Languages */}
           {data?.visibleSections?.languages !== false && (
             <section className="mb-6 cursor-pointer" onClick={() => onClickSection && onClickSection("languages")}>
@@ -135,7 +128,6 @@ export default function Template43({ data, onClickSection }) {
               </div>
             </section>
           )}
-
           {/* Skills */}
           {data?.visibleSections?.skills !== false && (
             <div className="mb-4">
@@ -146,7 +138,6 @@ export default function Template43({ data, onClickSection }) {
                   if (typeof s === 'string') {
                     return <p key={i} className="text-sm mb-1">• {s}</p>;
                   }
-
                   if (s.proficiency !== undefined) {
                     return (
                       <div key={i} className="mb-2">
@@ -163,7 +154,6 @@ export default function Template43({ data, onClickSection }) {
                       </div>
                     );
                   }
-
                   if (s.category && s.skills) {
                     return (
                       <p key={i} className="text-sm mb-1">
@@ -171,13 +161,11 @@ export default function Template43({ data, onClickSection }) {
                       </p>
                     );
                   }
-
                   return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
                 })}
               </div>
             </div>
           )}
-
           {/* Certifications */}
           {data?.visibleSections?.certificates !== false && (
             <section className="mb-6 cursor-pointer" onClick={() => onClickSection && onClickSection("certificates")}>
@@ -205,7 +193,6 @@ export default function Template43({ data, onClickSection }) {
               </div>
             </section>
           )}
-
           {/* AWARDS */}
           {data?.visibleSections?.awards !== false && Awards.length > 0 && (
             <div className="mt-6">
@@ -231,7 +218,6 @@ export default function Template43({ data, onClickSection }) {
               ))}
             </div>
           )}
-
           {/*References*/}
           {data?.visibleSections?.references !== false && references.length > 0 && (
             <>
@@ -253,9 +239,8 @@ export default function Template43({ data, onClickSection }) {
             </>
           )}
         </div>
-
         {/* Right Main Content */}
-        <div className="flex-1 px-8 py-6">
+        <div className="cv-sidebar w-2/3 flex-1 px-8 py-6">
           {/* Professional Experience */}
           {data?.visibleSections?.experience !== false && (
             <section className="mb-5 cursor-pointer" onClick={() => onClickSection && onClickSection("experience")}>
@@ -342,7 +327,8 @@ export default function Template43({ data, onClickSection }) {
                     ) : (
                       <p className="text-sm mt-1 text-gray-700 text-justify break-words">{edu.description}</p>
                     )
-                  )}                </div>
+                  )}
+                </div>
               ))}
             </div>
           )}
@@ -365,9 +351,11 @@ export default function Template43({ data, onClickSection }) {
                         href={project.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[12px] text-blue-600 underline block mt-0.5"
+                        className="text-xs text-blue-600 underline project-link"
                       >
-                        {project.link}
+                        {project.useCustomLabel
+                          ? project.linkLabel
+                          : project.link}
                       </a>
                     )}
                     {project.year && (

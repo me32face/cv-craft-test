@@ -29,7 +29,7 @@ export default function Template45({ data, onClickSection }) {
 
   return (
     <div
-      id="cv-preview"
+      id="pdf-template"
       className="cv-sidebar w-[794px] min-h-[1123px] bg-gray-50 mx-auto font-sans relative overflow-hidden flex text-slate-800"
     >
       {/* SVG Background Design - Top */}
@@ -85,7 +85,7 @@ export default function Template45({ data, onClickSection }) {
       </svg>
 
       {/* --- LEFT COLUMN (Sidebar) --- */}
-      <div className="w-[38%] relative z-10 flex flex-col pt-16 pb-10 bg-[#]">
+      <div className="cv-sidebar w-1/3 relative z-10 flex flex-col pt-16 pb-10 bg-[#]">
         {/* Profile Image with circular border */}
         <div className="flex justify-center mb-12 px-8">
           <div
@@ -111,7 +111,6 @@ export default function Template45({ data, onClickSection }) {
             )}
           </div>
         </div>
-
         {/* Sidebar Content */}
         <div className="px-8 flex flex-col gap-8">
           {/* Profile Section */}
@@ -139,12 +138,12 @@ export default function Template45({ data, onClickSection }) {
               {data?.visibleSections?.socialLinks !== false && socialLinks.length > 0 && (
                 <div className="w-full flex flex-col gap-1 mt-1">
                   {socialLinks.length > 0 && (
-                                      <div className="">
-                                        {data.socialLinks.map((link, i) => (
-                                          <SocialLinkDisplay key={i} link={link} />
-                                        ))}
-                                      </div>
-                                    )}
+                    <div className="">
+                      {data.socialLinks.map((link, i) => (
+                        <SocialLinkDisplay key={i} link={link} />
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -264,7 +263,6 @@ export default function Template45({ data, onClickSection }) {
               ))}
             </div>
           )}
-
           {/*References*/}
           {data?.visibleSections?.references !== false && references.length > 0 && (
             <div>
@@ -289,8 +287,7 @@ export default function Template45({ data, onClickSection }) {
       </div>
 
       {/* --- RIGHT COLUMN (Main Content) --- */}
-      <div className="w-[62%] pt-16 pr-12 pl-8 pb-10 flex flex-col gap-8">
-
+      <div className="cv-sidebar w-2/3 pt-16 pr-12 pl-8 pb-10 flex flex-col gap-8">
         {/* Header */}
         <header onClick={() => onClickSection && onClickSection("personal")} className="cursor-pointer mb-2">
           <h1 className="text-5xl font-bold uppercase mb-2 ml-8 tracking-wide" >
@@ -300,7 +297,6 @@ export default function Template45({ data, onClickSection }) {
             {data?.title || "JOB TITLE"}
           </p>
         </header>
-
         {/* Profile / Summary */}
         {data?.visibleSections?.summary !== false && (
           <section onClick={() => onClickSection && onClickSection("summary")} className="cursor-pointer">
@@ -312,7 +308,6 @@ export default function Template45({ data, onClickSection }) {
             </p>
           </section>
         )}
-
         {/* Professional Experience */}
         {data?.visibleSections?.experience !== false && (
           <section className="mb-0 cursor-pointer" onClick={() => onClickSection && onClickSection("experience")}>
@@ -371,7 +366,6 @@ export default function Template45({ data, onClickSection }) {
             </div>
           </section>
         )}
-
         {/* Projects */}
         {data?.visibleSections?.projects !== false && (
           <section
@@ -388,8 +382,15 @@ export default function Template45({ data, onClickSection }) {
                     <div>
                       <p className="font-semibold text-gray-800 !text-sm">{project.name}</p>
                       {project.link && (
-                        <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline">
-                          {project.link}
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-600 underline project-link"
+                        >
+                          {project.useCustomLabel
+                            ? project.linkLabel
+                            : project.link}
                         </a>
                       )}
                     </div>

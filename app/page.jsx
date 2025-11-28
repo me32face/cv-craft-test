@@ -24,20 +24,21 @@ export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeFilter, setActiveFilter] = useState("All");
   const [showToast, setShowToast] = useState(false);
+  const [hasResumes, setHasResumes] = useState(false);
   const templates = [
     {
       id: "Template01",
       name: "Professional Classic",
       key: "Richard Sanchez",
       image: "/template/template01n.png",
-      category: "modern",
+      category: "simple",
     },
     {
       id: "Template47",
       name: "Classic",
       key: "Richard",
       image: "/template/template47.png",
-      category: "modern",
+      category: "simple",
     },
     {
       id: "Template30",
@@ -93,7 +94,7 @@ export default function Home() {
       name: "Stylish Resume",
       key: "Sophia Lee",
       image: "/template/template37.jpg",
-      category: "modern",
+      category: "proffessional",
     },
     {
       id: "Template38",
@@ -107,7 +108,7 @@ export default function Home() {
       name: "Clean Creative",
       key: "Emily Davis",
       image: "/template/LEONARDOX NERO-1.png",
-      category: "professional",
+      category: "proffessional",
     },
     {
       id: "Template40",
@@ -387,6 +388,30 @@ export default function Home() {
     };
   }, [currentIndex, templates.length]);
 
+  // Check if user has resumes
+  useEffect(() => {
+    const checkUserResumes = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      
+      try {
+        const response = await fetch('http://localhost:5000/api/resumes/count', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const result = await response.json();
+        if (result.success) {
+          setHasResumes(result.count > 0);
+        }
+      } catch (error) {
+        console.error('Failed to check resume count:', error);
+      }
+    };
+    
+    checkUserResumes();
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -420,6 +445,22 @@ export default function Home() {
                     {filter}
                   </button>
                 )
+              )}
+              {hasResumes && (
+                <button
+                  onClick={() => {
+                    const token = localStorage.getItem("token");
+                    if (!token) {
+                      setShowToast(true);
+                      setTimeout(() => router.push("/login"), 1500);
+                    } else {
+                      router.push("/my-resumes");
+                    }
+                  }}
+                  className="px-6 py-2 whitespace-nowrap rounded-full text-white font-semibold bg-gradient-to-r from-[#10B981] to-[#059669] hover:opacity-90 transition cursor-pointer"
+                >
+                  Get Your Existing Resumes
+                </button>
               )}
             </div>
           </div>

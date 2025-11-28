@@ -1,3 +1,4 @@
+
 'use client';
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
@@ -23,9 +24,13 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
   const [additionalOpen, setAdditionalOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
+  const [exportMenuOpen, setExportMenuOpen] = useState(false);
   const [toast, setToast] = useState(null);
+  const [resumeId, setResumeId] = useState(null);
+  const [loading, setLoading] = useState(true);
   const shareMenuRef = useRef(null);
-const [templateSelectorOpen, setTemplateSelectorOpen] = useState(false);
+const [templateSelectorOpen, setTemplateSelectorOpen] = useState(false);  const exportMenuRef = useRef(null);
+
 const router = useRouter();
 
 const dropdownRef = useRef(null);
@@ -66,16 +71,19 @@ if (key === "templates") {
       if (shareMenuRef.current && !shareMenuRef.current.contains(event.target)) {
         setShareMenuOpen(false);
       }
+      if (exportMenuRef.current && !exportMenuRef.current.contains(event.target)) {
+        setExportMenuOpen(false);
+      }
     };
 
-    if (shareMenuOpen) {
+    if (shareMenuOpen || exportMenuOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [shareMenuOpen]);
+  }, [shareMenuOpen, exportMenuOpen]);
 
 
   const generatePdf = async () => {
@@ -102,7 +110,7 @@ if (key === "templates") {
       if (page > 0) pdf.addPage();
       const yOffset = -(page * pageHeight);
       pdf.addImage(imgData, "JPEG", 0, yOffset, imgWidth, imgHeight);
-      const linkElements = element.querySelectorAll(".social-link,.project-link");
+      const linkElements = element.querySelectorAll(".social-link");
 
       linkElements.forEach(el => {
         const rect = el.getBoundingClientRect();
@@ -394,6 +402,51 @@ if (key === "templates") {
     }, 100);
   }, [data]);
 
+  // Initial loading state
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Load resume by ID from URL parameter
+  useEffect(() => {
+    const loadResumeById = async () => {
+      if (typeof window === "undefined") return;
+
+      const params = new URLSearchParams(window.location.search);
+      const resumeIdParam = params.get('resumeId');
+      
+      if (!resumeIdParam) return;
+
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        const response = await fetch(`http://localhost:5000/api/resumes/${resumeIdParam}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        const result = await response.json();
+        
+        if (result.success && result.resume) {
+          setData(result.resume.templateData);
+          setResumeId(result.resume._id);
+          // setToast('Resume loaded successfully');
+        }
+      } catch (error) {
+        console.error('Failed to load resume:', error);
+        setToast('Failed to load resume');
+      }
+    };
+
+    loadResumeById();
+  }, []);
+
   // Load shared data from URL if present
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -464,8 +517,93 @@ if (key === "templates") {
     }, 200);
   };
 
+  const handleSave = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setToast('Please login to save resume');
+        return;
+      }
+
+      const response = await fetch('http://localhost:5000/api/resumes/save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          resumeId: resumeId,
+          resumeName: data.name || 'My Resume',
+          templateId: template,
+          templateData: data
+        })
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        setResumeId(result.resume.id);
+        setToast('Resume saved successfully!');
+        setExportMenuOpen(false);
+      } else {
+        setToast(result.message || 'Failed to save resume');
+      }
+    } catch (error) {
+      console.error('Save error:', error);
+      setToast('Failed to save resume');
+    }
+  };
+
+  const handleSaveAsNew = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setToast('Please login to save resume');
+        return;
+      }
+
+      const response = await fetch('http://localhost:5000/api/resumes/save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          // No resumeId - forces creation of new resume
+          resumeName: `${data.name || 'My Resume'} - Copy`,
+          templateId: template,
+          templateData: data
+        })
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        setResumeId(result.resume.id);
+        setToast('New resume created successfully!');
+        setExportMenuOpen(false);
+      } else {
+        setToast(result.message || 'Failed to create new resume');
+      }
+    } catch (error) {
+      console.error('Save as new error:', error);
+      setToast('Failed to create new resume');
+    }
+  };
 
 
+
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading template...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -673,6 +811,8 @@ if (key === "templates") {
                 <Printer size={14} className="sm:w-3 sm:h-3" />
                 <span className="hidden sm:inline">Print</span>
               </button>
+
+
               {/* Share dropdown (URL / Copy / PDF) */}
               <div ref={shareMenuRef} className="relative">
                 <button
@@ -755,17 +895,90 @@ if (key === "templates") {
                   </div>
                 )}
               </div>
-              {/* Export PDF */}
+              {/* Export Menu */}
+              <div ref={exportMenuRef} className="relative">
               <button
-                onClick={handleDownload}
-                className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm"
-              >
-                <Download size={14} className="sm:w-3 sm:h-3" />
-                <span className="hidden md:inline">Export PDF</span>
-                <span className="md:hidden">PDF</span>
-              </button>
+                  onClick={() => setExportMenuOpen(prev => !prev)}
+                  className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm shadow-sm"
+                >
+                  <Download size={14} className="sm:w-3 sm:h-3" />
+                  <span className="hidden md:inline">Export</span>
+                  <span className="md:hidden">PDF</span>
+                </button>
+  
+              {exportMenuOpen && (
+                <div className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur border border-indigo-100 rounded-2xl shadow-xl z-30 text-xs sm:text-sm overflow-hidden">
+                  {/* Top label */}
+                  <div className="px-3 py-2 bg-gradient-to-r from-[#F3F0FF] to-[#E9F1FF] border-b border-indigo-50">
+                    <p className="text-[11px] sm:text-xs font-medium text-[#5B46C8]">
+                      Save & Export Options
+                    </p>
+                    <p className="text-[10px] text-[#8E7FD9]">
+                      Choose how to save your resume
+                    </p>
+                  </div>
+                    {/* Save */}
+                  <button
+                    onClick={handleSave}
+                    className="flex w-full items-center gap-2 px-3 py-2.5 hover:bg-indigo-50/70 transition text-left"
+                  >
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-green-100">
+                      <FileText size={14} className="text-green-600" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-medium text-[#342768] text-[11px] sm:text-xs">
+                        Save
+                      </span>
+                      <span className="text-[10px] text-[#8E7FD9]">
+                        Update existing resume
+                      </span>
+                    </div>
+                  </button>
+
+                  {/* Save As New */}
+                  <button
+                    onClick={handleSaveAsNew}
+                    className="flex w-full items-center gap-2 px-3 py-2.5 hover:bg-indigo-50/70 transition text-left"
+                  >
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-100">
+                      <FileText size={14} className="text-blue-600" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-medium text-[#342768] text-[11px] sm:text-xs">
+                        Save As New
+                      </span>
+                      <span className="text-[10px] text-[#8E7FD9]">
+                        Create a new resume copy
+                      </span>
+                    </div>
+                  </button>
+
+                  {/* Export PDF */}
+                  <button
+                    onClick={() => {
+                      setExportMenuOpen(false);
+                      handleDownload();
+                    }}
+                    className="flex w-full items-center gap-2 px-3 py-2.5 hover:bg-indigo-50/70 transition text-left border-t border-dashed border-indigo-100"
+                  >
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100">
+                      <Download size={14} className="text-[#634BC9]" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-medium text-[#342768] text-[11px] sm:text-xs">
+                        Export PDF
+                      </span>
+                      <span className="text-[10px] text-[#8E7FD9]">
+                        Download as PDF file
+                      </span>
+                    </div>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
+
+        </div>
           {/* Preview area */}
           <div className="flex-1 overflow-auto px-3 sm:px-6 lg:px-20 py-3 sm:py-6 lg:py-8">
             <div className="mx-auto max-w-6xl">

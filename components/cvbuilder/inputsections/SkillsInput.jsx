@@ -342,7 +342,7 @@ export default function SkillsInput({ skills = [], setSkills, onClose, onNext })
           className="flex-1 px-4 py-2 rounded-full border 
              focus:border-purple-600 focus:ring-2 focus:ring-purple-300 
              outline-none transition"
-          placeholder="Add a new skill..."
+          placeholder="✨ Type your job role (e.g., 'Frontend Developer') and let AI suggest relevant skills..."
           value={newSkillText}
           onChange={(e) => setNewSkillText(e.target.value)}
         />
@@ -362,13 +362,19 @@ export default function SkillsInput({ skills = [], setSkills, onClose, onNext })
           <button
             onClick={handleGenerateAI}
             disabled={isGenerating}
-            className="flex items-center gap-1 px-3 py-1 rounded-full 
-                 bg-gradient-to-r from-purple-400 to-purple-200 
-                 text-[#634BC9] font-medium text-sm shadow-sm 
-                 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            className="group relative flex items-center gap-2 px-4 py-2 rounded-full 
+                 bg-gradient-to-r from-[#7C3AED] via-[#A78BFA] to-[#7C3AED] bg-[length:200%_100%]
+                 font-semibold text-sm text-white shadow-lg shadow-purple-300/50
+                 hover:shadow-xl hover:shadow-purple-400/60 hover:scale-105
+                 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
+                 transition-all duration-300 ease-out
+                 animate-gradient"
           >
-            <Sparkles size={14}/> 
-            {isGenerating ? "Generating..." : "Generate Using AI"}
+            <Sparkles 
+              size={16} 
+              className="animate-sparkle group-hover:animate-sparkle-fast"
+            /> 
+            <span>{isGenerating ? "Generating..." : "Generate with AI"}</span>
           </button>
         </div>
 
