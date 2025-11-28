@@ -3,7 +3,7 @@
 
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
-import { Phone, Mail, MapPin, Link } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
 import SocialLinkDisplay from "../SocialLinkDisplay";
 
 export default function Template44({ data, onClickSection }) {
@@ -45,7 +45,7 @@ export default function Template44({ data, onClickSection }) {
           <path
             d="M0,0 L320,0 C320,150 90,200 0,400"
             fill={themeColor}
-            opacity="0.5"
+            opacity="0.6"
           />
         </svg>
       </div>
@@ -59,7 +59,7 @@ export default function Template44({ data, onClickSection }) {
           <path
             d="M794,1123 L474,1123 C474,973 704,923 794,723"
             fill={themeColor}
-            opacity="0.5"
+            opacity="0.6"
           />
         </svg>
       </div>

@@ -2,6 +2,7 @@
 import React from 'react';
 import { Facebook, Twitter, Linkedin, Instagram, Heart } from 'lucide-react';
 import Image from "next/image";
+import Link from 'next/link';
 
 export default function Footer() {
     const footerSections = [
@@ -35,9 +36,10 @@ export default function Footer() {
         {
             title: 'Legal',
             links: [
-                { name: 'Privacy Policy', href: '#' },
-                { name: 'Terms of Service', href: '#' },
-                { name: 'Cookie policy', href: '#' }
+                { name: 'Privacy Policy', href: '/privacy-policy' },
+                { name: 'Refund Policy', href: '/policy-refund' },
+                { name: 'Terms of Conditions', href: '/terms-condition' },
+                { name: 'Disclaimer policy', href: '/disclaimer-policy' }
             ]
         }
     ];
@@ -64,8 +66,7 @@ export default function Footer() {
                                     width={160}
                                     height={40}
                                     unoptimized
-                                    className="relative object-contain sm:w-[80px] sm:h-[35px] lg:w-[160px] lg:h-[45px] transition-transform duration-500 group-hover:scale-105"
-                                />
+                                    className="relative object-contain sm:w-[80px] sm:h-[35px] lg:w-[160px] lg:h-[45px] transition-transform duration-500 group-hover:scale-105"/>
                             </div>
                         </div>
                         <p className="text-md font-semibold text-[#929292] mb-6">
@@ -90,23 +91,22 @@ export default function Footer() {
                     {/* Footer Links */}
                     {footerSections.map((section) => (
                         <div key={section.title}>
-                            <h4 className="text-lg font-bold text-[#342D4C] mb-4">
-                                {section.title}
-                            </h4>
+                            <h4 className="text-lg font-bold text-[#342D4C] mb-4">{section.title}</h4>
                             <ul className="space-y-3">
                                 {section.links.map((link) => (
                                     <li key={link.name}>
-                                        <a
+                                        <Link
                                             href={link.href}
-                                            className="text-md text-[#7d7d7d]  hover:text-[#524e5f] transition-colors duration-200"
+                                            className="text-md text-[#7d7d7d] hover:text-[#524e5f] transition-colors duration-200"
                                         >
                                             {link.name}
-                                        </a>
+                                        </Link>
                                     </li>
                                 ))}
                             </ul>
                         </div>
                     ))}
+
                 </div>
 
                 {/* Bottom Bar */}
