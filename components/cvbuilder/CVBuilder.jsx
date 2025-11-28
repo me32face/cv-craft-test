@@ -4,14 +4,15 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { templates, templateInputs } from "../templates";
-import { User, Camera, Link2, Code, GraduationCap, Briefcase, Globe, Award, Printer, Share2, Download, ZoomIn, ZoomOut, Expand, Sparkles, ChevronLeft, Menu, FolderCode, X, Home, FileText, Users } from "lucide-react";
+import { User, Camera, Link2, Code, GraduationCap, Briefcase, Globe, Award, Printer, Share2, Download, ZoomIn, ZoomOut, Expand, Sparkles, ChevronLeft, Menu, FolderCode, X, Home, FileText, Users,BookPlus ,ChevronUp} from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import PopupEditor from "./PopupEditor"; // reusable popup
 import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from "lz-string";
-
+import TemplateSelector from "./TemplateSelector";
 import Toast from "../Toast";
 
+import { LayoutTemplate } from "lucide-react";
 export default function CVBuilder({ initialTemplate = "template31", onBack }) {
   const [template, setTemplate] = useState(initialTemplate.toLowerCase());
   const TemplateComponent = templates[template];
@@ -28,15 +29,35 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
   const [resumeId, setResumeId] = useState(null);
   const [loading, setLoading] = useState(true);
   const shareMenuRef = useRef(null);
-  const exportMenuRef = useRef(null);
+const [templateSelectorOpen, setTemplateSelectorOpen] = useState(false);  const exportMenuRef = useRef(null);
 
-  const router = useRouter();
+const router = useRouter();
 
+const dropdownRef = useRef(null);
+const additionalBtnRef = useRef(null);
+const [additionalBtnX, setAdditionalBtnX] = useState(0);
+const [additionalBtnY, setAdditionalBtnY] = useState(0);
 
   const [totalPages, setTotalPages] = useState(1);
   const update = (key, value) => setData(prev => ({ ...prev, [key]: value }));
 
   const handleMenuItemClick = (key) => {
+if (key === "additional") {
+  setAdditionalOpen(!additionalOpen);
+
+  if (additionalBtnRef.current) {
+    const rect = additionalBtnRef.current.getBoundingClientRect();
+    setAdditionalBtnX(rect.left);
+    setAdditionalBtnY(rect.top);
+  }
+  return;
+}
+
+if (key === "templates") {
+  setTemplateSelectorOpen(true);
+  return;
+}
+
     setOpenSection(key);
     setSelectedMenu(key);
     setMobileMenuOpen(false);
@@ -91,18 +112,20 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
       pdf.addImage(imgData, "JPEG", 0, yOffset, imgWidth, imgHeight);
       const linkElements = element.querySelectorAll(".social-link");
 
-linkElements.forEach(el => {
-  const rect = el.getBoundingClientRect();
-  const parentRect = element.getBoundingClientRect();
+      linkElements.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        const parentRect = element.getBoundingClientRect();
 
-  // Calculate positions in PDF space
-  const x = (rect.left - parentRect.left) * (pageWidth / element.scrollWidth);
-  const y = (rect.top - parentRect.top) * (pageWidth / element.scrollWidth);
-  const w = rect.width * (pageWidth / element.scrollWidth);
-  const h = rect.height * (pageWidth / element.scrollWidth);
+        // Calculate positions in PDF space
+        const pxPerMM = element.offsetWidth / pageWidth;
 
-  pdf.link(x, y - pageHeight * page, w, h, { url: el.href });
-});
+        const x = (rect.left - parentRect.left) / pxPerMM;
+        const y = (rect.top - parentRect.top) / pxPerMM;
+        const w = rect.width / pxPerMM;
+        const h = rect.height / pxPerMM;
+
+        pdf.link(x, y - pageHeight * page, w, h, { url: el.href });
+      });
     }
 
     resetLayout(element);
@@ -457,6 +480,8 @@ linkElements.forEach(el => {
     { name: "Work Experience", key: "experience", icon: Briefcase, inputKey: "experiences" },
     { name: "Languages", key: "languages", icon: Globe, inputKey: "languages" },
     { name: "projects", key: "projects", icon: FolderCode, inputKey: "project" },
+    { name: "Additional Section", key: "additional", icon: BookPlus, inputKey: "additional" },
+    { name: "Templates", key: "templates", icon: LayoutTemplate, inputKey: "templates" },
   ];
 
   const menuItems = useMemo(() => {
@@ -582,274 +607,305 @@ linkElements.forEach(el => {
 
   return (
     <>
+    <div className="relative">
+
+   
       {toast && <Toast message={toast} onClose={() => setToast(null)} />}
       <div className="h-screen flex bg-[#F6F5F6] text-gray-800 overflow-hidden">
-      {/* MOBILE MENU BUTTON */}
-      <button
-        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-lg border border-indigo-100"
-      >
-        {mobileMenuOpen ? (
-          <X size={24} className="text-indigo-600" />
-        ) : (
-          <Menu size={24} className="text-indigo-600" />
-        )}
-      </button>
+        {/* MOBILE MENU BUTTON */}
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-lg border border-indigo-100"
+        >
+          {mobileMenuOpen ? (
+            <X size={24} className="text-indigo-600" />
+          ) : (
+            <Menu size={24} className="text-indigo-600" />
+          )}
+        </button>
 
 
-      {/* SIDEBAR */}
-      <aside
-        className={`
+        {/* SIDEBAR */}
+        <aside
+          className={`
           bg-white/70 border-r border-indigo-50 flex flex-col items-center lg:items-stretch transition-all duration-300
           fixed lg:static inset-y-0 left-0 z-40
           ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
           ${collapsed ? 'w-20 lg:w-24' : 'w-64 sm:w-72 lg:w-76 xl:w-80'}
         `}
-      >
-        <div className="w-full px-3 sm:px-4 lg:px-6 py-3 sm:py-4 flex items-center justify-start gap-2 sm:gap-3 border-b border-gray-200">
-          {!collapsed && (
-            <div className="relative flex-shrink-0 w-20 sm:w-24 lg:w-28 h-8 sm:h-9 lg:h-10">
-              <Image src="/cvlogo.png" alt="Logo" fill className="object-contain" />
-            </div>
-          )}
-          <button
-            onClick={() => setCollapsed(prev => !prev)}
-            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            className={`
+        >
+          <div className="w-full px-3 sm:px-4 lg:px-6 py-3 sm:py-4 flex items-center justify-start gap-2 sm:gap-3 border-b border-gray-200">
+            {!collapsed && (
+              <div className="relative flex-shrink-0 w-20 sm:w-24 lg:w-28 h-8 sm:h-9 lg:h-10">
+                <Image src="/cvlogo.png" alt="Logo" fill className="object-contain" />
+              </div>
+            )}
+            <button
+              onClick={() => setCollapsed(prev => !prev)}
+              aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+              className={`
             ${collapsed ? "mx-auto" : "ml-auto"} 
             inline-flex items-center justify-center 
             w-7 h-7 sm:w-8 sm:h-8 
             text-indigo-600 rounded-full 
             hover:bg-[#F2F0FF] transition
           `}
-          >
-            <ChevronLeft
-              size={22}
-              className={`${collapsed ? "rotate-180" : ""} transition-transform`}
-            />
-          </button>
+            >
+              <ChevronLeft
+                size={22}
+                className={`${collapsed ? "rotate-180" : ""} transition-transform`}
+              />
+            </button>
 
-        </div>
+          </div>
 
-        <nav
-          className={`
+          <nav
+            className={`
           w-full 
           ${collapsed ? "px-6" : "px-3 sm:px-4 lg:px-8"} 
           py-4 sm:py-6 lg:py-6
           flex-1 overflow-auto transition-all duration-300
         `}
-        >
-          <div className="flex flex-col gap-2 sm:gap-3">
-            {menuItems.map(item => (
-              <button
-                key={item.key}
-                onClick={() => handleMenuItemClick(item.key)}
-                title={item.name}
-                className={`
-          flex items-center 
-          ${collapsed ? "justify-center w-10 h-10 rounded-full"
+          >
+            <div className="flex flex-col gap-2 sm:gap-3">
+             {menuItems.map(item => {
+  if (item.key === "templates") {
+    // We render templates later, AFTER additional items
+    return null;
+  }
+
+  return (
+    <button
+      key={item.key}
+      ref={item.key === "additional" ? additionalBtnRef : null}
+      onClick={() => handleMenuItemClick(item.key)}
+      title={item.name}
+      className={`
+        flex items-center 
+        ${collapsed ? "justify-center w-10 h-10 rounded-full"
                     : "gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-full "}
-          transition-all text-xs sm:text-sm font-medium       
-          ${selectedMenu === item.key
+        transition-all text-xs sm:text-sm font-medium       
+        ${selectedMenu === item.key
                     ? "bg-gradient-to-r from-[#4B74F4] to-[#7642EE] text-white shadow-md scale-[1.02]"
                     : "bg-white text-indigo-700 border border-indigo-200 hover:bg-indigo-50"
-                  }
-        `}
-              >
-                <item.icon size={18} className={`${collapsed ? "mx-auto" : ""}`} />
-                {!collapsed && <span className="truncate">{item.name}</span>}
+        }
+      `}
+    >
+      <item.icon size={18} className={`${collapsed ? "mx-auto" : ""}`} />
+      {!collapsed && (
+        <span className="truncate flex items-center gap-1">
+          {item.name}
+          {item.key === "additional" && (
+            additionalOpen ?
+              <ChevronUp size={16}/> :
+              <ChevronDown size={16}/>
+          )}
+        </span>
+      )}
+    </button>
+  );
+})}
+
+{/* Now insert additional submenu BEFORE Templates */}
+{additionalOpen && (
+  <div className={`
+    ${collapsed
+      ? "fixed z-[99999] bg-white shadow-xl border border-gray-200 rounded-xl p-2"
+      : "ml-3 mt-2 flex flex-col border-l-4 border-indigo-400 pl-2"}
+  `}
+    style={
+      collapsed
+        ? { top: additionalBtnY, left: additionalBtnX + 50 }
+        : {}
+    }
+  >
+    <div className="text-[11px] uppercase text-indigo-400 font-semibold mb-1">
+      Additional Fields
+    </div>
+    
+    {additionalMenuItems.map(item => (
+      <button
+        key={item.key}
+        onClick={() => handleMenuItemClick(item.key)}
+        className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-indigo-50 text-indigo-700 border border-indigo-200 mt-1"
+      >
+        <item.icon size={18}/>
+        <span>{item.name}</span>
+      </button>
+    ))}
+  </div>
+)}
+
+{/* Finally render Templates button here */}
+{menuItems.find(it => it.key === "templates") && (
+  <button
+    key={"templates"}
+    onClick={() => handleMenuItemClick("templates")}
+    title="Templates"
+    className={`
+      flex items-center 
+      ${collapsed ? "justify-center w-10 h-10 rounded-full"
+                  : "gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-full "}
+      transition-all text-xs sm:text-sm font-medium       
+      ${selectedMenu === "templates"
+                  ? "bg-gradient-to-r from-[#4B74F4] to-[#7642EE] text-white shadow-md scale-[1.02]"
+                  : "bg-white text-indigo-700 border border-indigo-200 hover:bg-indigo-50"
+      }
+    `}
+  >
+    <LayoutTemplate size={18} className={`${collapsed ? "mx-auto" : ""}`} />
+    {!collapsed && <span className="truncate">Templates</span>}
+  </button>
+)}
+
+{/* Quick Tips Section */}
+{!collapsed && (
+  <div className="p-4 bg-[#F4EEFF] rounded-xl mt-4 border border-indigo-100">
+    <h3 className="text-sm font-semibold text-[#6C4CCF]">Quick Tips</h3>
+    <ul className="mt-2 text-xs text-[#6C4CCF] leading-relaxed space-y-1">
+      <li>• Click any section to start editing</li>
+      <li>• Changes save automatically</li>
+      <li>• Download as PDF when ready</li>
+      <li>• Try different templates</li>
+    </ul>
+  </div>
+)}
+
+            </div>
+
+
+
+          </nav>
+        </aside>
+
+        {/* OVERLAY FOR MOBILE MENU */}
+        {mobileMenuOpen && (
+          <div
+            className="lg:hidden fixed inset-0 bg-black/40 z-30"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+        )}
+
+        {/* TEMPLATE PREVIEW */}
+        <div className="flex-1 flex flex-col overflow-hidden pt-16 lg:pt-0">
+          {/* Topbar */}
+          <div className="flex items-center justify-between px-4 sm:px-8 lg:px-20 pt-4 sm:pt-6 lg:pt-8 bg-transparent">
+            {/* LEFT → HOME BUTTON */}
+            <div>
+              <button
+                onClick={() => router.push('/')}
+                title="Back to Home Page"
+                className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-2 py-1.5 sm:py-2 
+              rounded-lg bg-white/80 text-[#634BC9] hover:bg-[#634BC9] hover:text-white transition text-xs sm:text-sm">
+                <Home
+                  className="w-4 h-4 sm:w-6 sm:h-6 "
+                />
               </button>
-            ))}
-          </div>
+            </div>
+            {/* RIGHT → OTHER ACTION BUTTONS */}
+            <div className="flex items-center justify-end gap-2 sm:gap-4">
+              {/* Print */}
+              <button
+                onClick={handlePrint}
+                className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm">
+                <Printer size={14} className="sm:w-3 sm:h-3" />
+                <span className="hidden sm:inline">Print</span>
+              </button>
 
-          {!collapsed && (
-            <>
-              <div className="mt-4">
+
+              {/* Share dropdown (URL / Copy / PDF) */}
+              <div ref={shareMenuRef} className="relative">
                 <button
-                  onClick={() => setAdditionalOpen(!additionalOpen)}
-                  className="flex items-center justify-between w-full gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-full transition-all text-xs sm:text-sm font-medium bg-white text-indigo-700 border border-indigo-200 hover:bg-indigo-50"
-                >
-                  <span className="truncate">Additional Section</span>
-                  <ChevronDown className={`transition-transform ${additionalOpen ? 'rotate-180' : ''}`} />
+                  onClick={() => setShareMenuOpen(prev => !prev)}
+                  className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm shadow-sm">
+                  <Share2 size={14} className="sm:w-3 sm:h-3" />
+                  <span className="hidden sm:inline">Share</span>
                 </button>
-
-                {additionalOpen && (
-                  <div className="flex flex-col gap-2 sm:gap-3 mt-2 ml-2">
-                    {additionalMenuItems.map(item => (
-                      <button
-                        key={item.key}
-                        onClick={() => handleMenuItemClick(item.key)}
-                        title={item.name}
-                        className={`
-                          flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-full
-                          transition-all text-xs sm:text-sm font-medium
-                          ${selectedMenu === item.key
-                            ? "bg-gradient-to-r from-[#4B74F4] to-[#7642EE] text-white shadow-md scale-[1.02]"
-                            : "bg-white text-indigo-700 border border-indigo-200 hover:bg-indigo-50"
-                          }
-                        `}
-                      >
-                        <item.icon size={18} />
-                        <span className="truncate">{item.name}</span>
-                      </button>
-                    ))}
+                {shareMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur border border-indigo-100 rounded-2xl shadow-xl z-30 text-xs sm:text-sm overflow-hidden">
+                    {/* Top label */}
+                    <div className="px-3 py-2 bg-gradient-to-r from-[#F3F0FF] to-[#E9F1FF] border-b border-indigo-50">
+                      <p className="text-[11px] sm:text-xs font-medium text-[#5B46C8]">
+                        Share your resume
+                      </p>
+                      <p className="text-[10px] text-[#8E7FD9]">
+                        Choose how you want to send it
+                      </p>
+                    </div>
+                    {/* Share as PDF */}
+                    <button
+                      onClick={() => {
+                        setShareMenuOpen(false);
+                        handleSharePdf();
+                      }}
+                      className="flex w-full items-center gap-2 px-3 py-2.5 hover:bg-indigo-50/70 transition text-left"
+                    >
+                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100">
+                        <Download size={14} className="text-[#634BC9]" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-medium text-[#342768] text-[11px] sm:text-xs">
+                          Share as PDF
+                        </span>
+                        <span className="text-[10px] text-[#8E7FD9]">
+                          Perfect for email & print
+                        </span>
+                      </div>
+                    </button>
+                    {/* Share URL */}
+                    <button
+                      onClick={() => {
+                        setShareMenuOpen(false);
+                        handleShareUrl();
+                      }}
+                      className="flex w-full items-center gap-2 px-3 py-2.5 hover:bg-indigo-50/70 transition text-left"
+                    >
+                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-50">
+                        <Link2 size={14} className="text-emerald-600" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-medium text-[#342768] text-[11px] sm:text-xs">
+                          Share URL
+                        </span>
+                        <span className="text-[10px] text-[#8E7FD9]">
+                          Open resume directly in browser
+                        </span>
+                      </div>
+                    </button>
+                    {/* Copy link */}
+                    <button
+                      onClick={() => {
+                        setShareMenuOpen(false);
+                        handleCopyLink();
+                      }}
+                      className="flex w-full items-center gap-2 px-3 py-2.5 hover:bg-indigo-50/70 transition text-left border-t border-dashed border-indigo-100"
+                    >
+                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#FFF7E6]">
+                        <Share2 size={14} className="text-amber-500" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-medium text-[#342768] text-[11px] sm:text-xs">
+                          Copy link
+                        </span>
+                        <span className="text-[10px] text-[#8E7FD9]">
+                          Paste into WhatsApp, Mail, etc.
+                        </span>
+                      </div>
+                    </button>
                   </div>
                 )}
               </div>
-
-              <div className="p-4 bg-[#F4EEFF] rounded-xl mt-4">
-                <h3 className="text-sm font-semibold text-[#6C4CCF]">Quick Tips</h3>
-                <ul className="mt-2 text-xs text-[#6C4CCF] leading-relaxed space-y-1">
-                  <li>• Click any section to start editing</li>
-                  <li>• Changes save automatically</li>
-                  <li>• Download as PDF when ready</li>
-                  <li>• Try different templates</li>
-                </ul>
-              </div>
-            </>
-          )}
-        </nav>
-      </aside>
-
-      {/* OVERLAY FOR MOBILE MENU */}
-      {mobileMenuOpen && (
-        <div
-          className="lg:hidden fixed inset-0 bg-black/40 z-30"
-          onClick={() => setMobileMenuOpen(false)}
-        />
-      )}
-
-      {/* TEMPLATE PREVIEW */}
-      <div className="flex-1 flex flex-col overflow-hidden pt-16 lg:pt-0">
-        {/* Topbar */}
-        <div className="flex items-center justify-between px-4 sm:px-8 lg:px-20 pt-4 sm:pt-6 lg:pt-8 bg-transparent">
-
-          {/* LEFT → HOME BUTTON */}
-          <div>
-            <button
-              onClick={() => router.push('/')}
-              title="Back to Home Page"
-              className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-2 py-1.5 sm:py-2 
-              rounded-lg bg-white/80 text-[#634BC9] hover:bg-[#634BC9] hover:text-white transition text-xs sm:text-sm"
-            >
-              <Home
-                className="w-4 h-4 sm:w-6 sm:h-6 "
-              />
-            </button>
-          </div>
-
-
-          {/* RIGHT → OTHER ACTION BUTTONS */}
-          <div className="flex items-center justify-end gap-2 sm:gap-4">
-            {/* Print */}
-            <button
-              onClick={handlePrint}
-              className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm">
-              <Printer size={14} className="sm:w-3 sm:h-3" />
-              <span className="hidden sm:inline">Print</span>
-            </button>
-
-
-
-            {/* Share dropdown (URL / Copy / PDF) */}
-            <div ref={shareMenuRef} className="relative">
+              {/* Export Menu */}
+              <div ref={exportMenuRef} className="relative">
               <button
-                onClick={() => setShareMenuOpen(prev => !prev)}
-                className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm shadow-sm"
-              >
-                <Share2 size={14} className="sm:w-3 sm:h-3" />
-                <span className="hidden sm:inline">Share</span>
-              </button>
-
-              {shareMenuOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur border border-indigo-100 rounded-2xl shadow-xl z-30 text-xs sm:text-sm overflow-hidden">
-                  {/* Top label */}
-                  <div className="px-3 py-2 bg-gradient-to-r from-[#F3F0FF] to-[#E9F1FF] border-b border-indigo-50">
-                    <p className="text-[11px] sm:text-xs font-medium text-[#5B46C8]">
-                      Share your resume
-                    </p>
-                    <p className="text-[10px] text-[#8E7FD9]">
-                      Choose how you want to send it
-                    </p>
-                  </div>
-
-                  {/* Share as PDF */}
-                  <button
-                    onClick={() => {
-                      setShareMenuOpen(false);
-                      handleSharePdf();
-                    }}
-                    className="flex w-full items-center gap-2 px-3 py-2.5 hover:bg-indigo-50/70 transition text-left"
-                  >
-                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100">
-                      <Download size={14} className="text-[#634BC9]" />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="font-medium text-[#342768] text-[11px] sm:text-xs">
-                        Share as PDF
-                      </span>
-                      <span className="text-[10px] text-[#8E7FD9]">
-                        Perfect for email & print
-                      </span>
-                    </div>
-                  </button>
-
-                  {/* Share URL */}
-                  <button
-                    onClick={() => {
-                      setShareMenuOpen(false);
-                      handleShareUrl();
-                    }}
-                    className="flex w-full items-center gap-2 px-3 py-2.5 hover:bg-indigo-50/70 transition text-left"
-                  >
-                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-50">
-                      <Link2 size={14} className="text-emerald-600" />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="font-medium text-[#342768] text-[11px] sm:text-xs">
-                        Share URL
-                      </span>
-                      <span className="text-[10px] text-[#8E7FD9]">
-                        Open resume directly in browser
-                      </span>
-                    </div>
-                  </button>
-
-                  {/* Copy link */}
-                  <button
-                    onClick={() => {
-                      setShareMenuOpen(false);
-                      handleCopyLink();
-                    }}
-                    className="flex w-full items-center gap-2 px-3 py-2.5 hover:bg-indigo-50/70 transition text-left border-t border-dashed border-indigo-100"
-                  >
-                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#FFF7E6]">
-                      <Share2 size={14} className="text-amber-500" />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="font-medium text-[#342768] text-[11px] sm:text-xs">
-                        Copy link
-                      </span>
-                      <span className="text-[10px] text-[#8E7FD9]">
-                        Paste into WhatsApp, Mail, etc.
-                      </span>
-                    </div>
-                  </button>
-                </div>
-              )}
-            </div>
-            
-            {/* Export Menu */}
-            <div ref={exportMenuRef} className="relative">
-              <button
-                onClick={() => setExportMenuOpen(prev => !prev)}
-                className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm shadow-sm"
-              >
-                <Download size={14} className="sm:w-3 sm:h-3" />
-                <span className="hidden md:inline">Export</span>
-                <span className="md:hidden">PDF</span>
-              </button>
-
+                  onClick={() => setExportMenuOpen(prev => !prev)}
+                  className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg bg-[#634BC9] text-white hover:bg-indigo-700 transition text-xs sm:text-sm shadow-sm"
+                >
+                  <Download size={14} className="sm:w-3 sm:h-3" />
+                  <span className="hidden md:inline">Export</span>
+                  <span className="md:hidden">PDF</span>
+                </button>
+  
               {exportMenuOpen && (
                 <div className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur border border-indigo-100 rounded-2xl shadow-xl z-30 text-xs sm:text-sm overflow-hidden">
                   {/* Top label */}
@@ -861,8 +917,7 @@ linkElements.forEach(el => {
                       Choose how to save your resume
                     </p>
                   </div>
-
-                  {/* Save */}
+                    {/* Save */}
                   <button
                     onClick={handleSave}
                     className="flex w-full items-center gap-2 px-3 py-2.5 hover:bg-indigo-50/70 transition text-left"
@@ -924,156 +979,153 @@ linkElements.forEach(el => {
           </div>
 
         </div>
-
-
-        {/* Preview area */}
-        <div className="flex-1 overflow-auto px-3 sm:px-6 lg:px-20 py-3 sm:py-6 lg:py-8">
-          <div className="mx-auto max-w-6xl">
-            <div className="shadow-lg border border-gray-100 overflow-hidden rounded-xl sm:rounded-2xl">
-              <div className="relative">
-                <div className="h-14 sm:h-16 lg:h-20 rounded-t-xl sm:rounded-t-2xl bg-[#F2F5FC] border border-[#E4DEF3] border-b-0 flex items-center justify-between px-3 sm:px-4 lg:px-6 relative z-10">
-                  <div className="flex items-center gap-1.5 sm:gap-2 pb-1 sm:pb-2">
-                    <span className="text-[#7B61FF]">
-                      <Sparkles size={18} className="sm:w-5 sm:h-5 lg:w-[22px] lg:h-[22px] animate-[spin_3s_linear_infinite,zoom_2s_ease-in-out_infinite]" />
-                    </span>
-                    <h2 className="text-sm sm:text-base lg:text-xl font-semibold text-[#9C90DD] whitespace-nowrap">
-                      AI Generated Preview
-                    </h2>
-                  </div>
-
-                  <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-4 pb-1 sm:pb-2">
-                    <button
-                      onClick={handleZoomIn}
-                      className="flex p-1.5 sm:p-2 rounded-full border border-[#C7BFF3] hover:bg-white transition"
-                    >
-                      <ZoomIn size={14} className="sm:w-4 sm:h-4 text-[#7B61FF]" />
-                    </button>
-                    <button
-                      onClick={handleZoomOut}
-                      className="flex p-1.5 sm:p-2 rounded-full border border-[#C7BFF3] hover:bg-white transition"
-                    >
-                      <ZoomOut size={14} className="sm:w-4 sm:h-4 text-[#7B61FF]" />
-                    </button>
-                    <button
-                      onClick={() => setPreviewOpen(true)}
-                      className="hidden sm:flex p-1.5 sm:p-2 rounded-full border border-[#C7BFF3] hover:bg-white transition">
-                      <Expand size={14} className="sm:w-4 sm:h-4 text-[#7B61FF]" />
-                    </button>
-                  </div>
-                  <div className="h-6 sm:h-8 bg-gradient-to-r from-[#4B74F4] to-[#7642EE] rounded-t-xl sm:rounded-t-2xl absolute left-0 right-0 -bottom-3 sm:-bottom-4 z-20"></div>
-                </div>
-
-                <div className="w-full overflow-auto bg-gray-50 pt-4">
-                  {TemplateComponent ? (
-                    <div
-                      className="space-y-5"
-                      style={{
-                        transform: `scale(${scale})`,
-                        transformOrigin: "top center",
-                        transition: "transform 0.2s ease-in-out",
-                      }}
-                    >
-                      {Array.from({ length: totalPages }).map((_, pageIndex) => (
-                        <div
-                          key={pageIndex}
-                          data-preview-page
-                          style={{
-                            height: "1123px",
-                            width: "794px",
-                            overflow: "hidden",
-                            position: "relative",
-                          }}
-                          className="bg-white shadow-xl mx-auto"
-                        >
-                          {pageIndex > 0 && (
-                            <button
-                              onClick={() => setTotalPages(pageIndex)}
-                              className="absolute top-3 left-3 z-10 bg-red-500 text-white w-8 h-8 rounded-full hover:bg-red-600 flex items-center justify-center shadow-lg"
-                              title="Remove this page"
-                            >
-                              ✕
-                            </button>
-                          )}
-
-                          <div
-                            style={{
-                              position: "absolute",
-                              top: -(pageIndex * 1123),
-                              left: 0,
-                              width: "100%",
-                            }}
-                          >
-                            <TemplateComponent data={data} />
-                          </div>
-                        </div>
-                      ))}
+          {/* Preview area */}
+          <div className="flex-1 overflow-auto px-3 sm:px-6 lg:px-20 py-3 sm:py-6 lg:py-8">
+            <div className="mx-auto max-w-6xl">
+              <div className="shadow-lg border border-gray-100 overflow-hidden rounded-xl sm:rounded-2xl">
+                <div className="relative">
+                  <div className="h-14 sm:h-16 lg:h-20 rounded-t-xl sm:rounded-t-2xl bg-[#F2F5FC] border border-[#E4DEF3] border-b-0 flex items-center justify-between px-3 sm:px-4 lg:px-6 relative z-10">
+                    <div className="flex items-center gap-1.5 sm:gap-2 pb-1 sm:pb-2">
+                      <span className="text-[#7B61FF]">
+                        <Sparkles size={18} className="sm:w-5 sm:h-5 lg:w-[22px] lg:h-[22px] animate-[spin_3s_linear_infinite,zoom_2s_ease-in-out_infinite]" />
+                      </span>
+                      <h2 className="text-sm sm:text-base lg:text-xl font-semibold text-[#9C90DD] whitespace-nowrap">
+                        AI Generated Preview
+                      </h2>
                     </div>
-                  ) : (
-                    <p className="p-5 text-red-500">Template not found.</p>
-                  )}
+                    <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-4 pb-1 sm:pb-2">
+                      <button
+                        onClick={handleZoomIn}
+                        className="flex p-1.5 sm:p-2 rounded-full border border-[#C7BFF3] hover:bg-white transition"
+                      >
+                        <ZoomIn size={14} className="sm:w-4 sm:h-4 text-[#7B61FF]" />
+                      </button>
+                      <button
+                        onClick={handleZoomOut}
+                        className="flex p-1.5 sm:p-2 rounded-full border border-[#C7BFF3] hover:bg-white transition"
+                      >
+                        <ZoomOut size={14} className="sm:w-4 sm:h-4 text-[#7B61FF]" />
+                      </button>
+                      <button
+                        onClick={() => setPreviewOpen(true)}
+                        className="hidden sm:flex p-1.5 sm:p-2 rounded-full border border-[#C7BFF3] hover:bg-white transition">
+                        <Expand size={14} className="sm:w-4 sm:h-4 text-[#7B61FF]" />
+                      </button>
+                    </div>
+                    <div className="h-6 sm:h-8 bg-gradient-to-r from-[#4B74F4] to-[#7642EE] rounded-t-xl sm:rounded-t-2xl absolute left-0 right-0 -bottom-3 sm:-bottom-4 z-20"></div>
+                  </div>
+                  <div className="w-full overflow-auto bg-gray-50 pt-4">
+                    {TemplateComponent ? (
+                      <div
+                        className="space-y-5"
+                        style={{
+                          transform: `scale(${scale})`,
+                          transformOrigin: "top center",
+                          transition: "transform 0.2s ease-in-out",
+                        }}
+                      >
+                        {Array.from({ length: totalPages }).map((_, pageIndex) => (
+                          <div
+                            key={pageIndex}
+                            data-preview-page
+                            style={{
+                              height: "1123px",
+                              width: "794px",
+                              overflow: "hidden",
+                              position: "relative",
+                            }}
+                            className="bg-white shadow-xl mx-auto"
+                          >
+                            {pageIndex > 0 && (
+                              <button
+                                onClick={() => setTotalPages(pageIndex)}
+                                className="absolute top-3 left-3 z-10 bg-red-500 text-white w-8 h-8 rounded-full hover:bg-red-600 flex items-center justify-center shadow-lg"
+                                title="Remove this page"
+                              >
+                                ✕
+                              </button>
+                            )}
+                            <div
+                              style={{
+                                position: "absolute",
+                                top: -(pageIndex * 1123),
+                                left: 0,
+                                width: "100%",
+                              }}
+                            >
+                              <TemplateComponent data={data} />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="p-5 text-red-500">Template not found.</p>
+                    )}
+                  </div>
                 </div>
-
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Reusable Popup */}
-      <PopupEditor
-        visible={!!openSection}
-        section={openSection}
-        onClose={() => setOpenSection(null)}
-        selectedTemplate={template}
-        data={data}
-        update={update}
-        onNext={(nextSection) => {
-          setOpenSection(nextSection);
-          setSelectedMenu(nextSection);
-        }}
-      />
-
-      {/* Hidden PDF template */}
-      <div
-        id="pdf-template"
-        className="fixed top-0 left-0 m-0 p-0"
-        style={{
-          width: "794px",
-          minHeight: "1123px",
-          overflow: "hidden",
-          position: "absolute",
-          top: "-99999px",
-          left: "-99999px",
-          background: "white",
-        }}
-      >
-
-        {TemplateComponent && <TemplateComponent data={data} />}
-      </div>
-
-      {previewOpen && (
-        <div className="absolute inset-0 bg-black bg-opacity-80 z-[9999] flex justify-center py-6  overflow-auto">
-          {/* Template wrapper */}
-          <div
-            className="bg-white rounded-lg shadow-lg relative   "
-            style={{ width: "794px" }}
-          >
-            {/* Close button */}
-            <button
-              onClick={() => setPreviewOpen(false)}
-              className="absolute top-3 right-3 z-50 bg-white text-black p-1 rounded-full shadow-lg hover:bg-gray-100"
-            >
-              <X size={20} />
-            </button>
-
-            {/* Template */}
-            <TemplateComponent data={data} />
-          </div>
+        {/* Reusable Popup */}
+        <PopupEditor
+          visible={!!openSection}
+          section={openSection}
+          onClose={() => setOpenSection(null)}
+          selectedTemplate={template}
+          data={data}
+          update={update}
+          onNext={(nextSection) => {
+            setOpenSection(nextSection);
+            setSelectedMenu(nextSection);
+          }}
+        />
+        {/* Hidden PDF template */}
+        <div
+          id="pdf-template"
+          className="fixed top-0 left-0 m-0 p-0"
+          style={{
+            width: "794px",
+            minHeight: "1123px",
+            overflow: "hidden",
+            position: "absolute",
+            top: "-99999px",
+            left: "-99999px",
+            background: "white",
+          }}
+        >
+          {TemplateComponent && <TemplateComponent data={data} />}
         </div>
-      )}
-
-
+        {previewOpen && (
+          <div className="absolute inset-0 bg-black bg-opacity-80 z-[9999] flex justify-center py-6  overflow-auto">
+            {/* Template wrapper */}
+            <div
+              className="bg-white rounded-lg shadow-lg relative   "
+              style={{ width: "794px" }}
+            >
+              {/* Close button */}
+              <button
+                onClick={() => setPreviewOpen(false)}
+                className="absolute top-3 right-3 z-50 bg-white text-black p-1 rounded-full shadow-lg hover:bg-gray-100"
+              >
+                <X size={20} />
+              </button>
+              {/* Template */}
+              <TemplateComponent data={data} />
+            </div>
+          </div>
+        )}
       </div>
+      <TemplateSelector
+  open={templateSelectorOpen}
+  selectedTemplate={template}
+  onClose={() => setTemplateSelectorOpen(false)}
+  onSelectTemplate={(key) => {
+    setTemplate(key.toLowerCase());
+    setTemplateSelectorOpen(false);
+  }}
+/>
+ </div>
     </>
   );
 }
