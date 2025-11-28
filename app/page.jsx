@@ -54,13 +54,13 @@ export default function Home() {
     //   image: "/template/template31.png",
     //   category: "proffessional",
     // },
-    {
-      id: "Template32",
-      name: "Clean Two-Column CV",
-      key: "Rahul Menon",
-      image: "/template/template32.png",
-      category: "simple",
-    },
+    // {
+    //   id: "Template32",
+    //   name: "Executive Resume",
+    //   key: "Rahul Menon",
+    //   image: "/template/template32.png",
+    //   category: "simple",
+    // },
     {
       id: "Template33",
       name: "Olivia Modern",
