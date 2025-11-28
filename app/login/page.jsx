@@ -60,7 +60,7 @@ export default function Login() {
 
         // Store token in localStorage and cookie
         localStorage.setItem("token", data.token);
-        document.cookie = `token=${data.token}; path=/; max-age=86400`;
+        document.cookie = `token=${data.token}; path=/; max-age=604800`;
 
         // Check redirect from URL params
         const urlParams = new URLSearchParams(window.location.search);
@@ -192,7 +192,7 @@ export default function Login() {
 
                           if (data.token) {
                             localStorage.setItem("token", data.token);
-                            document.cookie = `token=${data.token}; path=/; max-age=86400`;
+                            document.cookie = `token=${data.token}; path=/; max-age=604800`;
                             setToastMessage("Logged in with Google!");
                             setShowToast(true);
                             const urlParams = new URLSearchParams(window.location.search);
