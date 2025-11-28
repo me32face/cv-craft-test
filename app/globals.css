@@ -185,3 +185,21 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
+@keyframes slideLeft {
+  from { transform: translateX(-420px); }
+  to { transform: translateX(0); }
+}
+
+.animate-slideLeft {
+  animation: slideLeft 0.25s ease-out;
+}
+
+@keyframes slideMiddle {
+  from { transform: translateX(-350px); }
+  to   { transform: translateX(0); }
+}
+.animate-slideInMiddle {
+  animation: slideMiddle 0.25s ease-out;
+}
+
+

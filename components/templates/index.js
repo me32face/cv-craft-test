@@ -75,7 +75,8 @@ export const templateInputs = {
     about: true,
     profileImage: true,
     skills: true,
-    socialLinks: true,  
+    socialLinks: true, 
+    certificates: true, 
   },
 
   template35: {

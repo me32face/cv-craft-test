@@ -6,9 +6,9 @@ import CVBuilder from "@/components/cvbuilder/CVBuilder";
 import { templates } from "@/components/templates";
 
 export default function TemplatePage({ params }) {
-  const { id } = use(params);
-  const templateKey = id.toLowerCase();
-  
+  const resolvedParams = use(params);
+  const templateKey = resolvedParams.id?.toLowerCase() || "template30";
+
   if (!templates[templateKey]) {
     notFound();
   }

@@ -388,7 +388,13 @@ export default function Template35({ data, onClickSection }) {
 
               <ul className="text-sm list-disc pl-4">
                 {awards.map((a, i) => (
-                  <li key={i}>{a}</li>
+                 <li key={i}>
+  <div className="font-semibold">{a.title}</div>
+  {a.issuer && <div className="text-xs opacity-75">Issued by: {a.issuer}</div>}
+  {a.date && <div className="text-xs opacity-75">Date: {a.date}</div>}
+  {a.description && <div className="text-xs opacity-75">{a.description}</div>}
+</li>
+
                 ))}
               </ul>
             </section>

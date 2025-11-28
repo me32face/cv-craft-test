@@ -506,7 +506,8 @@ export default function Home() {
                               setShowToast(true);
                               setTimeout(() => router.push("/login"), 1500);
                             } else {
-                              router.push(`/templates/${template.id}`);
+                              router.push(`/templates/${template.id.toLowerCase()}`);
+
                             }
                           }}
                         >
