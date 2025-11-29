@@ -228,13 +228,24 @@ export default function Template37({ data, onClickSection }) {
                 }
 
                 // Category
-                if (sk.category && sk.items) {
-                  return (
-                    <p key={i}>
-                      <b>{sk.category}:</b> {sk.items.join(", ")}
-                    </p>
-                  );
-                }
+if (sk.category && (sk.items || sk.skills)) {
+  const skillList = sk.items || sk.skills;
+  return (
+    <div key={i} className="cv-item">
+      <p className="text-[10px] font-semibold uppercase tracking-wide opacity-80">
+        {sk.category}
+      </p>
+      <div className="text-xs ml-4 space-y-1">
+        {skillList.map((item, idx) => (
+          <div key={idx} className="flex items-start">
+            <span className="mr-2">•</span>
+            <span>{item}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
                 return <p key={i}>• {safeText(sk.name, "Skill")}</p>;
               })}
@@ -628,7 +639,8 @@ export default function Template37({ data, onClickSection }) {
                             )}
                           </ol>
                         ) : (
-                          <p className="text-xs mt-1 break-words">{pr.desc}</p>
+                       <p className="text-xs mt-1 break-words whitespace-pre-line">{pr.desc}</p>
+
                         ))}
                     </div>
                   );
