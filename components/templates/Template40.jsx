@@ -161,6 +161,7 @@ export default function Template40({ data, onClickSection }) {
   onClick={() => onClickSection("image")}
   className="flex items-center justify-center"
 >
+  
   <div
     className={`overflow-hidden border border-gray-300 cursor-pointer`}
     style={{
