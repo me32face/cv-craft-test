@@ -354,7 +354,7 @@ export const templateInputs = {
     experiences: true,
     project: true,
     education: true,
-    skills: false,
+    skills: true,
     languages: false,
     certificates: false,
     references: false,

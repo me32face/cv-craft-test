@@ -187,7 +187,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
           {lines.map((line, idx) => (
             <li
               key={idx}
-              className="text-[12px] text-gray-700 leading-relaxed"
+              className="text-[12px] text-gray-700 leading-relaxed break-words"
             >
               {line
                 .replace(/^•\s*/, '')
@@ -205,7 +205,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
           {lines.map((line, idx) => (
             <li
               key={idx}
-              className="text-[12px] text-gray-700 leading-relaxed"
+              className="text-[12px] text-gray-700 leading-relaxed break-words"
             >
               {line
                 .replace(/^\d+\.\s*/, '')
@@ -219,7 +219,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
     // ---- PLAIN TEXT (no bullets) ----
     if (typeof raw === 'string') {
       return (
-        <p className="text-[12px] text-gray-700 leading-relaxed mt-1.5">
+        <p className="text-[12px] text-gray-700 leading-relaxed mt-1.5 break-words">
           {raw}
         </p>
       );
@@ -228,7 +228,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
     return lines.map((line, idx) => (
       <p
         key={idx}
-        className="text-[12px] text-gray-700 leading-relaxed mt-1.5"
+        className="text-[12px] text-gray-700 leading-relaxed mt-1.5 break-words"
       >
         {line}
       </p>
@@ -271,7 +271,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
 
     if (typeof raw === 'string' && raw.trim()) {
       return (
-        <p className="text-[12px] text-gray-700 mt-1">
+        <p className="text-[12px] text-gray-700 mt-1 break-words">
           {raw}
         </p>
       );
@@ -296,7 +296,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
     return (
       <div key={key} className="text-[12px] text-gray-800">
         <div className="flex justify-between items-start">
-          <span className="font-medium">{name}</span>
+          <span className="font-medium break-words">{name}</span>
 
           {displayFormat === 'level' && (
             <span className="text-[10px] opacity-70 ml-2">{level}</span>
@@ -380,27 +380,27 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
         {/* HEADER */}
         <div className="flex justify-between items-start cv-section">
           <div className="max-w-[70%]">
-            <h1 className="text-[28px] font-extrabold tracking-tight text-blue-900 leading-tight">
+            <h1 className="text-[28px] font-extrabold tracking-tight text-blue-900 leading-tight break-words">
               {merged.name}
             </h1>
-            <div className="text-[13px] font-semibold text-orange-500 mt-1">
+            <div className="text-[13px] font-semibold text-orange-500 mt-1 break-words">
               {merged.title}
             </div>
 
             {/* header location line */}
-            <div className="mt-1 text-[12px] text-gray-700">
+            <div className="mt-1 text-[12px] text-gray-700 break-words">
               {displayLocation}
             </div>
 
             <div className="flex flex-wrap items-center gap-3 text-[11px] text-gray-600 mt-2.5 cv-header-contacts">
               {merged.phone && (
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 break-words">
                   <Phone className="w-3 h-3" />
                   <span>{merged.phone}</span>
                 </div>
               )}
               {merged.email && (
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 break-words">
                   <Mail className="w-3 h-3" />
                   <span>{merged.email}</span>
                 </div>
@@ -439,7 +439,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
             >
               SUMMARY
             </h2>
-            <p className="text-[12px] text-gray-700 leading-relaxed">
+            <p className="text-[12px] text-gray-700 leading-relaxed break-words">
               {merged.summary ||
                 'A dedicated professional with extensive experience in the field.'}
             </p>
@@ -491,13 +491,13 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                       className="grid grid-cols-[150px,1fr] gap-5 items-start cv-item"
                     >
                       <div className="relative">
-                        <div className="text-[12px] font-semibold text-blue-800">
+                        <div className="text-[12px] font-semibold text-blue-800 break-words">
                           {dateText}
                         </div>
-                        <div className="text-[12px] text-orange-500 mt-0.5">
+                        <div className="text-[12px] text-orange-500 mt-0.5 break-words">
                           {exp.company || ''}
                         </div>
-                        <div className="text-[11px] text-gray-500 mt-0.5">
+                        <div className="text-[11px] text-gray-500 mt-0.5 break-words">
                           {expLocation}
                         </div>
                         <span className="absolute right-[-10px] top-[-15px] text-blue-900 text-[35px] leading-none">
@@ -506,7 +506,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                       </div>
 
                       <div>
-                        <div className="text-[13px] font-semibold text-blue-900">
+                        <div className="text-[13px] font-semibold text-blue-900 break-words">
                           {exp.role || exp.title || ''}
                         </div>
                         <div className="mt-1.5">
@@ -515,7 +515,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
 
                         {refLines.length > 0 && (
                           refLines.length === 1 ? (
-                            <div className="mt-1 text-[12px] text-gray-600 italic">
+                            <div className="mt-1 text-[12px] text-gray-600 italic break-words">
                               Reference: {refLines[0]}
                             </div>
                           ) : (
@@ -527,7 +527,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                                 {refLines.map((r, ri) => (
                                   <li
                                     key={ri}
-                                    className="text-[12px] text-gray-600"
+                                    className="text-[12px] text-gray-600 break-words"
                                   >
                                     {r}
                                   </li>
@@ -580,7 +580,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                   <div key={pidx} className="mb-0 cv-item">
                     <div className="flex justify-between items-start">
                       <div>
-                        <div className="text-[13px] font-semibold text-blue-900">
+                        <div className="text-[13px] font-semibold text-blue-900 break-words">
                           {proj.name || proj.title || 'Project'}
                         </div>
                       </div>
@@ -599,7 +599,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                           href={projLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-[11px] text-blue-700 underline project-link"
+                          className="text-[11px] text-blue-700 underline project-link break-all"
                         >
                           {linkLabel}
                         </a>
@@ -643,11 +643,11 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                       key={idx}
                       className="grid grid-cols-[150px,1fr] gap-5 items-start cv-item"
                     >
-                      <div className="relative">
-                        <div className="text-[12px] font-semibold text-blue-800">
+                      <div className="relative min-w-0">
+                        <div className="text-[12px] font-semibold text-blue-800 break-words">
                           {dateText}
                         </div>
-                        <div className="text-[11px] text-gray-500 mt-0.5">
+                        <div className="text-[11px] text-gray-500 mt-0.5 break-words">
                           {eduLocation}
                         </div>
                         <span className="absolute right-[-10px] top-[-10px] text-blue-900 text-[35px] leading-none">
@@ -655,15 +655,15 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                         </span>
                       </div>
 
-                      <div>
-                        <div className="text-[13px] font-semibold text-blue-900">
+                      <div className="min-w-0">
+                        <div className="text-[13px] font-semibold text-blue-900 break-words">
                           {edu.course || edu.degree || ''}
                         </div>
-                        <div className="text-[12px] text-orange-500 mt-0.5">
+                        <div className="text-[12px] text-orange-500 mt-0.5 break-words">
                           {edu.school || ''}
                         </div>
                         {edu.field && (
-                          <div className="text-[12px] text-gray-600 mt-1">
+                          <div className="text-[12px] text-gray-600 mt-1 break-words">
                             {edu.field}
                           </div>
                         )}
@@ -682,7 +682,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
           <div className="mt-3 cv-section">
             <div className="grid grid-cols-2 gap-6">
               {isSectionVisible('skills') && (
-                <div>
+                <div className="min-w-0">
                   <h2
                     className="text-[14px] font-bold text-blue-800 mb-3 cursor-pointer"
                     onClick={() => onClickSection && onClickSection('skills')}
@@ -705,7 +705,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                         return (
                           <div
                             key={i}
-                            className="px-2.5 py-1.5 border-b border-gray-300"
+                            className="px-2.5 py-1.5 border-b border-gray-300 break-words"
                           >
                             {String(s)}
                           </div>
@@ -719,7 +719,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                           return (
                             <div
                               key={i}
-                              className="px-2.5 py-1.5 border-b border-gray-300"
+                              className="px-2.5 py-1.5 border-b border-gray-300 break-words"
                             >
                               <span className="font-medium">
                                 {s.category}:
@@ -731,11 +731,11 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                         if (s.proficiency !== undefined) {
                           return (
                             <div key={i} className="w-full mb-2">
-                              <div className="flex justify-between items-center">
-                                <span className="text-[12px] text-gray-800">
+                              <div className="flex justify-between items-center gap-2">
+                                <span className="text-[12px] text-gray-800 break-words flex-1 min-w-0">
                                   {s.name || s.label}
                                 </span>
-                                <span className="text-[11px] text-gray-500">
+                                <span className="text-[11px] text-gray-500 flex-shrink-0">
                                   {String(s.proficiency)}%
                                 </span>
                               </div>
@@ -753,7 +753,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                         return (
                           <div
                             key={i}
-                            className="px-2.5 py-1.5 border-b border-gray-300"
+                            className="px-2.5 py-1.5 border-b border-gray-300 break-words"
                           >
                             {String(s.name || s.label || 'Skill')}
                           </div>
@@ -816,7 +816,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
             <div className="space-y-1 text-[12px] text-gray-700">
               {awardsToShow.map((a, i) => {
                 if (typeof a === 'string') {
-                  return <div key={i}>{a}</div>;
+                  return <div key={i} className="break-words">{a}</div>;
                 }
 
                 const title =
@@ -828,18 +828,18 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
 
                 return (
                   <div key={i} className="mb-1">
-                    <div className="font-semibold text-blue-900">
+                    <div className="font-semibold text-blue-900 break-words">
                       {title}
                     </div>
                     {(issuer || date) && (
-                      <div className="text-[11px] text-gray-600">
+                      <div className="text-[11px] text-gray-600 break-words">
                         {issuer}
                         {issuer && date ? ' • ' : ''}
                         {date}
                       </div>
                     )}
                     {description && (
-                      <div className="text-[11px] text-gray-700 mt-0.5">
+                      <div className="text-[11px] text-gray-700 mt-0.5 break-words">
                         {description}
                       </div>
                     )}
@@ -859,10 +859,10 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
             <div className="grid grid-cols-2 gap-6 text-[12px] text-gray-700">
               {achievementsToShow.map((a, i) => (
                 <div key={i}>
-                  <div className="text-[13px] font-semibold text-blue-900">
+                  <div className="text-[13px] font-semibold text-blue-900 break-words">
                     {a.title}
                   </div>
-                  <div className="mt-0.5">{a.desc}</div>
+                  <div className="mt-0.5 break-words">{a.desc}</div>
                 </div>
               ))}
             </div>
@@ -883,10 +883,10 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                   '';
                 return (
                   <div key={i}>
-                    <div className="font-semibold text-orange-500">
+                    <div className="font-semibold text-orange-500 break-words">
                       {c.name}
                     </div>
-                    <div className="text-[11px] text-gray-500">
+                    <div className="text-[11px] text-gray-500 break-words">
                       {c.issuer || ''}
                       {certDate ? ` • ${certDate}` : ''}
                     </div>
@@ -906,22 +906,22 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
             <div className="grid grid-cols-2 gap-6 text-[12px] text-gray-700">
               {referencesToShow.map((r, i) => (
                 <div key={i} className="mb-3">
-                  <div className="font-semibold text-blue-900">
+                  <div className="font-semibold text-blue-900 break-words">
                     {r.name}
                   </div>
                   {r.title && (
-                    <div className="text-[12px]">{r.title}</div>
+                    <div className="text-[12px] break-words">{r.title}</div>
                   )}
                   {r.company && (
-                    <div className="text-[12px]">{r.company}</div>
+                    <div className="text-[12px] break-words">{r.company}</div>
                   )}
                   {r.phone && (
-                    <div className="text-[12px] text-gray-700">
+                    <div className="text-[12px] text-gray-700 break-words">
                       Phone: {r.phone}
                     </div>
                   )}
                   {r.email && (
-                    <div className="text-[12px] text-gray-700">
+                    <div className="text-[12px] text-gray-700 break-words">
                       Email: {r.email}
                     </div>
                   )}

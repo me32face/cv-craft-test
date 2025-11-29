@@ -92,14 +92,14 @@ export default function Template34({ data, onClickSection }) {
 
           <div className="ml-8">
             <h1
-              className="text-4xl font-bold text-gray-800 tracking-wide cursor-pointer"
+              className="text-4xl font-bold text-gray-800 tracking-wide cursor-pointer break-words"
               onClick={() => onClickSection && onClickSection("personal")}
             >
               {data?.name || "DONNA STROUPE"}
             </h1>
 
             <p
-              className="text-lg text-gray-600 font-medium mt-1 cursor-pointer"
+              className="text-lg text-gray-600 font-medium mt-1 cursor-pointer break-words"
               onClick={() => onClickSection && onClickSection("personal")}
             >
               {data?.title || "Professional Sales Executive"}
@@ -111,7 +111,7 @@ export default function Template34({ data, onClickSection }) {
       {/* TWO COLUMNS */}
       <div className="grid grid-cols-[45%_55%] gap-6 text-gray-800">
         {/* LEFT SIDEBAR */}
-        <div className="cv-sidebar bg-[#f3f6fa] rounded-2xl p-5">
+        <div className="cv-sidebar bg-[#f3f6fa] rounded-2xl p-5 min-w-0">
           {/* CONTACT */}
           <section
             className="mb-6 cursor-pointer"
@@ -121,13 +121,13 @@ export default function Template34({ data, onClickSection }) {
               Contact
             </h3>
 
-            <p className="text-sm">
+            <p className="text-sm break-words">
               {safeText(data?.phone) || "+1 234 567 890"}
             </p>
             <p className="text-sm break-all">
               {safeText(data?.email) || "example@mail.com"}
             </p>
-            <p className="text-sm">
+            <p className="text-sm break-words">
               {safeText(data?.address) || "Your City, Country"}
             </p>
            
@@ -183,7 +183,7 @@ export default function Template34({ data, onClickSection }) {
                     return (
                       <div key={i} className="flex items-start">
                         <span className="mt-[3px] mr-2">•</span>
-                        <span>{s}</span>
+                        <span className="break-words">{s}</span>
                       </div>
                     );
                   }
@@ -194,9 +194,9 @@ export default function Template34({ data, onClickSection }) {
                   if (skillObj.proficiency !== undefined) {
                     return (
                       <div key={i}>
-                        <div className="flex justify-between items-center">
-                          <span>{safeText(skillObj.name)}</span>
-                          <span className="text-xs opacity-70">
+                        <div className="flex justify-between items-center gap-2">
+                          <span className="break-words flex-1 min-w-0">{safeText(skillObj.name)}</span>
+                          <span className="text-xs opacity-70 flex-shrink-0">
                             {skillObj.proficiency}%
                           </span>
                         </div>
@@ -221,7 +221,7 @@ export default function Template34({ data, onClickSection }) {
     : [];
 
                     return (
-                      <div key={i}>
+                      <div key={i} className="break-words">
                         <span className="font-medium">
                           {safeText(skillObj.category)}:
                         </span>{" "}
@@ -234,7 +234,7 @@ export default function Template34({ data, onClickSection }) {
                   return (
                     <div key={i} className="flex items-start">
                       <span className="mt-[3px] mr-2">•</span>
-                      <span>{safeText(skillObj)}</span>
+                      <span className="break-words">{safeText(skillObj)}</span>
                     </div>
                   );
                 })}
@@ -259,7 +259,7 @@ export default function Template34({ data, onClickSection }) {
                 ).map((lang, i) => {
                   // Simple string
                   if (typeof lang === "string") {
-                    return <p key={i}>{lang}</p>;
+                    return <p key={i} className="break-words">{lang}</p>;
                   }
 
                   const l = safeObj(lang);
@@ -268,7 +268,7 @@ export default function Template34({ data, onClickSection }) {
                   return (
                     <div key={i}>
                       <div className="flex justify-between items-center">
-                        <span>{safeText(name)}</span>
+                        <span className="break-words">{safeText(name)}</span>
                         {displayFormat === "level" && level && (
                           <span className="text-xs opacity-70">
                             {safeText(level)}
@@ -318,7 +318,7 @@ export default function Template34({ data, onClickSection }) {
                       "Advanced Communication Skills Training",
                     ]
                 ).map((c, i) => (
-                  <li key={i}>{safeText(c)}</li>
+                  <li key={i} className="break-words">{safeText(c)}</li>
                 ))}
               </ul>
             </section>
@@ -338,9 +338,9 @@ export default function Template34({ data, onClickSection }) {
       const r = safeObj(ref);
       return (
         <div key={i} className="text-sm mb-3">
-          <p className="font-semibold">{safeText(r.name)}</p>
-          <p className="opacity-70">{safeText(r.title)} — {safeText(r.company)}</p>
-          {r.phone && <p className="opacity-70">{safeText(r.phone)}</p>}
+          <p className="font-semibold break-words">{safeText(r.name)}</p>
+          <p className="opacity-70 break-words">{safeText(r.title)} — {safeText(r.company)}</p>
+          {r.phone && <p className="opacity-70 break-words">{safeText(r.phone)}</p>}
           {r.email && <p className="opacity-70 break-all">{safeText(r.email)}</p>}
         </div>
       );
@@ -360,11 +360,11 @@ export default function Template34({ data, onClickSection }) {
 
               <ul className="text-sm space-y-1">
                 {awards.map((a, i) => (
-                 <li key={i}>
+                 <li key={i} className="break-words">
   <span className="font-semibold">{a.title}</span>
   {a.issuer && ` — ${a.issuer}`}
   {a.date && ` (${a.date})`}
-  {a.description && <div className="text-xs mt-1 opacity-70">{a.description}</div>}
+  {a.description && <div className="text-xs mt-1 opacity-70 break-words">{a.description}</div>}
 </li>
 
                 ))}
@@ -385,7 +385,7 @@ export default function Template34({ data, onClickSection }) {
                 Profile Summary
               </h3>
 
-              <p className="text-sm mt-2 leading-relaxed">
+              <p className="text-sm mt-2 leading-relaxed break-words">
                 {getSummaryText() ||
                   "Dynamic and results-driven Sales Executive with over 5 years of experience..."}
               </p>
@@ -423,9 +423,9 @@ export default function Template34({ data, onClickSection }) {
 
         return (
           <div key={i} className="cv-item text-sm">
-            <p className="font-semibold">{safeText(e.role)}</p>
-            <p className="opacity-70">{safeText(e.company)}</p>
-            {e.location && <p className="opacity-70">{e.location}</p>}
+            <p className="font-semibold break-words">{safeText(e.role)}</p>
+            <p className="opacity-70 break-words">{safeText(e.company)}</p>
+            {e.location && <p className="opacity-70 break-words">{e.location}</p>}
             <p className="text-xs opacity-60">{dateRange}</p>
 
             {/* Auto bullet formatting */}
@@ -434,11 +434,11 @@ export default function Template34({ data, onClickSection }) {
                 {descLines.length > 1 ? (
                   <ul className="mt-1 ml-4 list-disc space-y-1">
                     {descLines.map(
-                      (line, idx) => line && <li key={idx}>{line}</li>
+                      (line, idx) => line && <li key={idx} className="break-words">{line}</li>
                     )}
                   </ul>
                 ) : (
-                  <p className="mt-1">{desc}</p>
+                  <p className="mt-1 break-words">{desc}</p>
                 )}
               </>
             )}
@@ -487,9 +487,9 @@ export default function Template34({ data, onClickSection }) {
 
       return (
         <div key={i} className="cv-item mb-3 text-sm">
-          <p className="font-semibold">{safeText(ed.degree)}</p>
-          <p className="opacity-70">{safeText(ed.school)}</p>
-          {ed.field && <p className="opacity-70">{safeText(ed.field)}</p>}
+          <p className="font-semibold break-words">{safeText(ed.degree)}</p>
+          <p className="opacity-70 break-words">{safeText(ed.school)}</p>
+          {ed.field && <p className="opacity-70 break-words">{safeText(ed.field)}</p>}
           <p className="text-xs opacity-60">{dateRange}</p>
 
           {/* Auto bullet formatting */}
@@ -498,11 +498,11 @@ export default function Template34({ data, onClickSection }) {
               {descLines.length > 1 ? (
                 <ul className="mt-1 ml-4 list-disc space-y-1">
                   {descLines.map(
-                    (line, idx) => line && <li key={idx}>{line}</li>
+                    (line, idx) => line && <li key={idx} className="break-words">{line}</li>
                   )}
                 </ul>
               ) : (
-                <p className="mt-1">{desc}</p>
+                <p className="mt-1 break-words">{desc}</p>
               )}
             </>
           )}
@@ -550,7 +550,7 @@ export default function Template34({ data, onClickSection }) {
                   <div key={i} className="cv-item text-sm mb-4">
                     <div className="flex justify-between items-start">
                       <div>
-                        <p className="font-semibold">
+                        <p className="font-semibold break-words">
                           {safeText(p.name) || "Project Title"}
                         </p>
                       {p.link && (
@@ -558,7 +558,7 @@ export default function Template34({ data, onClickSection }) {
     href={p.link}
     target="_blank"
     rel="noopener noreferrer"
-    className="text-xs text-blue-600 underline project-link"
+    className="text-xs text-blue-600 underline project-link break-all"
   >
    {p.useCustomLabel && p.linkLabel ? p.linkLabel : p.link}
   </a>
@@ -573,17 +573,17 @@ export default function Template34({ data, onClickSection }) {
                         {p.descFormat === "bullet" ? (
                           <ul className="mt-1 ml-4 list-disc space-y-1">
                             {descLines.map(
-                              (line, idx) => line && <li key={idx}>{line}</li>
+                              (line, idx) => line && <li key={idx} className="break-words">{line}</li>
                             )}
                           </ul>
                         ) : p.descFormat === "number" ? (
                           <ol className="mt-1 ml-4 list-decimal space-y-1">
                             {descLines.map(
-                              (line, idx) => line && <li key={idx}>{line}</li>
+                              (line, idx) => line && <li key={idx} className="break-words">{line}</li>
                             )}
                           </ol>
                         ) : (
-                          <p className="mt-1">{desc}</p>
+                          <p className="mt-1 break-words">{desc}</p>
                         )}
                       </>
                     )}

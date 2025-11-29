@@ -31,29 +31,29 @@ export default function Template35({ data, onClickSection }) {
           className="border-b pb-4 mb-6 cursor-pointer"
           onClick={() => onClickSection("personal")}
         >
-          <h1 className="text-4xl font-bold">
+          <h1 className="text-4xl font-bold break-words">
             {data.name || "ALEXANDER REED"}
           </h1>
 
-          <p className="text-lg text-gray-600 mt-1">
+          <p className="text-lg text-gray-600 mt-1 break-words">
             {data.title || "Software Engineer"}
           </p>
 
           <div className="flex flex-wrap gap-6 text-sm mt-3">
           {data.phone && (
-  <p className="flex items-center gap-1">
+  <p className="flex items-center gap-1 break-words">
     <Phone size={14} /> {data.phone}
   </p>
 )}
 
 {data.email && (
-  <p className="flex items-center gap-1">
+  <p className="flex items-center gap-1 break-words">
     <Mail size={14} /> {data.email}
   </p>
 )}
 
 {data.address && (
-  <p className="flex items-center gap-1">
+  <p className="flex items-center gap-1 break-words">
     <MapPin size={14} /> {data.address}
   </p>
 )}
@@ -88,7 +88,7 @@ export default function Template35({ data, onClickSection }) {
           <h2 className="text-xl font-semibold border-b pb-1 mb-2">
             Professional Summary
           </h2>
-          <p className="text-sm leading-relaxed">
+          <p className="text-sm leading-relaxed break-words">
             {data.summary ||
               "Detail-oriented and driven professional with proven ability to deliver results. Skilled in problem-solving, collaboration, and developing efficient solutions."}
           </p>
@@ -97,7 +97,7 @@ export default function Template35({ data, onClickSection }) {
 
       <div className=" cv-sidebar  flex gap-8">
         {/* LEFT COLUMN */}
-        <div className="w-2/3">
+        <div className="w-2/3 min-w-0">
           {/* EXPERIENCE */}
           {visible.experience !== false && (
             <section
@@ -145,17 +145,17 @@ export default function Template35({ data, onClickSection }) {
                 return (
                   <div key={i} className="mb-5 text-sm cv-item">
                     {/* Job title & date */}
-                    <div className="flex justify-between">
-                      <p className="font-bold">{e.role}</p>
-                      <p className="opacity-70">{dateText}</p>
+                    <div className="flex justify-between gap-2">
+                      <p className="font-bold break-words flex-1 min-w-0">{e.role}</p>
+                      <p className="opacity-70 flex-shrink-0">{dateText}</p>
                     </div>
 
                     {/* Company */}
-                    <p className="opacity-80">{e.company}</p>
+                    <p className="opacity-80 break-words">{e.company}</p>
 
                     {/* Location */}
                     {e.location && (
-                      <p className="opacity-70">📍 {e.location}</p>
+                      <p className="opacity-70 break-words">📍 {e.location}</p>
                     )}
 
                     {/* Description */}
@@ -164,18 +164,18 @@ export default function Template35({ data, onClickSection }) {
                         {isMulti ? (
                           <ul className="list-disc pl-5 mt-1 space-y-1">
                             {lines.map(
-                              (line, idx) => line && <li key={idx}>{line}</li>
+                              (line, idx) => line && <li key={idx} className="break-words">{line}</li>
                             )}
                           </ul>
                         ) : (
-                          <p className="mt-1 leading-relaxed">{desc}</p>
+                          <p className="mt-1 leading-relaxed break-words">{desc}</p>
                         )}
                       </>
                     )}
 
                     {/* Reference */}
                     {e.reference && (
-                      <p className="text-xs mt-2 opacity-60">
+                      <p className="text-xs mt-2 opacity-60 break-words">
                         <span className="font-semibold">Reference: </span>
                         {e.reference}
                       </p>
@@ -227,9 +227,9 @@ export default function Template35({ data, onClickSection }) {
 
                 return (
                   <div key={i} className="mb-5 text-sm cv-item">
-                    <div className="flex justify-between mb-1">
-                      <p className="font-bold">{p.name}</p>
-                      <p className="opacity-70">{p.year}</p>
+                    <div className="flex justify-between mb-1 gap-2">
+                      <p className="font-bold break-words flex-1 min-w-0">{p.name}</p>
+                      <p className="opacity-70 flex-shrink-0">{p.year}</p>
                     </div>
 
                     {/* Project link */}
@@ -237,7 +237,7 @@ export default function Template35({ data, onClickSection }) {
     href={p.link}
     target="_blank"
     rel="noopener noreferrer"
-    className="text-xs text-blue-600 underline project-link"
+    className="text-xs text-blue-600 underline project-link break-all"
   >
    {p.useCustomLabel && p.linkLabel ? p.linkLabel : p.link}
   </a>
@@ -248,11 +248,11 @@ export default function Template35({ data, onClickSection }) {
                         {isMultiLine ? (
                           <ul className="list-disc pl-6 mt-1 space-y-1">
                             {lines.map(
-                              (line, idx) => line && <li key={idx}>{line}</li>
+                              (line, idx) => line && <li key={idx} className="break-words">{line}</li>
                             )}
                           </ul>
                         ) : (
-                          <p className="mt-1 leading-relaxed">{desc}</p>
+                          <p className="mt-1 leading-relaxed break-words">{desc}</p>
                         )}
                       </>
                     )}
@@ -311,12 +311,12 @@ export default function Template35({ data, onClickSection }) {
                 return (
                   <div key={i} className="mb-4 text-sm cv-item">
                     {/* Degree */}
-                    <p className="font-bold">
+                    <p className="font-bold break-words">
                       {ed.degree || "Course / Degree"}
                     </p>
 
                     {/* School + Field */}
-                    <p className="opacity-80">
+                    <p className="opacity-80 break-words">
                       {ed.school} {ed.field ? ` — ${ed.field}` : ""}
                     </p>
 
@@ -329,11 +329,11 @@ export default function Template35({ data, onClickSection }) {
                         {isMultiLine ? (
                           <ul className="list-disc pl-5 mt-1 space-y-1">
                             {lines.map(
-                              (line, idx) => line && <li key={idx}>{line}</li>
+                              (line, idx) => line && <li key={idx} className="break-words">{line}</li>
                             )}
                           </ul>
                         ) : (
-                          <p className="mt-1">{desc}</p>
+                          <p className="mt-1 break-words">{desc}</p>
                         )}
                       </>
                     )}
@@ -361,11 +361,11 @@ export default function Template35({ data, onClickSection }) {
                       "Google UX Foundations",
                     ]
                 ).map((c, i) => {
-                  if (typeof c === "string") return <li key={i}>{c}</li>;
+                  if (typeof c === "string") return <li key={i} className="break-words">{c}</li>;
 
                   const cert = safeObj(c);
                   return (
-                    <li key={i}>
+                    <li key={i} className="break-words">
                       {cert.name}
                       {cert.issuer ? ` — ${cert.issuer}` : ""}
                       {cert.year ? ` (${cert.year})` : ""}
@@ -388,11 +388,11 @@ export default function Template35({ data, onClickSection }) {
 
               <ul className="text-sm list-disc pl-4">
                 {awards.map((a, i) => (
-                 <li key={i}>
-  <div className="font-semibold">{a.title}</div>
-  {a.issuer && <div className="text-xs opacity-75">Issued by: {a.issuer}</div>}
-  {a.date && <div className="text-xs opacity-75">Date: {a.date}</div>}
-  {a.description && <div className="text-xs opacity-75">{a.description}</div>}
+                 <li key={i} className="break-words">
+  <div className="font-semibold break-words">{a.title}</div>
+  {a.issuer && <div className="text-xs opacity-75 break-words">Issued by: {a.issuer}</div>}
+  {a.date && <div className="text-xs opacity-75 break-words">Date: {a.date}</div>}
+  {a.description && <div className="text-xs opacity-75 break-words">{a.description}</div>}
 </li>
 
                 ))}
@@ -406,7 +406,7 @@ export default function Template35({ data, onClickSection }) {
 
 
         {/* RIGHT COLUMN */}
-       <div className="w-1/3">
+       <div className="w-1/3 min-w-0">
           {/* SKILLS */}
           {visible.skills !== false && (
             <section
@@ -422,15 +422,15 @@ export default function Template35({ data, onClickSection }) {
                   ? skills
                   : ["JavaScript", "React", "Node.js", "Problem Solving"]
                 ).map((s, i) => {
-                  if (typeof s === "string") return <p key={i}>• {s}</p>;
+                  if (typeof s === "string") return <p key={i} className="break-words">• {s}</p>;
 
                   const sk = safeObj(s);
 
                   if (sk.proficiency !== undefined) {
                     return (
                       <div key={i}  className="cv-item">
-                        <div className="flex justify-between text-sm">
-                          <span>{sk.name}</span>
+                        <div className="flex justify-between text-sm gap-2">
+                          <span className="break-words flex-1 min-w-0">{sk.name}</span>
                           <span className="text-xs opacity-70">
                             {sk.proficiency}%
                           </span>
@@ -447,14 +447,14 @@ export default function Template35({ data, onClickSection }) {
 
                   if (sk.category && sk.items) {
                     return (
-                      <p key={i}>
+                      <p key={i} className="break-words">
                         <span className="font-semibold">{sk.category}:</span>{" "}
                         {sk.items.join(", ")}
                       </p>
                     );
                   }
 
-                  return <p key={i}>• {sk.name}</p>;
+                  return <p key={i} className="break-words">• {sk.name}</p>;
                 })}
               </div>
             </section>
@@ -473,14 +473,14 @@ export default function Template35({ data, onClickSection }) {
               <div className="text-sm space-y-2">
                 {(languages.length ? languages : ["English", "Hindi"]).map(
                   (l, i) => {
-                    if (typeof l === "string") return <p key={i}>{l}</p>;
+                    if (typeof l === "string") return <p key={i} className="break-words">{l}</p>;
 
                     const lang = safeObj(l);
 
                     return (
                       <div key={i} cv-item>
-                        <div className="flex justify-between">
-                          <span>{lang.name}</span>
+                        <div className="flex justify-between gap-2">
+                          <span className="break-words flex-1 min-w-0">{lang.name}</span>
 
                           {lang.displayFormat === "level" && (
                             <span className="text-xs opacity-70">
@@ -533,10 +533,10 @@ export default function Template35({ data, onClickSection }) {
                   ]
               ).map((ref, i) => (
                 <div key={i} className="mb-3 text-sm cv-item">
-                  <p className="font-semibold">{ref.name}</p>
-                  <p className="opacity-80">{ref.title}</p>
-                  <p>{ref.phone}</p>
-                  <p>{ref.email}</p>
+                  <p className="font-semibold break-words">{ref.name}</p>
+                  <p className="opacity-80 break-words">{ref.title}</p>
+                  <p className="break-words">{ref.phone}</p>
+                  <p className="break-words">{ref.email}</p>
                 </div>
               ))}
             </section>
