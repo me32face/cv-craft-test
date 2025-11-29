@@ -31,7 +31,14 @@ const resumeSchema = new mongoose.Schema({
     imageAlign: String,
     
     // Social Links
-    socialLinks: [String],
+    socialLinks: [
+  {
+    url: { type: String},
+    label: { type: String},
+    useIcon: { type: Boolean}
+  }
+]
+,
     
     // Visible Sections Control
     visibleSections: {
