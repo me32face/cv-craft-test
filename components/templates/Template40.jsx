@@ -176,7 +176,7 @@ export default function Template40({ data, onClickSection }) {
     }}
   >
     <img
-      src={finalData.profileImage}
+     src={finalData.profileImage || "/templateprofile/template40profile.jpg"}
       className="object-cover w-full h-full"
     />
   </div>
