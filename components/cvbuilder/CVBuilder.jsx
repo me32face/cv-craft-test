@@ -737,25 +737,38 @@ if (key === "templates") {
 
 {/* Finally render Templates button here */}
 {menuItems.find(it => it.key === "templates") && (
-  <button
-    key={"templates"}
-    onClick={() => handleMenuItemClick("templates")}
-    title="Templates"
-    className={`
-      flex items-center 
-      ${collapsed ? "justify-center w-10 h-10 rounded-full"
-                  : "gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-full "}
-      transition-all text-xs sm:text-sm font-medium       
-      ${selectedMenu === "templates"
-                  ? "bg-gradient-to-r from-[#4B74F4] to-[#7642EE] text-white shadow-md scale-[1.02]"
-                  : "bg-white text-indigo-700 border border-indigo-200 hover:bg-indigo-50"
-      }
-    `}
-  >
-    <LayoutTemplate size={18} className={`${collapsed ? "mx-auto" : ""}`} />
-    {!collapsed && <span className="truncate">Templates</span>}
-  </button>
+  <div className="flex flex-col">
+    <button
+      key={"templates"}
+      onClick={() => handleMenuItemClick("templates")}
+      title="Explore templates"
+      className={`
+        group relative flex items-center
+        ${collapsed ? "justify-center w-10 h-10 rounded-full" : "gap-2 px-4 py-2 rounded-full"}
+        font-semibold text-sm text-white 
+        shadow-lg shadow-purple-300/40
+        bg-gradient-to-r from-[#6D28D9] via-[#7C3AED] to-[#6D28D9] bg-[length:200%_100%]
+        hover:shadow-xl hover:shadow-purple-400/60 hover:scale-105
+        transition-all duration-300 ease-out
+        animate-gradient
+      `}
+    >
+      <LayoutTemplate 
+        size={18} 
+        className={`${collapsed ? "mx-auto" : ""} group-hover:rotate-6 transition-all drop-shadow-md`}
+      />
+      {!collapsed && <span className="font-semibold">Templates</span>}
+    </button>
+
+    {/* Hint Text */}
+    {!collapsed && (
+      <span className="text-[11px] text-[#5533AA] font-medium ml-2 opacity-90 animate-pulse mt-1">
+        ✨ Explore more styles & layouts
+      </span>
+    )}
+  </div>
 )}
+
 
 {/* Quick Tips Section */}
 {!collapsed && (
