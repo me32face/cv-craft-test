@@ -25,7 +25,7 @@ export const templatesList = [
       id: "Template32",
       name: "Clean Two-Column CV",
       key: "Rahul Menon",
-      image: "/template/template32.png",
+      image: "/template/Template32.png",
       category: "simple",
     },
     {
