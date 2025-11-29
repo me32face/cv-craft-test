@@ -307,7 +307,7 @@ export default function Template45({ data = {}, onClickSection }) {
                   {exp.desc && (
                     <div className="mt-1 text-xs text-gray-700 leading-relaxed">
                       {exp.descFormat === "bullet" ? (
-                        exp.desc.split('\n').map((line, idx) =>
+                        exp.desc.split('/\n|•/g').map((line, idx) =>
                           line.trim() && (
                             <p key={idx} className="mb-1">• {line.trim()}</p>
                           )
