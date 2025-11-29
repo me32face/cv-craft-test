@@ -121,6 +121,7 @@ export default function Template40({ data, onClickSection }) {
   const socialLinks = toArray(finalData.socialLinks);
   const references = toArray(finalData.references);
   const awards = toArray(finalData.awards);
+  const Certificates = toArray(finalData.certificates);
 
   const getSummaryText = () => {
     if (!finalData.summary) return "";
@@ -138,7 +139,7 @@ export default function Template40({ data, onClickSection }) {
       className="w-[794px] min-h-[1123px] mx-auto bg-white shadow-2xl font-sans"
     >
       {/* HEADER */}
-      <div className="bg-gradient-to-r from-indigo-700 to-purple-700 text-white px-12 py-10 border-b-4 border-indigo-300 shadow-md flex justify-between items-center">
+     <div className="bg-gray-900 text-white px-8 py-4 border-b border-gray-700 flex justify-between items-center">
         <div className="flex-1">
           <h1
             className="text-4xl font-bold tracking-tight cursor-pointer mb-1"
@@ -156,30 +157,37 @@ export default function Template40({ data, onClickSection }) {
         </div>
 
         {/* Profile Image */}
-        <div onClick={() => onClickSection("image")}>
-          <div
-            className={`w-32 h-32 overflow-hidden border-4 border-white shadow-2xl ring-4 ring-purple-300/60 ring-offset-2 ring-offset-indigo-600 cursor-pointer ${
-              finalData.imageShape === "circle"
-                ? "rounded-full"
-                : finalData.imageShape === "rounded"
-                ? "rounded-2xl"
-                : "rounded-lg"
-            }`}
-          >
-        <img
-  src={finalData.profileImage || "/templateprofile/template22profile.jpg"}
-  className="w-full h-full object-cover"
-/>
+       <div 
+  onClick={() => onClickSection("image")}
+  className="flex items-center justify-center"
+>
+  <div
+    className={`overflow-hidden border border-gray-300 cursor-pointer`}
+    style={{
+      width: finalData.imageSize || "110px",
+      height: finalData.imageSize || "110px",
+      borderRadius:
+        finalData.imageShape === "circle"
+          ? "50%"
+          : finalData.imageShape === "rounded"
+          ? "14px"
+          : "0",
+      objectFit: "cover",
+    }}
+  >
+    <img
+      src={finalData.profileImage}
+      className="object-cover w-full h-full"
+    />
+  </div>
+</div>
 
-
-          </div>
-        </div>
       </div>
 
       {/* FLEX LAYOUT */}
       <div className="flex">
         {/* LEFT SIDEBAR */}
-        <div className="cv-sidebar w-1/3 bg-gray-50 px-6 py-6">
+       <div className="cv-sidebar w-1/3 bg-gray-50 px-6 py-6 min-h-[1123px] border-r border-gray-300">
           {/* CONTACT */}
           <section
             className="mb-6 cursor-pointer cv-item"
@@ -262,7 +270,7 @@ export default function Template40({ data, onClickSection }) {
 
                     <div className="w-full bg-gray-200 h-2 rounded-full">
                       <div
-                        className="h-2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"
+                        className="h-2 rounded-full bg-gray-700"
                         style={{ width: `${skillObj.proficiency || 80}%` }}
                       ></div>
                     </div>
@@ -296,23 +304,30 @@ export default function Template40({ data, onClickSection }) {
 </section>
 
           {/* CERTIFICATIONS */}
-          <section
-            className="mb-6 cursor-pointer"
-            onClick={() => onClickSection("certificates")}
-          >
-            <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
-              Certifications
-            </h3>
+         {visible.certificates !== false && certificates.length > 0 && (
+  <section
+    className="mb-6 cursor-pointer"
+    onClick={() => onClickSection("certificates")}
+  >
+    <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
+      Certifications
+    </h3>
 
-            <ul className="space-y-2 text-sm">
-              {certificates.map((c, i) => (
-                <li key={i} className="cv-item flex items-start gap-2">
-                  <span className="text-indigo-600 mt-1">•</span>
-                  <span>{safeText(c)}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
+    <ul className="space-y-2 text-sm">
+      {certificates.map((c, i) => (
+        <li key={i} className="cv-item flex items-start gap-2">
+          <span className="text-indigo-600 mt-1">•</span>
+         <span>
+  {c.name || ""}
+  {c.issuer ? ` — ${c.issuer}` : ""}
+  {c.year ? ` (${c.year})` : ""}
+</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
     
 
     {/* AWARDS */}

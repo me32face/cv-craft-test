@@ -142,7 +142,7 @@ export default function Template37({ data, onClickSection }) {
             onClick={() => onClickSection("image")}
           >
             <img
-              src={profileImage || "/templateprofile/template01profile.jpg"}
+              src={profileImage || "/templateprofile/template37profile.jpg"}
               className="w-full h-full object-cover"
             />
           </div>
