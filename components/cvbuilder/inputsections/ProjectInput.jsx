@@ -8,7 +8,7 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
   const addProject = () => {
     const updated = [
       ...projects,
-    { name: '', year: '', desc: '', descFormat: 'default', link: '', linkLabel: '', useCustomLabel: false }
+      { name: '', year: '', desc: '', descFormat: 'default', link: '', linkLabel: '', useCustomLabel: false }
 
 
     ];
@@ -25,7 +25,7 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
   const formatText = (text, format) => {
     if (!text) return text;
     const lines = text.split('\n');
-    
+
     if (format === 'bullet') {
       return lines.map(line => {
         const trimmed = line.trim();
@@ -34,7 +34,7 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
         return `• ${cleaned}`;
       }).join('\n');
     }
-    
+
     if (format === 'number') {
       let count = 0;
       return lines.map(line => {
@@ -45,7 +45,7 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
         return `${count}. ${cleaned}`;
       }).join('\n');
     }
-    
+
     return lines.map(line => {
       const trimmed = line.trim();
       if (!trimmed) return '';
@@ -106,10 +106,10 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
                     {project.year || "Year not specified"}
                   </p>
                   {project.link && (
-    <p className="text-xs text-blue-600">
-      {project.useCustomLabel ? project.linkLabel : project.link}
-    </p>
-  )}
+                    <p className="text-xs text-blue-600">
+                      {project.useCustomLabel ? project.linkLabel : project.link}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -175,34 +175,34 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
 
                   {/* Live Link */}
                   <div className="col-span-2">
-                  <label className="font-medium mt-3 block">Live Link (optional)</label>
-<input
-  className="mt-1 w-full p-3 rounded-xl border"
-  value={project.link ?? ""}
-  placeholder="https://project.com"
-  onChange={(e) => updateProject(index, "link", e.target.value)}
-/>
+                    <label className="font-medium mt-3 block">Live Link (optional)</label>
+                    <input
+                      className="mt-1 w-full p-3 rounded-xl border"
+                      value={project.link ?? ""}
+                      placeholder="https://project.com"
+                      onChange={(e) => updateProject(index, "link", e.target.value)}
+                    />
 
-<label className="flex items-center gap-2 mt-3">
-  <input
-    type="checkbox"
-    checked={project.useCustomLabel || false}
-    onChange={() => updateProject(index, "useCustomLabel", !project.useCustomLabel)}
-  />
-  <span className="text-sm">Use custom name instead of URL</span>
-</label>
+                    <label className="flex items-center gap-2 mt-3">
+                      <input
+                        type="checkbox"
+                        checked={project.useCustomLabel || false}
+                        onChange={() => updateProject(index, "useCustomLabel", !project.useCustomLabel)}
+                      />
+                      <span className="text-sm">Use custom name instead of URL</span>
+                    </label>
 
-{project.useCustomLabel && (
-  <>
-    <label className="font-medium mt-2 block">Custom Link Name</label>
-    <input
-      className="mt-1 w-full p-3 rounded-xl border"
-      placeholder="Live / Demo / View / Repo"
-      value={project.linkLabel ?? ""}
-      onChange={(e) => updateProject(index, "linkLabel", e.target.value)}
-    />
-  </>
-)}
+                    {project.useCustomLabel && (
+                      <>
+                        <label className="font-medium mt-2 block">Custom Link Name</label>
+                        <input
+                          className="mt-1 w-full p-3 rounded-xl border"
+                          placeholder="Live / Demo / View / Repo"
+                          value={project.linkLabel ?? ""}
+                          onChange={(e) => updateProject(index, "linkLabel", e.target.value)}
+                        />
+                      </>
+                    )}
 
 
                   </div>
@@ -216,9 +216,8 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
                       <button
                         type="button"
                         onClick={() => handleFormatChange(index, "default")}
-                        className={`p-2 rounded ${
-                          project.descFormat === "default" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
-                        }`}
+                        className={`p-2 rounded ${project.descFormat === "default" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                          }`}
                         title="Default"
                       >
                         <AlignLeft size={18} />
@@ -226,9 +225,8 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
                       <button
                         type="button"
                         onClick={() => handleFormatChange(index, "bullet")}
-                        className={`p-2 rounded ${
-                          project.descFormat === "bullet" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
-                        }`}
+                        className={`p-2 rounded ${project.descFormat === "bullet" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                          }`}
                         title="Bullet List"
                       >
                         <List size={18} />
@@ -236,9 +234,8 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
                       <button
                         type="button"
                         onClick={() => handleFormatChange(index, "number")}
-                        className={`p-2 rounded ${
-                          project.descFormat === "number" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
-                        }`}
+                        className={`p-2 rounded ${project.descFormat === "number" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                          }`}
                         title="Numbered List"
                       >
                         <ListOrdered size={18} />
@@ -281,6 +278,12 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
           className="px-4 py-1 rounded-xl border border-gray-300 hover:bg-gray-100 transition"
         >
           Cancel
+        </button>
+        <button
+          onClick={onClose}
+          className="px-2 py-2 rounded-xl bg-[#634BC9] text-white hover:bg-[#553fb2] transition"
+        >
+          Finish
         </button>
       </div>
     </div>

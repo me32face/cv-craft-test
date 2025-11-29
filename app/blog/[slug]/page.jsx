@@ -214,7 +214,7 @@ export default async function BlogInnerPage({ params }) {
                 sizes="(max-width: 768px) 100vw,
                        (max-width: 1200px) 80vw,
                        800px"
-                className="object-cover"
+                className="object-contain"
                 priority
               />
             </div>
@@ -385,7 +385,7 @@ export default async function BlogInnerPage({ params }) {
                         src={block.src}
                         alt={block.alt || post.title}
                         fill
-                        className="object-cover"
+                        className="object-contain"
                         />
                     </div>
                     );

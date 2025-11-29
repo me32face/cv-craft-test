@@ -8,11 +8,11 @@ export const blogData = {
     readTime: "9 min read",
     category: "Resume Tips",
     author: "CV Craft Team",
-    image: "/blog/resume-writing-2025.jpg",
+    image: "/blog/resume-writing-2025.webp",
 
     // Optional: add innerImages later when files exist in /public/blog/inside
     // innerImages: [
-    //   "/blog/inside/resume-highlight.jpg",
+    //   "/blog/inside/resume-highlight.webp",
     //   "/blog/inside/resume-format-sections.png"
     // ],
 
@@ -245,7 +245,7 @@ export const blogData = {
     readTime: "8 min read",
     category: "ATS & Optimization",
     author: "CV Craft Experts",
-    image: "/blog/ats-checklist.jpg",
+    image: "/blog/ats-checklist.webp",
 
     // innerImages: ["/blog/inside/ats-resume-format.png"],
 
@@ -430,7 +430,7 @@ export const blogData = {
     readTime: "7 min read",
     category: "Cover Letter",
     author: "Career Coach Nisha",
-    image: "/blog/cover-letter.jpg",
+    image: "/blog/cover-letter.webp",
 
     // innerImages: [
     //   "/blog/inside/cover-letter-structure.png",
@@ -584,7 +584,7 @@ export const blogData = {
     readTime: "8 min read",
     category: "Job Search",
     author: "CV Craft Team",
-    image: "/blog/linkedin-optimization.jpg",
+    image: "/blog/linkedin-optimization.webp",
 
     // innerImages: [
     //   "/blog/inside/linkedin-profile-example.png",
@@ -751,7 +751,7 @@ export const blogData = {
     readTime: "9 min read",
     category: "Fresher Guide",
     author: "HR Recruiter Anjali",
-    image: "/blog/fresher-guide.jpg",
+    image: "/blog/fresher-guide.webp",
 
     // innerImages: [
     //   "/blog/inside/fresher-resume-example.png",
@@ -898,7 +898,7 @@ export const blogData = {
     readTime: "7 min read",
     category: "Resume Tips",
     author: "CV Craft Team",
-    image: "/blog/it-resume-summary.jpg",
+    image: "/blog/it-resume-summary.webp",
 
     // innerImages: ["/blog/inside/it-summary-examples.png"],
 
@@ -1020,7 +1020,7 @@ export const blogData = {
     readTime: "7 min read",
     category: "Resume Tips",
     author: "CV Craft Team",
-    image: "/blog/non-it-resume-summary.jpg",
+    image: "/blog/non-it-resume-summary.webp",
 
     // innerImages: ["/blog/inside/non-it-summary-examples.png"],
 
@@ -1132,7 +1132,7 @@ export const blogData = {
     readTime: "6 min read",
     category: "Resume Tips",
     author: "CV Craft Experts",
-    image: "/blog/resume-mistakes.jpg",
+    image: "/blog/resume-mistakes.webp",
 
     // innerImages: [
     //   "/blog/inside/resume-error-examples.png",
@@ -1267,7 +1267,7 @@ export const blogData = {
     readTime: "7 min read",
     category: "Resume Tips",
     author: "CV Craft Team",
-    image: "/blog/action-verbs-resume.jpg",
+    image: "/blog/action-verbs-resume.webp",
 
     // innerImages: [
     //   "/blog/inside/action-verbs-list.png",
@@ -1387,7 +1387,7 @@ export const blogData = {
     readTime: "8 min read",
     category: "Resume Tips",
     author: "CV Craft Team",
-    image: "/blog/customize-resume-job.jpg",
+    image: "/blog/customize-resume-job.webp",
 
     seo: {
       title: "Customize Your Resume for Each Job",
@@ -1484,7 +1484,7 @@ export const blogData = {
     readTime: "6 min read",
     category: "Resume Tips",
     author: "CV Craft Experts",
-    image: "/blog/resume-format-guide.jpg",
+    image: "/blog/resume-format-guide.webp",
 
     seo: {
       title: "Chronological vs Functional Resume Format",
@@ -1571,7 +1571,7 @@ export const blogData = {
     readTime: "8 min read",
     category: "Resume Tips",
     author: "CV Craft Team",
-    image: "/blog/career-change-resume.jpg",
+    image: "/blog/career-change-resume.webp",
 
     seo: {
       title: "Career Change Resume Tips",
@@ -1648,7 +1648,7 @@ export const blogData = {
     readTime: "7 min read",
     category: "Resume Tips",
     author: "Career Coach Nisha",
-    image: "/blog/women-returning-work.jpg",
+    image: "/blog/women-returning-work.webp",
 
     seo: {
       title: "Resume Tips for Women After Career Break",
@@ -1714,7 +1714,7 @@ export const blogData = {
     readTime: "6 min read",
     category: "Resume Tips",
     author: "CV Craft Team",
-    image: "/blog/kerala-jobseekers.jpg",
+    image: "/blog/kerala-jobseekers.webp",
 
     seo: {
       title: "Resume Tips for Kerala Job Seekers",
@@ -1777,7 +1777,7 @@ export const blogData = {
     readTime: "6 min read",
     category: "Job Search",
     author: "CV Craft Experts",
-    image: "/blog/linkedin-headline.jpg",
+    image: "/blog/linkedin-headline.webp",
 
     seo: {
       title: "LinkedIn Headline Examples for Job Seekers",
@@ -1853,7 +1853,7 @@ export const blogData = {
     readTime: "7 min read",
     category: "Job Search",
     author: "CV Craft Team",
-    image: "/blog/linkedin-about-section.jpg",
+    image: "/blog/linkedin-about-section.webp",
 
     seo: {
       title: "How to Write LinkedIn About Section",
@@ -1915,7 +1915,7 @@ export const blogData = {
     readTime: "8 min read",
     category: "Job Search",
     author: "CV Craft Team",
-    image: "/blog/portfolio-website.jpg",
+    image: "/blog/portfolio-website.webp",
 
     seo: {
       title: "Portfolio Website for Job Search",
@@ -1981,7 +1981,7 @@ export const blogData = {
     readTime: "6 min read",
     category: "Job Search",
     author: "HR Recruiter Anjali",
-    image: "/blog/tell-me-about-yourself.jpg",
+    image: "/blog/tell-me-about-yourself.webp",
 
     seo: {
       title: "Answer Tell Me About Yourself",
@@ -2030,7 +2030,7 @@ export const blogData = {
     readTime: "7 min read",
     category: "Job Search",
     author: "CV Craft Experts",
-    image: "/blog/hr-round-interview.jpg",
+    image: "/blog/hr-round-interview.webp",
 
     seo: {
       title: "Prepare for HR Round",
@@ -2088,7 +2088,7 @@ export const blogData = {
     readTime: "5 min read",
     category: "Job Search",
     author: "CV Craft Team",
-    image: "/blog/phone-screen-interview.jpg",
+    image: "/blog/phone-screen-interview.webp",
 
     seo: {
       title: "Phone Screen Interview Tips",
@@ -2143,7 +2143,7 @@ export const blogData = {
     readTime: "5 min read",
     category: "Job Search",
     author: "CV Craft Team",
-    image: "/blog/follow-up-email.jpg",
+    image: "/blog/follow-up-email.webp",
 
     seo: {
       title: "Follow-Up Email Templates After Interview",
@@ -2196,7 +2196,7 @@ export const blogData = {
     readTime: "8 min read",
     category: "Job Search",
     author: "Career Coach Nisha",
-    image: "/blog/salary-negotiation.jpg",
+    image: "/blog/salary-negotiation.webp",
 
     seo: {
       title: "Salary Negotiation Tips India",
@@ -2258,7 +2258,7 @@ export const blogData = {
     readTime: "7 min read",
     category: "ATS & Optimization",
     author: "CV Craft Team",
-    image: "/blog/ai-resume-writing.jpg",
+    image: "/blog/ai-resume-writing.webp",
 
     seo: {
       title: "Use AI to Improve Your Resume",
@@ -2311,7 +2311,7 @@ export const blogData = {
     readTime: "6 min read",
     category: "ATS & Optimization",
     author: "CV Craft Experts",
-    image: "/blog/software-engineer-keywords.jpg",
+    image: "/blog/software-engineer-keywords.webp",
 
     seo: {
       title: "Software Engineer Resume Keywords",
@@ -2371,7 +2371,7 @@ export const blogData = {
     readTime: "6 min read",
     category: "ATS & Optimization",
     author: "CV Craft Team",
-    image: "/blog/marketing-resume-keywords.jpg",
+    image: "/blog/marketing-resume-keywords.webp",
 
     seo: {
       title: "Marketing Resume Keywords",
@@ -2425,7 +2425,7 @@ export const blogData = {
     readTime: "7 min read",
     category: "ATS & Optimization",
     author: "CV Craft Team",
-    image: "/blog/ats-layout-guide.jpg",
+    image: "/blog/ats-layout-guide.webp",
 
     seo: {
       title: "ATS-Friendly Resume Layout Guide",
@@ -2479,7 +2479,7 @@ export const blogData = {
     readTime: "8 min read",
     category: "ATS & Optimization",
     author: "HR Recruiter Anjali",
-    image: "/blog/recruiter-reading-resume.jpg",
+    image: "/blog/recruiter-reading-resume.webp",
 
     seo: {
       title: "How Recruiters Scan Resumes",
@@ -2535,7 +2535,7 @@ export const blogData = {
     readTime: "8 min read",
     category: "ATS & Optimization",
     author: "CV Craft Experts",
-    image: "/blog/resume-screening-big-company.jpg",
+    image: "/blog/resume-screening-big-company.webp",
 
     seo: {
       title: "Pass Resume Screening in Big Companies",
@@ -2586,7 +2586,7 @@ export const blogData = {
     readTime: "6 min read",
     category: "Cover Letter",
     author: "CV Craft Team",
-    image: "/blog/fresher-cover-letter.jpg",
+    image: "/blog/fresher-cover-letter.webp",
 
     seo: {
       title: "Fresher Cover Letter Format",
@@ -2630,7 +2630,7 @@ export const blogData = {
     readTime: "5 min read",
     category: "Cover Letter",
     author: "CV Craft Team",
-    image: "/blog/short-cover-letter.jpg",
+    image: "/blog/short-cover-letter.webp",
 
     seo: {
       title: "Short Cover Letter Examples",
@@ -2677,7 +2677,7 @@ export const blogData = {
     readTime: "7 min read",
     category: "Cover Letter",
     author: "CV Craft Experts",
-    image: "/blog/cold-email-cover-letter.jpg",
+    image: "/blog/cold-email-cover-letter.webp",
 
     seo: {
       title: "Cold Email Cover Letter Template",
@@ -2722,7 +2722,7 @@ export const blogData = {
     readTime: "5 min read",
     category: "Cover Letter",
     author: "CV Craft Team",
-    image: "/blog/cover-letter-mistakes.jpg",
+    image: "/blog/cover-letter-mistakes.webp",
 
     seo: {
       title: "Cover Letter Mistakes to Avoid",
@@ -2767,7 +2767,7 @@ export const blogData = {
     readTime: "6 min read",
     category: "Cover Letter",
     author: "CV Craft Team",
-    image: "/blog/cover-letter-vs-resume.jpg",
+    image: "/blog/cover-letter-vs-resume.webp",
 
     seo: {
       title: "Cover Letter vs Resume",
@@ -2821,7 +2821,7 @@ export const blogData = {
     readTime: "7 min read",
     category: "Resume Tips",
     author: "Career Coach Nisha",
-    image: "/blog/gap-year-resume.jpg",
+    image: "/blog/gap-year-resume.webp",
 
     seo: {
       title: "Show Gap Year on Resume",
@@ -2873,7 +2873,7 @@ export const blogData = {
     readTime: "8 min read",
     category: "Fresher Guide",
     author: "CV Craft Team",
-    image: "/blog/internship-resume.jpg",
+    image: "/blog/internship-resume.webp",
 
     seo: {
       title: "Internship Resume Guide for Students",
@@ -2919,7 +2919,7 @@ export const blogData = {
     readTime: "7 min read",
     category: "Fresher Guide",
     author: "CV Craft Experts",
-    image: "/blog/diploma-student-resume.jpg",
+    image: "/blog/diploma-student-resume.webp",
 
     seo: {
       title: "Resume for Diploma Students",
@@ -2962,7 +2962,7 @@ export const blogData = {
     readTime: "8 min read",
     category: "Resume Tips",
     author: "Career Coach Nisha",
-    image: "/blog/mom-returning-work.jpg",
+    image: "/blog/mom-returning-work.webp",
 
     seo: {
       title: "Resume for Moms Returning to Work",
@@ -3013,7 +3013,7 @@ export const blogData = {
     readTime: "5 min read",
     category: "Resume Tips",
     author: "CV Craft Team",
-    image: "/blog/one-vs-two-page-resume.jpg",
+    image: "/blog/one-vs-two-page-resume.webp",
 
     seo: {
       title: "One-Page vs Two-Page Resume",
@@ -3067,7 +3067,7 @@ export const blogData = {
     readTime: "7 min read",
     category: "Fresher Guide",
     author: "CV Craft Team",
-    image: "/blog/fresher-projects-section.jpg",
+    image: "/blog/fresher-projects-section.webp",
 
     seo: {
       title: "Projects Section for Fresher Resume",
@@ -3113,7 +3113,7 @@ export const blogData = {
     readTime: "6 min read",
     category: "Fresher Guide",
     author: "CV Craft Experts",
-    image: "/blog/skills-fresher-resume.jpg",
+    image: "/blog/skills-fresher-resume.webp",
 
     seo: {
       title: "Skills to Add in Fresher Resume",
@@ -3157,7 +3157,7 @@ export const blogData = {
     readTime: "8 min read",
     category: "Fresher Guide",
     author: "CV Craft Team",
-    image: "/blog/data-analyst-fresher-resume.jpg",
+    image: "/blog/data-analyst-fresher-resume.webp",
 
     seo: {
       title: "Data Analyst Fresher Resume Example",
@@ -3201,7 +3201,7 @@ export const blogData = {
     readTime: "7 min read",
     category: "Fresher Guide",
     author: "CV Craft Experts",
-    image: "/blog/bcom-graduate-resume.jpg",
+    image: "/blog/bcom-graduate-resume.webp",
 
     seo: {
       title: "B.Com Graduate Resume Example",
@@ -3246,7 +3246,7 @@ export const blogData = {
     readTime: "7 min read",
     category: "Job Search",
     author: "CV Craft Team",
-    image: "/blog/government-job-resume.jpg",
+    image: "/blog/government-job-resume.webp",
 
     seo: {
       title: "Resume Tips for Government Job Exams",
@@ -3297,7 +3297,7 @@ export const blogData = {
     readTime: "7 min read",
     category: "Resume Tips",
     author: "CV Craft Team",
-    image: "/blog/achievements-resume.jpg",
+    image: "/blog/achievements-resume.webp",
 
     seo: {
       title: "Write Achievements in Resume",
@@ -3338,7 +3338,7 @@ export const blogData = {
     readTime: "5 min read",
     category: "Resume Tips",
     author: "CV Craft Experts",
-    image: "/blog/hobbies-interests-resume.jpg",
+    image: "/blog/hobbies-interests-resume.webp",
 
     seo: {
       title: "Hobbies and Interests in Resume",
@@ -3385,7 +3385,7 @@ export const blogData = {
     readTime: "6 min read",
     category: "Resume Tips",
     author: "CV Craft Team",
-    image: "/blog/photo-on-resume.jpg",
+    image: "/blog/photo-on-resume.webp",
 
     seo: {
       title: "Photo on Resume in India",
@@ -3428,7 +3428,7 @@ export const blogData = {
     readTime: "6 min read",
     category: "Job Search",
     author: "CV Craft Team",
-    image: "/blog/email-resume-to-hr.jpg",
+    image: "/blog/email-resume-to-hr.webp",
 
     seo: {
       title: "How to Email Resume to HR",
@@ -3475,7 +3475,7 @@ export const blogData = {
     readTime: "8 min read",
     category: "Job Search",
     author: "CV Craft Experts",
-    image: "/blog/linkedin-networking.jpg",
+    image: "/blog/linkedin-networking.webp",
 
     seo: {
       title: "Build LinkedIn Network Fast (Without Spam)",
@@ -3527,7 +3527,7 @@ export const blogData = {
     readTime: "8 min read",
     category: "Job Search",
     author: "CV Craft Team",
-    image: "/blog/job-search-while-working.jpg",
+    image: "/blog/job-search-while-working.webp",
 
     seo: {
       title: "Job Search While Working Full-Time",
@@ -3578,7 +3578,7 @@ export const blogData = {
     readTime: "5 min read",
     category: "Resume Tips",
     author: "CV Craft Team",
-    image: "/blog/resume-final-checklist.jpg",
+    image: "/blog/resume-final-checklist.webp",
 
     seo: {
       title: "Final Resume Checklist",

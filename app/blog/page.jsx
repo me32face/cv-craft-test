@@ -669,7 +669,7 @@ function LazyBlogCard({ post }) {
                      (max-width: 1200px) 50vw,
                      33vw"
               loading="lazy"
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              className="object-contain group-hover:scale-105 transition-transform duration-300"
             />
           </div>
           <div className="p-4 sm:p-5 flex flex-col flex-1">
@@ -727,12 +727,23 @@ export default function BlogPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const searchInputRef = useRef(null);
 
+  // Sort posts by date (latest first)
+  const sortedPosts = useMemo(
+    () =>
+      [...blogPosts].sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      ),
+    []
+  );
+
+  // Filter from sorted list
   const filteredPosts = useMemo(() => {
-    return blogPosts.filter((post) => {
+    const search = searchTerm.toLowerCase();
+
+    return sortedPosts.filter((post) => {
       const matchesCategory =
         activeCategory === "All" || post.category === activeCategory;
 
-      const search = searchTerm.toLowerCase();
       const matchesSearch =
         post.title.toLowerCase().includes(search) ||
         post.excerpt.toLowerCase().includes(search) ||
@@ -740,9 +751,16 @@ export default function BlogPage() {
 
       return matchesCategory && matchesSearch;
     });
-  }, [activeCategory, searchTerm]);
+  }, [sortedPosts, activeCategory, searchTerm]);
 
-  const featuredPost = blogPosts[0];
+  // Latest post as featured
+  // const featuredPost = sortedPosts[0];
+
+  const featuredPost =
+    blogPosts.find(
+      (p) => p.slug === "how-to-write-a-job-winning-resume"
+  ) || blogPosts[0];
+
   const isSearching = searchTerm.trim().length > 0;
 
   const handleClearSearch = () => {

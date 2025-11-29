@@ -14,10 +14,10 @@ const BuildSection = () => {
     const token = localStorage.getItem("token");
 
     if (token) {
-      // ✅ User logged in → Go to template
+      //  User logged in → Go to template
       router.push("/templates/Template01");
     } else {
-      // ❌ Not logged in → Remember where they wanted to go
+      //  Not logged in → Remember where they wanted to go
       localStorage.setItem("redirectAfterLogin", "/templates/Template01");
       setShowToast(true);
 
@@ -71,7 +71,7 @@ const BuildSection = () => {
           <div className="flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8 lg:gap-12">
 
             {/* Left Content */}
-            <div className="w-full lg:w-1/2 xl:w-[55%] text-center lg:text-left space-y-4 sm:space-y-6 animate-fade-in-up pt-0 sm:pt-4 md:pt-6 lg:pt-14">
+            <div className="w-full lg:w-1/2 xl:w-[55%] text-center lg:text-left space-y-4 sm:space-y-6 animate-fade-in-up pt-10 sm:pt-10 md:pt-10 lg:pt-14">
               {/* Rating Badge */}
               <div className="inline-flex items-center bg-white px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 rounded-full shadow-sm border cursor-pointer border-gray-100 hover:shadow-xl transition-shadow duration-300">
                 <Star className="w-4 h-4 sm:w-5 sm:h-5 text-[#28c260] fill-[#09b348] mr-1.5 sm:mr-2 animate-pulse" />
@@ -179,7 +179,7 @@ const BuildSection = () => {
                   <img
                     src="/Hero Image.png"
                     alt="Resume AI Illustration"
-                    className="w-full h-auto object-contain drop-shadow-2xl rounded-xl sm:rounded-2xl lg:rounded-3xl"
+                    className="w-full h-full object-contain drop-shadow-2xl rounded-xl sm:rounded-2xl lg:rounded-3xl"
                   />
                 </div>
               </div>
