@@ -258,6 +258,11 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
                   placeholder="Your name*"
                   value={formData.name}
                   onChange={handleChange}
+                  onKeyDown={(e)=>{
+                     if (/[0-9]/.test(e.key)) {
+                    e.preventDefault(); 
+                   }
+                  }}
                   className={`w-full px-2 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition ${errors.name ? 'border-red-500' : 'border-gray-300'
                     }`}
                 />

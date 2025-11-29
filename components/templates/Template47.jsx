@@ -405,12 +405,12 @@ const Template47 = ({ data = {}, onClickSection }) => {
           style={{ borderColor: darkText }}
         >
           <h1
-            className="text-4xl font-extrabold tracking-widest uppercase mb-1"
+            className="text-4xl font-extrabold tracking-widest uppercase mb-1 break-words"
             style={{ color: darkText }}
           >
             {merged.name}
           </h1>
-          <h2 className="text-sm tracking-wide uppercase font-medium text-gray-600">
+          <h2 className="text-sm tracking-wide uppercase font-medium text-gray-600 break-words">
             {merged.title}
           </h2>
         </header>
@@ -442,7 +442,7 @@ const Template47 = ({ data = {}, onClickSection }) => {
             >
               Profile
             </h3>
-            <p className="text-sm text-gray-700 leading-relaxed italic">
+            <p className="text-sm text-gray-700 leading-relaxed italic break-words">
               {merged.summary ||
                 'A dedicated professional with extensive experience in the field.'}
             </p>
@@ -471,7 +471,7 @@ const Template47 = ({ data = {}, onClickSection }) => {
               return (
                 <div key={index} className="mb-4 pb-2">
                   <div className="flex justify-between items-baseline mb-0.5">
-                    <h4 className="text-sm font-bold uppercase">
+                    <h4 className="text-sm font-bold uppercase break-words">
                       {proj.name || proj.title || 'Project'}
                     </h4>
                     {projYear && (
@@ -485,7 +485,7 @@ const Template47 = ({ data = {}, onClickSection }) => {
                   </div>
 
                   {proj.company && (
-                    <p className="text-xs italic text-gray-600 mb-0.5">
+                    <p className="text-xs italic text-gray-600 mb-0.5 break-words">
                       {proj.company}
                     </p>
                   )}
@@ -496,7 +496,7 @@ const Template47 = ({ data = {}, onClickSection }) => {
                         href={projLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs text-blue-700 underline project-link"
+                        className="text-xs text-blue-700 underline project-link break-all"
                       >
                         {linkLabel}
                       </a>
@@ -504,7 +504,7 @@ const Template47 = ({ data = {}, onClickSection }) => {
                   )}
 
                   {renderProjectItems(proj) && (
-                    <ul className=" list-outside ml-2 space-y-0.5 text-xs text-gray-700 leading-snug">
+                    <ul className=" list-outside ml-2 space-y-0.5 text-xs text-gray-700 leading-snug break-words">
                       {renderProjectItems(proj)}
                     </ul>
                   )}
@@ -532,7 +532,7 @@ const Template47 = ({ data = {}, onClickSection }) => {
               return (
                 <div key={index} className="mb-4 pb-2">
                   <div className="flex justify-between items-baseline mb-0.5">
-                    <h4 className="text-sm font-bold uppercase">
+                    <h4 className="text-sm font-bold uppercase break-words">
                       {job.role || job.title || ''}
                     </h4>
                     <p
@@ -543,12 +543,12 @@ const Template47 = ({ data = {}, onClickSection }) => {
                     </p>
                   </div>
                   <div className="flex justify-between items-baseline mb-1">
-                    <h5 className="text-sm font-medium italic text-gray-700">
+                    <h5 className="text-sm font-medium italic text-gray-700 break-words">
                       {job.company || ''}
                     </h5>
-                    <p className="text-xs text-gray-500">{jobLocation}</p>
+                    <p className="text-xs text-gray-500 break-words">{jobLocation}</p>
                   </div>
-                  <ul className="list-disc list-outside ml-5 space-y-0.5 text-xs text-gray-700 leading-snug">
+                  <ul className="list-disc list-outside ml-5 space-y-0.5 text-xs text-gray-700 leading-snug break-words">
                     {renderExperienceItems(job)}
                   </ul>
                 </div>
@@ -577,7 +577,7 @@ const Template47 = ({ data = {}, onClickSection }) => {
                   <div key={index} className="mb-2">
                     <div className="flex justify-between items-start">
                       <h4
-                        className="text-sm font-bold"
+                        className="text-sm font-bold break-words"
                         style={{ color: darkText }}
                       >
                         {edu.course || edu.degree || ''}
@@ -589,14 +589,14 @@ const Template47 = ({ data = {}, onClickSection }) => {
                         {dateText}
                       </p>
                     </div>
-                    <h5 className="text-sm italic text-gray-600">
+                    <h5 className="text-sm italic text-gray-600 break-words">
                       {edu.school || edu.institution || ''}
                     </h5>
                     {eduLocation && (
-                      <p className="text-xs text-gray-500">{eduLocation}</p>
+                      <p className="text-xs text-gray-500 break-words">{eduLocation}</p>
                     )}
                     {renderEducationItems(edu) && (
-                      <ul className=" list-outside ml-1 mt-1 space-y-0.5 text-xs text-gray-700 leading-snug">
+                      <ul className=" list-outside ml-1 mt-1 space-y-0.5 text-xs text-gray-700 leading-snug break-words">
                         {renderEducationItems(edu)}
                       </ul>
                     )}
@@ -620,7 +620,7 @@ const Template47 = ({ data = {}, onClickSection }) => {
               <div className="space-y-3 text-[13px] text-gray-700 leading-snug">
                 {awardsToShow.map((a, i) => {
                   if (typeof a === 'string') {
-                    return <div key={i}>{a}</div>;
+                    return <div key={i} className="break-words">{a}</div>;
                   }
 
                   const title = a.title || a.name || a.award || 'Award';
@@ -641,18 +641,18 @@ const Template47 = ({ data = {}, onClickSection }) => {
 
                   return (
                     <div key={i}>
-                      <div className="font-semibold text-blue-900">
+                      <div className="font-semibold text-blue-900 break-words">
                         {title}
                       </div>
                       {(issuer || date) && (
-                        <div className="text-[12px] text-gray-600">
+                        <div className="text-[12px] text-gray-600 break-words">
                           {issuer}
                           {issuer && date ? ' • ' : ''}
                           {date}
                         </div>
                       )}
                       {descLines.length > 0 && (
-                        <ul className="list-disc ml-5 mt-1 space-y-0.5 text-[12px] text-gray-700">
+                        <ul className="list-disc ml-5 mt-1 space-y-0.5 text-[12px] text-gray-700 break-words">
                           {descLines.map((line, idx) => (
                             <li key={idx}>{line}</li>
                           ))}

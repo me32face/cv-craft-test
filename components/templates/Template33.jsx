@@ -48,15 +48,15 @@ export default function Template35({ data, onClickSection }) {
         <div>
           <div className="mb-4">
             <h2 className="font-semibold text-md mb-2">CONTACT</h2>
-            <div className="flex items-center gap-2 leading-[1.4] text-sm">
+            <div className="flex items-center gap-2 leading-[1.4] text-sm break-words">
               <Phone size={14} className="shrink-0 translate-y-[-1px]" />
               <span>{data?.phone || "123-456-7890"}</span>
             </div>
-            <div className="flex items-center gap-2 leading-[1.4] text-sm">
+            <div className="flex items-center gap-2 leading-[1.4] text-sm break-words">
               <Mail size={14} className="shrink-0 translate-y-[-1px]" />
               <span>{data?.email || "hello@email.com"}</span>
             </div>
-            <div className="flex items-center gap-2 leading-[1.4] text-sm">
+            <div className="flex items-center gap-2 leading-[1.4] text-sm break-words">
               <MapPin size={14} className="shrink-0 translate-y-[-1px]" />
               <span>{data?.address || "123 Anywhere St., Any City"}</span>
             </div>
@@ -83,13 +83,13 @@ export default function Template35({ data, onClickSection }) {
               </h2>
               {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation"]).map((s, i) => {
                 if (typeof s === 'string') {
-                  return <p key={i} className="text-sm mb-1">• {s}</p>;
+                  return <p key={i} className="text-sm mb-1 break-words">• {s}</p>;
                 }
                 if (s.proficiency !== undefined) {
                   return (
                     <div key={i} className="mb-2">
                       <div className="flex justify-between items-center">
-                        <span className="text-sm">{s.name}</span>
+                        <span className="text-sm break-words">{s.name}</span>
                         <span className="text-xs  opacity-70">{s.proficiency}%</span>
                       </div>
                       <div className="w-full bg-white/20 rounded-full h-1 mt-2">
@@ -103,12 +103,12 @@ export default function Template35({ data, onClickSection }) {
                 }
                 if (s.category && s.skills) {
                   return (
-                    <p key={i} className="text-sm mb-1">
+                    <p key={i} className="text-sm mb-1 break-words">
                       <span className="font-medium">{s.category}:</span> {s.skills.filter(item => item && item.trim()).join(", ")}
                     </p>
                   );
                 }
-                return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
+                return <p key={i} className="text-sm mb-1 break-words">• {s.name || "Skill"}</p>;
               })}
             </div>
           </div>
@@ -133,12 +133,12 @@ export default function Template35({ data, onClickSection }) {
               { name: "Best Innovation Award", issuer: "Industry Association", year: "2022" }
             ]).map((award, i) => (
               <div key={i} className="mb-3">
-                <div className="flex justify-between items-start">
-                  <div>
+                <div className="flex justify-between items-start gap-2">
+                  <div className="flex-1 min-w-0">
                     <p className="font-bold text-sm break-words">{award.name}</p>
                     <p className="text-sm opacity-80 break-words">{award.issuer}</p>
                   </div>
-                  <p className="text-xs opacity-60">{award.year}</p>
+                  <p className="text-xs opacity-60 flex-shrink-0">{award.year}</p>
                 </div>
                 {award.description && (
                   <p className="text-sm mt-1 break-words">{award.description}</p>
@@ -151,7 +151,7 @@ export default function Template35({ data, onClickSection }) {
         {/* Certifications */}
         {data?.visibleSections?.certificates !== false && (
           <>
-            <h2 className="text-md font-semibold mt-2 mb-3  pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("certificates")}>
+            <h2 className="text-md font-semibold mt-2 mb-3  pb-1 cursor-pointer break-words" onClick={() => onClickSection && onClickSection("certificates")}>
               CERTIFICATIONS
             </h2>
             {(data?.certificates || [
@@ -159,12 +159,12 @@ export default function Template35({ data, onClickSection }) {
               { name: "Digital Marketing Certification", issuer: "Google", year: "2022" }
             ]).map((cert, i) => (
               <div key={i} className="mb-3">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="font-semibold !text-sm text-gray-700">{cert.name}</p>
-                    <p className="text-sm opacity-80">{cert.issuer}</p>
+                <div className="flex justify-between items-start gap-2">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-sm text-gray-700 break-words">{cert.name}</p>
+                    <p className="text-sm opacity-80 break-words">{cert.issuer}</p>
                   </div>
-                  <p className="text-xs opacity-60">{cert.year}</p>
+                  <p className="text-xs opacity-60 flex-shrink-0">{cert.year}</p>
                 </div>
               </div>
             ))}
@@ -182,11 +182,11 @@ export default function Template35({ data, onClickSection }) {
               { name: "Bailey Dupont", title: "CEO", phone: "123-456-7890", email: "hello@reality.com" }
             ]).map((r, i) => (
               <div key={i} className="mb-3">
-                <p className="font-semibold  !text-sm text-gray-700">{r.name}</p>
-                <p className="text-sm ">{r.title}</p>
-                <p className="text-sm ">{r.company}</p>
-                <p className="text-sm text-gray-700">Phone: {r.phone}</p>
-                <p className="text-sm text-gray-700">Email: {r.email}</p>
+                <p className="font-semibold  !text-sm text-gray-700 break-words">{r.name}</p>
+                <p className="text-sm break-words">{r.title}</p>
+                <p className="text-sm break-words">{r.company}</p>
+                <p className="text-sm text-gray-700 break-words">Phone: {r.phone}</p>
+                <p className="text-sm text-gray-700 break-words">Email: {r.email}</p>
               </div>
             ))}
           </>
@@ -201,11 +201,11 @@ export default function Template35({ data, onClickSection }) {
           onClick={() => onClickSection("personal")}
         >
           <div className="inline-flex flex-col items-center border px-6  py-3 rounded-3xl">
-            <h1 className="text-4xl font-bold text-gray-600 uppercase  tracking-wide">
+            <h1 className="text-4xl font-bold text-gray-600 uppercase  tracking-wide break-words">
               {data.name || "YOUR NAME"}
             </h1>
 
-            <p className="text-sm  font-medium text-green-900 uppercase tracking-wide mt-1">
+            <p className="text-sm  font-medium text-green-900 uppercase tracking-wide mt-1 break-words">
               {data.title || "The role you are applying for?"}
             </p>
           </div>
@@ -216,7 +216,7 @@ export default function Template35({ data, onClickSection }) {
             <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("summary")}>
               SUMMARY
             </h2>
-            <p className="text-sm mb-4 text-gray-700">{data?.summary || "A dedicated professional with extensive experience in the field."}</p>
+            <p className="text-sm mb-4 text-gray-700 break-words">{data?.summary || "A dedicated professional with extensive experience in the field."}</p>
           </>
         )}
         {/* Experience */}
@@ -231,23 +231,23 @@ export default function Template35({ data, onClickSection }) {
               { role: "Product Design Manager", company: "Timmerman Industries", year: "2017-2019", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." }
             ]).map((exp, i) => (
               <div key={i} className="mb-3">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="font-semibold text-gray-800 !text-sm">{exp.role}</p>
-                    <p className="text-sm opacity-80">{exp.company}</p>
+                <div className="flex justify-between items-start gap-2">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-gray-800 text-sm break-words">{exp.role}</p>
+                    <p className="text-sm opacity-80 break-words">{exp.company}</p>
                   </div>
-                  <p className="text-xs opacity-60">
+                  <p className="text-xs opacity-60 flex-shrink-0">
                     {exp.start}
                     {exp.start && (exp.end || exp.current) && " - "}
                     {exp.current ? "Present" : exp.end}
                   </p>
                 </div>
                 {exp.descFormat === "bullet" ? (
-                  exp.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">• {line}</p>)
+                  exp.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 break-words">• {line}</p>)
                 ) : exp.descFormat === "number" ? (
-                  exp.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">{idx + 1}. {line}</p>)
+                  exp.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 break-words">{idx + 1}. {line}</p>)
                 ) : (
-                  <p className="text-sm mt-1">{exp.desc}</p>
+                  <p className="text-sm mt-1 break-words">{exp.desc}</p>
                 )}
               </div>
             ))}
@@ -261,15 +261,15 @@ export default function Template35({ data, onClickSection }) {
             </h2>
             {projects.map((project, i) => (
               <div key={i} className="mb-3">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="font-semibold text-gray-800 !text-sm">{project.name}</p>
+                <div className="flex justify-between items-start gap-2">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-gray-800 text-sm break-words">{project.name}</p>
                     {project.link && (
                       <a
                         href={project.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs text-blue-600 underline project-link"
+                        className="text-xs text-blue-600 underline project-link break-all"
                       >
                         {project.useCustomLabel
                           ? project.linkLabel
@@ -277,14 +277,14 @@ export default function Template35({ data, onClickSection }) {
                       </a>
                     )}
                   </div>
-                  <p className="text-xs opacity-60">{project.year}</p>
+                  <p className="text-xs opacity-60 flex-shrink-0">{project.year}</p>
                 </div>
                 {project.descFormat === "bullet" ? (
-                  project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">• {line}</p>)
+                  project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 break-words">• {line}</p>)
                 ) : project.descFormat === "number" ? (
-                  project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">{idx + 1}. {line}</p>)
+                  project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 break-words">{idx + 1}. {line}</p>)
                 ) : (
-                  <p className="text-sm mt-1 text-gray-700">{project.desc}</p>
+                  <p className="text-sm mt-1 text-gray-700 break-words">{project.desc}</p>
                 )}
               </div>
             ))}
@@ -298,13 +298,13 @@ export default function Template35({ data, onClickSection }) {
             </h2>
             {education.map((edu, i) => (
               <div key={i} className=" mb-3">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="font-semibold !text-sm text-gray-700">{edu.degree}</p>
-                    <p className="text-sm opacity-80">{edu.school}</p>
-                    {edu.field && <p className="text-xs opacity-70">{edu.field}</p>}
+                <div className="flex justify-between items-start gap-2">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-sm text-gray-700 break-words">{edu.degree}</p>
+                    <p className="text-sm opacity-80 break-words">{edu.school}</p>
+                    {edu.field && <p className="text-xs opacity-70 break-words">{edu.field}</p>}
                   </div>
-                  <p className="text-xs opacity-60">
+                  <p className="text-xs opacity-60 flex-shrink-0">
                     {edu.start && formatDate(edu.start)}
                     {edu.start && (edu.end || edu.current) && " - "}
                     {edu.current ? "Present" : edu.end && formatDate(edu.end)}

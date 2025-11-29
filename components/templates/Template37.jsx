@@ -4,7 +4,7 @@ import { User, Briefcase, GraduationCap } from "lucide-react";
 import SocialLinkDisplay from "../SocialLinkDisplay";
 
 export default function Template37({ data, onClickSection }) {
- 
+
   const toArray = (v) =>
     !v ? [] : Array.isArray(v) ? v : typeof v === "string" ? [v] : [];
 
@@ -35,27 +35,27 @@ export default function Template37({ data, onClickSection }) {
   const experiences = rawExperiences.length
     ? rawExperiences
     : [
-        {
-          company: "Borcelle Studio",
-          role: "Marketing Manager",
-          year: "2030 - PRESENT",
-          desc: "Develop and execute marketing strategies...\nLead the marketing team...",
-          descFormat: "bullet",
-        },
-        {
-          company: "Fauget Studio",
-          role: "Marketing Specialist",
-          year: "2025 - 2029",
-          desc: "Create and manage campaign budgets...\nConduct market research...",
-          descFormat: "bullet",
-        },
-      ];
+      {
+        company: "Borcelle Studio",
+        role: "Marketing Manager",
+        year: "2030 - PRESENT",
+        desc: "Develop and execute marketing strategies...\nLead the marketing team...",
+        descFormat: "bullet",
+      },
+      {
+        company: "Fauget Studio",
+        role: "Marketing Specialist",
+        year: "2025 - 2029",
+        desc: "Create and manage campaign budgets...\nConduct market research...",
+        descFormat: "bullet",
+      },
+    ];
 
   // Education
-const educationArray = toArray(data?.education);
-const education = educationArray.length
-  ? educationArray
-  : [
+  const educationArray = toArray(data?.education);
+  const education = educationArray.length
+    ? educationArray
+    : [
       {
         course: "Executive MBA (EMBA)",
         school: "Wardiere University",
@@ -90,21 +90,21 @@ const education = educationArray.length
   const projects = toArray(data?.projects).length
     ? toArray(data?.projects)
     : [
-        {
-          name: "Portfolio Website",
-          year: "2023",
-          link: "https://yourwebsite.com",
-          desc: "Built a full responsive portfolio...\nUsed React + Tailwind.",
-          descFormat: "bullet",
-        },
-        {
-          name: "Marketing Dashboard",
-          year: "2022",
-          link: "https://github.com/yourrepo",
-          desc: "Created an analytics dashboard...\nIntegrated charts and KPIs.",
-          descFormat: "number",
-        },
-      ];
+      {
+        name: "Portfolio Website",
+        year: "2023",
+        link: "https://yourwebsite.com",
+        desc: "Built a full responsive portfolio...\nUsed React + Tailwind.",
+        descFormat: "bullet",
+      },
+      {
+        name: "Marketing Dashboard",
+        year: "2022",
+        link: "https://github.com/yourrepo",
+        desc: "Created an analytics dashboard...\nIntegrated charts and KPIs.",
+        descFormat: "number",
+      },
+    ];
 
   const profileImage = data?.profileImage;
 
@@ -122,21 +122,19 @@ const education = educationArray.length
       <div className="w-[35%] bg-gray-100 p-6 pl-8 ">
         {/* Profile Image */}
         <div
-          className={`mb-6 ${
-            data?.imageAlign === "left"
+          className={`mb-6 ${data?.imageAlign === "left"
               ? "flex justify-start"
               : data?.imageAlign === "right"
-              ? "flex justify-end"
-              : "flex justify-center"
-          }`}
+                ? "flex justify-end"
+                : "flex justify-center"
+            }`}
         >
           <div
             className={`
               w-36 h-36 overflow-hidden border-4 border-white shadow-lg cursor-pointer 
-              ${
-                data?.imageShape === "circle"
-                  ? "rounded-full"
-                  : data?.imageShape === "rounded"
+              ${data?.imageShape === "circle"
+                ? "rounded-full"
+                : data?.imageShape === "rounded"
                   ? "rounded-xl"
                   : "rounded-none"
               }
@@ -165,7 +163,7 @@ const education = educationArray.length
                 {safeText(data?.email, "hello@reallygreatsite.com")}
               </p>
               <p>{safeText(data?.address, "123 Anywhere St., Any City")}</p>
-             {visible.socialLinks !== false &&
+              {visible.socialLinks !== false &&
                 Array.isArray(data?.socialLinks) &&
                 data.socialLinks.length > 0 && (
                   <div
@@ -174,8 +172,8 @@ const education = educationArray.length
                   >
                     <div className="space-y-2 text-xs break-all">
                       {data.socialLinks.map((link, i) => (
-  <SocialLinkDisplay key={i} link={link} />
-))}
+                        <SocialLinkDisplay key={i} link={link} />
+                      ))}
                     </div>
                   </div>
                 )}
@@ -212,7 +210,7 @@ const education = educationArray.length
                 // Proficiency bar
                 if (sk.proficiency !== undefined) {
                   return (
-                    <div key={i}  className="cv-item">
+                    <div key={i} className="cv-item">
                       <div className="flex justify-between">
                         <span>{safeText(sk.name)}</span>
                         <span className="text-[10px] opacity-70">
@@ -313,12 +311,12 @@ const education = educationArray.length
               {(certificates.length
                 ? certificates
                 : [
-                    {
-                      name: "Project Management",
-                      issuer: "Project Institute",
-                      year: "2028",
-                    },
-                  ]
+                  {
+                    name: "Project Management",
+                    issuer: "Project Institute",
+                    year: "2028",
+                  },
+                ]
               ).map((c, i) => {
                 const cert = safeObj(c);
                 return (
@@ -353,34 +351,34 @@ const education = educationArray.length
 
 
         {/* REFERENCES */}
-{visible.references !== false && references.length > 0 && (
-  <div
-    className="mt-5 cursor-pointer"
-    onClick={() => onClickSection("references")}
-  >
-    <h3 className="text-sm font-bold mb-3 uppercase tracking-wide">
-      References
-    </h3>
+        {visible.references !== false && references.length > 0 && (
+          <div
+            className="mt-5 cursor-pointer"
+            onClick={() => onClickSection("references")}
+          >
+            <h3 className="text-sm font-bold mb-3 uppercase tracking-wide">
+              References
+            </h3>
 
-    <div className="text-xs space-y-3">
-      {references.map((ref, i) => {
-        const r = safeObj(ref);
-        return (
-          <div key={i}>
-            <p className="font-semibold">{safeText(r.name)}</p>
-            <p className="text-gray-600">
-              {safeText(r.title)} — {safeText(r.company)}
-            </p>
-            {r.phone && <p className="text-gray-600">{r.phone}</p>}
-            {r.email && (
-              <p className="text-gray-600 break-all">{r.email}</p>
-            )}
+            <div className="text-xs space-y-3">
+              {references.map((ref, i) => {
+                const r = safeObj(ref);
+                return (
+                  <div key={i}>
+                    <p className="font-semibold">{safeText(r.name)}</p>
+                    <p className="text-gray-600">
+                      {safeText(r.title)} — {safeText(r.company)}
+                    </p>
+                    {r.phone && <p className="text-gray-600">{r.phone}</p>}
+                    {r.email && (
+                      <p className="text-gray-600 break-all">{r.email}</p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        );
-      })}
-    </div>
-  </div>
-)}
+        )}
 
 
 
@@ -423,7 +421,7 @@ const education = educationArray.length
               <div className="relative">
                 <div className="absolute left-3 top-0 w-0.5 h-full bg-gray-300"></div>
                 <div className="pl-8 ml-3">
-                  <p className="text-xs leading-relaxed text-gray-700">
+                  <p className="text-xs leading-relaxed text-gray-700 break-words">
                     {safeText(
                       data?.summary,
                       "Lorem ipsum dolor sit amet, consectetur adipiscing elit..."
@@ -458,10 +456,10 @@ const education = educationArray.length
                     <div key={i} className="cv-item" >
                       <div className="flex justify-between items-start mb-1">
                         <div>
-                          <h3 className="text-sm font-bold">
+                          <h3 className="text-sm font-bold break-words">
                             {safeText(e.company)}
                           </h3>
-                          <p className="text-xs text-gray-600">
+                          <p className="text-xs text-gray-600 break-words">
                             {safeText(e.role)}
                           </p>
                         </div>
@@ -479,7 +477,7 @@ const education = educationArray.length
                                 line && (
                                   <li key={idx} className="flex items-start">
                                     <span className="mr-2">•</span>
-                                    <span>{line}</span>
+                                    <span className="break-words">{line}</span>
                                   </li>
                                 )
                             )}
@@ -487,11 +485,11 @@ const education = educationArray.length
                         ) : e.descFormat === "number" ? (
                           <ol className="ml-4 list-decimal space-y-1">
                             {lines.map(
-                              (line, idx) => line && <li key={idx}>{line}</li>
+                              (line, idx) => line && <li key={idx} className="break-words">{line}</li>
                             )}
                           </ol>
                         ) : (
-                          <p className="text-xs mt-1">{e.desc}</p>
+                          <p className="text-xs mt-1 break-words">{e.desc}</p>
                         ))}
                     </div>
                   );
@@ -501,69 +499,69 @@ const education = educationArray.length
           )}
 
           {/* EDUCATION */}
-{visible.education !== false && (
-  <div
-    className="mt-8 cursor-pointer"
-    onClick={() => onClickSection("education")}
-  >
-    <div className="flex items-center gap-2 mb-2">
-      <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center">
-        <GraduationCap className="w-3 h-3 text-white" />
-      </div>
-      <h2 className="text-sm font-bold uppercase tracking-wide">
-        Education
-      </h2>
-    </div>
-
-    <div className="pl-8 border-l-2 border-gray-300 ml-3 space-y-3 text-xs">
-      {education.map((edu, i) => {
-        const ed = safeObj(edu);
-
-        // Fix duration display
-        const duration = ed.current
-          ? `${ed.start || ""} - Present`
-          : `${ed.start || ""} - ${ed.end || ""}`;
-
-        return (
-          <div key={i} className="cv-item">
-            <div className="flex justify-between items-start">
-              <div>
-                {/* DEGREE / COURSE */}
-                <h3 className="text-sm font-bold">
-                  {safeText(ed.degree) || safeText(ed.course) || "Course Name"}
-                </h3>
-
-                {/* SCHOOL */}
-                <p className="text-xs text-gray-600">
-                  {safeText(ed.school, "School / University")}
-                </p>
-
-                {/* FIELD OF STUDY */}
-                {ed.field && (
-                  <p className="text-xs text-gray-600">
-                    Field: {safeText(ed.field)}
-                  </p>
-                )}
-
-                {/* DESCRIPTION */}
-                {ed.description && (
-                  <p className="text-xs text-gray-500 mt-1">
-                    {safeText(ed.description)}
-                  </p>
-                )}
+          {visible.education !== false && (
+            <div
+              className="mt-8 cursor-pointer"
+              onClick={() => onClickSection("education")}
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center">
+                  <GraduationCap className="w-3 h-3 text-white" />
+                </div>
+                <h2 className="text-sm font-bold uppercase tracking-wide">
+                  Education
+                </h2>
               </div>
 
-              {/* DURATION */}
-              <span className="text-xs text-gray-500 whitespace-nowrap">
-                {duration}
-              </span>
+              <div className="pl-8 border-l-2 border-gray-300 ml-3 space-y-3 text-xs">
+                {education.map((edu, i) => {
+                  const ed = safeObj(edu);
+
+                  // Fix duration display
+                  const duration = ed.current
+                    ? `${ed.start || ""} - Present`
+                    : `${ed.start || ""} - ${ed.end || ""}`;
+
+                  return (
+                    <div key={i} className="cv-item">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1 min-w-0 pr-2">
+                          {/* DEGREE / COURSE */}
+                          <h3 className="text-sm font-bold break-words">
+                            {safeText(ed.degree) || safeText(ed.course) || "Course Name"}
+                          </h3>
+
+                          {/* SCHOOL */}
+                          <p className="text-xs text-gray-600 break-words">
+                            {safeText(ed.school, "School / University")}
+                          </p>
+
+                          {/* FIELD OF STUDY */}
+                          {ed.field && (
+                            <p className="text-xs text-gray-600 break-words">
+                              Field: {safeText(ed.field)}
+                            </p>
+                          )}
+
+                          {/* DESCRIPTION */}
+                          {ed.description && (
+                            <p className="text-xs text-gray-500 mt-1 break-words">
+                              {safeText(ed.description)}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* DURATION */}
+                        <span className="text-xs text-gray-500 whitespace-nowrap">
+                          {duration}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        );
-      })}
-    </div>
-  </div>
-)}
+          )}
 
           {/* PROJECTS */}
           {visible.projects !== false && (
@@ -589,19 +587,19 @@ const education = educationArray.length
                     <div key={i} className="cv-item" >
                       <div className="flex justify-between items-start mb-1">
                         <div>
-                          <h3 className="text-sm font-bold">
+                          <h3 className="text-sm font-bold break-words">
                             {safeText(pr.name)}
                           </h3>
 
-                                     {/* Project link */}
-                   <a
-    href={p.link}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="text-xs text-blue-600 underline project-link"
-  >
-   {p.useCustomLabel && p.linkLabel ? p.linkLabel : p.link}
-  </a>
+                          {/* Project link */}
+                          <a
+                            href={p.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-600 underline project-link break-all"
+                          >
+                            {p.useCustomLabel && p.linkLabel ? p.linkLabel : p.link}
+                          </a>
 
                         </div>
 
@@ -618,7 +616,7 @@ const education = educationArray.length
                                 line && (
                                   <li key={idx} className="flex items-start">
                                     <span className="mr-2">•</span>
-                                    <span>{line}</span>
+                                    <span className="break-words">{line}</span>
                                   </li>
                                 )
                             )}
@@ -626,11 +624,11 @@ const education = educationArray.length
                         ) : pr.descFormat === "number" ? (
                           <ol className="ml-4 list-decimal space-y-1">
                             {lines.map(
-                              (line, idx) => line && <li key={idx}>{line}</li>
+                              (line, idx) => line && <li key={idx} className="break-words">{line}</li>
                             )}
                           </ol>
                         ) : (
-                          <p className="text-xs mt-1">{pr.desc}</p>
+                          <p className="text-xs mt-1 break-words">{pr.desc}</p>
                         ))}
                     </div>
                   );

@@ -7,7 +7,7 @@ export default function AIContent() {
 
   return (
     <div id='about' className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 py-10 sm:py-12 md:py-16 lg:py-16 xl:py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-8xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#6D6D6D] mb-4">
@@ -80,7 +80,7 @@ export default function AIContent() {
             </div>
 
             {/* Second Card */}
-            <div className="bg-[#F3F9F9] rounded-2xl shadow-xs pb-5 sm:pl-5">
+            <div className="bg-[#F3F9F9] rounded-2xl shadow-xs p-5 sm:pl-5">
               <div className=" pt-8">
                 <h3 className="text-lg font-semibold text-[#5E5E5E] mb-4">
                   AI Features Include:

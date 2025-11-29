@@ -7,6 +7,7 @@ import Toast from "../../Toast";
 export default function PersonalInfo({ data, update, onClose, onNext, onSave }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [toast, setToast] = useState(null);
+  const [errors, setErrors] = useState({});
 
   const handleGenerateAI = async () => {
     const title = data.title;
@@ -52,6 +53,11 @@ export default function PersonalInfo({ data, update, onClose, onNext, onSave }) 
           className="w-full border border-gray-300 focus:border-[#634BC9] focus:ring-1 focus:ring-[#634BC9] p-3 rounded-xl outline-none"
           defaultValue=""
           onChange={(e) => update("name", e.target.value)}
+          onKeyDown={(e)=>{
+            if (/[0-9]/.test(e.key)) {
+            e.preventDefault(); 
+           }
+          }}
           placeholder={data.name || "Santhosh John"}
         />
       </div>
@@ -63,6 +69,11 @@ export default function PersonalInfo({ data, update, onClose, onNext, onSave }) 
           className="w-full border border-gray-300 focus:border-[#634BC9] focus:ring-1 focus:ring-[#634BC9] p-3 rounded-xl outline-none"
           defaultValue=""
           onChange={(e) => update("title", e.target.value)}
+          onKeyDown={(e)=>{
+            if (/[0-9]/.test(e.key)) {
+            e.preventDefault(); 
+           }
+          }}
           placeholder={data.title || "Software Engineer"}
         />
       </div>
@@ -74,21 +85,47 @@ export default function PersonalInfo({ data, update, onClose, onNext, onSave }) 
             Email<span className="text-red-500">*</span>
           </label>
           <input
-            className="w-full border border-gray-300 focus:border-[#634BC9] focus:ring-1 focus:ring-[#634BC9] p-3 rounded-xl outline-none"
+            type="email"
+            className={`w-full border p-3 rounded-xl outline-none ${
+              errors.email ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500" : "border-gray-300 focus:border-[#634BC9] focus:ring-1 focus:ring-[#634BC9]"
+            }`}
             defaultValue=""
-            onChange={(e) => update("email", e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+              if (value && !emailRegex.test(value)) {
+                setErrors(prev => ({ ...prev, email: "Invalid email format" }));
+              } else {
+                setErrors(prev => ({ ...prev, email: "" }));
+              }
+              update("email", value);
+            }}
             placeholder={data.email || "yourmail@example.com"}
           />
+          {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
         </div>
 
         <div>
           <label className="block text-sm font-semibold mb-1">Phone</label>
           <input
-            className="w-full border border-gray-300 focus:border-[#634BC9] focus:ring-1 focus:ring-[#634BC9] p-3 rounded-xl outline-none"
+            type="tel"
+            className={`w-full border p-3 rounded-xl outline-none ${
+              errors.phone ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500" : "border-gray-300 focus:border-[#634BC9] focus:ring-1 focus:ring-[#634BC9]"
+            }`}
             defaultValue=""
-            onChange={(e) => update("phone", e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,9}$/;
+              if (value && !phoneRegex.test(value)) {
+                setErrors(prev => ({ ...prev, phone: "Invalid phone format" }));
+              } else {
+                setErrors(prev => ({ ...prev, phone: "" }));
+              }
+              update("phone", value);
+            }}
             placeholder={data.phone || "+91 1234567890"}
           />
+          {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
         </div>
       </div>
 

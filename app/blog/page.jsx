@@ -21,7 +21,7 @@ const blogPosts = [
     readTime: "7 min read",
     date: "Jan 12, 2025",
     tag: "Featured",
-    image: "/blog/resume-writing-2025.jpg",
+    image: "/blog/resume-writing-2025.webp",
     author: "CV Craft Team",
   },
   {
@@ -33,7 +33,7 @@ const blogPosts = [
     readTime: "5 min read",
     date: "Feb 02, 2025",
     tag: "ATS",
-    image: "/blog/ats-checklist.jpg",
+    image: "/blog/ats-checklist.webp",
     author: "CV Craft Experts",
   },
   {
@@ -45,7 +45,7 @@ const blogPosts = [
     readTime: "6 min read",
     date: "Feb 18, 2025",
     tag: "Cover Letter",
-    image: "/blog/cover-letter.jpg",
+    image: "/blog/cover-letter.webp",
     author: "Career Coach Nisha",
   },
   {
@@ -57,7 +57,7 @@ const blogPosts = [
     readTime: "8 min read",
     date: "Mar 02, 2025",
     tag: "LinkedIn",
-    image: "/blog/linkedin-optimization.jpg",
+    image: "/blog/linkedin-optimization.webp",
     author: "CV Craft Team",
   },
   {
@@ -69,7 +69,7 @@ const blogPosts = [
     readTime: "9 min read",
     date: "Mar 10, 2025",
     tag: "Fresher",
-    image: "/blog/fresher-guide.jpg",
+    image: "/blog/fresher-guide.webp",
     author: "HR Recruiter Anjali",
   },
   {
@@ -81,7 +81,7 @@ const blogPosts = [
     readTime: "6 min read",
     date: "Mar 18, 2025",
     tag: "IT",
-    image: "/blog/it-resume-summary.jpg",
+    image: "/blog/it-resume-summary.webp",
     author: "CV Craft Team",
   },
   {
@@ -93,7 +93,7 @@ const blogPosts = [
     readTime: "6 min read",
     date: "Mar 25, 2025",
     tag: "Non-IT",
-    image: "/blog/non-it-resume-summary.jpg",
+    image: "/blog/non-it-resume-summary.webp",
     author: "CV Craft Team",
   },
   {
@@ -105,7 +105,7 @@ const blogPosts = [
     readTime: "5 min read",
     date: "Apr 01, 2025",
     tag: "Checklist",
-    image: "/blog/resume-mistakes.jpg",
+    image: "/blog/resume-mistakes.webp",
     author: "CV Craft Experts",
   },
   {
@@ -117,7 +117,7 @@ const blogPosts = [
     readTime: "7 min read",
     date: "Apr 05, 2025",
     tag: "Words",
-    image: "/blog/action-verbs-resume.jpg",
+    image: "/blog/action-verbs-resume.webp",
     author: "CV Craft Team",
   },
   {
@@ -129,7 +129,7 @@ const blogPosts = [
     readTime: "8 min read",
     date: "Apr 10, 2025",
     tag: "Customization",
-    image: "/blog/customize-resume-job.jpg",
+    image: "/blog/customize-resume-job.webp",
     author: "CV Craft Team",
   },
   {
@@ -141,7 +141,7 @@ const blogPosts = [
     readTime: "6 min read",
     date: "Apr 14, 2025",
     tag: "Format",
-    image: "/blog/resume-format-guide.jpg",
+    image: "/blog/resume-format-guide.webp",
     author: "CV Craft Experts",
   },
   {
@@ -153,7 +153,7 @@ const blogPosts = [
     readTime: "8 min read",
     date: "Apr 18, 2025",
     tag: "Career Change",
-    image: "/blog/career-change-resume.jpg",
+    image: "/blog/career-change-resume.webp",
     author: "CV Craft Team",
   },
   {
@@ -165,7 +165,7 @@ const blogPosts = [
     readTime: "7 min read",
     date: "Apr 22, 2025",
     tag: "Career Break",
-    image: "/blog/women-returning-work.jpg",
+    image: "/blog/women-returning-work.webp",
     author: "Career Coach Nisha",
   },
   {
@@ -177,7 +177,7 @@ const blogPosts = [
     readTime: "6 min read",
     date: "Apr 25, 2025",
     tag: "Kerala",
-    image: "/blog/kerala-jobseekers.jpg",
+    image: "/blog/kerala-jobseekers.webp",
     author: "CV Craft Team",
   },
   {
@@ -189,7 +189,7 @@ const blogPosts = [
     readTime: "6 min read",
     date: "Apr 28, 2025",
     tag: "LinkedIn",
-    image: "/blog/linkedin-headline.jpg",
+    image: "/blog/linkedin-headline.webp",
     author: "CV Craft Experts",
   },
   {
@@ -201,7 +201,7 @@ const blogPosts = [
     readTime: "7 min read",
     date: "May 01, 2025",
     tag: "LinkedIn",
-    image: "/blog/linkedin-about-section.jpg",
+    image: "/blog/linkedin-about-section.webp",
     author: "CV Craft Team",
   },
   {
@@ -213,7 +213,7 @@ const blogPosts = [
     readTime: "8 min read",
     date: "May 04, 2025",
     tag: "Portfolio",
-    image: "/blog/portfolio-website.jpg",
+    image: "/blog/portfolio-website.webp",
     author: "CV Craft Team",
   },
   {
@@ -225,7 +225,7 @@ const blogPosts = [
     readTime: "6 min read",
     date: "May 07, 2025",
     tag: "Interview",
-    image: "/blog/tell-me-about-yourself.jpg",
+    image: "/blog/tell-me-about-yourself.webp",
     author: "HR Recruiter Anjali",
   },
   {
@@ -237,7 +237,7 @@ const blogPosts = [
     readTime: "7 min read",
     date: "May 10, 2025",
     tag: "Interview",
-    image: "/blog/hr-round-interview.jpg",
+    image: "/blog/hr-round-interview.webp",
     author: "CV Craft Experts",
   },
   {
@@ -249,7 +249,7 @@ const blogPosts = [
     readTime: "5 min read",
     date: "May 13, 2025",
     tag: "Phone Screen",
-    image: "/blog/phone-screen-interview.jpg",
+    image: "/blog/phone-screen-interview.webp",
     author: "CV Craft Team",
   },
   {
@@ -261,7 +261,7 @@ const blogPosts = [
     readTime: "5 min read",
     date: "May 16, 2025",
     tag: "Email",
-    image: "/blog/follow-up-email.jpg",
+    image: "/blog/follow-up-email.webp",
     author: "CV Craft Team",
   },
   {
@@ -273,7 +273,7 @@ const blogPosts = [
     readTime: "8 min read",
     date: "May 20, 2025",
     tag: "Salary",
-    image: "/blog/salary-negotiation.jpg",
+    image: "/blog/salary-negotiation.webp",
     author: "Career Coach Nisha",
   },
   {
@@ -285,7 +285,7 @@ const blogPosts = [
     readTime: "7 min read",
     date: "May 24, 2025",
     tag: "AI",
-    image: "/blog/ai-resume-writing.jpg",
+    image: "/blog/ai-resume-writing.webp",
     author: "CV Craft Team",
   },
   {
@@ -297,7 +297,7 @@ const blogPosts = [
     readTime: "6 min read",
     date: "May 28, 2025",
     tag: "Keywords",
-    image: "/blog/software-engineer-keywords.jpg",
+    image: "/blog/software-engineer-keywords.webp",
     author: "CV Craft Experts",
   },
   {
@@ -309,7 +309,7 @@ const blogPosts = [
     readTime: "6 min read",
     date: "Jun 01, 2025",
     tag: "Keywords",
-    image: "/blog/marketing-resume-keywords.jpg",
+    image: "/blog/marketing-resume-keywords.webp",
     author: "CV Craft Team",
   },
   {
@@ -321,7 +321,7 @@ const blogPosts = [
     readTime: "7 min read",
     date: "Jun 05, 2025",
     tag: "Layout",
-    image: "/blog/ats-layout-guide.jpg",
+    image: "/blog/ats-layout-guide.webp",
     author: "CV Craft Team",
   },
   {
@@ -333,7 +333,7 @@ const blogPosts = [
     readTime: "8 min read",
     date: "Jun 09, 2025",
     tag: "Recruiter View",
-    image: "/blog/recruiter-reading-resume.jpg",
+    image: "/blog/recruiter-reading-resume.webp",
     author: "HR Recruiter Anjali",
   },
   {
@@ -345,7 +345,7 @@ const blogPosts = [
     readTime: "8 min read",
     date: "Jun 13, 2025",
     tag: "MNC",
-    image: "/blog/resume-screening-big-company.jpg",
+    image: "/blog/resume-screening-big-company.webp",
     author: "CV Craft Experts",
   },
   {
@@ -357,7 +357,7 @@ const blogPosts = [
     readTime: "6 min read",
     date: "Jun 17, 2025",
     tag: "Fresher",
-    image: "/blog/fresher-cover-letter.jpg",
+    image: "/blog/fresher-cover-letter.webp",
     author: "CV Craft Team",
   },
   {
@@ -369,7 +369,7 @@ const blogPosts = [
     readTime: "5 min read",
     date: "Jun 21, 2025",
     tag: "Short",
-    image: "/blog/short-cover-letter.jpg",
+    image: "/blog/short-cover-letter.webp",
     author: "CV Craft Team",
   },
   {
@@ -381,7 +381,7 @@ const blogPosts = [
     readTime: "7 min read",
     date: "Jun 25, 2025",
     tag: "Cold Email",
-    image: "/blog/cold-email-cover-letter.jpg",
+    image: "/blog/cold-email-cover-letter.webp",
     author: "CV Craft Experts",
   },
   {
@@ -393,7 +393,7 @@ const blogPosts = [
     readTime: "5 min read",
     date: "Jun 29, 2025",
     tag: "Mistakes",
-    image: "/blog/cover-letter-mistakes.jpg",
+    image: "/blog/cover-letter-mistakes.webp",
     author: "CV Craft Team",
   },
   {
@@ -405,7 +405,7 @@ const blogPosts = [
     readTime: "6 min read",
     date: "Jul 03, 2025",
     tag: "Guide",
-    image: "/blog/cover-letter-vs-resume.jpg",
+    image: "/blog/cover-letter-vs-resume.webp",
     author: "CV Craft Team",
   },
   {
@@ -417,7 +417,7 @@ const blogPosts = [
     readTime: "7 min read",
     date: "Jul 07, 2025",
     tag: "Gap Year",
-    image: "/blog/gap-year-resume.jpg",
+    image: "/blog/gap-year-resume.webp",
     author: "Career Coach Nisha",
   },
   {
@@ -429,7 +429,7 @@ const blogPosts = [
     readTime: "8 min read",
     date: "Jul 11, 2025",
     tag: "Internship",
-    image: "/blog/internship-resume.jpg",
+    image: "/blog/internship-resume.webp",
     author: "CV Craft Team",
   },
   {
@@ -441,7 +441,7 @@ const blogPosts = [
     readTime: "7 min read",
     date: "Jul 15, 2025",
     tag: "Diploma",
-    image: "/blog/diploma-student-resume.jpg",
+    image: "/blog/diploma-student-resume.webp",
     author: "CV Craft Experts",
   },
   {
@@ -453,7 +453,7 @@ const blogPosts = [
     readTime: "8 min read",
     date: "Jul 19, 2025",
     tag: "Career Break",
-    image: "/blog/mom-returning-work.jpg",
+    image: "/blog/mom-returning-work.webp",
     author: "Career Coach Nisha",
   },
   {
@@ -465,7 +465,7 @@ const blogPosts = [
     readTime: "5 min read",
     date: "Jul 23, 2025",
     tag: "Length",
-    image: "/blog/one-vs-two-page-resume.jpg",
+    image: "/blog/one-vs-two-page-resume.webp",
     author: "CV Craft Team",
   },
   {
@@ -477,7 +477,7 @@ const blogPosts = [
     readTime: "7 min read",
     date: "Jul 27, 2025",
     tag: "Projects",
-    image: "/blog/fresher-projects-section.jpg",
+    image: "/blog/fresher-projects-section.webp",
     author: "CV Craft Team",
   },
   {
@@ -489,7 +489,7 @@ const blogPosts = [
     readTime: "6 min read",
     date: "Jul 31, 2025",
     tag: "Skills",
-    image: "/blog/skills-fresher-resume.jpg",
+    image: "/blog/skills-fresher-resume.webp",
     author: "CV Craft Experts",
   },
   {
@@ -501,7 +501,7 @@ const blogPosts = [
     readTime: "8 min read",
     date: "Aug 04, 2025",
     tag: "Data Analyst",
-    image: "/blog/data-analyst-fresher-resume.jpg",
+    image: "/blog/data-analyst-fresher-resume.webp",
     author: "CV Craft Team",
   },
   {
@@ -513,7 +513,7 @@ const blogPosts = [
     readTime: "7 min read",
     date: "Aug 08, 2025",
     tag: "B.Com",
-    image: "/blog/bcom-graduate-resume.jpg",
+    image: "/blog/bcom-graduate-resume.webp",
     author: "CV Craft Experts",
   },
   {
@@ -525,7 +525,7 @@ const blogPosts = [
     readTime: "7 min read",
     date: "Aug 12, 2025",
     tag: "Government",
-    image: "/blog/government-job-resume.jpg",
+    image: "/blog/government-job-resume.webp",
     author: "CV Craft Team",
   },
   {
@@ -537,7 +537,7 @@ const blogPosts = [
     readTime: "7 min read",
     date: "Aug 16, 2025",
     tag: "Achievements",
-    image: "/blog/achievements-resume.jpg",
+    image: "/blog/achievements-resume.webp",
     author: "CV Craft Team",
   },
   {
@@ -549,7 +549,7 @@ const blogPosts = [
     readTime: "5 min read",
     date: "Aug 20, 2025",
     tag: "Hobbies",
-    image: "/blog/hobbies-interests-resume.jpg",
+    image: "/blog/hobbies-interests-resume.webp",
     author: "CV Craft Experts",
   },
   {
@@ -561,7 +561,7 @@ const blogPosts = [
     readTime: "6 min read",
     date: "Aug 24, 2025",
     tag: "Photo",
-    image: "/blog/photo-on-resume.jpg",
+    image: "/blog/photo-on-resume.webp",
     author: "CV Craft Team",
   },
   {
@@ -573,7 +573,7 @@ const blogPosts = [
     readTime: "6 min read",
     date: "Aug 28, 2025",
     tag: "Email",
-    image: "/blog/email-resume-to-hr.jpg",
+    image: "/blog/email-resume-to-hr.webp",
     author: "CV Craft Team",
   },
   {
@@ -585,7 +585,7 @@ const blogPosts = [
     readTime: "8 min read",
     date: "Sep 01, 2025",
     tag: "Networking",
-    image: "/blog/linkedin-networking.jpg",
+    image: "/blog/linkedin-networking.webp",
     author: "CV Craft Experts",
   },
   {
@@ -597,7 +597,7 @@ const blogPosts = [
     readTime: "8 min read",
     date: "Sep 05, 2025",
     tag: "Strategy",
-    image: "/blog/job-search-while-working.jpg",
+    image: "/blog/job-search-while-working.webp",
     author: "CV Craft Team",
   },
   {
@@ -609,7 +609,7 @@ const blogPosts = [
     readTime: "5 min read",
     date: "Sep 09, 2025",
     tag: "Checklist",
-    image: "/blog/resume-final-checklist.jpg",
+    image: "/blog/resume-final-checklist.webp",
     author: "CV Craft Team",
   },
 ];
