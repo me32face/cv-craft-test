@@ -736,6 +736,9 @@ if (key === "templates") {
 )}
 
 
+
+
+
 {/* Finally render Templates button here */}
 {menuItems.find(it => it.key === "templates") && (
   <div className="flex flex-col">
