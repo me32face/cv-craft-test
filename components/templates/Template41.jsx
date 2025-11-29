@@ -127,12 +127,12 @@ export default function Template41({ data, onClickSection }) {
 
                 if (s.category && s.skills) {
                   return (
-                    <p key={i} className="text-sm mb-1">
-                      <span className="font-medium">{s.category}:</span> {s.skills.filter(item => item && item.trim()).join(", ")}
+                    <p key={i} className="text-sm mb-1 break-words">
+                      <span className="font-medium break-words">{s.category}:</span> {s.skills.filter(item => item && item.trim()).join(", ")}
                     </p>
                   );
                 }
-                return <p key={i} className="text-sm mb-1 ">• {s.name || "Skill"}</p>;
+                return <p key={i} className="text-sm mb-1 break-words">• {s.name || "Skill"}</p>;
               })}
             </div>
           </div>
@@ -156,11 +156,11 @@ export default function Template41({ data, onClickSection }) {
                 { name: "CPR & First Aid", issuer: "Heart Health Org" }
               ]).map((cert, i) => (
                 <div key={i}>
-                  <p className="text-sm font-semibold text-white">
+                  <p className="text-sm font-semibold text-white break-words">
                     {cert.name}
                   </p>
                   {cert.year && <p className="text-xs mt-1">{cert.year}</p>}
-                  {cert.issuer && <p className="text-xs opacity-80">{cert.issuer}</p>}
+                  {cert.issuer && <p className="text-xs opacity-80 break-words">{cert.issuer}</p>}
                 </div>
               ))}
             </div>
@@ -188,7 +188,7 @@ export default function Template41({ data, onClickSection }) {
               <span className="w-2 h-2 bg-[#a680c9] rounded-full"></span>
               Profile Summary
             </h2>
-            <p className="text-sm leading-relaxed text-slate-700 pl-5">
+            <p className="text-sm leading-relaxed text-slate-700 pl-5 break-words">
               {data?.summary || "I am a fresh graduate with a teaching license, focused on providing quality English education to high school students."}
             </p>
           </section>
@@ -312,11 +312,11 @@ export default function Template41({ data, onClickSection }) {
                     <p className="text-xs opacity-60">{project.year}</p>
                   </div>
                   {project.descFormat === "bullet" ? (
-                    project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">• {line}</p>)
+                    project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 break-words">• {line}</p>)
                   ) : project.descFormat === "number" ? (
-                    project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">{idx + 1}. {line}</p>)
+                    project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 break-words">{idx + 1}. {line}</p>)
                   ) : (
-                    <p className="text-sm mt-1 text-gray-700">{project.desc}</p>
+                    <p className="text-sm mt-1 text-gray-700 break-words">{project.desc}</p>
                   )}
                 </div>
               ))}

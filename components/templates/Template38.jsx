@@ -25,10 +25,7 @@ export default function Template38({ data, onClickSection }) {
   const socialLinks = toArray(data?.socialLinks);
 
   return (
-    <div
-      id="cv-preview"
-      className="cv-sidebar w-[794px] min-h-[1123px] bg-white mx-auto  text-gray-900"
-    >
+    <div className="w-[794px] min-h-[1123px] bg-white mx-auto text-gray-900 flex flex-col">
       {/* HEADER */}
       <header
         className="border-b-2 border-gray-800 py-8 px-12 cursor-pointer"
@@ -39,9 +36,9 @@ export default function Template38({ data, onClickSection }) {
         </h1>
       </header>
 
-      <div className="grid grid-cols-[38%_62%] min-h-screen">
+      <div className="flex flex-1">
         {/* LEFT COLUMN */}
-        <div className="cv-sidebar  bg-gray-200 px-8 py-8">
+        <div className="cv-sidebar w-1/3 bg-gray-200 px-8 py-8">
           {/* Contact */}
           <div>
             <div className="mb-4">
@@ -85,8 +82,8 @@ export default function Template38({ data, onClickSection }) {
                 <div key={i} className="mb-4">
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="font-semibold !text-sm text-gray-700">{cert.name}</p>
-                      <p className="text-xs opacity-80">{cert.issuer}</p>
+                      <p className="font-semibold !text-sm text-gray-700 break-words">{cert.name}</p>
+                      <p className="text-xs opacity-80 break-words">{cert.issuer}</p>
                     </div>
                     <p className="text-xs opacity-60">{cert.year}</p>
                   </div>
@@ -191,14 +188,14 @@ export default function Template38({ data, onClickSection }) {
         </div>
 
         {/* RIGHT COLUMN */}
-        <div className="cv-sidebar px-8 py-8">
+        <div className="w-2/3 px-8 py-8">
           {/* Summary */}
           {data?.visibleSections?.summary !== false && (
             <>
               <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("summary")}>
                 SUMMARY
               </h2>
-              <p className="text-xs mb-4 text-gray-700">{data?.summary || "A dedicated professional with extensive experience in the field."}</p>
+              <p className="text-xs mb-4 text-gray-700 break-words">{data?.summary || "A dedicated professional with extensive experience in the field."}</p>
             </>
           )}
           {/* Projects */}
@@ -211,13 +208,13 @@ export default function Template38({ data, onClickSection }) {
                 <div key={i} className="mb-3">
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="font-semibold text-gray-800 !text-sm">{project.name}</p>
+                      <p className="font-semibold text-gray-800 !text-sm break-words">{project.name}</p>
                       {project.link && (
                         <a
                           href={project.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-xs text-blue-600 underline project-link"
+                          className="text-xs text-blue-600 underline project-link break-all"
                         >
                           {project.useCustomLabel
                             ? project.linkLabel
@@ -228,11 +225,11 @@ export default function Template38({ data, onClickSection }) {
                     <p className="text-xs opacity-60">{project.year}</p>
                   </div>
                   {project.descFormat === "bullet" ? (
-                    project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">• {line}</p>)
+                    project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 break-words">• {line}</p>)
                   ) : project.descFormat === "number" ? (
-                    project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">{idx + 1}. {line}</p>)
+                    project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 break-words">{idx + 1}. {line}</p>)
                   ) : (
-                    <p className="text-sm mt-1 text-gray-700">{project.desc}</p>
+                    <p className="text-sm mt-1 text-gray-700 break-words">{project.desc}</p>
                   )}
                 </div>
               ))}
@@ -252,8 +249,8 @@ export default function Template38({ data, onClickSection }) {
                 <div key={i} className="mb-3">
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="font-semibold text-gray-800 !text-sm">{exp.role}</p>
-                      <p className="text-sm opacity-80">{exp.company}</p>
+                      <p className="font-semibold text-gray-800 !text-sm break-words">{exp.role}</p>
+                      <p className="text-sm opacity-80 break-words">{exp.company}</p>
                     </div>
                     <p className="text-xs opacity-60">
                       {exp.start}
@@ -261,11 +258,11 @@ export default function Template38({ data, onClickSection }) {
                       {exp.current ? "Present" : exp.end}
                     </p>                  </div>
                   {exp.descFormat === "bullet" ? (
-                    exp.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">• {line}</p>)
+                    exp.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 break-words">• {line}</p>)
                   ) : exp.descFormat === "number" ? (
-                    exp.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">{idx + 1}. {line}</p>)
+                    exp.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 break-words">{idx + 1}. {line}</p>)
                   ) : (
-                    <p className="text-xs mt-1">{exp.desc}</p>
+                    <p className="text-xs mt-1 break-words">{exp.desc}</p>
                   )}
                 </div>
               ))}
@@ -282,9 +279,9 @@ export default function Template38({ data, onClickSection }) {
                 <div key={i} className=" mb-3">
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="font-semibold !text-sm text-gray-700">{edu.degree}</p>
-                      <p className="text-sm opacity-80">{edu.school}</p>
-                      {edu.field && <p className="text-xs opacity-70">{edu.field}</p>}
+                      <p className="font-semibold !text-sm text-gray-700 break-words">{edu.degree}</p>
+                      <p className="text-sm opacity-80 break-words">{edu.school}</p>
+                      {edu.field && <p className="text-xs opacity-70 break-words">{edu.field}</p>}
                     </div>
                     <p className="text-xs opacity-60">
                       {edu.start && formatDate(edu.start)}

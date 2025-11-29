@@ -71,8 +71,8 @@ export default function Template43({ data, onClickSection }) {
       {/* Profile Summary - Full Width */}
       {data?.visibleSections?.summary !== false && (
         <div className="px-10 py-1 mb-5 cursor-pointer" onClick={() => onClickSection && onClickSection("summary")}>
-          <p className="text-xs leading-relaxed text-gray-700 text-justify">
-            {data?.summary || "Results-oriented Full Stack Developer with a proven ability to design,Results-oriented Full Stack Developer with a proven ability to design, develop, and deploy robust web applications. Proficient in both front-end and back-end technologies, consistently delivering high-quality, scalable solutions. Seeking to leverage comprehensive development expertise in a challenging and innovative environment.Results-oriented Full Stack Developer with a proven ability to design, develop, and deploy robust web applications. Proficient in both front-end and back-end technologies, consistently delivering high-quality, scalable solutions. Seeking to leverage comprehensive development expertise in a challenging and innovative environment. develop, and deploy robust web applications. Proficient in both front-end and back-end technologies, consistently delivering high-quality, scalable solutions. Seeking to leverage comprehensive development expertise in a challenging and innovative environment.."}
+          <p className="text-xs leading-relaxed text-gray-700 text-justify break-words">
+            {data?.summary || "Results-oriented Full Stack Developer with a proven ability to design,Results-oriented Full Stack Developer with a proven ability to design, develop, and deploy robust web applications."}
           </p>
         </div>
       )}
@@ -161,7 +161,7 @@ export default function Template43({ data, onClickSection }) {
                       </p>
                     );
                   }
-                  return <p key={i} className="text-sm mb-1">• {s.name || "Skill"}</p>;
+                  return <p key={i} className="text-sm mb-1 break-words">• {s.name || "Skill"}</p>;
                 })}
               </div>
             </div>
@@ -184,8 +184,8 @@ export default function Template43({ data, onClickSection }) {
                   }
                   return (
                     <div key={i}>
-                      <p className="text-xs font-semibold text-gray-800">{cert.name}</p>
-                      {cert.issuer && <p className="text-xs text-gray-600 mt-0.5">{cert.issuer}</p>}
+                      <p className="text-xs font-semibold text-gray-800 break-words">{cert.name}</p>
+                      {cert.issuer && <p className="text-xs text-gray-600 mt-0.5 break-words">{cert.issuer}</p>}
                       {cert.year && <p className="text-xs text-gray-500 mt-0.5">{cert.year}</p>}
                     </div>
                   );
@@ -262,34 +262,34 @@ export default function Template43({ data, onClickSection }) {
                     desc: "Managed daily operations and team development. Successfully executed multiple high-impact projects that enhanced customer satisfaction and revenue."
                   },
                 ]).map((exp, i) => (
-                  <div key={i} className="relative pl-1 ">
-                    <div className="flex justify-between items-start mb-1">
+                  <div key={i} className="relative pl-1 break-words">
+                    <div className="flex justify-between items-start mb-1 break-words">
                       <div>
-                        <p className="text-sm font-bold text-slate-800">{exp.role}</p>
+                        <p className="text-sm font-bold text-slate-800 break-words">{exp.role}</p>
                         <p className="text-xs text-slate-600 italic">{exp.company}</p>
                       </div>
-                      <p className="text-xs opacity-60">
+                      <p className="text-xs opacity-60 break-words">
                         {exp.start}
                         {exp.start && (exp.end || exp.current) && " - "}
                         {exp.current ? "Present" : exp.end}
                       </p>
                     </div>
                     {exp.desc && (
-                      <div className="mt-1 text-xs text-gray-700 leading-relaxed">
+                      <div className="mt-1 text-xs text-gray-700 leading-relaxed break-words">
                         {exp.descFormat === "bullet" ? (
                           exp.desc.split('\n').map((line, idx) =>
                             line.trim() && (
-                              <p key={idx} className="mb-1">• {line.trim()}</p>
+                              <p key={idx} className="mb-1 break-words">• {line.trim()}</p>
                             )
                           )
                         ) : exp.descFormat === "number" ? (
                           exp.desc.split('\n').map((line, idx) =>
                             line.trim() && (
-                              <p key={idx} className="mb-1">{idx + 1}. {line.trim()}</p>
+                              <p key={idx} className="mb-1 break-words">{idx + 1}. {line.trim()}</p>
                             )
                           )
                         ) : (
-                          <p className="text-justify">{exp.desc}</p>
+                          <p className="text-justify break-words">{exp.desc}</p>
                         )}
                       </div>
                     )}
@@ -366,17 +366,17 @@ export default function Template43({ data, onClickSection }) {
                         {project.descFormat === "bullet" ? (
                           project.desc.split('\n').map((line, idx) =>
                             line.trim() && (
-                              <p key={idx} className="mb-0.5">• {line.trim()}</p>
+                              <p key={idx} className="mb-0.5 break-words">• {line.trim()}</p>
                             )
                           )
                         ) : project.descFormat === "number" ? (
                           project.desc.split('\n').map((line, idx) =>
                             line.trim() && (
-                              <p key={idx} className="mb-0.5">{idx + 1}. {line.trim()}</p>
+                              <p key={idx} className="mb-0.5 break-words">{idx + 1}. {line.trim()}</p>
                             )
                           )
                         ) : (
-                          <p>{project.desc}</p>
+                          <p className="break-words">{project.desc}</p>
                         )}
                       </div>
                     )}

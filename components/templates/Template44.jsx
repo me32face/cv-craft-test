@@ -271,7 +271,7 @@ export default function Template44({ data, onClickSection }) {
             <h2 className="text-sm text-[#83549f] font-bold tracking-widest uppercase mb-3  pb-2 border-b-2 border-[#dfc3f1]" >
               Profile
             </h2>
-            <p className="text-xs leading-relaxed text-slate-700 text-justify">
+            <p className="text-xs leading-relaxed text-slate-700 text-justify break-words">
               {data?.summary || "Creative and versatile artist with a passion for bringing imagination to life through various mediums. Proficient in both traditional and digital art, with a strong foundation in illustration and design. Committed to delivering visually compelling and conceptually rich artwork."}
             </p>
           </section>
@@ -316,17 +316,17 @@ export default function Template44({ data, onClickSection }) {
                       {exp.descFormat === "bullet" ? (
                         exp.desc.split('\n').map((line, idx) =>
                           line.trim() && (
-                            <p key={idx} className="mb-1">• {line.trim()}</p>
+                            <p key={idx} className="mb-1 break-words">• {line.trim()}</p>
                           )
                         )
                       ) : exp.descFormat === "number" ? (
                         exp.desc.split('\n').map((line, idx) =>
                           line.trim() && (
-                            <p key={idx} className="mb-1">{idx + 1}. {line.trim()}</p>
+                            <p key={idx} className="mb-1 break-words">{idx + 1}. {line.trim()}</p>
                           )
                         )
                       ) : (
-                        <p className="text-justify">{exp.desc}</p>
+                        <p className="text-justify break-words">{exp.desc}</p>
                       )}
                     </div>
                   )}
@@ -368,17 +368,17 @@ export default function Template44({ data, onClickSection }) {
                       {project.descFormat === "bullet" ? (
                         project.desc.split('\n').map((line, idx) =>
                           line.trim() && (
-                            <p key={idx} className="mb-0.5">• {line.trim()}</p>
+                            <p key={idx} className="mb-0.5 break-words">• {line.trim()}</p>
                           )
                         )
                       ) : project.descFormat === "number" ? (
                         project.desc.split('\n').map((line, idx) =>
                           line.trim() && (
-                            <p key={idx} className="mb-0.5">{idx + 1}. {line.trim()}</p>
+                            <p key={idx} className="mb-0.5 break-words">{idx + 1}. {line.trim()}</p>
                           )
                         )
                       ) : (
-                        <p>{project.desc}</p>
+                        <p className="break-words">{project.desc}</p>
                       )}
                     </div>
                   )}

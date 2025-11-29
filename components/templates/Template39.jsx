@@ -61,11 +61,11 @@ export default function template39({ data, onClickSection }) {
           className="flex-1 pt-2 cursor-pointer"
           onClick={() => onClickSection && onClickSection("personal")}
         >
-          <h1 className="text-4xl font-bold text-amber-800 mb-1">
+          <h1 className="text-4xl font-bold text-amber-800 mb-1 break-words">
             {data?.name || "Daniel Gallego"}
           </h1>
           <p className="text-sm text-gray-600 mb-4">
-            {data?.title || "Professional Marketing Manager"}
+            {data?.title || "Professional Marketing Manager break-words"}
           </p>
           {/* Contact Icons Row */}
           <div className="flex flex-wrap gap-x-1 gap-y-1 text-gray-600 text-xs">
@@ -133,10 +133,10 @@ export default function template39({ data, onClickSection }) {
                     );
                   }
                   return (
-                    <li key={i} className="flex items-start gap-1.5">
-                      <span className="text-amber-700 font-bold text-[10px]">•</span>
+                    <li key={i} className="flex items-start gap-1.5 break-words">
+                      <span className="text-amber-700 font-bold text-[10px] break-words">•</span>
                       <div>
-                        <p className="text-sm font-semibold text-gray-800">{cert.name}</p>
+                        <p className="text-sm font-semibold text-gray-800 break-words">{cert.name}</p>
                         {cert.issuer && <p className="text-xs text-gray-600">{cert.issuer}</p>}
                         {cert.year && <p className="text-xs text-gray-500">{cert.year}</p>}
                       </div>
@@ -285,7 +285,7 @@ export default function template39({ data, onClickSection }) {
               <h2 className="text-md font-semibold uppercase text-gray-800 mb-2 border-b-2 border-amber-700 pb-1.5">
                 Professional Summary
               </h2>
-              <p className="text-xs leading-relaxed text-gray-700">
+              <p className="text-xs leading-relaxed text-gray-700 break-words">
                 {data?.summary ||
                   "Innovative marketing manager with 7+ years of experience leading successful marketing initiatives and campaigns. Proven track record in developing and implementing strategies that drive brand awareness and revenue growth. Exceptional communication skills and a talent for building and leading high-performing teams."}
               </p>
@@ -326,21 +326,21 @@ export default function template39({ data, onClickSection }) {
                       </p>                    </div>
 
                     {exp.desc && (
-                      <div className="mt-1.5 text-[12px] text-gray-700 leading-relaxed">
+                      <div className="mt-1.5 text-[12px] text-gray-700 leading-relaxed break-words">
                         {exp.descFormat === "bullet" ? (
                           exp.desc.split('\n').map((line, idx) =>
                             line.trim() && (
-                              <p key={idx} className="mb-0.5">• {line.trim()}</p>
+                              <p key={idx} className="mb-0.5 break-words">• {line.trim()}</p>
                             )
                           )
                         ) : exp.descFormat === "number" ? (
                           exp.desc.split('\n').map((line, idx) =>
                             line.trim() && (
-                              <p key={idx} className="mb-0.5">{idx + 1}. {line.trim()}</p>
+                              <p key={idx} className="mb-0.5 break-words">{idx + 1}. {line.trim()}</p>
                             )
                           )
                         ) : (
-                          <p>{exp.desc}</p>
+                          <p className="break-words">{exp.desc}</p>
                         )}
                       </div>
                     )}
@@ -378,21 +378,21 @@ export default function template39({ data, onClickSection }) {
                       <p className="text-[12px] text-gray-500 mt-0.5">{project.year}</p>
                     )}
                     {project.desc && (
-                      <div className="mt-1.5 text-[12px] text-gray-700 leading-relaxed">
+                      <div className="mt-1.5 text-[12px] text-gray-700 leading-relaxed break-words">
                         {project.descFormat === "bullet" ? (
                           project.desc.split('\n').map((line, idx) =>
                             line.trim() && (
-                              <p key={idx} className="mb-0.5">• {line.trim()}</p>
+                              <p key={idx} className="mb-0.5 break-words">• {line.trim()}</p>
                             )
                           )
                         ) : project.descFormat === "number" ? (
                           project.desc.split('\n').map((line, idx) =>
                             line.trim() && (
-                              <p key={idx} className="mb-0.5">{idx + 1}. {line.trim()}</p>
+                              <p key={idx} className="mb-0.5 break-words">{idx + 1}. {line.trim()}</p>
                             )
                           )
                         ) : (
-                          <p>{project.desc}</p>
+                          <p className="break-words">{project.desc}</p>
                         )}
                       </div>
                     )}

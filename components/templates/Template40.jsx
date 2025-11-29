@@ -4,7 +4,7 @@ import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
 import { Phone, Mail, MapPin } from "lucide-react";
 import SocialLinkDisplay from "../SocialLinkDisplay";
 export default function Template40({ data, onClickSection }) {
- 
+
   const defaultData = {
     name: "SARAH WILLIAMS",
     title: "Graphic Designer | Visual Creative",
@@ -35,7 +35,7 @@ export default function Template40({ data, onClickSection }) {
       "UI/UX Specialization – Coursera"
     ],
 
-   
+
     experiences: [
       {
         role: "Senior Graphic Designer",
@@ -139,7 +139,7 @@ export default function Template40({ data, onClickSection }) {
       className="w-[794px] min-h-[1123px] mx-auto bg-white shadow-2xl font-sans"
     >
       {/* HEADER */}
-     <div className="bg-gray-900 text-white px-8 py-4 border-b border-gray-700 flex justify-between items-center">
+      <div className="bg-gray-900 text-white px-8 py-4 border-b border-gray-700 flex justify-between items-center">
         <div className="flex-1">
           <h1
             className="text-4xl font-bold tracking-tight cursor-pointer mb-1"
@@ -157,38 +157,38 @@ export default function Template40({ data, onClickSection }) {
         </div>
 
         {/* Profile Image */}
-       <div 
-  onClick={() => onClickSection("image")}
-  className="flex items-center justify-center"
->
-  
-  <div
-    className={`overflow-hidden border border-gray-300 cursor-pointer`}
-    style={{
-      width: finalData.imageSize || "110px",
-      height: finalData.imageSize || "110px",
-      borderRadius:
-        finalData.imageShape === "circle"
-          ? "50%"
-          : finalData.imageShape === "rounded"
-          ? "14px"
-          : "0",
-      objectFit: "cover",
-    }}
-  >
-    <img
-     src={finalData.profileImage || "/templateprofile/template40profile.jpg"}
-      className="object-cover w-full h-full"
-    />
-  </div>
-</div>
+        <div
+          onClick={() => onClickSection("image")}
+          className="flex items-center justify-center"
+        >
+
+          <div
+            className={`overflow-hidden border border-gray-300 cursor-pointer`}
+            style={{
+              width: finalData.imageSize || "110px",
+              height: finalData.imageSize || "110px",
+              borderRadius:
+                finalData.imageShape === "circle"
+                  ? "50%"
+                  : finalData.imageShape === "rounded"
+                    ? "14px"
+                    : "0",
+              objectFit: "cover",
+            }}
+          >
+            <img
+              src={finalData.profileImage || "/templateprofile/template40profile.jpg"}
+              className="object-cover w-full h-full"
+            />
+          </div>
+        </div>
 
       </div>
 
       {/* FLEX LAYOUT */}
       <div className="flex">
         {/* LEFT SIDEBAR */}
-       <div className="cv-sidebar w-1/3 bg-gray-50 px-6 py-6 min-h-[1123px] border-r border-gray-300">
+        <div className="cv-sidebar w-1/3 bg-gray-50 px-6 py-6 min-h-[1123px] border-r border-gray-300">
           {/* CONTACT */}
           <section
             className="mb-6 cursor-pointer cv-item"
@@ -199,21 +199,21 @@ export default function Template40({ data, onClickSection }) {
             </h3>
 
             <div className="space-y-2 text-sm text-gray-700">
-                   {data.phone && (
-               <p className="flex items-center gap-1">
-                 <Phone size={14} /> {data.phone}
-               </p>
-             )}
-             {data.email && (
-               <p className="flex items-center gap-1">
-                 <Mail size={14} /> {data.email}
-               </p>
-             )}
-             {data.address && (
-               <p className="flex items-center gap-1">
-                 <MapPin size={14} /> {data.address}
-               </p>
-             )}
+              {data.phone && (
+                <p className="flex items-center gap-1">
+                  <Phone size={14} /> {data.phone}
+                </p>
+              )}
+              {data.email && (
+                <p className="flex items-center gap-1">
+                  <Mail size={14} /> {data.email}
+                </p>
+              )}
+              {data.address && (
+                <p className="flex items-center gap-1">
+                  <MapPin size={14} /> {data.address}
+                </p>
+              )}
 
               {socialLinks.length > 0 && (
                 <div
@@ -222,9 +222,9 @@ export default function Template40({ data, onClickSection }) {
                 >
                   <h4 className="text-sm font-semibold">Social Links</h4>
                   <div className="space-y-1 text-sm">
-                   {socialLinks.map((link, i) => (
-  <SocialLinkDisplay key={i} link={link} />
-))}
+                    {socialLinks.map((link, i) => (
+                      <SocialLinkDisplay key={i} link={link} />
+                    ))}
                   </div>
                 </div>
               )}
@@ -245,17 +245,17 @@ export default function Template40({ data, onClickSection }) {
                 const skillObj = safeObj(s);
 
                 if (skillObj.category && Array.isArray(skillObj.skills)) {
-    return (
-      <div key={i} className="cv-item text-sm">
-        <p className="font-semibold text-indigo-700">{skillObj.category}</p>
-        <ul className="ml-4 list-disc text-gray-700">
-          {skillObj.skills.map((sk, idx) => (
-            <li key={idx}>{sk}</li>
-          ))}
-        </ul>
-      </div>
-    );
-  }
+                  return (
+                    <div key={i} className="cv-item text-sm">
+                      <p className="font-semibold text-indigo-700">{skillObj.category}</p>
+                      <ul className="ml-4 list-disc text-gray-700">
+                        {skillObj.skills.map((sk, idx) => (
+                          <li key={idx}>{sk}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                }
 
 
                 return (
@@ -282,119 +282,119 @@ export default function Template40({ data, onClickSection }) {
           </section>
 
           {/* LANGUAGES */}
-         <section
-  className="mb-6 cursor-pointer"
-  onClick={() => onClickSection("languages")}
->
-  <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
-    Languages
-  </h3>
+          <section
+            className="mb-6 cursor-pointer"
+            onClick={() => onClickSection("languages")}
+          >
+            <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
+              Languages
+            </h3>
 
-  <div className="space-y-2 text-sm">
-    {languages.map((l, i) =>
-      renderLanguage(l, i, {
-        container: "mb-2",
-        name: "text-sm text-gray-800 font-medium",
-        level: "text-xs text-gray-500",
-        percentage: "text-xs text-gray-500",
-        barContainer: "bg-gray-200 rounded-full h-1 mt-2",
-        bar: "bg-indigo-600 h-1 rounded-full"
-      })
-    )}
-  </div>
-</section>
+            <div className="space-y-2 text-sm">
+              {languages.map((l, i) =>
+                renderLanguage(l, i, {
+                  container: "mb-2",
+                  name: "text-sm text-gray-800 font-medium",
+                  level: "text-xs text-gray-500",
+                  percentage: "text-xs text-gray-500",
+                  barContainer: "bg-gray-200 rounded-full h-1 mt-2",
+                  bar: "bg-indigo-600 h-1 rounded-full"
+                })
+              )}
+            </div>
+          </section>
 
           {/* CERTIFICATIONS */}
-         {visible.certificates !== false && certificates.length > 0 && (
-  <section
-    className="mb-6 cursor-pointer"
-    onClick={() => onClickSection("certificates")}
-  >
-    <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
-      Certifications
-    </h3>
+          {visible.certificates !== false && certificates.length > 0 && (
+            <section
+              className="mb-6 cursor-pointer"
+              onClick={() => onClickSection("certificates")}
+            >
+              <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
+                Certifications
+              </h3>
 
-    <ul className="space-y-2 text-sm">
-      {certificates.map((c, i) => (
-        <li key={i} className="cv-item flex items-start gap-2">
-          <span className="text-indigo-600 mt-1">•</span>
-         <span>
-  {c.name || ""}
-  {c.issuer ? ` — ${c.issuer}` : ""}
-  {c.year ? ` (${c.year})` : ""}
-</span>
-        </li>
-      ))}
-    </ul>
-  </section>
-)}
-
-    
-
-    {/* AWARDS */}
-{visible.awards !== false && awards.length > 0 && (
-  <section
-    className="mb-6 cursor-pointer"
-    onClick={() => onClickSection("awards")}
-  >
-    <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
-      Awards
-    </h3>
-
-    <div className="space-y-2 text-sm">
-      {awards.map((a, i) => {
-        const award = safeObj(a);
-        return (
-          <div key={i} className="cv-item">
-            <p className="font-semibold">{safeText(award.title)}</p>
-            <p className="text-xs text-gray-600">
-              {safeText(award.issuer)} {award.date && `• ${award.date}`}
-            </p>
-            {award.description && (
-              <p className="text-xs text-gray-600 mt-1">
-                {safeText(award.description)}
-              </p>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  </section>
-)}
+              <ul className="space-y-2 text-sm">
+                {certificates.map((c, i) => (
+                  <li key={i} className="cv-item flex items-start gap-2">
+                    <span className="text-indigo-600 mt-1">•</span>
+                    <span>
+                      {c.name || ""}
+                      {c.issuer ? ` — ${c.issuer}` : ""}
+                      {c.year ? ` (${c.year})` : ""}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
 
-{/* REFERENCES */}
-{visible.references !== false && references.length > 0 && (
-  <section
-    className="mb-6 cursor-pointer"
-    onClick={() => onClickSection("references")}
-  >
-    <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
-      References
-    </h3>
 
-    <div className="space-y-3 text-sm">
-      {references.map((ref, i) => {
-        const r = safeObj(ref);
-        return (
-          <div key={i} className="cv-item">
-            <p className="font-semibold">{safeText(r.name)}</p>
-            <p className="text-xs text-gray-600">
-              {safeText(r.title)} — {safeText(r.company)}
-            </p>
-            {r.phone && <p className="text-xs text-gray-600">{r.phone}</p>}
-            {r.email && (
-              <p className="text-xs text-gray-600 break-all">{r.email}</p>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  </section>
-)}
+          {/* AWARDS */}
+          {visible.awards !== false && awards.length > 0 && (
+            <section
+              className="mb-6 cursor-pointer"
+              onClick={() => onClickSection("awards")}
+            >
+              <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
+                Awards
+              </h3>
 
-        
-        
+              <div className="space-y-2 text-sm">
+                {awards.map((a, i) => {
+                  const award = safeObj(a);
+                  return (
+                    <div key={i} className="cv-item">
+                      <p className="font-semibold">{safeText(award.title)}</p>
+                      <p className="text-xs text-gray-600">
+                        {safeText(award.issuer)} {award.date && `• ${award.date}`}
+                      </p>
+                      {award.description && (
+                        <p className="text-xs text-gray-600 mt-1">
+                          {safeText(award.description)}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+
+
+          {/* REFERENCES */}
+          {visible.references !== false && references.length > 0 && (
+            <section
+              className="mb-6 cursor-pointer"
+              onClick={() => onClickSection("references")}
+            >
+              <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
+                References
+              </h3>
+
+              <div className="space-y-3 text-sm">
+                {references.map((ref, i) => {
+                  const r = safeObj(ref);
+                  return (
+                    <div key={i} className="cv-item">
+                      <p className="font-semibold">{safeText(r.name)}</p>
+                      <p className="text-xs text-gray-600">
+                        {safeText(r.title)} — {safeText(r.company)}
+                      </p>
+                      {r.phone && <p className="text-xs text-gray-600">{r.phone}</p>}
+                      {r.email && (
+                        <p className="text-xs text-gray-600 break-all">{r.email}</p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+
+
+
         </div>
 
         {/* RIGHT SIDE */}
@@ -407,7 +407,7 @@ export default function Template40({ data, onClickSection }) {
             <h3 className="text-lg font-bold uppercase tracking-wide text-gray-800 mb-3 pb-2 border-b-2 border-indigo-600">
               About Me
             </h3>
-            <p className="text-sm leading-relaxed">{getSummaryText()}</p>
+            <p className="text-sm leading-relaxed break-words">{getSummaryText()}</p>
           </section>
 
           {/* EXPERIENCE */}
@@ -436,7 +436,7 @@ export default function Template40({ data, onClickSection }) {
                     </p>
 
                     {e.desc && (
-                      <ul className="mt-2 ml-4 list-disc space-y-1">
+                      <ul className="mt-2 ml-4 list-disc space-y-1 break-words">
                         {lines.map(
                           (line, idx) => line && <li key={idx}>{line}</li>
                         )}
@@ -481,7 +481,7 @@ export default function Template40({ data, onClickSection }) {
                     )}
 
                     {ed.description && (
-                      <p className="text-xs text-gray-600 mt-1">
+                      <p className="text-xs text-gray-600 mt-1 break-words">
                         {safeText(ed.description)}
                       </p>
                     )}
@@ -510,16 +510,16 @@ export default function Template40({ data, onClickSection }) {
                     </span>
                   </div>
 
-                               <a
-    href={p.link}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="text-xs text-blue-600 underline project-link"
-  >
-   {p.useCustomLabel && p.linkLabel ? p.linkLabel : p.link}
-  </a>
+                  <a
+                    href={p.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-blue-600 underline project-link"
+                  >
+                    {p.useCustomLabel && p.linkLabel ? p.linkLabel : p.link}
+                  </a>
                   {p.desc && (
-                    <p className="mt-2 text-gray-700">{safeText(p.desc)}</p>
+                    <p className="mt-2 text-gray-700 break-words">{safeText(p.desc)}</p>
                   )}
                 </div>
               ))}

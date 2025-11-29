@@ -303,7 +303,7 @@ export default function Template45({ data, onClickSection }) {
             <h2 className="text-sm font-bold text-slate-600 tracking-widest uppercase mb-3  pb-2 border-b-2 border-[#d4d2db]" >
               Profile
             </h2>
-            <p className="text-xs leading-relaxed text-slate-700 text-justify">
+            <p className="text-xs leading-relaxed text-slate-700 text-justify break-words">
               {data?.summary || "Creative and versatile artist with a passion for bringing imagination to life through various mediums. Proficient in both traditional and digital art, with a strong foundation in illustration and design. Committed to delivering visually compelling and conceptually rich artwork."}
             </p>
           </section>
@@ -347,17 +347,17 @@ export default function Template45({ data, onClickSection }) {
                       {exp.descFormat === "bullet" ? (
                         exp.desc.split('\n').map((line, idx) =>
                           line.trim() && (
-                            <p key={idx} className="mb-1">• {line.trim()}</p>
+                            <p key={idx} className="mb-1 break-words">• {line.trim()}</p>
                           )
                         )
                       ) : exp.descFormat === "number" ? (
                         exp.desc.split('\n').map((line, idx) =>
                           line.trim() && (
-                            <p key={idx} className="mb-1">{idx + 1}. {line.trim()}</p>
+                            <p key={idx} className="mb-1 break-words">{idx + 1}. {line.trim()}</p>
                           )
                         )
                       ) : (
-                        <p className="text-justify">{exp.desc}</p>
+                        <p className="text-justify break-words">{exp.desc}</p>
                       )}
                     </div>
                   )}
@@ -397,11 +397,11 @@ export default function Template45({ data, onClickSection }) {
                     <p className="text-xs opacity-60">{project.year}</p>
                   </div>
                   {project.descFormat === "bullet" ? (
-                    project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">• {line}</p>)
+                    project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 break-words">• {line}</p>)
                   ) : project.descFormat === "number" ? (
-                    project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700">{idx + 1}. {line}</p>)
+                    project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 break-words">{idx + 1}. {line}</p>)
                   ) : (
-                    <p className="text-sm mt-1 text-gray-700">{project.desc}</p>
+                    <p className="text-sm mt-1 text-gray-700 break-words">{project.desc}</p>
                   )}
                 </div>
               ))}
@@ -427,7 +427,7 @@ export default function Template45({ data, onClickSection }) {
                 }
                 return (
                   <div key={i}>
-                    <p className="text-xs font-semibold text-gray-700">{cert.name}</p>
+                    <p className="text-xs font-semibold text-gray-700 break-words">{cert.name}</p>
                     {cert.issuer && <p className="text-xs text-gray-600 mt-0.5">{cert.issuer}</p>}
                     {cert.year && <p className="text-xs text-gray-500 mt-0.5">{cert.year}</p>}
                   </div>
