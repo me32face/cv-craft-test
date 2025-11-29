@@ -187,8 +187,8 @@ export default function ImageUploader({ image, setImage, setShape, setAlign, onC
               }}
             >
               <img
-                src="/placeholder.png"
-                alt="placeholder"
+                src="/Placeholder.png"
+                alt="Placeholder"
                 className="object-cover w-full h-full"
               />
             </div>

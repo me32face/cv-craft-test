@@ -103,7 +103,7 @@ export default function Home() {
       id: "Template32",
       name: "Executive Resume",
       key: "Rahul Menon",
-      image: "/template/template32.png",
+      image: "/template/Template32.png",
       category: "simple",
     },
     {
