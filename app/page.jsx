@@ -78,8 +78,6 @@ export default function Home() {
       image: "/template/template47.png",
       category: "modern",
     },
- 
-
     {
       id: "Template32",
       name: "Executive Resume",
@@ -129,7 +127,20 @@ export default function Home() {
       image: "/template/template37.jpg",
       category: "proffessional",
     },
-    
+    {
+      id: "Template38",
+      name: "Modern Creative",
+      key: "Emily Davis",
+      image: "/template/template38.png",
+      category: "creative",
+    },
+    {
+      id: "Template39",
+      name: "Clean Creative",
+      key: "Emily Davis",
+      image: "/template/LEONARDOX NERO-1.png",
+      category: "professional",
+    },
     {
       id: "Template40",
       name: "Modern Creative",
@@ -141,7 +152,7 @@ export default function Home() {
       id: "Template41",
       name: "Stylish Classic",
       key: "Emily Davis",
-      image: "/template/ARTHAVION BLAZE.png",
+      image: "/template/ARTHAVION.png",
       category: "modern",
     },
     {
@@ -151,7 +162,6 @@ export default function Home() {
       image: "/template/TITANUS ZORIN.png",
       category: "creative",
     },
-  
   ];
 
   const filteredTemplates =
