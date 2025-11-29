@@ -14,10 +14,10 @@ const BuildSection = () => {
     const token = localStorage.getItem("token");
 
     if (token) {
-      // ✅ User logged in → Go to template
+      //  User logged in → Go to template
       router.push("/templates/Template01");
     } else {
-      // ❌ Not logged in → Remember where they wanted to go
+      //  Not logged in → Remember where they wanted to go
       localStorage.setItem("redirectAfterLogin", "/templates/Template01");
       setShowToast(true);
 

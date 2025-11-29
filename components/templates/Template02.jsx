@@ -137,7 +137,6 @@ export default function Template02() {
             const paragraphs = cleanedContent.split('\n\n').filter(p => p.trim().length > 50);
 
             // Skip introductory paragraphs (like "Of course. Here are...")
-            // Find the first paragraph that doesn't contain phrases like "here are", "options", "choose"
             const actualSummary = paragraphs.find(p =>
               !p.toLowerCase().includes('here are') &&
               !p.toLowerCase().includes('of course') &&
