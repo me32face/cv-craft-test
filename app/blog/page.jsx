@@ -754,7 +754,13 @@ export default function BlogPage() {
   }, [sortedPosts, activeCategory, searchTerm]);
 
   // Latest post as featured
-  const featuredPost = sortedPosts[0];
+  // const featuredPost = sortedPosts[0];
+
+  const featuredPost =
+    blogPosts.find(
+      (p) => p.slug === "how-to-write-a-job-winning-resume"
+  ) || blogPosts[0];
+
   const isSearching = searchTerm.trim().length > 0;
 
   const handleClearSearch = () => {
