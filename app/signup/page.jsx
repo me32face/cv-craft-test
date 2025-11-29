@@ -8,7 +8,7 @@ import { GoogleLogin } from '@react-oauth/google';
 
 
 export default function Signup() {
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL ;
   const [showToast, setShowToast] = useState(false);
   const [loading, setLoading] = useState(false);
   const [toastMessage, setToastMessage] = useState('');

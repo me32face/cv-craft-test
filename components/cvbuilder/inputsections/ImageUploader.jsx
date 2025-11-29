@@ -187,14 +187,14 @@ export default function ImageUploader({ image, setImage, setShape, setAlign, onC
               }}
             >
               <img
-                src="/placeholder.png" // replace with your placeholder image path
-                alt="Placeholder"
+                src="/placeholder.png"
+                alt="placeholder"
                 className="object-cover w-full h-full"
               />
             </div>
           )}
 
-          
+
         </div>
 
         {/* Shape & Alignment */}

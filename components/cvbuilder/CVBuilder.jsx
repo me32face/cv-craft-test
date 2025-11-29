@@ -410,6 +410,8 @@ if (key === "templates") {
     return () => clearTimeout(timer);
   }, []);
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   // Load resume by ID from URL parameter
   useEffect(() => {
     const loadResumeById = async () => {
@@ -424,7 +426,7 @@ if (key === "templates") {
         const token = localStorage.getItem('token');
         if (!token) return;
 
-        const response = await fetch(`http://localhost:5000/api/resumes/${resumeIdParam}`, {
+        const response = await fetch(`${API_URL}/api/resumes/${resumeIdParam}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -524,7 +526,7 @@ if (key === "templates") {
         return;
       }
 
-      const response = await fetch('http://localhost:5000/api/resumes/save', {
+      const response = await fetch(`${API_URL}/api/resumes/save`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -561,7 +563,7 @@ if (key === "templates") {
         return;
       }
 
-      const response = await fetch('http://localhost:5000/api/resumes/save', {
+      const response = await fetch(`${API_URL}/api/resumes/save`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

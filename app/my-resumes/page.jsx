@@ -12,6 +12,8 @@ export default function MyResumes() {
   const [toast, setToast] = useState(null);
   const [deleteModal, setDeleteModal] = useState({ open: false, resumeId: null, resumeName: '' });
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   const templateImages = {
     template01: "/template/template01n.png",
     template30: "/template/template30.png",
@@ -45,7 +47,7 @@ export default function MyResumes() {
         return;
       }
 
-      const response = await fetch('http://localhost:5000/api/resumes/', {
+      const response = await fetch(`${API_URL}/api/resumes/`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -81,7 +83,7 @@ export default function MyResumes() {
   const confirmDelete = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/resumes/${deleteModal.resumeId}`, {
+      const response = await fetch(`${API_URL}/api/resumes/${deleteModal.resumeId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

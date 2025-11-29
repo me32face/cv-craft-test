@@ -25,6 +25,9 @@ export default function Home() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [showToast, setShowToast] = useState(false);
   const [hasResumes, setHasResumes] = useState(false);
+
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   const templates = [
     {
       id: "Template01",
@@ -34,6 +37,34 @@ export default function Home() {
       category: "simple",
     },
     {
+      id: "Template30",
+      name: "Professional Resume",
+      key: "John Doe",
+      image: "/template/template30.png",
+      category: "modern",
+    },
+    {
+      id: "Template46",
+      name: "Modern Creative",
+      key: "Emily Davis",
+      image: "/template/AUGUSTUS AXEL.png",
+      category: "modern",
+    },
+    {
+      id: "Template45",
+      name: "Modern Creative",
+      key: "Emily Davis",
+      image: "/template/RAVENOR.png",
+      category: "modern",
+    },
+     {
+      id: "Template44",
+      name: "proffessional",
+      key: "Emily Davis",
+      image: "/template/ASTROLON.png",
+      category: "modern",
+    },
+    {
       id: "Template47",
       name: "Classic",
       key: "Richard",
@@ -41,32 +72,53 @@ export default function Home() {
       category: "simple",
     },
     {
-      id: "Template30",
-      name: "Professional Resume",
-      key: "John Doe",
-      image: "/template/template30.png",
+      id: "Template43",
+      name: "Stylish Layout",
+      key: "Emily Davis",
+      image: "/template/VORTEXION ZAYNIX.png",
       category: "modern",
     },
-    // {
-    //   id: "Template31",
-    //   name: "Executive Resume",
-    //   key: "Jane Smith",
-    //   image: "/template/template31.png",
-    //   category: "proffessional",
-    // },
-    // {
-    //   id: "Template32",
-    //   name: "Executive Resume",
-    //   key: "Rahul Menon",
-    //   image: "/template/template32.png",
-    //   category: "simple",
-    // },
+    {
+      id: "Template41",
+      name: "Stylish Classic",
+      key: "Emily Davis",
+      image: "/template/ARTHAVION.png",
+      category: "modern",
+    },
+    {
+      id: "Template38",
+      name: "Modern Creative",
+      key: "Emily Davis",
+      image: "/template/template38.png",
+      category: "creative",
+    },
+    {
+      id: "Template39",
+      name: "Clean Creative",
+      key: "Emily Davis",
+      image: "/template/LEONARDOX NERO-1.png",
+      category: "proffessional",
+    },
+    {
+      id: "Template32",
+      name: "Executive Resume",
+      key: "Rahul Menon",
+      image: "/template/template32.png",
+      category: "simple",
+    },
     {
       id: "Template33",
       name: "Olivia Modern",
       key: "Olivia Wilson",
       image: "/template/template33.png",
       category: "proffessional",
+    },
+      {
+      id: "Template42",
+      name: "Creative Classic",
+      key: "Emily Davis",
+      image: "/template/TITANUS ZORIN.png",
+      category: "creative",
     },
     {
       id: "Template34",
@@ -96,20 +148,7 @@ export default function Home() {
       image: "/template/template37.jpg",
       category: "proffessional",
     },
-    {
-      id: "Template38",
-      name: "Modern Creative",
-      key: "Emily Davis",
-      image: "/template/template38.png",
-      category: "creative",
-    },
-    {
-      id: "Template39",
-      name: "Clean Creative",
-      key: "Emily Davis",
-      image: "/template/LEONARDOX NERO-1.png",
-      category: "proffessional",
-    },
+    
     {
       id: "Template40",
       name: "Modern Creative",
@@ -117,48 +156,15 @@ export default function Home() {
       image: "/template/template40.jpg",
       category: "modern",
     },
-    {
-      id: "Template41",
-      name: "Stylish Classic",
-      key: "Emily Davis",
-      image: "/template/ARTHAVION.png",
-      category: "modern",
-    },
-    {
-      id: "Template42",
-      name: "Creative Classic",
-      key: "Emily Davis",
-      image: "/template/TITANUS ZORIN.png",
-      category: "creative",
-    },
-    {
-      id: "Template43",
-      name: "Stylish Layout",
-      key: "Emily Davis",
-      image: "/template/VORTEXION ZAYNIX.png",
-      category: "modern",
-    },
-    {
-      id: "Template44",
-      name: "proffessional",
-      key: "Emily Davis",
-      image: "/template/ASTROLON.png",
-      category: "modern",
-    },
-    {
-      id: "Template45",
-      name: "Modern Creative",
-      key: "Emily Davis",
-      image: "/template/RAVENOR.png",
-      category: "modern",
-    },
-    {
-      id: "Template46",
-      name: "Modern Creative",
-      key: "Emily Davis",
-      image: "/template/AUGUSTUS AXEL.png",
-      category: "modern",
-    },
+
+
+    // {
+    //   id: "Template31",
+    //   name: "Executive Resume",
+    //   key: "Jane Smith",
+    //   image: "/template/template31.png",
+    //   category: "proffessional",
+    // },
     // {
     //   id: "Template47",
     //   name: "Modern Creative",
@@ -334,7 +340,7 @@ export default function Home() {
     //   image: "/template/template25.png",
     //   category: "proffessional",
     // },
-    
+
   ];
 
   const filteredTemplates =
@@ -393,9 +399,9 @@ export default function Home() {
     const checkUserResumes = async () => {
       const token = localStorage.getItem("token");
       if (!token) return;
-      
+
       try {
-        const response = await fetch('http://localhost:5000/api/resumes/count', {
+        const response = await fetch(`${API_URL}/api/resumes/count`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -408,7 +414,7 @@ export default function Home() {
         console.error('Failed to check resume count:', error);
       }
     };
-    
+
     checkUserResumes();
   }, []);
 
