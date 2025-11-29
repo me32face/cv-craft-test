@@ -34,13 +34,34 @@ export default function Home() {
       name: "Professional Classic",
       key: "Richard Sanchez",
       image: "/template/template01n.png",
-      category: "simple",
+      category: "modern",
     },
-    {
+       {
       id: "Template30",
       name: "Professional Resume",
       key: "John Doe",
       image: "/template/template30.png",
+      category: "modern",
+    },
+      {
+      id: "Template43",
+      name: "Stylish Layout",
+      key: "Emily Davis",
+      image: "/template/VORTEXION ZAYNIX.png",
+      category: "modern",
+    },
+    {
+      id: "Template44",
+      name: "proffessional",
+      key: "Emily Davis",
+      image: "/template/ASTROLON.png",
+      category: "modern",
+    },
+    {
+      id: "Template45",
+      name: "Modern Creative",
+      key: "Emily Davis",
+      image: "/template/RAVENOR.png",
       category: "modern",
     },
     {
@@ -51,54 +72,14 @@ export default function Home() {
       category: "modern",
     },
     {
-      id: "Template45",
-      name: "Modern Creative",
-      key: "Emily Davis",
-      image: "/template/RAVENOR.png",
-      category: "modern",
-    },
-     {
-      id: "Template44",
-      name: "proffessional",
-      key: "Emily Davis",
-      image: "/template/ASTROLON.png",
-      category: "modern",
-    },
-    {
       id: "Template47",
       name: "Classic",
       key: "Richard",
       image: "/template/template47.png",
-      category: "simple",
-    },
-    {
-      id: "Template43",
-      name: "Stylish Layout",
-      key: "Emily Davis",
-      image: "/template/VORTEXION ZAYNIX.png",
       category: "modern",
     },
-    {
-      id: "Template41",
-      name: "Stylish Classic",
-      key: "Emily Davis",
-      image: "/template/ARTHAVION.png",
-      category: "modern",
-    },
-    {
-      id: "Template38",
-      name: "Modern Creative",
-      key: "Emily Davis",
-      image: "/template/template38.png",
-      category: "creative",
-    },
-    {
-      id: "Template39",
-      name: "Clean Creative",
-      key: "Emily Davis",
-      image: "/template/LEONARDOX NERO-1.png",
-      category: "proffessional",
-    },
+ 
+
     {
       id: "Template32",
       name: "Executive Resume",
@@ -156,7 +137,21 @@ export default function Home() {
       image: "/template/template40.jpg",
       category: "modern",
     },
-
+    {
+      id: "Template41",
+      name: "Stylish Classic",
+      key: "Emily Davis",
+      image: "/template/ARTHAVION BLAZE.png",
+      category: "modern",
+    },
+    {
+      id: "Template42",
+      name: "Creative Classic",
+      key: "Emily Davis",
+      image: "/template/TITANUS ZORIN.png",
+      category: "creative",
+    },
+  
   ];
 
   const filteredTemplates =

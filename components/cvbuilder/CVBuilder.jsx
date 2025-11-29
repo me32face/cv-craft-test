@@ -410,8 +410,6 @@ if (key === "templates") {
     return () => clearTimeout(timer);
   }, []);
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
   // Load resume by ID from URL parameter
   useEffect(() => {
     const loadResumeById = async () => {
@@ -426,7 +424,7 @@ if (key === "templates") {
         const token = localStorage.getItem('token');
         if (!token) return;
 
-        const response = await fetch(`${API_URL}/api/resumes/${resumeIdParam}`, {
+        const response = await fetch(`http://localhost:5000/api/resumes/${resumeIdParam}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -526,7 +524,7 @@ if (key === "templates") {
         return;
       }
 
-      const response = await fetch(`${API_URL}/api/resumes/save`, {
+      const response = await fetch('http://localhost:5000/api/resumes/save', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -563,7 +561,7 @@ if (key === "templates") {
         return;
       }
 
-      const response = await fetch(`${API_URL}/api/resumes/save`, {
+      const response = await fetch('http://localhost:5000/api/resumes/save', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -740,25 +738,23 @@ if (key === "templates") {
 {/* Finally render Templates button here */}
 {menuItems.find(it => it.key === "templates") && (
   <button
-  key={"templates"}
-  onClick={() => handleMenuItemClick("templates")}
-  title="Switch Templates"
-  className={`
-    flex items-center 
-    ${collapsed ? "justify-center w-10 h-10 rounded-full"
-                : "gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-full "}
-     text-xs sm:text-sm font-semibold       
-    bg-gradient-to-r from-[#4B74F4] to-[#7642EE] text-white shadow-md 
-  `}
->
-  <LayoutTemplate size={18} className={`${collapsed ? "mx-auto" : ""}`} />
-  {!collapsed && (
-    <span className="truncate flex flex-col leading-tight">
-      <span>Templates</span>
-      <span className="text-[10px] opacity-90 font-normal">Switch CV style →</span>
-    </span>
-  )}
-</button>
+    key={"templates"}
+    onClick={() => handleMenuItemClick("templates")}
+    title="Templates"
+    className={`
+      flex items-center 
+      ${collapsed ? "justify-center w-10 h-10 rounded-full"
+                  : "gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-full "}
+      transition-all text-xs sm:text-sm font-medium       
+      ${selectedMenu === "templates"
+                  ? "bg-gradient-to-r from-[#4B74F4] to-[#7642EE] text-white shadow-md scale-[1.02]"
+                  : "bg-white text-indigo-700 border border-indigo-200 hover:bg-indigo-50"
+      }
+    `}
+  >
+    <LayoutTemplate size={18} className={`${collapsed ? "mx-auto" : ""}`} />
+    {!collapsed && <span className="truncate">Templates</span>}
+  </button>
 )}
 
 {/* Quick Tips Section */}
