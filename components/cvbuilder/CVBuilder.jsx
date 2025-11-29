@@ -989,6 +989,7 @@ if (key === "templates") {
               )}
             </div>
           </div>
+          
 
         </div>
           {/* Preview area */}
