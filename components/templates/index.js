@@ -35,12 +35,16 @@ export const templates = {
   template39: Template39,
   template40: Template40,
   template41: Template41,
+
   template42: Template42,
   template43: Template43,
   template44: Template44,
   template45: Template45,
   template46: Template46,
   template47: Template47,
+
+
+
 };
 
 export const templateInputs = {
