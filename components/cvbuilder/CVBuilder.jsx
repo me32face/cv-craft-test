@@ -1138,7 +1138,7 @@ if (key === "templates") {
   onSelectTemplate={(key) => {
     setTemplate(key.toLowerCase());
     setTemplateSelectorOpen(false);
-  }}
+}}
 />
  </div>
     </>
