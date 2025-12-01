@@ -117,7 +117,9 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
     if (!dateStr) return '';
     const d = new Date(dateStr);
     if (Number.isNaN(d.getTime())) return String(dateStr);
-    return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    return d.toLocaleDateString('en-US', { 
+      // month: 'short', 
+      year: 'numeric' });
   };
 
   const getDateText = (obj) => {
@@ -296,7 +298,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
     return (
       <div key={key} className="text-[12px] text-gray-800">
         <div className="flex justify-between items-start">
-          <span className="font-medium break-words">{name}</span>
+          <span className="font-medium break-words mt-2">{name}</span>
 
           {displayFormat === 'level' && (
             <span className="text-[10px] opacity-70 ml-2">{level}</span>
@@ -396,20 +398,25 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
               {merged.phone && (
                 <div className="flex items-center gap-1 break-words">
                   <Phone className="w-3 h-3" />
-                  <span>{merged.phone}</span>
+                  <span className='pt-1'>{merged.phone}</span>
                 </div>
               )}
               {merged.email && (
                 <div className="flex items-center gap-1 break-words">
                   <Mail className="w-3 h-3" />
-                  <span>{merged.email}</span>
+                  <span className='pt-1'>{merged.email}</span>
                 </div>
               )}
 
               {isSectionVisible('socialLinks') &&
                 normalizedSocialLinks.length > 0 &&
                 normalizedSocialLinks.map((link, i) => (
-                  <SocialLinkDisplay key={i} link={link} />
+                  <div
+                    key={i}
+                    className="flex items-center gap-1 text-[11px] text-gray-600 break-words pt-1"
+                  >
+                    <SocialLinkDisplay link={link} />
+                  </div>
                 ))}
             </div>
           </div>
@@ -500,9 +507,9 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                         <div className="text-[11px] text-gray-500 mt-0.5 break-words">
                           {expLocation}
                         </div>
-                        <span className="absolute right-[-10px] top-[-15px] text-blue-900 text-[35px] leading-none">
-                          •
-                        </span>
+                        <span
+                          className="absolute right-[-10px] top-1/2 -translate-y-[190%] w-2 h-2 bg-blue-900 rounded-full inline-block"
+                        />
                       </div>
 
                       <div>
@@ -650,7 +657,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                         <div className="text-[11px] text-gray-500 mt-0.5 break-words">
                           {eduLocation}
                         </div>
-                        <span className="absolute right-[-10px] top-[-10px] text-blue-900 text-[35px] leading-none">
+                        <span className="absolute right-[-10px] top-[-10px] text-blue-900 text-[30px] leading-none mt-1">
                           •
                         </span>
                       </div>
@@ -774,7 +781,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
 
               {isSectionVisible('languages') && (
                 <div>
-                  <h2 className="text-[14px] font-bold text-blue-800 mb-3">
+                  <h2 className="text-[14px] font-bold text-blue-800 mb-1">
                     LANGUAGES
                   </h2>
                   <div>
@@ -938,8 +945,8 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
           display: inline-flex !important;
           align-items: center !important;
           font-size: 11px !important;
-          color: #1f2937 !important; /* gray-800 */
-          gap: 0.3rem !important;    /* spacing between icon & text */
+          color: #1f2937 !important;
+          gap: 0.3rem !important;    
           line-height: 1.25 !important;
         }
 
@@ -952,7 +959,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
         .cv-header-contacts a.social-link svg {
           width: 14px !important;
           height: 14px !important;
-          stroke: #4b5563 !important; /* gray-600 */
+          stroke: #4b5563 !important;
         }
       `}</style>
     </div>
