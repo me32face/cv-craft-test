@@ -23,7 +23,7 @@ export const templatesList = [
     },
     {
       id: "Template32",
-      name: "Clean Two-Column CV",
+      name: "Executive Resume",
       key: "Rahul Menon",
       image: "/template/Template32.png",
       category: "simple",
