@@ -67,7 +67,7 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
   const formatText = (text, format) => {
     if (!text) return text;
     const lines = text.split('\n');
-    
+
     if (format === 'bullet') {
       return lines.map(line => {
         const trimmed = line.trim();
@@ -76,7 +76,7 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
         return `• ${cleaned}`;
       }).join('\n');
     }
-    
+
     if (format === 'number') {
       let count = 0;
       return lines.map(line => {
@@ -87,7 +87,7 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
         return `${count}. ${cleaned}`;
       }).join('\n');
     }
-    
+
     return lines.map(line => {
       const trimmed = line.trim();
       if (!trimmed) return '';
@@ -280,28 +280,37 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                         </div>
 
                         <div>
-                          <label className="font-medium">Start Year</label>
+                          <label className="font-medium">Start Date</label>
                           <input
-                            type="number"
+                            type="month"
                             className="mt-1 w-full p-3 rounded-xl border"
                             value={exp.start ?? ""}
-                            onChange={(e) => updateField(i, "start", e.target.value)}
-                            placeholder="2020"
+                            onChange={(e) => {
+                              updateField(i, "start", e.target.value);
+                            }}
                           />
                         </div>
 
                         {!exp.current && (
                           <div>
-                            <label className="font-medium">End Year</label>
+                            <label className="font-medium">End Date</label>
                             <input
-                              type="number"
+                              type="month"
                               className="mt-1 w-full p-3 rounded-xl border"
                               value={exp.end ?? ""}
-                              onChange={(e) => updateField(i, "end", e.target.value)}
-                              placeholder="2023"
+                              onChange={(e) => {
+                                const endDate = e.target.value;
+                                if (exp.start && endDate < exp.start) {
+                                  alert("End date must be greater than start date");
+                                  return; 
+                                }
+
+                                updateField(i, "end", endDate);
+                              }}
                             />
                           </div>
                         )}
+
                       </div>
 
                       <div className="flex items-center gap-3 mt-3">
@@ -329,10 +338,10 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                                  transition-all duration-300 ease-out
                                  animate-gradient"
                           >
-                            <Sparkles 
-                              size={16} 
+                            <Sparkles
+                              size={16}
                               className="animate-sparkle group-hover:animate-sparkle-fast"
-                            /> 
+                            />
                             <span>{isGenerating ? "Generating..." : "Generate with AI"}</span>
                           </button>
                         </div>
@@ -341,9 +350,8 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                             <button
                               type="button"
                               onClick={() => handleFormatChange(i, "default")}
-                              className={`p-2 rounded ${
-                                exp.descFormat === "default" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
-                              }`}
+                              className={`p-2 rounded ${exp.descFormat === "default" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                                }`}
                               title="Default"
                             >
                               <AlignLeft size={18} />
@@ -351,9 +359,8 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                             <button
                               type="button"
                               onClick={() => handleFormatChange(i, "bullet")}
-                              className={`p-2 rounded ${
-                                exp.descFormat === "bullet" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
-                              }`}
+                              className={`p-2 rounded ${exp.descFormat === "bullet" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                                }`}
                               title="Bullet List"
                             >
                               <List size={18} />
@@ -361,9 +368,8 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                             <button
                               type="button"
                               onClick={() => handleFormatChange(i, "number")}
-                              className={`p-2 rounded ${
-                                exp.descFormat === "number" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
-                              }`}
+                              className={`p-2 rounded ${exp.descFormat === "number" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                                }`}
                               title="Numbered List"
                             >
                               <ListOrdered size={18} />

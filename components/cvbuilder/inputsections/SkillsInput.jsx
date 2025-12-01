@@ -32,6 +32,8 @@ export default function SkillsInput({ skills = [], setSkills, onClose, onNext })
   const [newSkillText, setNewSkillText] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [toast, setToast] = useState(null);
+  const [inputError, setInputError] = useState("");
+  const inputRef = useRef(null);
 
 
 
@@ -58,13 +60,28 @@ export default function SkillsInput({ skills = [], setSkills, onClose, onNext })
     let converted = [];
 
     if (next === "bullet") {
-      converted = localSkills.map((s) => (typeof s === "string" ? s : s.name || ""));
+      converted = localSkills.flatMap((s) => {
+        if (typeof s === "string") return s;
+        if (s.skills && Array.isArray(s.skills)) {
+          if (s.skills.length === 1 && s.skills[0] === "New Skill") {
+            return s.category || "";
+          }
+          return s.skills;
+        }
+        return s.name || "";
+      });
     }
 
     if (next === "percentage") {
-      converted = localSkills.map((s) => {
+      converted = localSkills.flatMap((s) => {
         if (typeof s === "string") return { name: s, proficiency: 60 };
         if (s.proficiency !== undefined) return s;
+        if (s.skills && Array.isArray(s.skills)) {
+          if (s.skills.length === 1 && s.skills[0] === "New Skill") {
+            return { name: s.category || "Skill", proficiency: 60 };
+          }
+          return s.skills.map(skill => ({ name: skill, proficiency: 60 }));
+        }
         return { name: s.name || "Skill", proficiency: 60 };
       });
     }
@@ -135,10 +152,12 @@ export default function SkillsInput({ skills = [], setSkills, onClose, onNext })
 
   const handleGenerateAI = async () => {
     if (!newSkillText.trim()) {
-      setToast("Please enter keywords or job role to generate skills");
+      setInputError("Please enter keywords or job role to generate skills");
+      inputRef.current?.focus();
       return;
     }
 
+    setInputError("");
     setIsGenerating(true);
     try {
       const response = await geminiService.generateContent("skills", newSkillText);
@@ -278,6 +297,7 @@ export default function SkillsInput({ skills = [], setSkills, onClose, onNext })
                       }}
                       className="text-gray-600"
                     >
+                      
                       {isCollapsed ? "▼" : "▲"}
                     </button>
 
@@ -337,22 +357,31 @@ export default function SkillsInput({ skills = [], setSkills, onClose, onNext })
       </div>
 
       {/* ADD NEW SKILL FIELD */}
-      <div className="flex gap-3 mb-4">
-        <input
-          className="flex-1 px-4 py-2 rounded-full border 
-             focus:border-purple-600 focus:ring-2 focus:ring-purple-300 
-             outline-none transition"
-          placeholder="✨ Type your job role (e.g., 'Frontend Developer') and let AI suggest relevant skills..."
-          value={newSkillText}
-          onChange={(e) => setNewSkillText(e.target.value)}
-        />
+      <div className="mb-4">
+        <div className="flex gap-3">
+          <input
+            ref={inputRef}
+            className="flex-1 px-4 py-2 rounded-full border 
+               focus:border-purple-600 focus:ring-2 focus:ring-purple-300 
+               outline-none transition"
+            placeholder="✨ Type your job role (e.g., 'Frontend Developer') and let AI suggest relevant skills..."
+            value={newSkillText}
+            onChange={(e) => {
+              setNewSkillText(e.target.value);
+              setInputError("");
+            }}
+          />
 
-        <button
-          onClick={addSkill}
-          className="px-4 py-2 bg-[#634BC9] text-white rounded-full"
-        >
-          Add
-        </button>
+          <button
+            onClick={addSkill}
+            className="px-4 py-2 bg-[#634BC9] text-white rounded-full"
+          >
+            Add
+          </button>
+        </div>
+        {inputError && (
+          <p className="text-red-500 text-sm mt-2 ml-4">{inputError}</p>
+        )}
       </div>
 
       <div className="flex items-center justify-between my-4">

@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { ChevronDown, List, ListOrdered, AlignLeft } from "lucide-react";
+import Toast from "../../../components/Toast.jsx";
 
 export default function EducationInput({
   education = [],
@@ -39,7 +40,7 @@ export default function EducationInput({
   const formatText = (text, format) => {
     if (!text) return text;
     const lines = text.split('\n');
-    
+
     if (format === 'bullet') {
       return lines.map(line => {
         const trimmed = line.trim();
@@ -48,7 +49,7 @@ export default function EducationInput({
         return `• ${cleaned}`;
       }).join('\n');
     }
-    
+
     if (format === 'number') {
       let count = 0;
       return lines.map(line => {
@@ -59,7 +60,7 @@ export default function EducationInput({
         return `${count}. ${cleaned}`;
       }).join('\n');
     }
-    
+
     return lines.map(line => {
       const trimmed = line.trim();
       if (!trimmed) return '';
@@ -100,6 +101,9 @@ export default function EducationInput({
   const toggleOpen = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
+
+  const [toast, setToast] = useState({ show: false, message: "", type: "error" });
+
 
   return (
     <div className="w-full space-y-6">
@@ -249,68 +253,100 @@ export default function EducationInput({
                       </div>
 
                       <div>
-                        <label className="font-medium">Start Date</label>
+                        <label className="font-medium">Start Year</label>
                         <input
-                          type="date"
+                          type="number"
+                          min="1900"
+                          max={new Date().getFullYear()}
                           className="mt-1 w-full p-3 rounded-xl border"
                           value={edu.start ?? ""}
-                          onChange={(e) =>
-                            updateField(index, "start", e.target.value)
-                          }
+                          onChange={(e) => updateField(index, "start", e.target.value)}
+                          placeholder="2020"
                         />
                       </div>
 
+
                       {!edu.current && (
                         <div>
-                          <label className="font-medium">End Date</label>
+                          <label className="font-medium">End Year</label>
                           <input
-                            type="date"
+                            type="number"
+                            min="1900"
+                            max={new Date().getFullYear()}
                             className="mt-1 w-full p-3 rounded-xl border"
                             value={edu.end ?? ""}
-                            onChange={(e) =>
-                              updateField(index, "end", e.target.value)
-                            }
+                            placeholder="2024"
+                            onKeyDown={(e) => {
+                              if (["e", "E", "+", "-", "."].includes(e.key)) e.preventDefault();
+                            }}
+                            onChange={(e) => {
+                              const value = e.target.value;
+
+                              // Allow empty input
+                              if (!value) {
+                                updateField(index, "end", "");
+                                return;
+                              }
+
+                              // Update live typed value
+                              updateField(index, "end", value);
+
+                              const endYear = Number(value);
+                              const startYear = Number(edu.start);
+
+                              if (value.length < 4) return;
+
+                              if (!startYear) return;
+
+                              if (endYear < startYear) {
+                                setToast({
+                                  show: true,
+                                  message: "End year must be greater than or equal to the start year",
+                                  type: "error",
+                                });
+                                updateField(index, "end", "");
+                              }
+                            }}
                           />
+
                         </div>
                       )}
+
+
                     </div>
 
                     <div className="mt-4">
                       <label className="font-medium">Description</label>
-                                              <div className="flex gap-1 mb-2 border-b pb-2"></div>
-
+                      <div className="flex gap-1 mb-2 border-b pb-2"></div>
                       <div className="relative">
                         {/* <div className="flex gap-1 mb-2 border-b pb-2"> */}
-                          <button
-                            type="button"
-                            onClick={() => handleFormatChange(index, "default")}
-                            className={`p-2 rounded ${
-                              edu.descFormat === "default" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                        <button
+                          type="button"
+                          onClick={() => handleFormatChange(index, "default")}
+                          className={`p-2 rounded ${edu.descFormat === "default" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
                             }`}
-                            title="Default"
-                          >
-                            <AlignLeft size={18} />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleFormatChange(index, "bullet")}
-                            className={`p-2 rounded ${
-                              edu.descFormat === "bullet" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                          title="Default"
+                        >
+                          <AlignLeft size={18} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleFormatChange(index, "bullet")}
+                          className={`p-2 rounded ${edu.descFormat === "bullet" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
                             }`}
-                            title="Bullet List"
-                          >
-                            <List size={18} />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleFormatChange(index, "number")}
-                            className={`p-2 rounded ${
-                              edu.descFormat === "number" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                          title="Bullet List"
+                        >
+                          <List size={18} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleFormatChange(index, "number")}
+                          className={`p-2 rounded ${edu.descFormat === "number" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
                             }`}
-                            title="Numbered List"
-                          >
-                            <ListOrdered size={18} />
-                          </button>
+                          title="Numbered List"
+                        >
+                          <ListOrdered size={18} />
+                        </button>
                         {/* </div> */}
                         <textarea
                           className="w-full p-3 rounded-xl border"
@@ -354,6 +390,14 @@ export default function EducationInput({
           </div>
         </div>
       )}
+      {toast.show && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast({ ...toast, show: false })}
+        />
+      )}
+
     </div>
   );
 }

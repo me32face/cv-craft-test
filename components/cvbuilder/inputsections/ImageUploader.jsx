@@ -162,12 +162,12 @@ export default function ImageUploader({ image, setImage, setShape, setAlign, onC
                     : selectedShape === "rounded"
                       ? "1.5rem"
                       : "0",
-                justifyContent:
-                  selectedAlign === "left"
-                    ? "flex-start"
-                    : selectedAlign === "right"
-                      ? "flex-end"
-                      : "center",
+                // justifyContent:
+                //   selectedAlign === "left"
+                //     ? "flex-start"
+                //     : selectedAlign === "right"
+                //       ? "flex-end"
+                //       : "center",
               }}
             >
               <img src={image} className="object-cover w-full h-full" />
@@ -210,9 +210,9 @@ export default function ImageUploader({ image, setImage, setShape, setAlign, onC
               </button>
             ))}
 
-            <div className="w-px bg-gray-300 mx-1" />
+            {/* <div className="w-px bg-gray-300 mx-1" /> */}
 
-            {["left", "center", "right"].map((a) => (
+            {/* {["left", "center", "right"].map((a) => (
               <button
                 key={a}
                 onClick={() => handleAlignChange(a)}
@@ -220,7 +220,7 @@ export default function ImageUploader({ image, setImage, setShape, setAlign, onC
               >
                 {a}
               </button>
-            ))}
+            ))} */}
           </div>
         )}
 

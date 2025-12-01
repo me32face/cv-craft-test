@@ -27,8 +27,8 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://cvcraft.in"),
 
   title: {
-    default: "CV Craft – Create Professional CVs in Minutes",
-    template: "%s | CV Craft",
+    default: "CVCraft – Create Professional CVs in Minutes",
+    template: "%s | CVCraft",
   },
 
   description:
@@ -36,21 +36,21 @@ export const metadata: Metadata = {
 
   keywords: [
     "resume builder",
-    "cv maker",
+    "cvmaker",
     "cvcraft",
     "cv-craft",
     "professional resume",
-    "cv templates",
+    "cvtemplates",
     "free resume builder",
     "online cv generator",
   ],
 
   openGraph: {
-    title: "CV Craft – Professional Resume Builder",
+    title: "CVCraft – Professional Resume Builder",
     description:
       "Create professional CVs instantly using modern templates with AI assistance.",
     url: "https://cvcraft.in",
-    siteName: "CV Craft",
+    siteName: "CVCraft",
     images: [
       {
         url: "/mainlogo.png",
@@ -90,7 +90,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* ⭐ JSON-LD SCHEMA FOR GOOGLE SEO */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="shortcut icon" href="/favicon.ico" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

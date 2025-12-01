@@ -163,6 +163,7 @@ export default function Home() {
       category: "creative",
     },
   ];
+  
 
   const filteredTemplates =
     activeFilter === "All"

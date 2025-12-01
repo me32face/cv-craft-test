@@ -10,7 +10,7 @@ export default function Template38({ data, onClickSection }) {
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    return date.toLocaleDateString('en-US', { year: 'numeric' });
   };
 
   const safeObj = (v) => (typeof v === "object" && v !== null ? v : {});
