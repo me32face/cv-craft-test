@@ -127,15 +127,22 @@ export default function Template30({ data, onClickSection }) {
         )}
 
         {/* Awards */}
-        {data?.visibleSections?.awards !== false && (
+        {data?.visibleSections?.awards !== false && awards.length > 0 && (
           <div className="mb-4">
-            <h2 className="font-semibold text-md mb-2">AWARDS</h2>
-            {(awards.length ? awards : [
-              "Oct 2024 | Employee of the Year",
-              "Dec 2025 | Best Employee"
-            ]).map((a, i) => (
-              <p key={i} className="text-sm mb-1">{a}</p>
-            ))}
+            <h2 className="font-semibold text-md mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("awards")}>AWARDS</h2>
+            {awards.map((a, i) => {
+              if (typeof a === 'string') {
+                return <p key={i} className="text-sm mb-1">{a}</p>;
+              }
+              return (
+                <div key={i} className="mb-2">
+                  <p className="text-sm font-medium break-words">{a.name}</p>
+                  {a.issuer && <p className="text-xs opacity-80 break-words">{a.issuer}</p>}
+                  {a.year && <p className="text-xs opacity-80 break-words">{a.year}</p>}
+                  {a.description && <p className="text-xs opacity-80 break-words">{a.description}</p>}
+                </div>
+              );
+            })}
           </div>
         )}
 
@@ -309,19 +316,16 @@ export default function Template30({ data, onClickSection }) {
 
 
         {/*References*/}
-        {data?.visibleSections?.references !== false && (
+        {data?.visibleSections?.references !== false && references.length > 0 && (
           <>
             <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1">REFERENCES</h2>
-            {(references.length ? references : [
-              { name: "Harumi Kobayashi", title: "CEO", phone: "123-456-7890", email: "hello@reality.com" },
-              { name: "Bailey Dupont", title: "CEO", phone: "123-456-7890", email: "hello@reality.com" }
-            ]).map((r, i) => (
+            {references.map((r, i) => (
               <div key={i} className="mb-3">
                 <p className="font-semibold  !text-sm text-gray-700">{r.name}</p>
-                <p className="text-sm ">{r.title}</p>
-                <p className="text-sm ">{r.company}</p>
-                <p className="text-sm text-gray-700">Phone: {r.phone}</p>
-                <p className="text-sm text-gray-700">Email: {r.email}</p>
+                {r.title && <p className="text-sm ">{r.title}</p>}
+                {r.company && <p className="text-sm ">{r.company}</p>}
+                {r.phone && <p className="text-sm text-gray-700">Phone: {r.phone}</p>}
+                {r.email && <p className="text-sm text-gray-700">Email: {r.email}</p>}
               </div>
             ))}
           </>

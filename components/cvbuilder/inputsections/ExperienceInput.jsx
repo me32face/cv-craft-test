@@ -66,6 +66,7 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
 
   const formatText = (text, format) => {
     if (!text) return text;
+    
     const lines = text.split('\n');
 
     if (format === 'bullet') {
@@ -97,21 +98,30 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
 
   const handleDescriptionChange = (i, value) => {
     const format = experiences[i].descFormat || 'default';
-    if (format !== 'default') {
-      const formatted = formatText(value, format);
-      updateField(i, 'desc', formatted);
-    } else {
-      updateField(i, 'desc', value);
+    const prevValue = experiences[i].desc || '';
+    
+    // Auto-format when Enter is pressed in bullet/number mode
+    if (format === 'bullet' || format === 'number') {
+      const prevLines = prevValue.split('\n').length;
+      const newLines = value.split('\n').length;
+      
+      // If new line was added (Enter pressed)
+      if (newLines > prevLines) {
+        const formatted = formatText(value, format);
+        updateField(i, 'desc', formatted);
+        return;
+      }
     }
+    
+    updateField(i, 'desc', value);
   };
 
   const handleFormatChange = (i, newFormat) => {
     const currentDesc = experiences[i].desc || '';
-    const formatted = formatText(currentDesc, newFormat);
-    updateField(i, 'descFormat', newFormat);
-    if (currentDesc) {
-      updateField(i, 'desc', formatted);
-    }
+    const formatted = currentDesc ? formatText(currentDesc, newFormat) : '';
+    const list = [...experiences];
+    list[i] = { ...list[i], descFormat: newFormat, desc: formatted };
+    setExperiences(list);
   };
 
   const handleGenerateAI = async (index) => {
@@ -350,8 +360,9 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                             <button
                               type="button"
                               onClick={() => handleFormatChange(i, "default")}
-                              className={`p-2 rounded ${exp.descFormat === "default" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
-                                }`}
+                              className={`p-2 rounded ${
+                                (exp.descFormat || "default") === "default" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                              }`}
                               title="Default"
                             >
                               <AlignLeft size={18} />
@@ -359,8 +370,9 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                             <button
                               type="button"
                               onClick={() => handleFormatChange(i, "bullet")}
-                              className={`p-2 rounded ${exp.descFormat === "bullet" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
-                                }`}
+                              className={`p-2 rounded ${
+                                (exp.descFormat || "default") === "bullet" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                              }`}
                               title="Bullet List"
                             >
                               <List size={18} />
@@ -368,8 +380,9 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                             <button
                               type="button"
                               onClick={() => handleFormatChange(i, "number")}
-                              className={`p-2 rounded ${exp.descFormat === "number" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
-                                }`}
+                              className={`p-2 rounded ${
+                                (exp.descFormat || "default") === "number" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                              }`}
                               title="Numbered List"
                             >
                               <ListOrdered size={18} />
