@@ -94,11 +94,11 @@ if (key === "templates") {
     const calculatedPages = adjustLayoutForPageBreaks(element);
 
     const canvas = await html2canvas(element, {
-      scale: 1.5,
+      scale: 3,
       useCORS: true,
     });
 
-    const imgData = canvas.toDataURL("image/jpeg", 0.85);
+    const imgData = canvas.toDataURL("image/jpeg");
     const pdf = new jsPDF("p", "mm", "a4");
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
@@ -917,7 +917,7 @@ if (key === "templates") {
                 >
                   <Download size={14} className="sm:w-3 sm:h-3" />
                   <span className="hidden md:inline">Export</span>
-                  <span className="md:hidden">PDF</span>
+                  <span className="md:hidden">Export</span>
                 </button>
   
               {exportMenuOpen && (
