@@ -17,7 +17,7 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
     if (!dateStr) return '';
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) return dateStr;
-    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    return date.toLocaleDateString('en-US', { year: 'numeric' });
   };
 
   const experiences = toArray(data?.experiences);

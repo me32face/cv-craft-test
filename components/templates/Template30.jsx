@@ -2,7 +2,7 @@
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
 import { Phone, Mail, MapPin } from "lucide-react";
-import SocialLinkDisplay from "../SocialLinkDisplay"; 
+import SocialLinkDisplay from "../SocialLinkDisplay";
 
 export default function Template30({ data, onClickSection }) {
   // Safety conversion
@@ -11,7 +11,7 @@ export default function Template30({ data, onClickSection }) {
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    return date.toLocaleDateString('en-US', { year: 'numeric' });
   };
 
   const experiences = toArray(data?.experiences);
@@ -38,9 +38,9 @@ export default function Template30({ data, onClickSection }) {
           <img src={data?.profileImage || "/templateprofile/template30profile.webp"} className="w-full h-full object-cover" alt="profile" />
         </div>
         <div className="mt-2">
-        <h1 className="text-xl font-bold text-center break-words">{data?.name || "Isabel Mercado"}</h1>
-        <p className="text-sm text-center opacity-80 break-words">{data?.title || "Marketing Manager"}</p>
-      </div>
+          <h1 className="text-xl font-bold text-center break-words">{data?.name || "Isabel Mercado"}</h1>
+          <p className="text-sm text-center opacity-80 break-words">{data?.title || "Marketing Manager"}</p>
+        </div>
         <div className="border-t border-white/40 my-4"></div>
 
         {/* Contact */}
@@ -224,10 +224,17 @@ export default function Template30({ data, onClickSection }) {
                     {exp.location && <p className="text-xs opacity-70 break-words">{exp.location}</p>}
                   </div>
                   <p className="text-xs opacity-60">
-                    {exp.start}
+                    {exp.start
+                      ? new Date(exp.start).toLocaleString("en-US", { month: "short", year: "numeric" })
+                      : ""}
                     {exp.start && (exp.end || exp.current) && " - "}
-                    {exp.current ? "Present" : exp.end}
+                    {exp.current
+                      ? "Present"
+                      : exp.end
+                        ? new Date(exp.end).toLocaleString("en-US", { month: "short", year: "numeric" })
+                        : ""}
                   </p>
+
                 </div>
                 {exp.desc && (
                   exp.descFormat === "bullet" ? (
