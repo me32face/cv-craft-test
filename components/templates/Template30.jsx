@@ -313,8 +313,6 @@ export default function Template30({ data, onClickSection }) {
           </div>
         )}
 
-
-
         {/*References*/}
         {data?.visibleSections?.references !== false && references.length > 0 && (
           <>

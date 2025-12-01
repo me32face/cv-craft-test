@@ -32,7 +32,7 @@ export default function Template01({ data, onClickSection }) {
         <div className="flex justify-between">
           <div>
             <h1 className="text-4xl font-bold break-words"> {data?.name || "DEEPAL SURVE"} </h1>
-            <p className="text-lg mt-1 break-words"> {data?.title || "Office Manager"} </p>
+            <p className="text-lg  break-words"> {data?.title || "Office Manager"} </p>
           </div>
 
           <div className="text-sm text-right leading-5">
@@ -57,13 +57,14 @@ export default function Template01({ data, onClickSection }) {
         </div>
 
         {/* ================= ABOUT ME ================= */}
+        <div className="mt-10">
         <h2
-          className="mt-10 mb-2 text-lg font-semibold"
+          className=" mb-1 text-lg font-semibold"
           onClick={() => onClickSection?.("summary")}
         >
           ABOUT ME
         </h2>
-
+        </div>
         <p className="text-sm text-justify leading-relaxed break-words">
           {data?.summary ||
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."}

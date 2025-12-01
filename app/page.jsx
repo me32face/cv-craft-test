@@ -25,6 +25,7 @@ export default function Home() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [showToast, setShowToast] = useState(false);
   const [hasResumes, setHasResumes] = useState(false);
+  const [loadingTemplate, setLoadingTemplate] = useState(null);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -34,14 +35,14 @@ export default function Home() {
       name: "Professional Classic",
       key: "Richard Sanchez",
       image: "/template/template01n.png",
-      category: "modern",
+      category: "simple",
     },
        {
       id: "Template30",
       name: "Professional Resume",
       key: "John Doe",
       image: "/template/template30.png",
-      category: "modern",
+      category: "proffessional",
     },
       {
       id: "Template43",
@@ -76,7 +77,7 @@ export default function Home() {
       name: "Classic",
       key: "Richard",
       image: "/template/template47.png",
-      category: "modern",
+      category: "simple",
     },
     {
       id: "Template32",
@@ -139,7 +140,7 @@ export default function Home() {
       name: "Clean Creative",
       key: "Emily Davis",
       image: "/template/LEONARDOX NERO-1.png",
-      category: "professional",
+      category: "simple",
     },
     {
       id: "Template40",
@@ -163,7 +164,7 @@ export default function Home() {
       category: "creative",
     },
   ];
-  
+
 
   const filteredTemplates =
     activeFilter === "All"
@@ -368,19 +369,30 @@ export default function Home() {
 
                       <div className="flex items-center justify-center mt-3">
                         <button
-                          className="text-sm text-gray-700 border border-gray-500 px-4 py-2 rounded-full w-full text-center backdrop-blur-lg bg-white/40 hover:bg-white/60 transition"
+                          className="text-sm text-gray-700 border border-gray-500 px-4 py-2 rounded-full w-full text-center backdrop-blur-lg bg-white/40 hover:bg-white/60 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                          disabled={loadingTemplate === template.id}
                           onClick={() => {
                             const token = localStorage.getItem("token");
                             if (!token) {
                               setShowToast(true);
                               setTimeout(() => router.push("/login"), 1500);
                             } else {
+                              setLoadingTemplate(template.id);
                               router.push(`/templates/${template.id.toLowerCase()}`);
-
                             }
                           }}
                         >
-                          Use Template
+                          {loadingTemplate === template.id ? (
+                            <>
+                              <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                              Loading...
+                            </>
+                          ) : (
+                            "Use Template"
+                          )}
                         </button>
                       </div>
                     </div>
