@@ -139,15 +139,13 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
               <img
                 src={data.profileImage}
                 alt="profile"
-                className={`w-28 h-28 object-cover ${
-                  data.imageShape === 'circle' ? 'rounded-full' : 'rounded-lg'
-                }`}
+                className={`w-28 h-28 object-cover ${data.imageShape === 'circle' ? 'rounded-full' : 'rounded-lg'
+                  }`}
               />
             ) : (
               <div
-                className={`w-28 h-28 flex items-center justify-center ${
-                  data.imageShape === 'circle' ? 'rounded-full' : 'rounded-lg'
-                } bg-green-50`}
+                className={`w-28 h-28 flex items-center justify-center ${data.imageShape === 'circle' ? 'rounded-full' : 'rounded-lg'
+                  } bg-green-50`}
               >
                 <span className="text-2xl text-gray-400 font-bold">
                   {(data?.name || 'YN')
@@ -234,15 +232,15 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                 </div>
               )}
 
-            {data?.visibleSections?.socialLinks !== false &&
-              socialLinks.length > 0 && (
-                <div className="pt-0 flex flex-col gap-1 pl-0.5">
-                  {socialLinks.map((link, i) => (
-                    <SocialLinkDisplay key={i} link={link} />
-                  ))}
-                </div>
-              )
-            }
+              {data?.visibleSections?.socialLinks !== false &&
+                socialLinks.length > 0 && (
+                  <div className="pt-0 flex flex-col gap-1 pl-0.5">
+                    {socialLinks.map((link, i) => (
+                      <SocialLinkDisplay key={i} link={link} />
+                    ))}
+                  </div>
+                )
+              }
             </div>
           </div>
 
@@ -563,11 +561,18 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                           </div>
                         )}
                       </div>
-                      <div className="text-[11px] text-gray-500 text-right min-w-[110px]">
-                        {exp.start}
-                        {exp.start && (exp.end || exp.current) && ' - '}
-                        {exp.current ? 'Present' : exp.end}
+                      <div className="text-xs opacity-60">
+                        {exp.start
+                          ? new Date(exp.start).toLocaleString("en-US", { month: "short", year: "numeric" })
+                          : ""}
+                        {exp.start && (exp.end || exp.current) && " - "}
+                        {exp.current
+                          ? "Present"
+                          : exp.end
+                            ? new Date(exp.end).toLocaleString("en-US", { month: "short", year: "numeric" })
+                            : ""}
                       </div>
+
                     </div>
 
                     <div className="mt-3">

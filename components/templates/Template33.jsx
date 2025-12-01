@@ -236,10 +236,16 @@ export default function Template35({ data, onClickSection }) {
                     <p className="font-semibold text-gray-800 text-sm break-words">{exp.role}</p>
                     <p className="text-sm opacity-80 break-words">{exp.company}</p>
                   </div>
-                  <p className="text-xs opacity-60 flex-shrink-0">
-                    {exp.start}
+                  <p className="text-xs opacity-60">
+                    {exp.start
+                      ? new Date(exp.start).toLocaleString("en-US", { month: "short", year: "numeric" })
+                      : ""}
                     {exp.start && (exp.end || exp.current) && " - "}
-                    {exp.current ? "Present" : exp.end}
+                    {exp.current
+                      ? "Present"
+                      : exp.end
+                        ? new Date(exp.end).toLocaleString("en-US", { month: "short", year: "numeric" })
+                        : ""}
                   </p>
                 </div>
                 {exp.descFormat === "bullet" ? (

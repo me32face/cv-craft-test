@@ -20,9 +20,7 @@ const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
 });
 
-/* ---------------------------------------------
-   ⭐ FULL SEO CONFIG FOR CV-CRAFT
-----------------------------------------------*/
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://cvcraft.in"),
 

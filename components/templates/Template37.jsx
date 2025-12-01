@@ -123,10 +123,10 @@ export default function Template37({ data, onClickSection }) {
         {/* Profile Image */}
         <div
           className={`mb-6 ${data?.imageAlign === "left"
-              ? "flex justify-start"
-              : data?.imageAlign === "right"
-                ? "flex justify-end"
-                : "flex justify-center"
+            ? "flex justify-start"
+            : data?.imageAlign === "right"
+              ? "flex justify-end"
+              : "flex justify-center"
             }`}
         >
           <div
@@ -228,24 +228,24 @@ export default function Template37({ data, onClickSection }) {
                 }
 
                 // Category
-if (sk.category && (sk.items || sk.skills)) {
-  const skillList = sk.items || sk.skills;
-  return (
-    <div key={i} className="cv-item">
-      <p className="text-[10px] font-semibold uppercase tracking-wide opacity-80">
-        {sk.category}
-      </p>
-      <div className="text-xs ml-4 space-y-1">
-        {skillList.map((item, idx) => (
-          <div key={idx} className="flex items-start">
-            <span className="mr-2">•</span>
-            <span>{item}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
+                if (sk.category && (sk.items || sk.skills)) {
+                  const skillList = sk.items || sk.skills;
+                  return (
+                    <div key={i} className="cv-item">
+                      <p className="text-[10px] font-semibold uppercase tracking-wide opacity-80">
+                        {sk.category}
+                      </p>
+                      <div className="text-xs ml-4 space-y-1">
+                        {skillList.map((item, idx) => (
+                          <div key={idx} className="flex items-start">
+                            <span className="mr-2">•</span>
+                            <span>{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                }
 
                 return <p key={i}>• {safeText(sk.name, "Skill")}</p>;
               })}
@@ -325,7 +325,7 @@ if (sk.category && (sk.items || sk.skills)) {
                   {
                     name: "Project Management",
                     issuer: "Project Institute",
-                    year: "2028",
+                    year: "2023",
                   },
                 ]
               ).map((c, i) => {
@@ -528,6 +528,14 @@ if (sk.category && (sk.items || sk.skills)) {
                 {education.map((edu, i) => {
                   const ed = safeObj(edu);
 
+                  const formatDate = (date) => {
+                    if (!date) return "";
+                    return new Date(date).toLocaleString("en-US", {
+                      month: "short",
+                      year: "numeric",
+                    });
+                  };
+
                   // Fix duration display
                   const duration = ed.current
                     ? `${ed.start || ""} - Present`
@@ -639,7 +647,7 @@ if (sk.category && (sk.items || sk.skills)) {
                             )}
                           </ol>
                         ) : (
-                       <p className="text-xs mt-1 break-words whitespace-pre-line">{pr.desc}</p>
+                          <p className="text-xs mt-1 break-words whitespace-pre-line">{pr.desc}</p>
 
                         ))}
                     </div>

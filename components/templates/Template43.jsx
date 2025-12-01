@@ -11,7 +11,7 @@ export default function Template43({ data, onClickSection }) {
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', {  year: 'numeric' });
+    return date.toLocaleDateString('en-US', { year: 'numeric' });
   };
 
   const experiences = toArray(data?.experiences);
@@ -268,10 +268,16 @@ export default function Template43({ data, onClickSection }) {
                         <p className="text-sm font-bold text-slate-800 break-words">{exp.role}</p>
                         <p className="text-xs text-slate-600 italic">{exp.company}</p>
                       </div>
-                      <p className="text-xs opacity-60 break-words">
-                        {exp.start}
+                      <p className="text-xs opacity-60">
+                        {exp.start
+                          ? new Date(exp.start).toLocaleString("en-US", { month: "short", year: "numeric" })
+                          : ""}
                         {exp.start && (exp.end || exp.current) && " - "}
-                        {exp.current ? "Present" : exp.end}
+                        {exp.current
+                          ? "Present"
+                          : exp.end
+                            ? new Date(exp.end).toLocaleString("en-US", { month: "short", year: "numeric" })
+                            : ""}
                       </p>
                     </div>
                     {exp.desc && (
