@@ -103,6 +103,19 @@ setSocialLinks([
             value={editedUrl}
             onChange={(e) => setEditedUrl(e.target.value)}
           />
+
+          <label className="text-xs text-gray-600 flex items-center gap-1 mt-2">
+        <input
+          type="checkbox"
+          checked={links[i].useIcon || false}
+          onChange={() => {
+            const updated = [...links];
+            updated[i].useIcon = !updated[i].useIcon;
+            setSocialLinks(updated);
+          }}
+        />
+        Show icon
+      </label>
         </div>
 
         <div className="flex flex-col gap-2">
