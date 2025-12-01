@@ -500,10 +500,12 @@ export default function Template37({ data, onClickSection }) {
                   {lines.map(
                     (line, idx) =>
                       line && (
-                        <li key={idx} className="flex items-start">
-                          <span className="mr-2">•</span>
-                          <span className="break-words">{line}</span>
-                        </li>
+                       <li key={idx} className="flex items-start">
+  <span className="mr-2">•</span>
+  <span className="break-words">
+    {line.replace(/^[•\-*]\s*/, "")}
+  </span>
+</li>
                       )
                   )}
                 </ul>
