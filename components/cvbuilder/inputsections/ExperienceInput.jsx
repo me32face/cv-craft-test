@@ -3,6 +3,11 @@ import React, { useState } from "react";
 import { ChevronDown, Sparkles, List, ListOrdered, AlignLeft } from "lucide-react";
 import { geminiService } from "./gemini";
 import Toast from "../../Toast";
+// MUI
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 
 export default function ExperienceInput({ experiences = [], setExperiences, onClose, onNext }) {
   const [openIndex, setOpenIndex] = useState(null);
@@ -66,7 +71,7 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
 
   const formatText = (text, format) => {
     if (!text) return text;
-    
+
     const lines = text.split('\n');
 
     if (format === 'bullet') {
@@ -99,12 +104,12 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
   const handleDescriptionChange = (i, value) => {
     const format = experiences[i].descFormat || 'default';
     const prevValue = experiences[i].desc || '';
-    
+
     // Auto-format when Enter is pressed in bullet/number mode
     if (format === 'bullet' || format === 'number') {
       const prevLines = prevValue.split('\n').length;
       const newLines = value.split('\n').length;
-      
+
       // If new line was added (Enter pressed)
       if (newLines > prevLines) {
         const formatted = formatText(value, format);
@@ -112,7 +117,7 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
         return;
       }
     }
-    
+
     updateField(i, 'desc', value);
   };
 
@@ -289,37 +294,57 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                           />
                         </div>
 
-                        <div>
-                          <label className="font-medium">Start Date</label>
-                          <input
-                            type="month"
-                            className="mt-1 w-full p-3 rounded-xl border"
-                            value={exp.start ?? ""}
-                            onChange={(e) => {
-                              updateField(i, "start", e.target.value);
-                            }}
-                          />
-                        </div>
-
-                        {!exp.current && (
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          {/* START DATE */}
                           <div>
-                            <label className="font-medium">End Date</label>
-                            <input
-                              type="month"
-                              className="mt-1 w-full p-3 rounded-xl border"
-                              value={exp.end ?? ""}
-                              onChange={(e) => {
-                                const endDate = e.target.value;
-                                if (exp.start && endDate < exp.start) {
-                                  alert("End date must be greater than start date");
-                                  return; 
-                                }
-
-                                updateField(i, "end", endDate);
+                            <label className="font-medium block ">Start Date</label>
+                            <DatePicker
+                              views={["year", "month"]}
+                              format="MMM YYYY"
+                              value={exp.start ? dayjs(exp.start) : null}
+                              onChange={(date) => {
+                                if (!date) return;
+                                const formatted = date.format("YYYY-MM");
+                                updateField(i, "start", formatted);
+                              }}
+                              slotProps={{
+                                textField: {
+                                  className: " w-full p-1 rounded-xl border",
+                                },
                               }}
                             />
                           </div>
-                        )}
+
+                          {/* END DATE */}
+                          {!exp.current && (
+                            <div className="mt-4">
+                              <label className="font-medium block">End Date</label>
+                              <DatePicker
+                                views={["year", "month"]}
+                                format="MMM YYYY"
+                                value={exp.end ? dayjs(exp.end) : null}
+                                onChange={(date) => {
+                                  if (!date) return;
+
+                                  const formatted = date.format("YYYY-MM");
+
+                                  // Validation: End >= Start
+                                  if (exp.start && formatted < exp.start) {
+                                    setToast("End date must be greater than start date");
+                                    return;
+                                  }
+
+                                  updateField(i, "end", formatted);
+                                }}
+                                slotProps={{
+                                  textField: {
+                                    className: "mt-1 w-full p-3 rounded-xl border",
+                                  },
+                                }}
+                              />
+                            </div>
+                          )}
+                        </LocalizationProvider>
 
                       </div>
 
@@ -360,9 +385,8 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                             <button
                               type="button"
                               onClick={() => handleFormatChange(i, "default")}
-                              className={`p-2 rounded ${
-                                (exp.descFormat || "default") === "default" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
-                              }`}
+                              className={`p-2 rounded ${(exp.descFormat || "default") === "default" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                                }`}
                               title="Default"
                             >
                               <AlignLeft size={18} />
@@ -370,9 +394,8 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                             <button
                               type="button"
                               onClick={() => handleFormatChange(i, "bullet")}
-                              className={`p-2 rounded ${
-                                (exp.descFormat || "default") === "bullet" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
-                              }`}
+                              className={`p-2 rounded ${(exp.descFormat || "default") === "bullet" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                                }`}
                               title="Bullet List"
                             >
                               <List size={18} />
@@ -380,9 +403,8 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                             <button
                               type="button"
                               onClick={() => handleFormatChange(i, "number")}
-                              className={`p-2 rounded ${
-                                (exp.descFormat || "default") === "number" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
-                              }`}
+                              className={`p-2 rounded ${(exp.descFormat || "default") === "number" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                                }`}
                               title="Numbered List"
                             >
                               <ListOrdered size={18} />

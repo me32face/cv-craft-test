@@ -316,14 +316,23 @@ export default function template39({ data, onClickSection }) {
                   },
                 ]).map((exp, i) => (
                   <div key={i}>
-                    <p className="text-[14px] font-bold text-gray-800">{exp.role}</p>
                     <div className="flex justify-between items-center mt-0.5">
-                      <p className="text-[13px] italic text-gray-600">{exp.company}</p>
+                      <p className="text-[14px] font-bold text-gray-800">{exp.role}</p>
                       <p className="text-xs opacity-60">
-                        {exp.start}
+                        {exp.start
+                          ? new Date(exp.start).toLocaleString("en-US", { month: "short", year: "numeric" })
+                          : ""}
                         {exp.start && (exp.end || exp.current) && " - "}
-                        {exp.current ? "Present" : exp.end}
-                      </p>                    </div>
+                        {exp.current
+                          ? "Present"
+                          : exp.end
+                            ? new Date(exp.end).toLocaleString("en-US", { month: "short", year: "numeric" })
+                            : ""}
+                      </p>
+                    </div>
+
+                    <p className="text-[13px] italic text-gray-600">{exp.company}</p>
+
 
                     {exp.desc && (
                       <div className="mt-1.5 text-[12px] text-gray-700 leading-relaxed break-words">

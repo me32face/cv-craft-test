@@ -306,9 +306,15 @@ export default function Template44({ data, onClickSection }) {
                       <p className="text-xs text-slate-600 italic">{exp.company}</p>
                     </div>
                     <p className="text-xs opacity-60">
-                      {exp.start}
+                      {exp.start
+                        ? new Date(exp.start).toLocaleString("en-US", { month: "short", year: "numeric" })
+                        : ""}
                       {exp.start && (exp.end || exp.current) && " - "}
-                      {exp.current ? "Present" : exp.end}
+                      {exp.current
+                        ? "Present"
+                        : exp.end
+                          ? new Date(exp.end).toLocaleString("en-US", { month: "short", year: "numeric" })
+                          : ""}
                     </p>
                   </div>
                   {exp.desc && (

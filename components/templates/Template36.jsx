@@ -14,7 +14,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
     email: 'help@enhancv.com',
     location: '',
     profileImage: null,
-    imageShape: 'circle', // 'circle' | 'rounded' | 'square'
+    imageShape: 'circle', 
     summary: '',
     experiences: [],
     projects: [],

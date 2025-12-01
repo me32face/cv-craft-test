@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Phone, Mail, MapPin } from "lucide-react"; 
+import { Phone, Mail, MapPin } from "lucide-react";
 import SocialLinkDisplay from "../SocialLinkDisplay";
 export default function Template35({ data, onClickSection }) {
   const toArray = (v) =>
@@ -16,7 +16,7 @@ export default function Template35({ data, onClickSection }) {
   const references = toArray(data.references);
   const awards = toArray(data.awards);
   const socialLinks = toArray(data.socialLinks);
- 
+
   // visibility logic like Template30
   const visible = data?.visibleSections || {};
 
@@ -40,26 +40,23 @@ export default function Template35({ data, onClickSection }) {
           </p>
 
           <div className="flex flex-wrap gap-6 text-sm mt-3">
-          {data.phone && (
-  <p className="flex items-center gap-1 break-words">
-    <Phone size={14} /> {data.phone}
-  </p>
-)}
+            {data.phone && (
+              <p className="flex items-center gap-1 break-words">
+                <Phone size={14} /> {data.phone}
+              </p>
+            )}
 
-{data.email && (
-  <p className="flex items-center gap-1 break-words">
-    <Mail size={14} /> {data.email}
-  </p>
-)}
+            {data.email && (
+              <p className="flex items-center gap-1 break-words">
+                <Mail size={14} /> {data.email}
+              </p>
+            )}
 
-{data.address && (
-  <p className="flex items-center gap-1 break-words">
-    <MapPin size={14} /> {data.address}
-  </p>
-)}
-
-
-            {/* Website (OPTIONAL FIELD) */}
+            {data.address && (
+              <p className="flex items-center gap-1 break-words">
+                <MapPin size={14} /> {data.address}
+              </p>
+            )}
 
             {/* SOCIAL LINKS (dynamic from SocialLinks.jsx) */}
             {visible.socialLinks !== false &&
@@ -69,9 +66,9 @@ export default function Template35({ data, onClickSection }) {
                   className="flex flex-wrap gap-4 mt-2 text-sm cursor-pointer"
                   onClick={() => onClickSection("social")}
                 >
-                 {data.socialLinks.map((link, i) => (
-  <SocialLinkDisplay key={i} link={link} />
-))}
+                  {data.socialLinks.map((link, i) => (
+                    <SocialLinkDisplay key={i} link={link} />
+                  ))}
 
                 </div>
               )}
@@ -111,16 +108,16 @@ export default function Template35({ data, onClickSection }) {
               {(experiences.length
                 ? experiences
                 : [
-                    {
-                      role: "Software Developer",
-                      company: "TechCorp Pvt Ltd",
-                      location: "Kozhikode",
-                      start: "2021-01-01",
-                      current: true,
-                      desc: "Built scalable applications.\nOptimized backend APIs.",
-                      reference: "",
-                    },
-                  ]
+                  {
+                    role: "Software Developer",
+                    company: "TechCorp Pvt Ltd",
+                    location: "Kozhikode",
+                    start: "2021-01-01",
+                    current: true,
+                    desc: "Built scalable applications.\nOptimized backend APIs.",
+                    reference: "",
+                  },
+                ]
               ).map((exp, i) => {
                 const e = safeObj(exp);
 
@@ -201,19 +198,19 @@ export default function Template35({ data, onClickSection }) {
               {(toArray(data.projects).length
                 ? toArray(data.projects)
                 : [
-                    {
-                      name: "Portfolio Website",
-                      year: "2023",
-                      link: "https://yourportfolio.com",
-                      desc: "Built a full personal portfolio using React, Tailwind and Framer Motion.\nIntegrated contact form and dark mode.",
-                    },
-                    {
-                      name: "Task Manager App",
-                      year: "2022",
-                      link: "https://github.com/yourrepo",
-                      desc: "Created a task manager with analytics.\nSupports drag & drop and filters.",
-                    },
-                  ]
+                  {
+                    name: "Portfolio Website",
+                    year: "2023",
+                    link: "https://yourportfolio.com",
+                    desc: "Built a full personal portfolio using React, Tailwind and Framer Motion.\nIntegrated contact form and dark mode.",
+                  },
+                  {
+                    name: "Task Manager App",
+                    year: "2022",
+                    link: "https://github.com/yourrepo",
+                    desc: "Created a task manager with analytics.\nSupports drag & drop and filters.",
+                  },
+                ]
               ).map((project, i) => {
                 const p = safeObj(project);
 
@@ -233,14 +230,14 @@ export default function Template35({ data, onClickSection }) {
                     </div>
 
                     {/* Project link */}
-                   <a
-    href={p.link}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="text-xs text-blue-600 underline project-link break-all"
-  >
-   {p.useCustomLabel && p.linkLabel ? p.linkLabel : p.link}
-  </a>
+                    <a
+                      href={p.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-blue-600 underline project-link break-all"
+                    >
+                      {p.useCustomLabel && p.linkLabel ? p.linkLabel : p.link}
+                    </a>
 
                     {/* DESCRIPTION AUTO-FORMATTED */}
                     {desc && (
@@ -275,17 +272,17 @@ export default function Template35({ data, onClickSection }) {
               {(education.length
                 ? education
                 : [
-                    {
-                      degree: "Bachelor of Computer Science",
-                      school: "ABC College",
-                      field: "Computer Science",
-                      start: "2018-06-01",
-                      end: "2021-05-30",
-                      current: false,
-                      description:
-                        "Studied core computer science subjects.\nWorked on mini projects.",
-                    },
-                  ]
+                  {
+                    degree: "Bachelor of Computer Science",
+                    school: "ABC College",
+                    field: "Computer Science",
+                    start: "2018-06-01",
+                    end: "2021-05-30",
+                    current: false,
+                    description:
+                      "Studied core computer science subjects.\nWorked on mini projects.",
+                  },
+                ]
               ).map((edu, i) => {
                 const ed = safeObj(edu);
 
@@ -357,9 +354,9 @@ export default function Template35({ data, onClickSection }) {
                 {(certificates.length
                   ? certificates
                   : [
-                      "AWS Certified Cloud Practitioner",
-                      "Google UX Foundations",
-                    ]
+                    "AWS Certified Cloud Practitioner",
+                    "Google UX Foundations",
+                  ]
                 ).map((c, i) => {
                   if (typeof c === "string") return <li key={i} className="break-words">{c}</li>;
 
@@ -388,25 +385,25 @@ export default function Template35({ data, onClickSection }) {
 
               <ul className="text-sm list-disc pl-4">
                 {awards.map((a, i) => (
-                 <li key={i} className="break-words">
-  <div className="font-semibold break-words">{a.title}</div>
-  {a.issuer && <div className="text-xs opacity-75 break-words">Issued by: {a.issuer}</div>}
-  {a.date && <div className="text-xs opacity-75 break-words">Date: {a.date}</div>}
-  {a.description && <div className="text-xs opacity-75 break-words">{a.description}</div>}
-</li>
+                  <li key={i} className="break-words">
+                    <div className="font-semibold break-words">{a.title}</div>
+                    {a.issuer && <div className="text-xs opacity-75 break-words">Issued by: {a.issuer}</div>}
+                    {a.date && <div className="text-xs opacity-75 break-words">Date: {a.date}</div>}
+                    {a.description && <div className="text-xs opacity-75 break-words">{a.description}</div>}
+                  </li>
 
                 ))}
               </ul>
             </section>
           )}
 
-          
+
         </div>
 
 
 
         {/* RIGHT COLUMN */}
-       <div className="w-1/3 min-w-0">
+        <div className="w-1/3 min-w-0">
           {/* SKILLS */}
           {visible.skills !== false && (
             <section
@@ -428,7 +425,7 @@ export default function Template35({ data, onClickSection }) {
 
                   if (sk.proficiency !== undefined) {
                     return (
-                      <div key={i}  className="cv-item">
+                      <div key={i} className="cv-item">
                         <div className="flex justify-between text-sm gap-2">
                           <span className="break-words flex-1 min-w-0">{sk.name}</span>
                           <span className="text-xs opacity-70">
@@ -524,13 +521,13 @@ export default function Template35({ data, onClickSection }) {
               {(references.length
                 ? references
                 : [
-                    {
-                      name: "John Doe",
-                      title: "Project Manager",
-                      phone: "9876543210",
-                      email: "john@example.com",
-                    },
-                  ]
+                  {
+                    name: "John Doe",
+                    title: "Project Manager",
+                    phone: "9876543210",
+                    email: "john@example.com",
+                  },
+                ]
               ).map((ref, i) => (
                 <div key={i} className="mb-3 text-sm cv-item">
                   <p className="font-semibold break-words">{ref.name}</p>

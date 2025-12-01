@@ -38,7 +38,7 @@ export default function Template34({ data, onClickSection }) {
   const projects = toArray(data?.projects);
   const socialLinks = toArray(data?.socialLinks);
   const references = toArray(data?.references);
-  
+
   const getSummaryText = () => {
     if (!data?.summary) return "";
     if (Array.isArray(data.summary)) {
@@ -59,10 +59,9 @@ export default function Template34({ data, onClickSection }) {
           <div
             className={`
               flex 
-              ${
-                data?.imageAlign === "left"
-                  ? "justify-start"
-                  : data?.imageAlign === "right"
+              ${data?.imageAlign === "left"
+                ? "justify-start"
+                : data?.imageAlign === "right"
                   ? "justify-end"
                   : "justify-center"
               }
@@ -72,10 +71,9 @@ export default function Template34({ data, onClickSection }) {
             <div
               className={`
                 w-32 h-32 overflow-hidden bg-white border-4 border-white shadow-md cursor-pointer
-                ${
-                  data?.imageShape === "circle"
-                    ? "rounded-full"
-                    : data?.imageShape === "rounded"
+                ${data?.imageShape === "circle"
+                  ? "rounded-full"
+                  : data?.imageShape === "rounded"
                     ? "rounded-xl"
                     : "rounded-none"
                 }
@@ -130,28 +128,28 @@ export default function Template34({ data, onClickSection }) {
             <p className="text-sm break-words">
               {safeText(data?.address) || "Your City, Country"}
             </p>
-           
+
           </section>
 
           {/* SOCIAL LINKS (Works with checkbox toggle) */}
-{data?.visibleSections?.socialLinks !== false && (
-  <section
-    className="mb-6 cursor-pointer"
-    onClick={() => onClickSection && onClickSection("socialLinks")}
-  >
-   
+          {data?.visibleSections?.socialLinks !== false && (
+            <section
+              className="mb-6 cursor-pointer"
+              onClick={() => onClickSection && onClickSection("socialLinks")}
+            >
 
-    {socialLinks.length > 0 && (
-      <div className="text-sm space-y-1">
-       {socialLinks.map((link, i) => (
-  <SocialLinkDisplay key={i} link={link} />
-  
-  
-))}
-      </div>
-    )}
-  </section>
-)}
+
+              {socialLinks.length > 0 && (
+                <div className="text-sm space-y-1">
+                  {socialLinks.map((link, i) => (
+                    <SocialLinkDisplay key={i} link={link} />
+
+
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
 
 
           {/* SKILLS */}
@@ -168,15 +166,15 @@ export default function Template34({ data, onClickSection }) {
                 {(skills.length
                   ? skills
                   : [
-                      "Client Relationship Building",
-                      "Negotiation Skills",
-                      "Target Achievement",
-                      "CRM Management",
-                      "Team Collaboration",
-                      "Lead Prospecting",
-                      "Communication Skills",
-                      "Strategic Planning",
-                    ]
+                    "Client Relationship Building",
+                    "Negotiation Skills",
+                    "Target Achievement",
+                    "CRM Management",
+                    "Team Collaboration",
+                    "Lead Prospecting",
+                    "Communication Skills",
+                    "Strategic Planning",
+                  ]
                 ).map((s, i) => {
                   // String – simple bullet item
                   if (typeof s === "string") {
@@ -214,11 +212,11 @@ export default function Template34({ data, onClickSection }) {
                   }
 
                   // Skill category with items
-                if (skillObj.category && (skillObj.skills || skillObj.items)) {
-  const itemsArray = skillObj.skills || skillObj.items || [];
-  const items = Array.isArray(itemsArray)
-    ? itemsArray.filter((it) => it && it.toString().trim())
-    : [];
+                  if (skillObj.category && (skillObj.skills || skillObj.items)) {
+                    const itemsArray = skillObj.skills || skillObj.items || [];
+                    const items = Array.isArray(itemsArray)
+                      ? itemsArray.filter((it) => it && it.toString().trim())
+                      : [];
 
                     return (
                       <div key={i} className="break-words">
@@ -312,11 +310,11 @@ export default function Template34({ data, onClickSection }) {
                 {(certificates.length
                   ? certificates
                   : [
-                      "Certified Sales Expert — 2021",
-                      "CRM Professional — 2020",
-                      "Digital Marketing Basics — Google",
-                      "Advanced Communication Skills Training",
-                    ]
+                    "Certified Sales Expert — 2021",
+                    "CRM Professional — 2020",
+                    "Digital Marketing Basics — Google",
+                    "Advanced Communication Skills Training",
+                  ]
                 ).map((c, i) => (
                   <li key={i} className="break-words">{safeText(c)}</li>
                 ))}
@@ -326,27 +324,27 @@ export default function Template34({ data, onClickSection }) {
 
 
           {data?.visibleSections?.references !== false && (
-  <section
-    className="mb-8 cursor-pointer"
-    onClick={() => onClickSection && onClickSection("references")}
-  >
-    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
-      References
-    </h3>
+            <section
+              className="mb-8 cursor-pointer"
+              onClick={() => onClickSection && onClickSection("references")}
+            >
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
+                References
+              </h3>
 
-    {(references.length ? references : []).map((ref, i) => {
-      const r = safeObj(ref);
-      return (
-        <div key={i} className="text-sm mb-3">
-          <p className="font-semibold break-words">{safeText(r.name)}</p>
-          <p className="opacity-70 break-words">{safeText(r.title)} — {safeText(r.company)}</p>
-          {r.phone && <p className="opacity-70 break-words">{safeText(r.phone)}</p>}
-          {r.email && <p className="opacity-70 break-all">{safeText(r.email)}</p>}
-        </div>
-      );
-    })}
-  </section>
-)}
+              {(references.length ? references : []).map((ref, i) => {
+                const r = safeObj(ref);
+                return (
+                  <div key={i} className="text-sm mb-3">
+                    <p className="font-semibold break-words">{safeText(r.name)}</p>
+                    <p className="opacity-70 break-words">{safeText(r.title)} — {safeText(r.company)}</p>
+                    {r.phone && <p className="opacity-70 break-words">{safeText(r.phone)}</p>}
+                    {r.email && <p className="opacity-70 break-all">{safeText(r.email)}</p>}
+                  </div>
+                );
+              })}
+            </section>
+          )}
 
           {/* AWARDS – only if data.awards exists */}
           {awards.length > 0 && (
@@ -360,12 +358,12 @@ export default function Template34({ data, onClickSection }) {
 
               <ul className="text-sm space-y-1">
                 {awards.map((a, i) => (
-                 <li key={i} className="break-words">
-  <span className="font-semibold">{a.title}</span>
-  {a.issuer && ` — ${a.issuer}`}
-  {a.date && ` (${a.date})`}
-  {a.description && <div className="text-xs mt-1 opacity-70 break-words">{a.description}</div>}
-</li>
+                  <li key={i} className="break-words">
+                    <span className="font-semibold">{a.title}</span>
+                    {a.issuer && ` — ${a.issuer}`}
+                    {a.date && ` (${a.date})`}
+                    {a.description && <div className="text-xs mt-1 opacity-70 break-words">{a.description}</div>}
+                  </li>
 
                 ))}
               </ul>
@@ -393,124 +391,124 @@ export default function Template34({ data, onClickSection }) {
           )}
 
           {/* EXPERIENCE / WORK EXPERIENCE */}
-         {data?.visibleSections?.experience !== false && (
-  <section
-    className="mb-8 cursor-pointer"
-    onClick={() => onClickSection && onClickSection("experience")}
-  >
-    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1">
-      Work Experience
-    </h3>
+          {data?.visibleSections?.experience !== false && (
+            <section
+              className="mb-8 cursor-pointer"
+              onClick={() => onClickSection && onClickSection("experience")}
+            >
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1">
+                Work Experience
+              </h3>
 
-    <div className="mt-3 space-y-3 border-l-2 border-gray-300 pl-4">
-      {(experiences.length ? experiences : []).map((exp, i) => {
-        const e = safeObj(exp);
+              <div className="mt-3 space-y-3 border-l-2 border-gray-300 pl-4">
+                {(experiences.length ? experiences : []).map((exp, i) => {
+                  const e = safeObj(exp);
 
-        const formatDate = (value) => {
-          if (!value) return "";
-          const date = new Date(value);
-          return date.toLocaleString("en-US", { month: "short", year: "numeric" });
-        };
+                  const formatDate = (value) => {
+                    if (!value) return "";
+                    const date = new Date(value);
+                    return date.toLocaleString("en-US", { month: "short", year: "numeric" });
+                  };
 
-        const dateRange = e.current
-          ? `${formatDate(e.start)} – Present`
-          : `${formatDate(e.start)} – ${formatDate(e.end)}`;
+                  const dateRange = e.current
+                    ? `${formatDate(e.start)} – Present`
+                    : `${formatDate(e.start)} – ${formatDate(e.end)}`;
 
-        const desc = e.desc ? e.desc.toString() : "";
-        const descLines = desc
-          ? desc.split("\n").map((line) => line.trim())
-          : [];
+                  const desc = e.desc ? e.desc.toString() : "";
+                  const descLines = desc
+                    ? desc.split("\n").map((line) => line.trim())
+                    : [];
 
-        return (
-          <div key={i} className="cv-item text-sm">
-            <p className="font-semibold break-words">{safeText(e.role)}</p>
-            <p className="opacity-70 break-words">{safeText(e.company)}</p>
-            {e.location && <p className="opacity-70 break-words">{e.location}</p>}
-            <p className="text-xs opacity-60">{dateRange}</p>
+                  return (
+                    <div key={i} className="cv-item text-sm">
+                      <p className="font-semibold break-words">{safeText(e.role)}</p>
+                      <p className="opacity-70 break-words">{safeText(e.company)}</p>
+                      {e.location && <p className="opacity-70 break-words">{e.location}</p>}
+                      <p className="text-xs opacity-60">{dateRange}</p>
 
-            {/* Auto bullet formatting */}
-            {desc && (
-              <>
-                {descLines.length > 1 ? (
-                  <ul className="mt-1 ml-4 list-disc space-y-1">
-                    {descLines.map(
-                      (line, idx) => line && <li key={idx} className="break-words">{line}</li>
-                    )}
-                  </ul>
-                ) : (
-                  <p className="mt-1 break-words">{desc}</p>
-                )}
-              </>
-            )}
+                      {/* Auto bullet formatting */}
+                      {desc && (
+                        <>
+                          {descLines.length > 1 ? (
+                            <ul className="mt-1 ml-4 list-disc space-y-1">
+                              {descLines.map(
+                                (line, idx) => line && <li key={idx} className="break-words">{line}</li>
+                              )}
+                            </ul>
+                          ) : (
+                            <p className="mt-1 break-words">{desc}</p>
+                          )}
+                        </>
+                      )}
 
-            {/* Reference (optional) */}
-            {e.reference && (
-              <p className="text-xs mt-2 opacity-60">
-                <span className="font-semibold">Reference: </span>
-                {e.reference}
-              </p>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  </section>
-)}
+                      {/* Reference (optional) */}
+                      {e.reference && (
+                        <p className="text-xs mt-2 opacity-60">
+                          <span className="font-semibold">Reference: </span>
+                          {e.reference}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
 
           {/* EDUCATION */}
-         {data?.visibleSections?.education !== false && (
-  <section
-    className="mb-8 cursor-pointer"
-    onClick={() => onClickSection && onClickSection("education")}
-  >
-    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
-      Education
-    </h3>
+          {data?.visibleSections?.education !== false && (
+            <section
+              className="mb-8 cursor-pointer"
+              onClick={() => onClickSection && onClickSection("education")}
+            >
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
+                Education
+              </h3>
 
-    {(education.length ? education : []).map((edu, i) => {
-      const ed = safeObj(edu);
+              {(education.length ? education : []).map((edu, i) => {
+                const ed = safeObj(edu);
 
-      const formatDate = (value) => {
-        if (!value) return "";
-        const date = new Date(value);
-        return date.toLocaleString("en-US", { month: "short", year: "numeric" });
-      };
+                const formatDate = (value) => {
+                  if (!value) return "";
+                  const date = new Date(value);
+                  return date.toLocaleString("en-US", { month: "short", year: "numeric" });
+                };
 
-      const dateRange = ed.current
-        ? `${formatDate(ed.start)} – Present`
-        : `${formatDate(ed.start)} – ${formatDate(ed.end)}`;
+                const dateRange = ed.current
+                  ? `${formatDate(ed.start)} – Present`
+                  : `${formatDate(ed.start)} – ${formatDate(ed.end)}`;
 
-      const desc = ed.description ? ed.description.toString() : "";
-      const descLines = desc
-        ? desc.split("\n").map((line) => line.trim())
-        : [];
+                const desc = ed.description ? ed.description.toString() : "";
+                const descLines = desc
+                  ? desc.split("\n").map((line) => line.trim())
+                  : [];
 
-      return (
-        <div key={i} className="cv-item mb-3 text-sm">
-          <p className="font-semibold break-words">{safeText(ed.degree)}</p>
-          <p className="opacity-70 break-words">{safeText(ed.school)}</p>
-          {ed.field && <p className="opacity-70 break-words">{safeText(ed.field)}</p>}
-          <p className="text-xs opacity-60">{dateRange}</p>
+                return (
+                  <div key={i} className="cv-item mb-3 text-sm">
+                    <p className="font-semibold break-words">{safeText(ed.degree)}</p>
+                    <p className="opacity-70 break-words">{safeText(ed.school)}</p>
+                    {ed.field && <p className="opacity-70 break-words">{safeText(ed.field)}</p>}
+                    <p className="text-xs opacity-60">{dateRange}</p>
 
-          {/* Auto bullet formatting */}
-          {desc && (
-            <>
-              {descLines.length > 1 ? (
-                <ul className="mt-1 ml-4 list-disc space-y-1">
-                  {descLines.map(
-                    (line, idx) => line && <li key={idx} className="break-words">{line}</li>
-                  )}
-                </ul>
-              ) : (
-                <p className="mt-1 break-words">{desc}</p>
-              )}
-            </>
+                    {/* Auto bullet formatting */}
+                    {desc && (
+                      <>
+                        {descLines.length > 1 ? (
+                          <ul className="mt-1 ml-4 list-disc space-y-1">
+                            {descLines.map(
+                              (line, idx) => line && <li key={idx} className="break-words">{line}</li>
+                            )}
+                          </ul>
+                        ) : (
+                          <p className="mt-1 break-words">{desc}</p>
+                        )}
+                      </>
+                    )}
+                  </div>
+                );
+              })}
+            </section>
           )}
-        </div>
-      );
-    })}
-  </section>
-)}
           {/* PROJECTS (replacing References) */}
           {data?.visibleSections?.projects !== false && (
             <section
@@ -524,21 +522,21 @@ export default function Template34({ data, onClickSection }) {
               {(projects.length
                 ? projects
                 : [
-                    {
-                      name: "Portfolio Website",
-                      year: "2023",
-                      link: "https://yourportfolio.com",
-                      desc: "Designed and developed a responsive personal portfolio using React and Tailwind CSS.\nImplemented reusable components and responsive layouts.",
-                      descFormat: "bullet",
-                    },
-                    {
-                      name: "Sales Dashboard",
-                      year: "2022",
-                      link: "https://github.com/yourusername/sales-dashboard",
-                      desc: "Built an interactive dashboard to visualize sales KPIs.\nIntegrated charts and filters for real-time insights.",
-                      descFormat: "number",
-                    },
-                  ]
+                  {
+                    name: "Portfolio Website",
+                    year: "2023",
+                    link: "https://yourportfolio.com",
+                    desc: "Designed and developed a responsive personal portfolio using React and Tailwind CSS.\nImplemented reusable components and responsive layouts.",
+                    descFormat: "bullet",
+                  },
+                  {
+                    name: "Sales Dashboard",
+                    year: "2022",
+                    link: "https://github.com/yourusername/sales-dashboard",
+                    desc: "Built an interactive dashboard to visualize sales KPIs.\nIntegrated charts and filters for real-time insights.",
+                    descFormat: "number",
+                  },
+                ]
               ).map((project, i) => {
                 const p = safeObj(project);
                 const desc = p.desc ? p.desc.toString() : "";
@@ -553,16 +551,16 @@ export default function Template34({ data, onClickSection }) {
                         <p className="font-semibold break-words">
                           {safeText(p.name) || "Project Title"}
                         </p>
-                      {p.link && (
-  <a
-    href={p.link}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="text-xs text-blue-600 underline project-link break-all"
-  >
-   {p.useCustomLabel && p.linkLabel ? p.linkLabel : p.link}
-  </a>
-)}
+                        {p.link && (
+                          <a
+                            href={p.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-600 underline project-link break-all"
+                          >
+                            {p.useCustomLabel && p.linkLabel ? p.linkLabel : p.link}
+                          </a>
+                        )}
                       </div>
                       <p className="text-xs opacity-60">{safeText(p.year)}</p>
                     </div>
