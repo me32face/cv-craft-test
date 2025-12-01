@@ -35,14 +35,12 @@ export default function Template35({ data, onClickSection }) {
         {/* PROFILE IMAGE */}
         <div className="mb-10 relative">
           {/* Profile Image */}
-          {data?.profileImage && (
             <div
-              className={`overflow-hidden mb-6 ${data.imageShape === "circle" ? "rounded-full" : data.imageShape === "rounded" ? "rounded-xl" : ""}`}
-              style={{ width: 120, height: 120, margin: "0 auto" }}
-            >
-              <img src={data.profileImage} className="w-full h-full object-cover" alt="profile" />
-            </div>
-          )}
+          className={`overflow-hidden mb-6 ${data?.imageShape === "circle" ? "rounded-full" : data?.imageShape === "rounded" ? "rounded-xl" : ""}`}
+          style={{ width: 120, height: 120, margin: "0 auto" }}
+        >
+          <img src={data?.profileImage || "/templateprofile/template33profile.jpeg"} className="w-full h-full object-cover" alt="profile" />
+        </div>
         </div>
         {/* Contact */}
         <div>
@@ -225,6 +223,49 @@ export default function Template35({ data, onClickSection }) {
             <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("experience")}>
               EXPERIENCE
             </h2>
+            {experiences.map((exp, i) => (
+              <div key={i} className=" mb-3">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="font-semibold text-gray-800 !text-sm break-words">{exp.role}</p>
+                    <p className="text-sm opacity-90 break-words ">{exp.company}</p>
+                    {exp.location && <p className="text-xs opacity-70 break-words">{exp.location}</p>}
+                  </div>
+                  <p className="text-xs opacity-60">
+                    {exp.start}
+                    {exp.start && (exp.end || exp.current) && " - "}
+                    {exp.current ? "Present" : exp.end}
+                  </p>
+                </div>
+                  {exp.desc && (
+                  exp.descFormat === "bullet" ? (
+                    exp.desc.split('\n').map((line, idx) => {
+                      const trimmed = line.trim();
+                      if (!trimmed) return null;
+                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                      return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `• ${trimmed}`}</p>;
+                    })
+                  ) : exp.descFormat === "number" ? (
+                    exp.desc.split('\n').map((line, idx) => {
+                      const trimmed = line.trim();
+                      if (!trimmed) return null;
+                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                      return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `${idx + 1}. ${trimmed}`}</p>;
+                    })
+                  ) : (
+                    <p className="text-sm mt-1 text-justify text-gray-700 break-words">{exp.desc}</p>
+                  )
+                )}
+                
+              </div>
+            ))}
+          </>
+        )}
+        {/* {data?.visibleSections?.experience !== false && (
+          <>
+            <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("experience")}>
+              EXPERIENCE
+            </h2>
             {(experiences.length ? experiences : [
               { role: "Product Design Manager", company: "Arowwai Industries", year: "2020-2023", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
               { role: "Product Design Manager", company: "Ingoude Company", year: "2019-2020", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
@@ -258,7 +299,7 @@ export default function Template35({ data, onClickSection }) {
               </div>
             ))}
           </>
-        )}
+        )} */}
         {/* Projects */}
         {data?.visibleSections?.projects !== false && (
           <>
@@ -285,19 +326,73 @@ export default function Template35({ data, onClickSection }) {
                   </div>
                   <p className="text-xs opacity-60 flex-shrink-0">{project.year}</p>
                 </div>
-                {project.descFormat === "bullet" ? (
-                  project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 break-words">• {line}</p>)
-                ) : project.descFormat === "number" ? (
-                  project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 break-words">{idx + 1}. {line}</p>)
-                ) : (
-                  <p className="text-sm mt-1 text-gray-700 break-words">{project.desc}</p>
+                {project.desc && (
+                  project.descFormat === "bullet" ? (
+                    project.desc.split('\n').map((line, idx) => {
+                      const trimmed = line.trim();
+                      if (!trimmed) return null;
+                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                      return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `• ${trimmed}`}</p>;
+                    })
+                  ) : project.descFormat === "number" ? (
+                    project.desc.split('\n').map((line, idx) => {
+                      const trimmed = line.trim();
+                      if (!trimmed) return null;
+                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                      return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `${idx + 1}. ${trimmed}`}</p>;
+                    })
+                  ) : (
+                    <p className="text-sm mt-1 text-gray-700 text-justify break-words">{project.desc}</p>
+                  )
                 )}
               </div>
             ))}
           </>
         )}
         {/* Education */}
-        {data?.visibleSections?.education !== false && (
+         {data?.visibleSections?.education !== false && (
+          <div className="">
+            <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
+              EDUCATION
+            </h2>
+            {education.map((edu, i) => (
+              <div key={i} className=" mb-3">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="font-semibold !text-sm text-gray-700 break-words">{edu.degree}</p>
+                    <p className="text-sm opacity-80 break-words">{edu.school}</p>
+                    {edu.field && <p className="text-xs opacity-70 break-words">{edu.field}</p>}
+                  </div>
+                  <p className="text-xs opacity-60">
+                    {edu.start && formatDate(edu.start)}
+                    {edu.start && (edu.end || edu.current) && " - "}
+                    {edu.current ? "Present" : edu.end && formatDate(edu.end)}
+                  </p>
+                </div>
+                  {edu.description && (
+                  edu.descFormat === "bullet" ? (
+                    edu.description.split('\n').map((line, idx) => {
+                      const trimmed = line.trim();
+                      if (!trimmed) return null;
+                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                      return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `• ${trimmed}`}</p>;
+                    })
+                  ) : edu.descFormat === "number" ? (
+                    edu.description.split('\n').map((line, idx) => {
+                      const trimmed = line.trim();
+                      if (!trimmed) return null;
+                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                      return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `${idx + 1}. ${trimmed}`}</p>;
+                    })
+                  ) : (
+                    <p className="text-sm mt-1 text-gray-700 text-justify break-words">{edu.description}</p>
+                  )
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+        {/* {data?.visibleSections?.education !== false && (
           <div className="">
             <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
               EDUCATION
@@ -328,7 +423,7 @@ export default function Template35({ data, onClickSection }) {
               </div>
             ))}
           </div>
-        )}
+        )} */}
       </div>
     </div>
   )
