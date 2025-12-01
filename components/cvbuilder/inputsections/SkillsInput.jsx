@@ -297,6 +297,7 @@ export default function SkillsInput({ skills = [], setSkills, onClose, onNext })
                       }}
                       className="text-gray-600"
                     >
+                      
                       {isCollapsed ? "▼" : "▲"}
                     </button>
 
