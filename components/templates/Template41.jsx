@@ -5,20 +5,6 @@ import { Phone, Mail, MapPin, Link } from "lucide-react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
 import SocialLinkDisplay from "../SocialLinkDisplay";
 
-// const renderLanguage = (lang, index) => {
-//   if (typeof lang === 'string') {
-//     return <p key={index} className="text-white text-sm mb-2">→ {lang}</p>;
-//   }
-//   return (
-//     <div key={index} className="mb-3">
-//       <div className="flex justify-between items-center text-white text-sm">
-//         <span className="font-medium">{lang.name}</span>
-//         <span className="text-xs opacity-80">({lang.proficiency || 'Fluent'})</span>
-//       </div>
-//     </div>
-//   );
-// };
-
 export default function Template41({ data, onClickSection }) {
   const toArray = (value) => (!value ? [] : Array.isArray(value) ? value : [value]);
 
@@ -47,28 +33,17 @@ export default function Template41({ data, onClickSection }) {
       <div className="cv-sidebar w-1/3 bg-gradient-to-b from-slate-700 via-slate-800 to-slate-900 text-white  p-8 flex-shrink-0">
         {/* Profile Image */}
         <div className="mb-8 cursor-pointer" onClick={() => onClickSection && onClickSection("personal")}>
-          {data?.profileImage && (
-            <div
-              className={`overflow-hidden mx-auto border-4 border-[#a680c9] shadow-2xl ${data.imageShape === "circle"
-                ? "rounded-full"
-                : data.imageShape === "rounded"
-                  ? "rounded-2xl"
-                  : ""
-                }`}
-              style={{ width: 150, height: 150 }}
-            >
-              <img
-                src={data.profileImage}
-                className="w-full h-full object-cover"
-                alt="profile"
-              />
-            </div>
-          )}
+         <div
+          className={`overflow-hidden mb-6 ${data?.imageShape === "circle" ? "rounded-full" : data?.imageShape === "rounded" ? "rounded-xl" : ""}`}
+          style={{ width: 120, height: 120, margin: "0 auto" }}
+        >
+          <img src={data?.profileImage || "/templateprofile/template41profile.jpg"} className="w-full h-full object-cover" alt="profile" />
+        </div>
         </div>
 
         {/* Contact Section */}
         <section className="mb-8 cursor-pointer" onClick={() => onClickSection && onClickSection("personal")}>
-          <h2 className="text-lg font-bold mb-4 pb-2 border-b border-[#c3c3c3] uppercase tracking-wider">Contact</h2>
+          <h2 className="text-lg font-bold mb-4 pb-2 border-b border-[#f0e7f9] uppercase tracking-wider">Contact</h2>
           <div className="space-y-3 text-sm">
             <div className="flex items-center gap-2 leading-[1.4] text-sm">
               <Phone size={14} className="shrink-0 translate-y-[-1px] text-[#c5a0e7]" />
@@ -101,11 +76,11 @@ export default function Template41({ data, onClickSection }) {
         {/* Skills */}
         {data?.visibleSections?.skills !== false && (
           <div className="mb-8 cursor-pointer" onClick={() => onClickSection && onClickSection("skills")}>
-            <h2 className="text-lg font-bold mb-4 pb-2 border-b border-[#c3c3c3] uppercase tracking-wider">Skills</h2>
+            <h2 className="text-lg font-bold mb-4 pb-2 border-b border-[#f0e7f9] uppercase tracking-wider">Skills</h2>
             <div className="space-y-3">
               {(data?.skills || ["Management Skills", "Creativity", "Digital Marketing", "Negotiation"]).map((s, i) => {
                 if (typeof s === 'string') {
-                  return <p key={i} className="text-sm mb-1 "><span className="text-[#c5a0e7] w-1 h-1">•</span> {s}</p>;
+                  return <p key={i} className="text-sm mb-1 "><span className="text-[#c5a0e7] w-1 h-1 ">•</span> {s}</p>;
                 }
 
                 if (s.proficiency !== undefined) {
@@ -139,7 +114,7 @@ export default function Template41({ data, onClickSection }) {
         )}
         {data?.visibleSections?.languages !== false && (
           <div className="mb-4">
-            <h2 className="font-semibold text-md mb-2 border-b border-[#c3c3c3] pb-1.5">LANGUAGE</h2>
+            <h2 className="font-semibold text-md mb-2 border-b border-[#f0e7f9] pb-1.5">LANGUAGE</h2>
             {(data?.languages?.length ? data.languages : ["Spanish", "Arabic", "English"]).map((l, i) =>
               renderLanguage(l, i)
             )}
@@ -149,7 +124,7 @@ export default function Template41({ data, onClickSection }) {
         {/* Certifications */}
         {data?.visibleSections?.certificates !== false && (
           <section className="cursor-pointer" onClick={() => onClickSection("certificates")}>
-            <h2 className="text-lg font-bold mb-4 pb-2 border-b border-[#c3c3c3] uppercase tracking-wider">Certifications</h2>
+            <h2 className="text-lg font-bold mb-4 pb-2 border-b border-[#f0e7f9] uppercase tracking-wider">Certifications</h2>
             <div className="space-y-4">
               {(certificates.length ? certificates : [
                 { name: "Teaching License", issuer: "State Department", year: "July 2024" },
@@ -178,17 +153,17 @@ export default function Template41({ data, onClickSection }) {
           <p className="text-2xl text-slate-600 font-light tracking-wide">
             {data?.title || "English Teacher"}
           </p>
-          <div className="w-28 h-1 bg-[#a680c9] mt-4"></div>
+          <div className="w-28 h-1 bg-[#a680c9] rounded-full mt-4"></div>
         </div>
 
         {/* Profile Summary */}
         {data?.visibleSections?.summary !== false && (
           <section className="mb-8 cursor-pointer" onClick={() => onClickSection && onClickSection("summary")}>
-            <h2 className="text-lg font-bold text-slate-600 mb-3 uppercase tracking-wide flex items-center gap-3">
-              <span className="w-2 h-2 bg-[#a680c9] rounded-full"></span>
+            <h2 className="text-lg font-bold text-slate-600 mb-2 uppercase tracking-wide flex items-center gap-3">
               Profile Summary
             </h2>
-            <p className="text-sm leading-relaxed text-slate-700 pl-5 break-words">
+         <div className="w-28 h-1 rounded-full bg-[#f0e7f9] mb-2"></div>
+            <p className="text-sm leading-relaxed text-slate-700 pl-1 break-words">
               {data?.summary || "I am a fresh graduate with a teaching license, focused on providing quality English education to high school students."}
             </p>
           </section>
@@ -197,11 +172,11 @@ export default function Template41({ data, onClickSection }) {
         {/* Work Experience */}
         {data?.visibleSections?.experience !== false && (
           <section className="mb-8 cursor-pointer" onClick={() => onClickSection("experience")}>
-            <h2 className="text-lg font-bold text-slate-600 mb-4 uppercase tracking-wide flex items-center gap-3">
-              <span className="w-2 h-2 bg-[#a680c9] rounded-full"></span>
+            <h2 className="text-lg font-bold text-slate-600 mb-2 uppercase tracking-wide flex items-center gap-3">
               Work Experience
             </h2>
-            <div className="space-y-6 pl-2">
+             <div className="w-28 h-1 rounded-full bg-[#f0e7f9] mb-2"></div>
+            <div className="space-y-6 pl-0">
               {(experiences.length ? experiences : [
                 {
                   role: "English Teacher | Internship",
@@ -216,7 +191,7 @@ export default function Template41({ data, onClickSection }) {
                   desc: "Assisted in creating educational materials...\nHelped organize events..."
                 }
               ]).map((exp, i) => (
-                <div key={i} className="relative pl-4">
+                <div key={i} className="relative pl-1">
                   {/* <div className="absolute left-0 top-2 w-3 h-3 bg-yellow-400 rounded-full -ml-[26px]"></div> */}
                   <div className="flex justify-between items-start mb-2">
                     <div>
@@ -236,15 +211,25 @@ export default function Template41({ data, onClickSection }) {
                     </p>
                   </div>
 
-                  {exp.desc && (
-                    exp.descFormat === "bullet" ? (
-                      exp.desc.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-slate-700 break-words">• {line}</p>)
-                    ) : exp.descFormat === "number" ? (
-                      exp.desc.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-slate-700 break-words">{idx + 1}. {line}</p>)
-                    ) : (
-                      <p className="text-sm mt-1 text-slate-700 break-words">{exp.desc}</p>
-                    )
-                  )}
+                   {exp.desc && (
+                  exp.descFormat === "bullet" ? (
+                    exp.desc.split('\n').map((line, idx) => {
+                      const trimmed = line.trim();
+                      if (!trimmed) return null;
+                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                      return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `• ${trimmed}`}</p>;
+                    })
+                  ) : exp.descFormat === "number" ? (
+                    exp.desc.split('\n').map((line, idx) => {
+                      const trimmed = line.trim();
+                      if (!trimmed) return null;
+                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                      return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `${idx + 1}. ${trimmed}`}</p>;
+                    })
+                  ) : (
+                    <p className="text-sm mt-1 text-justify text-gray-700 break-words">{exp.desc}</p>
+                  )
+                )}
                 </div>
               ))}
             </div>
@@ -254,13 +239,13 @@ export default function Template41({ data, onClickSection }) {
         {/* Education */}
         {data?.visibleSections?.education !== false && (
           <div className="mb-8 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
-            <h2 className="text-lg font-bold text-slate-600 mb-4 uppercase tracking-wide flex items-center gap-3">
-              <span className="w-2 h-2 bg-[#a680c9] rounded-full"></span>
+            <h2 className="text-lg font-bold text-slate-600 mb-2 uppercase tracking-wide flex items-center gap-3">
               Education
             </h2>
-            <div className="space-y-5 pl-2">
+         <div className="w-28 h-1 rounded-full bg-[#f0e7f9]  mb-2"></div>
+            <div className="space-y-5 pl-0">
               {education.map((edu, i) => (
-                <div key={i} className="relative pl-4">
+                <div key={i} className="relative pl-1">
                   {/* <div className="absolute left-0 top-2 w-3 h-3 bg-yellow-400 rounded-full -ml-[26px]"></div> */}
                   <div className="flex justify-between items-start mb-1">
                     <div>
@@ -274,15 +259,25 @@ export default function Template41({ data, onClickSection }) {
                       {edu.current ? "Present" : edu.end && formatDate(edu.end)}
                     </p>
                   </div>
-                  {edu.description && (
-                    edu.descFormat === "bullet" ? (
-                      edu.description.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-slate-700 break-words">• {line}</p>)
-                    ) : edu.descFormat === "number" ? (
-                      edu.description.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-slate-700 break-words">{idx + 1}. {line}</p>)
-                    ) : (
-                      <p className="text-sm mt-1 text-slate-700 break-words">{edu.description}</p>
-                    )
-                  )}
+                    {edu.description && (
+                  edu.descFormat === "bullet" ? (
+                    edu.description.split('\n').map((line, idx) => {
+                      const trimmed = line.trim();
+                      if (!trimmed) return null;
+                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                      return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `• ${trimmed}`}</p>;
+                    })
+                  ) : edu.descFormat === "number" ? (
+                    edu.description.split('\n').map((line, idx) => {
+                      const trimmed = line.trim();
+                      if (!trimmed) return null;
+                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                      return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `${idx + 1}. ${trimmed}`}</p>;
+                    })
+                  ) : (
+                    <p className="text-sm mt-1 text-gray-700 text-justify break-words">{edu.description}</p>
+                  )
+                )}
                 </div>
               ))}
             </div>
@@ -292,11 +287,11 @@ export default function Template41({ data, onClickSection }) {
         {/* Projects */}
         {data?.visibleSections?.projects !== false && (
           <section className="mb-8 cursor-pointer" onClick={() => onClickSection && onClickSection("projects")}>
-            <h2 className="text-lg font-bold text-slate-600 mb-4 uppercase tracking-wide flex items-center gap-3">
-              <span className="w-2 h-2 bg-[#a680c9] rounded-full"></span>
+            <h2 className="text-lg font-bold text-slate-600 mb-2 uppercase tracking-wide flex items-center gap-3">
               Projects
             </h2>
-            <div className="space-y-5 pl-5">
+           <div className="w-28 h-1 rounded-full bg-[#f0e7f9]  mb-2"></div>
+            <div className="space-y-5 pl-0">
               {projects.map((project, i) => (
                 <div key={i} className="mb-3">
                   <div className="flex justify-between items-start">
@@ -317,13 +312,25 @@ export default function Template41({ data, onClickSection }) {
                     </div>
                     <p className="text-xs opacity-60">{project.year}</p>
                   </div>
-                  {project.descFormat === "bullet" ? (
-                    project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 break-words">• {line}</p>)
+                  {project.desc && (
+                  project.descFormat === "bullet" ? (
+                    project.desc.split('\n').map((line, idx) => {
+                      const trimmed = line.trim();
+                      if (!trimmed) return null;
+                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                      return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `• ${trimmed}`}</p>;
+                    })
                   ) : project.descFormat === "number" ? (
-                    project.desc?.split('\n').map((line, idx) => line.trim() && <p key={idx} className="text-sm mt-1 text-gray-700 break-words">{idx + 1}. {line}</p>)
+                    project.desc.split('\n').map((line, idx) => {
+                      const trimmed = line.trim();
+                      if (!trimmed) return null;
+                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                      return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `${idx + 1}. ${trimmed}`}</p>;
+                    })
                   ) : (
-                    <p className="text-sm mt-1 text-gray-700 break-words">{project.desc}</p>
-                  )}
+                    <p className="text-sm mt-1 text-gray-700 text-justify break-words">{project.desc}</p>
+                  )
+                )}
                 </div>
               ))}
             </div>
@@ -333,10 +340,10 @@ export default function Template41({ data, onClickSection }) {
         {/* Awards */}
         {data?.visibleSections?.awards !== false && Awards.length > 0 && (
           <div className="mb-8 cursor-pointer" onClick={() => onClickSection?.("awards")}>
-            <h2 className="text-xl font-bold text-slate-900 mb-4 uppercase tracking-wide flex items-center gap-3">
-              <span className="w-2 h-2 bg-[#a680c9] rounded-full"></span>
+            <h2 className="text-lg font-bold text-slate-600 mb-2 uppercase tracking-wide flex items-center gap-3">
               Awards
             </h2>
+           <div className="w-28 h-1  rounded-full bg-[#f0e7f9] mb-2"></div>
             <div className="space-y-4 pl-5">
               {(Awards.length ? Awards : [
                 { name: "Employee of the Year", issuer: "Tech Company", year: "2023" },
@@ -362,10 +369,10 @@ export default function Template41({ data, onClickSection }) {
         {/* References */}
         {data?.visibleSections?.references !== false && references.length > 0 && (
           <div className="cursor-pointer" onClick={() => onClickSection?.("references")}>
-            <h2 className="text-xl font-bold text-slate-900 mb-4 uppercase tracking-wide flex items-center gap-3">
-              <span className="w-2 h-2 bg-[#a680c9] rounded-full"></span>
+            <h2 className="text-lg font-bold text-slate-600 mb-2 uppercase tracking-wide flex items-center gap-3">
               References
             </h2>
+           <div className="w-28 h-1  rounded-full bg-[#f0e7f9] mb-2"></div>
             <div className="grid grid-cols-2 gap-4 pl-5">
               {(references.length ? references : [
                 { name: "Harumi Kobayashi", title: "CEO", phone: "123-456-7890", email: "hello@reality.com" },

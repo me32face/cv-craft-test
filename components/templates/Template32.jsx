@@ -29,48 +29,58 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
   const projects = toArray(data?.projects);
   const socialLinks = toArray(data?.socialLinks);
 
+  // === Template30-style description renderer ===
   const renderDescription = (text, format) => {
     if (!text) return null;
 
-    const hasBulletChar = text.includes("•");
-    const looksNumbered = /^\s*\d+\./m.test(text);
-
-    let lines = text.split(/\r?\n/);
-
-    if (lines.length === 1 && hasBulletChar) {
-      lines = text.split("•");
-    }
-
-    lines = lines
-      .map(line => line.trim())
-      .filter(line => line.length > 0);
+    // Normalize to lines
+    const lines = text.split('\n').map((line) => line.trim()).filter(Boolean);
 
     if (!lines.length) return null;
 
-    if (format === "bullet" || (!format && hasBulletChar)) {
+    // Bullet style (like Template30)
+    if (format === 'bullet') {
       return (
-        <ul className="mt-1 text-[11px] text-gray-700 leading-relaxed list-disc list-outside pl-5 space-y-1">
-          {lines.map((line, idx) => (
-            <li key={idx} className="break-words">
-              {line.replace(/^•\s*/, "")}
-            </li>
-          ))}
-        </ul>
+        <>
+          {lines.map((line, idx) => {
+            const hasPrefix =
+              line.startsWith('•') || /^\d+\./.test(line);
+            const content = hasPrefix ? line : `• ${line}`;
+            return (
+              <p
+                key={idx}
+                className="text-[11px] mt-1 text-gray-700 leading-relaxed break-words"
+              >
+                {content}
+              </p>
+            );
+          })}
+        </>
       );
     }
 
-    if (format === "number" || (!format && looksNumbered)) {
+    // Numbered style (like Template30)
+    if (format === 'number') {
       return (
-        <ol className="mt-1 text-[11px] text-gray-700 leading-relaxed list-decimal list-outside pl-5 space-y-1">
-          {lines.map((line, idx) => (
-            <li key={idx} className="break-words">
-              {line.replace(/^\d+\.\s*/, "")}
-            </li>
-          ))}
-        </ol>
+        <>
+          {lines.map((line, idx) => {
+            const hasPrefix =
+              line.startsWith('•') || /^\d+\./.test(line);
+            const content = hasPrefix ? line : `${idx + 1}. ${line}`;
+            return (
+              <p
+                key={idx}
+                className="text-[11px] mt-1 text-gray-700 leading-relaxed break-words"
+              >
+                {content}
+              </p>
+            );
+          })}
+        </>
       );
     }
 
+    // Plain paragraph (no special formatting)
     return (
       <p className="text-[11px] mt-1 text-gray-700 leading-relaxed break-words">
         {text}
@@ -171,13 +181,13 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                 <IconSmall>
                   <FiPhone className="w-4 h-4" />
                 </IconSmall>
-                <span className='pl-1.5'>{data?.phone || 'Phone'}</span>
+                <span className="pl-1.5">{data?.phone || 'Phone'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <IconSmall>
                   <FiMail className="w-4 h-4" />
                 </IconSmall>
-                <span className='pl-1.5'>{data?.email || 'Email'}</span>
+                <span className="pl-1.5">{data?.email || 'Email'}</span>
               </div>
               {data?.linkedin && (
                 <div className="flex items-center gap-2">
@@ -228,7 +238,7 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                   <IconSmall>
                     <FiMapPin className="w-4 h-4" />
                   </IconSmall>
-                  <span className='pl-1.5'>{data?.address || 'Location'}</span>
+                  <span className="pl-1.5">{data?.address || 'Location'}</span>
                 </div>
               )}
 
@@ -359,12 +369,11 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                     return (
                       <div
                         key={i}
-                        className="flex items-start mb-1 text-[12px]"
+                        className="flex items-center mb-1 text-[12px]"
                       >
-                        <span className="text-[20px] leading-none mr-5">
-                          •
-                        </span>
-                        <span>{s}</span>
+                        {/* small round dot, vertically aligned with text */}
+                        <span className="w-1 h-1 rounded-full bg-gray-700 mr-2 mt-[2px] flex-shrink-0" />
+                        <span className="flex-1 pl-4">{s}</span>
                       </div>
                     );
                   }
@@ -515,7 +524,9 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                           rel="noopener noreferrer"
                           className="text-xs text-blue-600 underline project-link"
                         >
-                          {project.useCustomLabel ? project.linkLabel : project.link}
+                          {project.useCustomLabel
+                            ? project.linkLabel
+                            : project.link}
                         </a>
                       </div>
                     )}
@@ -632,13 +643,18 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                       )}
 
                       <div className="mt-2">
-                        {renderDescription(edu.description, edu.descFormat)}
+                        {renderDescription(
+                          edu.description,
+                          edu.descFormat
+                        )}
                       </div>
                     </div>
                     <div className="text-[11px] text-gray-500">
                       {edu.start && formatDate(edu.start)}
                       {edu.start && (edu.end || edu.current) && ' - '}
-                      {edu.current ? 'Present' : edu.end && formatDate(edu.end)}
+                      {edu.current
+                        ? 'Present'
+                        : edu.end && formatDate(edu.end)}
                     </div>
                   </div>
                 ))}
