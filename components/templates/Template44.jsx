@@ -369,7 +369,7 @@ export default function Template44({ data, onClickSection }) {
                     <p className="text-[12px] text-gray-500 mt-0.5">{project.year}</p>
                   )}
                   {project.desc && (
-                  project.descFormat === "bullet" ? (
+                  project.descFormat === "paragraph" ? (
                     project.desc.split('\n').map((line, idx) => {
                       const trimmed = line.trim();
                       if (!trimmed) return null;
