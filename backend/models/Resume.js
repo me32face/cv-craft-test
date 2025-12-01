@@ -100,7 +100,7 @@ const resumeSchema = new mongoose.Schema({
     projects: [{
       name: String,
       desc: String,
-      descFormat: { type: String, enum: ['bullet', 'number', 'paragraph'] },
+      descFormat: { type: String, enum: ['bullet', 'number', 'paragraph','default'] },
       year: String,
       link: String
     }],
