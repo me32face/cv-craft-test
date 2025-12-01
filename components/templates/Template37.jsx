@@ -255,6 +255,7 @@ export default function Template37({ data, onClickSection }) {
                   );
                 }
 
+              
                 return <p key={i}>• {safeText(sk.name, "Skill")}</p>;
               })}
             </div>
