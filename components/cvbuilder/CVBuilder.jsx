@@ -97,6 +97,7 @@ if (key === "templates") {
       scale: 3,
       useCORS: true,
     });
+    
 
     const imgData = canvas.toDataURL("image/jpeg");
     const pdf = new jsPDF("p", "mm", "a4");
