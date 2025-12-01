@@ -112,7 +112,7 @@ export default function Template34({ data, onClickSection }) {
         <div className="cv-sidebar bg-[#f3f6fa] rounded-2xl p-5 min-w-0">
           {/* CONTACT */}
           <section
-            className="mb-6 cursor-pointer"
+            className="mb-1 cursor-pointer"
             onClick={() => onClickSection && onClickSection("personal")}
           >
             <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
@@ -132,12 +132,12 @@ export default function Template34({ data, onClickSection }) {
           </section>
 
           {/* SOCIAL LINKS (Works with checkbox toggle) */}
-          {data?.visibleSections?.socialLinks !== false && (
-            <section
-              className="mb-6 cursor-pointer"
-              onClick={() => onClickSection && onClickSection("socialLinks")}
-            >
-
+{data?.visibleSections?.socialLinks !== false && (
+  <section
+    className="mb-4 cursor-pointer"
+    onClick={() => onClickSection && onClickSection("socialLinks")}
+  >
+   
 
               {socialLinks.length > 0 && (
                 <div className="text-sm space-y-1">
@@ -179,9 +179,9 @@ export default function Template34({ data, onClickSection }) {
                   // String – simple bullet item
                   if (typeof s === "string") {
                     return (
-                      <div key={i} className="flex items-start">
+                      <div key={i} className="flex items-baseline ">
                         <span className="mt-[3px] mr-2">•</span>
-                        <span className="break-words">{s}</span>
+                        <span className="break-words flex-1">{s}</span>
                       </div>
                     );
                   }
@@ -391,14 +391,14 @@ export default function Template34({ data, onClickSection }) {
           )}
 
           {/* EXPERIENCE / WORK EXPERIENCE */}
-          {data?.visibleSections?.experience !== false && (
-            <section
-              className="mb-8 cursor-pointer"
-              onClick={() => onClickSection && onClickSection("experience")}
-            >
-              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1">
-                Work Experience
-              </h3>
+         {data?.visibleSections?.experience !== false && (
+  <section
+    className="mb-8 "
+    onClick={() => onClickSection && onClickSection("experience")}
+  >
+    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1">
+      Work Experience
+    </h3>
 
               <div className="mt-3 space-y-3 border-l-2 border-gray-300 pl-4">
                 {(experiences.length ? experiences : []).map((exp, i) => {
@@ -456,14 +456,14 @@ export default function Template34({ data, onClickSection }) {
           )}
 
           {/* EDUCATION */}
-          {data?.visibleSections?.education !== false && (
-            <section
-              className="mb-8 cursor-pointer"
-              onClick={() => onClickSection && onClickSection("education")}
-            >
-              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
-                Education
-              </h3>
+    {data?.visibleSections?.education !== false && (
+  <section
+    className="mb-8"
+    onClick={() => onClickSection && onClickSection("education")}
+  >
+    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
+      Education
+    </h3>
 
               {(education.length ? education : []).map((edu, i) => {
                 const ed = safeObj(edu);
@@ -478,41 +478,86 @@ export default function Template34({ data, onClickSection }) {
                   ? `${formatDate(ed.start)} – Present`
                   : `${formatDate(ed.start)} – ${formatDate(ed.end)}`;
 
-                const desc = ed.description ? ed.description.toString() : "";
-                const descLines = desc
-                  ? desc.split("\n").map((line) => line.trim())
-                  : [];
+      const rawDesc = ed.description ? ed.description.toString() : "";
+      const descLines = rawDesc
+        ? rawDesc
+            .split("\n")
+            .map((line) => line.trim())
+            .filter(Boolean)
+        : [];
 
-                return (
-                  <div key={i} className="cv-item mb-3 text-sm">
-                    <p className="font-semibold break-words">{safeText(ed.degree)}</p>
-                    <p className="opacity-70 break-words">{safeText(ed.school)}</p>
-                    {ed.field && <p className="opacity-70 break-words">{safeText(ed.field)}</p>}
-                    <p className="text-xs opacity-60">{dateRange}</p>
+      // remove leading bullets / numbers from each line
+      const cleanedLines = descLines.map((line) =>
+        line
+          .replace(/^[•\-*]\s*/, "")   // remove bullet symbols
+          .replace(/^\d+\.\s*/, "")    // remove "1. " / "2. "
+      );
 
-                    {/* Auto bullet formatting */}
-                    {desc && (
-                      <>
-                        {descLines.length > 1 ? (
-                          <ul className="mt-1 ml-4 list-disc space-y-1">
-                            {descLines.map(
-                              (line, idx) => line && <li key={idx} className="break-words">{line}</li>
-                            )}
-                          </ul>
-                        ) : (
-                          <p className="mt-1 break-words">{desc}</p>
-                        )}
-                      </>
-                    )}
-                  </div>
-                );
-              })}
-            </section>
+      const descFormat = ed.descFormat || "auto";
+
+      return (
+        <div key={i} className="cv-item mb-3 text-sm">
+          <p className="font-semibold break-words">{safeText(ed.degree)}</p>
+          <p className="opacity-70 break-words">{safeText(ed.school)}</p>
+          {ed.field && (
+            <p className="opacity-70 break-words">{safeText(ed.field)}</p>
           )}
+          <p className="text-xs opacity-60">{dateRange}</p>
+
+          {/* Follow the same format as input (bullet / number / normal) */}
+          {rawDesc && (
+            <>
+              {descFormat === "bullet" ? (
+                <ul className="mt-1 ml-4 list-disc space-y-1">
+                  {cleanedLines.map(
+                    (line, idx) =>
+                      line && (
+                        <li key={idx} className="break-words">
+                          {line}
+                        </li>
+                      )
+                  )}
+                </ul>
+              ) : descFormat === "number" ? (
+                <ol className="mt-1 ml-4 list-decimal space-y-1">
+                  {cleanedLines.map(
+                    (line, idx) =>
+                      line && (
+                        <li key={idx} className="break-words">
+                          {line}
+                        </li>
+                      )
+                  )}
+                </ol>
+              ) : cleanedLines.length > 1 ? (
+                // auto-bullet for multi-line default
+                <ul className="mt-1 ml-4 list-disc space-y-1">
+                  {cleanedLines.map(
+                    (line, idx) =>
+                      line && (
+                        <li key={idx} className="break-words">
+                          {line}
+                        </li>
+                      )
+                  )}
+                </ul>
+              ) : (
+                <p className="mt-1 break-words">
+                  {cleanedLines[0] || rawDesc}
+                </p>
+              )}
+            </>
+          )}
+        </div>
+      );
+    })}
+  </section>
+)}
+
           {/* PROJECTS (replacing References) */}
           {data?.visibleSections?.projects !== false && (
             <section
-              className="mb-8 cursor-pointer"
+              className="mb-8 "
               onClick={() => onClickSection && onClickSection("projects")}
             >
               <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">

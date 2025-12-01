@@ -83,7 +83,6 @@ export default function Template40({ data, onClickSection }) {
     ]
   };
 
-  /** MERGE DEFAULTS + USER DATA */
   const finalData = { ...defaultData, ...data };
   const visible = finalData.visibleSections || {};
 
@@ -130,13 +129,11 @@ export default function Template40({ data, onClickSection }) {
     return safeText(finalData.summary);
   };
 
-  /** ---------------------------
-   *  TEMPLATE UI
-   ----------------------------*/
+  
   return (
     <div
       id="pdf-template"
-      className="w-[794px] min-h-[1123px] mx-auto bg-white shadow-2xl font-sans"
+      className="w-[794px]  mx-auto bg-white shadow-2xl font-sans"
     >
       {/* HEADER */}
       <div className="bg-gray-900 text-white px-8 py-4 border-b border-gray-700 flex justify-between items-center">
@@ -162,20 +159,21 @@ export default function Template40({ data, onClickSection }) {
           className="flex items-center justify-center"
         >
 
-          <div
-            className={`overflow-hidden border border-gray-300 cursor-pointer`}
-            style={{
-              width: finalData.imageSize || "110px",
-              height: finalData.imageSize || "110px",
-              borderRadius:
-                finalData.imageShape === "circle"
-                  ? "50%"
-                  : finalData.imageShape === "rounded"
-                    ? "14px"
-                    : "0",
-              objectFit: "cover",
-            }}
-          >
+         <div
+  className={`profile-img-box overflow-hidden border border-gray-300 cursor-pointer`}
+  style={{
+    width: finalData.imageSize || "110px",
+    height: finalData.imageSize || "110px",
+    aspectRatio: "1 / 1",
+    borderRadius:
+      finalData.imageShape === "circle"
+        ? "50%"
+        : finalData.imageShape === "rounded"
+          ? "14px"
+          : "0",
+  }}
+>
+
             <img
               src={finalData.profileImage || "/templateprofile/template40profile.jpg"}
               className="object-cover w-full h-full"
@@ -233,54 +231,82 @@ export default function Template40({ data, onClickSection }) {
 
           {/* SKILLS */}
           <section
-            className="mb-6 cursor-pointer"
-            onClick={() => onClickSection("skills")}
+  className="mb-6 cursor-pointer"
+  onClick={() => onClickSection("skills")}
+>
+  <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
+    Skills
+  </h3>
+
+  <div className="space-y-3">
+    {skills.map((s, i) => {
+      // 🔹 BULLET FORMAT → plain string
+      if (typeof s === "string") {
+        return (
+          <div
+            key={i}
+            className="cv-item text-sm flex items-start gap-2"
           >
-            <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
-              Skills
-            </h3>
+            <span className="mt-1 text-gray-600">•</span>
+            <span>{s}</span>
+          </div>
+        );
+      }
 
-            <div className="space-y-3">
-              {skills.map((s, i) => {
-                const skillObj = safeObj(s);
+      const skillObj = safeObj(s);
 
-                if (skillObj.category && Array.isArray(skillObj.skills)) {
-                  return (
-                    <div key={i} className="cv-item text-sm">
-                      <p className="font-semibold text-indigo-700">{skillObj.category}</p>
-                      <ul className="ml-4 list-disc text-gray-700">
-                        {skillObj.skills.map((sk, idx) => (
-                          <li key={idx}>{sk}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  );
-                }
+      // 🔹 CATEGORY FORMAT → category + nested skills[]
+      if (skillObj.category && Array.isArray(skillObj.skills)) {
+        return (
+          <div key={i} className="cv-item text-sm">
+            <p className="font-semibold text-indigo-700">
+              {skillObj.category}
+            </p>
+            <ul className="ml-4 list-disc text-gray-700">
+              {skillObj.skills.map((sk, idx) => (
+                <li key={idx}>{sk}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      }
 
-
-                return (
-                  <div key={i} className="cv-item text-sm">
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="font-medium">
-                        {safeText(skillObj.name || s)}
-                      </span>
-                      <span className="text-xs text-gray-600">
-                        {skillObj.proficiency || 80}%
-                      </span>
-                    </div>
-
-                    <div className="w-full bg-gray-200 h-2 rounded-full">
-                      <div
-                        className="h-2 rounded-full bg-gray-700"
-                        style={{ width: `${skillObj.proficiency || 80}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                );
-              })}
+      // 🔹 PERCENTAGE FORMAT → has proficiency
+      if (typeof skillObj.proficiency === "number") {
+        return (
+          <div key={i} className="cv-item text-sm">
+            <div className="flex justify-between items-center mb-1">
+              <span className="font-medium">
+                {safeText(skillObj.name || s)}
+              </span>
+              <span className="text-xs text-gray-600">
+                {skillObj.proficiency}%
+              </span>
             </div>
-          </section>
 
+            <div className="w-full bg-gray-200 h-2 rounded-full">
+              <div
+                className="h-2 rounded-full bg-gray-700"
+                style={{ width: `${skillObj.proficiency}%` }}
+              ></div>
+            </div>
+          </div>
+        );
+      }
+
+      // 🔹 FALLBACK → treat anything else as bullet text
+      return (
+        <div
+          key={i}
+          className="cv-item text-sm flex items-start gap-2"
+        >
+          <span className="mt-1 text-gray-600">•</span>
+          <span>{safeText(skillObj.name || s)}</span>
+        </div>
+      );
+    })}
+  </div>
+</section>
           {/* LANGUAGES */}
           <section
             className="mb-6 cursor-pointer"
@@ -411,42 +437,112 @@ export default function Template40({ data, onClickSection }) {
           </section>
 
           {/* EXPERIENCE */}
-          <section
-            className="mb-6 cursor-pointer"
-            onClick={() => onClickSection("experience")}
-          >
-            <h3 className="text-lg font-bold uppercase tracking-wide text-gray-800 mb-3 pb-2 border-b-2 border-indigo-600">
-              Work Experience
-            </h3>
+        {/* EXPERIENCE */}
+{visible.experience !== false && (
+  <section
+    className="mb-6 cursor-pointer"
+    onClick={() => onClickSection("experience")}
+  >
+    <h3 className="text-lg font-bold uppercase tracking-wide text-gray-800 mb-3 pb-2 border-b-2 border-indigo-600">
+      Work Experience
+    </h3>
 
-            <div className="space-y-4">
-              {experiences.map((exp, i) => {
-                const e = safeObj(exp);
-                const lines = e.desc ? e.desc.split("\n") : [];
-                return (
-                  <div key={i} className="text-sm cv-item">
-                    <div className="flex justify-between mb-1">
-                      <p className="font-bold">{safeText(e.role)}</p>
-                      <span className="text-xs text-gray-500">
-                        {safeText(e.year)}
-                      </span>
-                    </div>
-                    <p className="italic text-gray-600">
-                      {safeText(e.company)}
-                    </p>
+    {(experiences.length
+      ? experiences
+      : [
+          {
+            role: "Software Developer",
+            company: "TechCorp Pvt Ltd",
+            location: "Kozhikode",
+            start: "2021-01-01",
+            current: true,
+            desc: "Built scalable applications.\nOptimized backend APIs.",
+            reference: "",
+          },
+        ]
+    ).map((exp, i) => {
+      const e = safeObj(exp);
 
-                    {e.desc && (
-                      <ul className="mt-2 ml-4 list-disc space-y-1 break-words">
-                        {lines.map(
-                          (line, idx) => line && <li key={idx}>{line}</li>
-                        )}
-                      </ul>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </section>
+      // Format dates (e.g. "Jan 2021")
+      const formatDate = (value) => {
+        if (!value) return "";
+        const d = new Date(value);
+        return d.toLocaleString("en-US", {
+          month: "short",
+          year: "numeric",
+        });
+      };
+
+      let dateText = "";
+
+      // Prefer start/end/current if they exist
+      if (e.start && (e.end || e.current)) {
+        dateText = e.current
+          ? `${formatDate(e.start)} – Present`
+          : `${formatDate(e.start)} – ${formatDate(e.end)}`;
+      } else if (e.year) {
+        // Fallback to simple year string
+        dateText = e.year;
+      }
+
+      const desc = e.desc || "";
+      const lines = desc ? desc.split("\n").map((l) => l.trim()) : [];
+      const isMulti = lines.length > 1;
+
+      return (
+        <div key={i} className="mb-5 text-sm cv-item">
+          {/* Job title & date */}
+          <div className="flex justify-between gap-2">
+            <p className="font-bold break-words flex-1 min-w-0">
+              {e.role}
+            </p>
+            <p className="opacity-70 flex-shrink-0">
+              {dateText || e.year}
+            </p>
+          </div>
+
+          {/* Company */}
+          <p className="opacity-80 break-words">{e.company}</p>
+
+          {/* Location */}
+          {e.location && (
+            <p className="opacity-70 break-words">📍 {e.location}</p>
+          )}
+
+          {/* Description */}
+          {desc && (
+            <>
+              {isMulti ? (
+                <ul className="list-disc pl-5 mt-1 space-y-1">
+                  {lines.map(
+                    (line, idx) =>
+                      line && (
+                        <li key={idx} className="break-words">
+                          {line}
+                        </li>
+                      )
+                  )}
+                </ul>
+              ) : (
+                <p className="mt-1 leading-relaxed break-words">
+                  {desc}
+                </p>
+              )}
+            </>
+          )}
+
+          {/* Reference */}
+          {e.reference && (
+            <p className="text-xs mt-2 opacity-60 break-words">
+              <span className="font-semibold">Reference: </span>
+              {e.reference}
+            </p>
+          )}
+        </div>
+      );
+    })}
+  </section>
+)}
 
           {/* EDUCATION */}
           <section
@@ -529,4 +625,7 @@ export default function Template40({ data, onClickSection }) {
       </div>
     </div>
   );
+
+
+  
 }

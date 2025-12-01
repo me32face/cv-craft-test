@@ -32,6 +32,14 @@ export default function Template37({ data, onClickSection }) {
   const visible = data?.visibleSections || {};
 
   const rawExperiences = toArray(data?.experiences);
+  const formatDate = (value) => {
+  if (!value) return "";
+  const d = new Date(value);
+  return d.toLocaleString("en-US", {
+    month: "short",
+    year: "numeric",
+  });
+};
   const experiences = rawExperiences.length
     ? rawExperiences
     : [
@@ -247,6 +255,7 @@ export default function Template37({ data, onClickSection }) {
                   );
                 }
 
+              
                 return <p key={i}>• {safeText(sk.name, "Skill")}</p>;
               })}
             </div>
@@ -444,70 +453,84 @@ export default function Template37({ data, onClickSection }) {
           )}
 
           {/* EXPERIENCE */}
-          {visible.experience !== false && (
-            <div
-              className="pt-4 cursor-pointer"
-              onClick={() => onClickSection("experience")}
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center">
-                  <Briefcase className="w-3 h-3 text-white" />
-                </div>
-                <h2 className="text-sm font-bold uppercase tracking-wide">
-                  Work Experience
-                </h2>
+         {visible.experience !== false && (
+  <div
+    className="pt-4 cursor-pointer"
+    onClick={() => onClickSection("experience")}
+  >
+    <div className="flex items-center gap-2 mb-2">
+      <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center">
+        <Briefcase className="w-3 h-3 text-white" />
+      </div>
+      <h2 className="text-sm font-bold uppercase tracking-wide">
+        Work Experience
+      </h2>
+    </div>
+
+    <div className="pl-8 border-l-2 border-gray-300 ml-3 space-y-4 text-xs">
+      {experiences.map((exp, i) => {
+        const e = safeObj(exp);
+        const lines = e.desc ? e.desc.split("\n") : [];
+
+        const dateText =
+          e.start || e.end || e.current
+            ? (e.current
+                ? `${formatDate(e.start)} – Present`
+                : `${formatDate(e.start)} – ${formatDate(e.end)}`)
+            : e.year || "";
+
+        return (
+          <div key={i} className="cv-item">
+            <div className="flex justify-between items-start mb-1">
+              <div>
+                <h3 className="text-sm font-bold break-words">
+                  {safeText(e.company)}
+                </h3>
+                <p className="text-xs text-gray-600 break-words">
+                  {safeText(e.role)}
+                </p>
               </div>
-
-              <div className="pl-8 border-l-2 border-gray-300 ml-3 space-y-4 text-xs">
-                {experiences.map((exp, i) => {
-                  const e = safeObj(exp);
-                  const lines = e.desc ? e.desc.split("\n") : [];
-
-                  return (
-                    <div key={i} className="cv-item" >
-                      <div className="flex justify-between items-start mb-1">
-                        <div>
-                          <h3 className="text-sm font-bold break-words">
-                            {safeText(e.company)}
-                          </h3>
-                          <p className="text-xs text-gray-600 break-words">
-                            {safeText(e.role)}
-                          </p>
-                        </div>
-                        <span className="text-xs text-gray-500 whitespace-nowrap">
-                          {safeText(e.year)}
-                        </span>
-                      </div>
-
-                      {/* DESC FORMATTING */}
-                      {e.desc &&
-                        (e.descFormat === "bullet" ? (
-                          <ul className="ml-4 space-y-1">
-                            {lines.map(
-                              (line, idx) =>
-                                line && (
-                                  <li key={idx} className="flex items-start">
-                                    <span className="mr-2">•</span>
-                                    <span className="break-words">{line}</span>
-                                  </li>
-                                )
-                            )}
-                          </ul>
-                        ) : e.descFormat === "number" ? (
-                          <ol className="ml-4 list-decimal space-y-1">
-                            {lines.map(
-                              (line, idx) => line && <li key={idx} className="break-words">{line}</li>
-                            )}
-                          </ol>
-                        ) : (
-                          <p className="text-xs mt-1 break-words">{e.desc}</p>
-                        ))}
-                    </div>
-                  );
-                })}
-              </div>
+              <span className="text-xs text-gray-500 whitespace-nowrap">
+                {dateText}
+              </span>
             </div>
-          )}
+
+            {e.desc &&
+              (e.descFormat === "bullet" ? (
+                <ul className="ml-4 space-y-1">
+                  {lines.map(
+                    (line, idx) =>
+                      line && (
+                       <li key={idx} className="flex items-start">
+  <span className="mr-2">•</span>
+  <span className="break-words">
+    {line.replace(/^[•\-*]\s*/, "")}
+  </span>
+</li>
+                      )
+                  )}
+                </ul>
+              ) : e.descFormat === "number" ? (
+                <ol className="ml-4 list-decimal space-y-1">
+                  {lines.map(
+                    (line, idx) =>
+                      line && (
+                        <li key={idx} className="break-words">
+                          {line}
+                        </li>
+                      )
+                  )}
+                </ol>
+              ) : (
+                <p className="text-xs mt-1 break-words">{e.desc}</p>
+              ))}
+          </div>
+        );
+      })}
+    </div>
+  </div>
+)}
+
 
           {/* EDUCATION */}
           {visible.education !== false && (
