@@ -55,21 +55,30 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
 
   const handleDescriptionChange = (index, value) => {
     const format = projects[index].descFormat || 'default';
-    if (format !== 'default') {
-      const formatted = formatText(value, format);
-      updateProject(index, 'desc', formatted);
-    } else {
-      updateProject(index, 'desc', value);
+    const prevValue = projects[index].desc || '';
+    
+    // Auto-format when Enter is pressed in bullet/number mode
+    if (format === 'bullet' || format === 'number') {
+      const prevLines = prevValue.split('\n').length;
+      const newLines = value.split('\n').length;
+      
+      // If new line was added (Enter pressed)
+      if (newLines > prevLines) {
+        const formatted = formatText(value, format);
+        updateProject(index, 'desc', formatted);
+        return;
+      }
     }
+    
+    updateProject(index, 'desc', value);
   };
 
   const handleFormatChange = (index, newFormat) => {
     const currentDesc = projects[index].desc || '';
-    const formatted = formatText(currentDesc, newFormat);
-    updateProject(index, 'descFormat', newFormat);
-    if (currentDesc) {
-      updateProject(index, 'desc', formatted);
-    }
+    const formatted = currentDesc ? formatText(currentDesc, newFormat) : '';
+    const updated = [...projects];
+    updated[index] = { ...updated[index], descFormat: newFormat, desc: formatted };
+    setProjects(updated);
   };
 
   const removeProject = (index) => {
@@ -216,7 +225,7 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
                       <button
                         type="button"
                         onClick={() => handleFormatChange(index, "default")}
-                        className={`p-2 rounded ${project.descFormat === "default" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                        className={`p-2 rounded ${(project.descFormat || "default") === "default" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
                           }`}
                         title="Default"
                       >
@@ -225,7 +234,7 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
                       <button
                         type="button"
                         onClick={() => handleFormatChange(index, "bullet")}
-                        className={`p-2 rounded ${project.descFormat === "bullet" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                        className={`p-2 rounded ${(project.descFormat || "default") === "bullet" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
                           }`}
                         title="Bullet List"
                       >
@@ -234,7 +243,7 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
                       <button
                         type="button"
                         onClick={() => handleFormatChange(index, "number")}
-                        className={`p-2 rounded ${project.descFormat === "number" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                        className={`p-2 rounded ${(project.descFormat || "default") === "number" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
                           }`}
                         title="Numbered List"
                       >

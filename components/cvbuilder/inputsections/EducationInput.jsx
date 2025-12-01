@@ -70,21 +70,30 @@ export default function EducationInput({
 
   const handleDescriptionChange = (index, value) => {
     const format = educations[index].descFormat || 'default';
-    if (format !== 'default') {
-      const formatted = formatText(value, format);
-      updateField(index, 'description', formatted);
-    } else {
-      updateField(index, 'description', value);
+    const prevValue = educations[index].description || '';
+    
+    // Auto-format when Enter is pressed in bullet/number mode
+    if (format === 'bullet' || format === 'number') {
+      const prevLines = prevValue.split('\n').length;
+      const newLines = value.split('\n').length;
+      
+      // If new line was added (Enter pressed)
+      if (newLines > prevLines) {
+        const formatted = formatText(value, format);
+        updateField(index, 'description', formatted);
+        return;
+      }
     }
+    
+    updateField(index, 'description', value);
   };
 
   const handleFormatChange = (index, newFormat) => {
     const currentDesc = educations[index].description || '';
-    const formatted = formatText(currentDesc, newFormat);
-    updateField(index, 'descFormat', newFormat);
-    if (currentDesc) {
-      updateField(index, 'description', formatted);
-    }
+    const formatted = currentDesc ? formatText(currentDesc, newFormat) : '';
+    const updated = [...educations];
+    updated[index] = { ...updated[index], descFormat: newFormat, description: formatted };
+    setEducation(updated);
   };
 
   const removeEducation = (index) => {
@@ -320,28 +329,31 @@ export default function EducationInput({
                       <div className="flex gap-1 mb-2 border-b pb-2"></div>
                       <div className="relative">
                         {/* <div className="flex gap-1 mb-2 border-b pb-2"> */}
-                        <button
-                          type="button"
-                          onClick={() => handleFormatChange(index, "default")}
-                          className={`p-2 rounded ${edu.descFormat === "default" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                          <button
+                            type="button"
+                            onClick={() => handleFormatChange(index, "default")}
+                            className={`p-2 rounded ${
+                              (edu.descFormat || "default") === "default" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
                             }`}
-                          title="Default"
-                        >
-                          <AlignLeft size={18} />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleFormatChange(index, "bullet")}
-                          className={`p-2 rounded ${edu.descFormat === "bullet" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                            title="Default"
+                          >
+                            <AlignLeft size={18} />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleFormatChange(index, "bullet")}
+                            className={`p-2 rounded ${
+                              (edu.descFormat || "default") === "bullet" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
                             }`}
-                          title="Bullet List"
-                        >
-                          <List size={18} />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleFormatChange(index, "number")}
-                          className={`p-2 rounded ${edu.descFormat === "number" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                            title="Bullet List"
+                          >
+                            <List size={18} />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleFormatChange(index, "number")}
+                            className={`p-2 rounded ${
+                              (edu.descFormat || "default") === "number" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
                             }`}
                           title="Numbered List"
                         >
