@@ -60,28 +60,18 @@ export default function SkillsInput({ skills = [], setSkills, onClose, onNext })
     let converted = [];
 
     if (next === "bullet") {
-      converted = localSkills.flatMap((s) => {
+      converted = localSkills.map((s) => {
         if (typeof s === "string") return s;
-        if (s.skills && Array.isArray(s.skills)) {
-          if (s.skills.length === 1 && s.skills[0] === "New Skill") {
-            return s.category || "";
-          }
-          return s.skills;
-        }
+        if (s.category) return s.category;
         return s.name || "";
       });
     }
 
     if (next === "percentage") {
-      converted = localSkills.flatMap((s) => {
+      converted = localSkills.map((s) => {
         if (typeof s === "string") return { name: s, proficiency: 60 };
         if (s.proficiency !== undefined) return s;
-        if (s.skills && Array.isArray(s.skills)) {
-          if (s.skills.length === 1 && s.skills[0] === "New Skill") {
-            return { name: s.category || "Skill", proficiency: 60 };
-          }
-          return s.skills.map(skill => ({ name: skill, proficiency: 60 }));
-        }
+        if (s.category) return { name: s.category, proficiency: 60 };
         return { name: s.name || "Skill", proficiency: 60 };
       });
     }
@@ -112,7 +102,7 @@ export default function SkillsInput({ skills = [], setSkills, onClose, onNext })
 
   const updateSkillObject = (i, field, value) => {
     const updated = [...localSkills];
-    updated[i] = { ...updated[i], [field]: value };
+    updated[i] = { ...updated[i], [field]: value, skills: updated[i].skills || [] };
     setLocalSkills(updated);
   };
 
