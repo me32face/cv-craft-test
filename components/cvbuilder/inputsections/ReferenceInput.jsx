@@ -4,6 +4,7 @@ import { ChevronDown } from "lucide-react";
 
 export default function ReferenceInput({ references = [], setReferences, onClose, onNext }) {
   const [openIndex, setOpenIndex] = useState(null);
+  const [errors, setErrors] = useState({});
 
   const add = () => {
     const newReferences = [...(references || []), { name: "", title: "", company: "", phone: "", email: "" }];
@@ -15,6 +16,24 @@ export default function ReferenceInput({ references = [], setReferences, onClose
     const arr = [...(references || [])];
     arr[i] = { ...arr[i], [field]: value };
     setReferences(arr);
+
+    if (field === "email") {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (value && !emailRegex.test(value)) {
+        setErrors(prev => ({ ...prev, [`email_${i}`]: "Invalid email format" }));
+      } else {
+        setErrors(prev => ({ ...prev, [`email_${i}`]: "" }));
+      }
+    }
+
+    if (field === "phone") {
+      const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,9}$/;
+      if (value && !phoneRegex.test(value)) {
+        setErrors(prev => ({ ...prev, [`phone_${i}`]: "Invalid phone format" }));
+      } else {
+        setErrors(prev => ({ ...prev, [`phone_${i}`]: "" }));
+      }
+    }
   };
 
   const remove = (i) => {
@@ -105,20 +124,30 @@ export default function ReferenceInput({ references = [], setReferences, onClose
                     <label className="font-medium">Phone</label>
                     <input
                       type="tel"
-                      className="mt-1 w-full p-3 rounded-xl border"
+                      className={`mt-1 w-full p-3 rounded-xl border ${
+                        errors[`phone_${index}`] ? "border-red-500" : ""
+                      }`}
                       value={ref.phone ?? ""}
                       onChange={(e) => update(index, "phone", e.target.value)}
                     />
+                    {errors[`phone_${index}`] && (
+                      <p className="text-red-500 text-xs mt-1">{errors[`phone_${index}`]}</p>
+                    )}
                   </div>
 
                   <div className="md:col-span-2">
                     <label className="font-medium">Email</label>
                     <input
                       type="email"
-                      className="mt-1 w-full p-3 rounded-xl border"
+                      className={`mt-1 w-full p-3 rounded-xl border ${
+                        errors[`email_${index}`] ? "border-red-500" : ""
+                      }`}
                       value={ref.email ?? ""}
                       onChange={(e) => update(index, "email", e.target.value)}
                     />
+                    {errors[`email_${index}`] && (
+                      <p className="text-red-500 text-xs mt-1">{errors[`email_${index}`]}</p>
+                    )}
                   </div>
                 </div>
               </div>
