@@ -354,20 +354,50 @@ export default function Template37({ data, onClickSection }) {
 
         {/* Awards */}
         {visible.awards !== false && awards.length > 0 && (
-          <div
-            className="mt-5 cursor-pointer"
-            onClick={() => onClickSection("awards")}
-          >
-            <h3 className="text-sm font-bold mb-3 uppercase tracking-wide">
-              Awards
-            </h3>
-            <ul className="text-xs list-disc pl-4 space-y-1">
-              {awards.map((a, i) => (
-                <li key={i}>{safeText(a)}</li>
-              ))}
-            </ul>
+  <div
+    className="mt-5 cursor-pointer"
+    onClick={() => onClickSection("awards")}
+  >
+    <h3 className="text-sm font-bold mb-3 uppercase tracking-wide">
+      Awards
+    </h3>
+    <div className="text-xs space-y-2">
+      {awards.map((a, i) => {
+        const award = safeObj(a);
+        return (
+          <div key={i} className="cv-item">
+            {/* Title */}
+            <p className="font-semibold break-words">
+              {safeText(award.title, safeText(a))}
+            </p>
+
+            {/* Issuer */}
+            {award.issuer && (
+              <p className="text-gray-600 break-words">
+                Issued by: {award.issuer}
+              </p>
+            )}
+
+            {/* Date */}
+            {award.date && (
+              <p className="text-gray-600 break-words">
+                Date: {award.date}
+              </p>
+            )}
+
+            {/* Description with multiline support */}
+            {award.description && (
+              <p className="text-gray-600 break-words whitespace-pre-line mt-1">
+                {award.description}
+              </p>
+            )}
           </div>
-        )}
+        );
+      })}
+    </div>
+  </div>
+)}
+
 
 
         {/* REFERENCES */}
@@ -587,10 +617,10 @@ export default function Template37({ data, onClickSection }) {
 
                           {/* DESCRIPTION */}
                           {ed.description && (
-                            <p className="text-xs text-gray-500 mt-1 break-words">
-                              {safeText(ed.description)}
-                            </p>
-                          )}
+  <p className="text-xs text-gray-500 mt-1 break-words whitespace-pre-line">
+    {safeText(ed.description)}
+  </p>
+)}
                         </div>
 
                         {/* DURATION */}
@@ -650,29 +680,38 @@ export default function Template37({ data, onClickSection }) {
                         </span>
                       </div>
 
-                      {pr.desc &&
-                        (pr.descFormat === "bullet" ? (
-                          <ul className="ml-4 space-y-1">
-                            {lines.map(
-                              (line, idx) =>
-                                line && (
-                                  <li key={idx} className="flex items-start">
-                                    <span className="mr-2">•</span>
-                                    <span className="break-words">{line}</span>
-                                  </li>
-                                )
-                            )}
-                          </ul>
-                        ) : pr.descFormat === "number" ? (
-                          <ol className="ml-4 list-decimal space-y-1">
-                            {lines.map(
-                              (line, idx) => line && <li key={idx} className="break-words">{line}</li>
-                            )}
-                          </ol>
-                        ) : (
-                          <p className="text-xs mt-1 break-words whitespace-pre-line">{pr.desc}</p>
+                     {pr.descFormat === "bullet" ? (
+  <div className="ml-4 space-y-1">
+    {lines.map(
+      (line, idx) =>
+        line && (
+          <p key={idx} className="flex items-start text-xs">
+            <span className="mr-2">•</span>
+            <span className="break-words">
+              {line.replace(/^[•\-*]+\s*/, "")}
+            </span>
+          </p>
+        )
+    )}
+  </div>
+) : pr.descFormat === "number" ? (
+  <div className="ml-4 space-y-1">
+    {lines.map(
+      (line, idx) =>
+        line && (
+          <p key={idx} className="flex items-start text-xs">
+            <span className="mr-2">{idx + 1}.</span>
+            <span className="break-words">
+              {line.replace(/^\d+\.\s*/, "")}
+            </span>
+          </p>
+        )
+    )}
+  </div>
+) : (
+  <p className="text-xs mt-1 break-words whitespace-pre-line">{pr.desc}</p>
+)}
 
-                        ))}
                     </div>
                   );
                 })}

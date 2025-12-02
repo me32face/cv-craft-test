@@ -427,19 +427,32 @@ export default function Template34({ data, onClickSection }) {
                       <p className="text-xs opacity-60">{dateRange}</p>
 
                       {/* Auto bullet formatting */}
-                      {desc && (
-                        <>
-                          {descLines.length > 1 ? (
-                            <ul className="mt-1 ml-4 list-disc space-y-1">
-                              {descLines.map(
-                                (line, idx) => line && <li key={idx} className="break-words">{line}</li>
-                              )}
-                            </ul>
-                          ) : (
-                            <p className="mt-1 break-words">{desc}</p>
-                          )}
-                        </>
-                      )}
+                    {exp.desc && (
+  <>
+    {e.descFormat === "bullet" ? (
+  <ul className="mt-1 ml-4 list-disc space-y-1">
+    {e.desc.split("\n").map((line, idx) => {
+      const trimmed = line.trim();
+      if (!trimmed) return null;
+      const cleaned = trimmed.replace(/^[•\-*]\s*/, '').replace(/^\d+\.\s*/, '');
+      return <li key={idx} className="break-words">{cleaned}</li>;
+    })}
+  </ul>
+) : e.descFormat === "number" ? (
+  <ol className="mt-1 ml-4 list-decimal space-y-1">
+    {e.desc.split("\n").map((line, idx) => {
+      const trimmed = line.trim();
+      if (!trimmed) return null;
+      const cleaned = trimmed.replace(/^[•\-*]\s*/, '').replace(/^\d+\.\s*/, '');
+      return <li key={idx} className="break-words">{cleaned}</li>;
+    })}
+  </ol>
+) : (
+  <p className="mt-1 break-words">{exp.desc}</p>
+)}
+
+  </>
+)}
 
                       {/* Reference (optional) */}
                       {e.reference && (
@@ -613,21 +626,24 @@ export default function Template34({ data, onClickSection }) {
                     {/* Description formats like Template30 */}
                     {desc && (
                       <>
-                        {p.descFormat === "bullet" ? (
-                          <ul className="mt-1 ml-4 list-disc space-y-1">
-                            {descLines.map(
-                              (line, idx) => line && <li key={idx} className="break-words">{line}</li>
-                            )}
-                          </ul>
-                        ) : p.descFormat === "number" ? (
-                          <ol className="mt-1 ml-4 list-decimal space-y-1">
-                            {descLines.map(
-                              (line, idx) => line && <li key={idx} className="break-words">{line}</li>
-                            )}
-                          </ol>
-                        ) : (
-                          <p className="mt-1 break-words">{desc}</p>
-                        )}
+                       {p.descFormat === "bullet" ? (
+  <ul className="mt-1 ml-4 list-disc space-y-1">
+    {descLines.map((line, idx) => {
+      const cleaned = line.replace(/^[•\-*]\s*/, '').replace(/^\d+\.\s*/, '');
+      return <li key={idx} className="break-words">{cleaned}</li>;
+    })}
+  </ul>
+) : p.descFormat === "number" ? (
+  <ol className="mt-1 ml-4 list-decimal space-y-1">
+    {descLines.map((line, idx) => {
+      const cleaned = line.replace(/^[•\-*]\s*/, '').replace(/^\d+\.\s*/, '');
+      return <li key={idx} className="break-words">{cleaned}</li>;
+    })}
+  </ol>
+) : (
+  <p className="mt-1 break-words">{desc}</p>
+)}
+
                       </>
                     )}
                   </div>
