@@ -125,7 +125,7 @@ export default function Template45({ data, onClickSection }) {
               </div>
               {/* SOCIAL LINKS → always bottom line */}
               {data?.visibleSections?.socialLinks !== false && socialLinks.length > 0 && (
-                <div className="w-full flex flex-col gap-1 mt-1">
+                <div className="w-full flex flex-col gap-1">
                   {socialLinks.length > 0 && (
                     <div className="">
                       {data.socialLinks.map((link, i) => (
@@ -166,7 +166,7 @@ export default function Template45({ data, onClickSection }) {
                       <p className="text-sm opacity-80">{edu.school}</p>
                       {edu.field && <p className="text-xs opacity-70">{edu.field}</p>}
                     </div>
-                    <p className="text-xs opacity-60">
+                    <p className="text-[10px] opacity-60">
                       {edu.start && formatDate(edu.start)}
                       {edu.start && (edu.end || edu.current) && " - "}
                       {edu.current ? "Present" : edu.end && formatDate(edu.end)}
@@ -288,11 +288,11 @@ export default function Template45({ data, onClickSection }) {
       {/* --- RIGHT COLUMN (Main Content) --- */}
       <div className="cv-sidebar w-2/3 pt-16 pr-12 pl-8 pb-10 flex flex-col gap-8">
         {/* Header */}
-        <header onClick={() => onClickSection && onClickSection("personal")} className="cursor-pointer mb-2">
-          <h1 className="text-5xl font-bold uppercase mb-2 ml-8 tracking-wide" >
+        <header onClick={() => onClickSection && onClickSection("personal")} className="cursor-pointer mb-0 ">
+          <h1 className="text-5xl font-bold uppercase  ml-0 tracking-wide" >
             {data?.name || "NAME SURNAME"}
           </h1>
-          <p className="text-sm ml-14 font-bold tracking-widest uppercase text-[#787677]">
+          <p className="text-sm ml-0 font-bold tracking-widest uppercase text-[#787677]">
             {data?.title || "JOB TITLE"}
           </p>
         </header>
@@ -347,7 +347,7 @@ export default function Template45({ data, onClickSection }) {
                           : ""}
                     </p>
                   </div>
-                    {exp.desc && (
+{exp.desc && (
                   exp.descFormat === "bullet" ? (
                     exp.desc.split('\n').map((line, idx) => {
                       const trimmed = line.trim();
@@ -365,6 +365,9 @@ export default function Template45({ data, onClickSection }) {
                   ) : (
                     <p className="text-sm mt-1 text-justify text-gray-700 break-words">{exp.desc}</p>
                   )
+                )}
+                {exp.reference && (
+                  <p className="text-xs mt-1 italic text-gray-600 break-words">Reference: {exp.reference}</p>
                 )}
                 </div>
               ))}

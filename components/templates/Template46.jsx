@@ -28,7 +28,8 @@ export default function Template45({ data = {}, onClickSection }) {
 
   return (
     <div
-      id="pdf-template"
+     id="cv-preview"
+      // id="pdf-template"
       className="cv-sidebar w-[794px] min-h-[1123px] bg-white mx-auto font-sans relative overflow-hidden flex text-slate-800"
     >
       {/* SVG Background Design - Soft organic shapes */}
@@ -210,16 +211,16 @@ export default function Template45({ data = {}, onClickSection }) {
                 { name: "Employee of the Year", issuer: "Tech Company", year: "2023" },
                 { name: "Best Innovation Award", issuer: "Industry Association", year: "2022" }
               ]).map((award, i) => (
-                <div key={i} className="mb-0">
+                <div key={i} className="">
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="font-bold text-sm break-words">{award.name}</p>
-                      <p className="text-sm opacity-80 break-words">{award.issuer}</p>
+                      <p className="font-bold text-sm break-words mb-1">{award.name}</p>
+                      <p className="text-sm opacity-80 break-words mb-1">{award.issuer}</p>
                     </div>
-                    <p className="text-xs opacity-60">{award.year}</p>
+                    <p className="text-xs opacity-60 mb-1">{award.year}</p>
                   </div>
                   {award.description && (
-                    <p className="text-sm mt-1 break-words">{award.description}</p>
+                    <p className="text-sm mt-1 break-words mb-1">{award.description}</p>
                   )}
                 </div>
               ))}
