@@ -161,7 +161,10 @@ export default function Template38({ data, onClickSection }) {
             <div className="mb-4 mt-6">
               <h2 className="font-semibold   text-md mb-2">LANGUAGE</h2>
               {(data?.languages?.length ? data.languages : ["Spanish", "Arabic", "English"]).map((l, i) =>
-                renderLanguage(l, i)
+                renderLanguage(l, i, {
+                barContainer: "w-full bg-gray-200 rounded-full h-1 mt-2",
+                bar: "bg-gray-500 h-1 rounded-full transition-all"
+              })
               )}
             </div>
           )}
