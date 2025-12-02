@@ -201,7 +201,10 @@ export default function Template42({ data, onClickSection }) {
 
               <div className="ml-4  gap-x-4 gap-y-1">
                 {(data?.languages?.length ? data.languages : ["Spanish", "Arabic", "English"]).map((l, i) =>
-                  renderLanguage(l, i)
+                  renderLanguage(l, i, {
+                barContainer: "w-full bg-gray-200 rounded-full h-1 mt-2",
+                bar: "bg-gray-500 h-1 rounded-full transition-all"
+              })
                 )}
               </div>
             </section>
