@@ -165,27 +165,37 @@ export default function Template35({ data, onClickSection }) {
                     )}
 
                     {/* Description */}
-                    {desc && (
-                      <>
-                        {isMulti ? (
-                          <ul className="list-disc pl-5 mt-1 space-y-1">
-                            {lines.map(
-                              (line, idx) =>
-                                line && (
-                                  <li key={idx} className="break-words">
-                                    {line}
-                                  </li>
-                                )
-                            )}
-                          </ul>
-                        ) : (
-                          <p className="mt-1 leading-relaxed break-words">
-                            {desc}
-                          </p>
-                        )}
-                      </>
-                    )}
-
+                  {desc && (
+  <>
+    {e.descFormat === "bullet" ? (
+      <div className="pl-5 mt-1 space-y-1">
+        {lines.map(
+          (line, idx) =>
+            line && (
+              <p key={idx} className="break-words">
+                {line.replace(/^[•\-*]\s*/, "• ")}
+              </p>
+            )
+        )}
+      </div>
+    ) : e.descFormat === "number" ? (
+      <div className="pl-5 mt-1 space-y-1">
+        {lines.map(
+          (line, idx) =>
+            line && (
+              <p key={idx} className="break-words">
+                {`${idx + 1}. ` + line.replace(/^\d+\.\s*/, "")}
+              </p>
+            )
+        )}
+      </div>
+    ) : (
+      <p className="mt-1 leading-relaxed break-words whitespace-pre-line">
+        {desc}
+      </p>
+    )}
+  </>
+)}
                     {/* Reference */}
                     {e.reference && (
                       <p className="text-xs mt-2 opacity-60 break-words">
@@ -302,7 +312,7 @@ export default function Template35({ data, onClickSection }) {
           {/* EDUCATION */}
           {visible.education !== false && (
             <section
-              className="mb-8 cursor-pointer"
+              className="mb-8 cursor-pointer cv-item"
               onClick={() => onClickSection("education")}
             >
               <h2 className="text-xl font-semibold border-b pb-1 mb-4">
@@ -361,24 +371,40 @@ export default function Template35({ data, onClickSection }) {
                     <p className="text-xs opacity-60">{dateText}</p>
 
                     {/* Description */}
-                    {desc && (
-                      <>
-                        {isMultiLine ? (
-                          <ul className="list-disc pl-5 mt-1 space-y-1">
-                            {lines.map(
-                              (line, idx) =>
-                                line && (
-                                  <li key={idx} className="break-words">
-                                    {line}
-                                  </li>
-                                )
-                            )}
-                          </ul>
-                        ) : (
-                          <p className="mt-1 break-words">{desc}</p>
-                        )}
-                      </>
-                    )}
+                   {desc && (
+  <>
+    {ed.descFormat === "bullet" ? (
+      <div className="pl-5 mt-1 space-y-1">
+        {lines.map(
+          (line, idx) =>
+            line && (
+              <p key={idx} className="break-words ">
+                {line.replace(/^[•\-*]\s*/, "• ")}
+              </p>
+            )
+        )}
+      </div>
+    ) : ed.descFormat === "number" ? (
+      <div className="pl-5 mt-1 space-y-1">
+        {lines.map(
+          (line, idx) =>
+            line && (
+              <p key={idx} className="break-words">
+                {`${idx + 1}. ` + line.replace(/^\d+\.\s*/, "")}
+              </p>
+            )
+        )}
+      </div>
+    ) : isMultiLine ? (
+      <p className="mt-1 whitespace-pre-line break-words">
+        {desc}
+      </p>
+    ) : (
+      <p className="mt-1 break-words">{desc}</p>
+    )}
+  </>
+)}
+
                   </div>
                 );
               })}
