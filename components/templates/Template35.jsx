@@ -526,14 +526,16 @@ export default function Template35({ data, onClickSection }) {
                     );
                   }
 
-                  if (sk.category && sk.items) {
-                    return (
-                      <p key={i} className="break-words">
-                        <span className="font-semibold">{sk.category}:</span>{" "}
-                        {sk.items.join(", ")}
-                      </p>
-                    );
-                  }
+              if (sk.category && (sk.items || sk.skills)) {
+  const arr = sk.items || sk.skills;
+  return (
+    <p key={i} className="break-words">
+      <span className="font-semibold">{sk.category}:</span>{" "}
+      {arr.join(", ")}
+    </p>
+  );
+}
+
 
                   return (
                     <p key={i} className="break-words">
