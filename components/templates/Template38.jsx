@@ -25,7 +25,10 @@ export default function Template38({ data, onClickSection }) {
   const socialLinks = toArray(data?.socialLinks);
 
   return (
-    <div className="w-[794px] min-h-[1123px] bg-white mx-auto text-gray-900 flex flex-col">
+    
+    <div 
+        id="cv-preview"
+      className="w-[794px] min-h-[1123px] bg-white mx-auto text-gray-900 flex flex-col">
       {/* HEADER */}
       <header
         className="border-b-2 border-gray-400 py-8 px-12 cursor-pointer"
