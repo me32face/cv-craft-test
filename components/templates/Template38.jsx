@@ -28,12 +28,14 @@ export default function Template38({ data, onClickSection }) {
     <div className="w-[794px] min-h-[1123px] bg-white mx-auto text-gray-900 flex flex-col">
       {/* HEADER */}
       <header
-        className="border-b-2 border-gray-800 py-8 px-12 cursor-pointer"
-        onClick={() => onClickSection("personal")}
+        className="border-b-2 border-gray-400 py-8 px-12 cursor-pointer"
       >
-        <h1 className="text-5xl font-serif tracking-[0.1em] text-center mb-2">
+        <h1 className="text-5xl font-serif tracking-[0.1em] text-center ">
           {(data.name || "ADELINE PALMERSTON").toUpperCase()}
         </h1>
+        <p className="text-sm  font-medium text-gray-700 text-center uppercase tracking-wide  break-words">
+              {data.title || "The role you are applying for?"}
+            </p>
       </header>
 
       <div className="flex flex-1">
