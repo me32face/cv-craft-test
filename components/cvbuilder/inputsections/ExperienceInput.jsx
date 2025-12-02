@@ -13,6 +13,8 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
   const [openIndex, setOpenIndex] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [toast, setToast] = useState(null);
+  const currentYear = dayjs().year();
+  const currentMonth = dayjs().month();
 
   const emptyExp = {
     role: "",
@@ -295,22 +297,38 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                         </div>
 
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
+
                           {/* START DATE */}
                           <div>
-                            <label className="font-medium block ">Start Date</label>
+                            <label className="font-medium block">Start Date</label>
                             <DatePicker
                               views={["year", "month"]}
                               format="MMM YYYY"
                               value={exp.start ? dayjs(exp.start) : null}
+                              maxDate={dayjs()}
                               onChange={(date) => {
                                 if (!date) return;
+
+                                const selectedYear = date.year();
+                                const selectedMonth = date.month();
                                 const formatted = date.format("YYYY-MM");
+
+                                // Prevent selecting future year
+                                if (selectedYear > currentYear) {
+                                  setToast("You cannot select a future year");
+                                  return;
+                                }
+
+                                // Prevent selecting future month in the current year
+                                if (selectedYear === currentYear && selectedMonth > currentMonth) {
+                                  setToast("You cannot select a future month");
+                                  return;
+                                }
+
                                 updateField(i, "start", formatted);
                               }}
                               slotProps={{
-                                textField: {
-                                  className: " w-full p-1 rounded-xl border",
-                                },
+                                textField: { className: "w-full p-1 rounded-xl border" },
                               }}
                             />
                           </div>
@@ -323,12 +341,21 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                                 views={["year", "month"]}
                                 format="MMM YYYY"
                                 value={exp.end ? dayjs(exp.end) : null}
+                                maxDate={dayjs()}  // ⬅ Prevent future dates
                                 onChange={(date) => {
                                   if (!date) return;
 
                                   const formatted = date.format("YYYY-MM");
+                                  const selectedYear = Number(date.format("YYYY"));
+                                  const currentYear = new Date().getFullYear();
 
-                                  // Validation: End >= Start
+                                  // Prevent future year
+                                  if (selectedYear > currentYear) {
+                                    setToast("You cannot select a future year");
+                                    return;
+                                  }
+
+                                  // End >= Start validation
                                   if (exp.start && formatted < exp.start) {
                                     setToast("End date must be greater than start date");
                                     return;
@@ -337,9 +364,7 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                                   updateField(i, "end", formatted);
                                 }}
                                 slotProps={{
-                                  textField: {
-                                    className: "mt-1 w-full p-3 rounded-xl border",
-                                  },
+                                  textField: { className: "mt-1 w-full p-3 rounded-xl border" },
                                 }}
                               />
                             </div>

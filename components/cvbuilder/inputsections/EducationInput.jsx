@@ -71,12 +71,12 @@ export default function EducationInput({
   const handleDescriptionChange = (index, value) => {
     const format = educations[index].descFormat || 'default';
     const prevValue = educations[index].description || '';
-    
+
     // Auto-format when Enter is pressed in bullet/number mode
     if (format === 'bullet' || format === 'number') {
       const prevLines = prevValue.split('\n').length;
       const newLines = value.split('\n').length;
-      
+
       // If new line was added (Enter pressed)
       if (newLines > prevLines) {
         const formatted = formatText(value, format);
@@ -84,7 +84,7 @@ export default function EducationInput({
         return;
       }
     }
-    
+
     updateField(index, 'description', value);
   };
 
@@ -112,6 +112,7 @@ export default function EducationInput({
   };
 
   const [toast, setToast] = useState({ show: false, message: "", type: "error" });
+  const currentYear = new Date().getFullYear();
 
 
   return (
@@ -266,11 +267,31 @@ export default function EducationInput({
                         <input
                           type="number"
                           min="1900"
-                          max={new Date().getFullYear()}
+                          max={currentYear}  // Prevent selecting future years
                           className="mt-1 w-full p-3 rounded-xl border"
                           value={edu.start ?? ""}
-                          onChange={(e) => updateField(index, "start", e.target.value)}
                           placeholder="2020"
+                          onChange={(e) => {
+                            const value = e.target.value;
+
+                            // Live update
+                            updateField(index, "start", value);
+
+                            if (value.length < 4) return; // Wait until full year typed
+
+                            const startYear = Number(value);
+
+                            // ❌ Block future year
+                            if (startYear > currentYear) {
+                              setToast({
+                                show: true,
+                                message: `Year cannot be greater than ${currentYear}`,
+                                type: "error",
+                              });
+                              updateField(index, "start", "");
+                              return;
+                            }
+                          }}
                         />
                       </div>
 
@@ -281,7 +302,7 @@ export default function EducationInput({
                           <input
                             type="number"
                             min="1900"
-                            max={new Date().getFullYear()}
+                            max={currentYear}  // Prevent selecting future years
                             className="mt-1 w-full p-3 rounded-xl border"
                             value={edu.end ?? ""}
                             placeholder="2024"
@@ -291,37 +312,40 @@ export default function EducationInput({
                             onChange={(e) => {
                               const value = e.target.value;
 
-                              // Allow empty input
-                              if (!value) {
-                                updateField(index, "end", "");
-                                return;
-                              }
-
-                              // Update live typed value
+                              // Live update
                               updateField(index, "end", value);
+
+                              if (!value) return;
+                              if (value.length < 4) return;
 
                               const endYear = Number(value);
                               const startYear = Number(edu.start);
 
-                              if (value.length < 4) return;
+                              // ❌ Block future year
+                              if (endYear > currentYear) {
+                                setToast({
+                                  show: true,
+                                  message: `Year cannot be greater than ${currentYear}`,
+                                  type: "error",
+                                });
+                                updateField(index, "end", "");
+                                return;
+                              }
 
-                              if (!startYear) return;
-
-                              if (endYear < startYear) {
+                              // End < Start
+                              if (startYear && endYear < startYear) {
                                 setToast({
                                   show: true,
                                   message: "End year must be greater than or equal to the start year",
                                   type: "error",
                                 });
                                 updateField(index, "end", "");
+                                return;
                               }
                             }}
                           />
-
                         </div>
                       )}
-
-
                     </div>
 
                     <div className="mt-4">
@@ -329,31 +353,28 @@ export default function EducationInput({
                       <div className="flex gap-1 mb-2 border-b pb-2"></div>
                       <div className="relative">
                         {/* <div className="flex gap-1 mb-2 border-b pb-2"> */}
-                          <button
-                            type="button"
-                            onClick={() => handleFormatChange(index, "default")}
-                            className={`p-2 rounded ${
-                              (edu.descFormat || "default") === "default" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                        <button
+                          type="button"
+                          onClick={() => handleFormatChange(index, "default")}
+                          className={`p-2 rounded ${(edu.descFormat || "default") === "default" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
                             }`}
-                            title="Default"
-                          >
-                            <AlignLeft size={18} />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleFormatChange(index, "bullet")}
-                            className={`p-2 rounded ${
-                              (edu.descFormat || "default") === "bullet" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                          title="Default"
+                        >
+                          <AlignLeft size={18} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleFormatChange(index, "bullet")}
+                          className={`p-2 rounded ${(edu.descFormat || "default") === "bullet" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
                             }`}
-                            title="Bullet List"
-                          >
-                            <List size={18} />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleFormatChange(index, "number")}
-                            className={`p-2 rounded ${
-                              (edu.descFormat || "default") === "number" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
+                          title="Bullet List"
+                        >
+                          <List size={18} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleFormatChange(index, "number")}
+                          className={`p-2 rounded ${(edu.descFormat || "default") === "number" ? "bg-[#634BC9] text-white hover:bg-[#553fb2]" : "hover:bg-gray-100"
                             }`}
                           title="Numbered List"
                         >

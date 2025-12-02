@@ -75,7 +75,7 @@ export default function Template35({ data, onClickSection }) {
         {/* SKILLS */}
         {data?.visibleSections?.skills !== false && (
           <div className="mb-4">
-            <div className="mb-2 cursor-pointer" onClick={() => onClickSection && onClickSection("skills")}>
+            <div className="mb-2 cursor-pointer" >
               <h2 className="text-md  font-semibold  mb-3  ">
                 SKILLS
               </h2>
@@ -126,7 +126,7 @@ export default function Template35({ data, onClickSection }) {
         {/* AWARDS */}
         {data?.visibleSections?.awards !== false && Awards.length > 0 && (
           <div className="mt-6">
-            <h2 className="text-md  font-semibold  mb-3 " onClick={() => onClickSection?.("awards")}>
+            <h2 className="text-md  font-semibold  mb-3 " >
               AWARDS
             </h2>
             {(Awards.length ? Awards : [
@@ -214,7 +214,7 @@ export default function Template35({ data, onClickSection }) {
         {/* Summary */}
         {data?.visibleSections?.summary !== false && (
           <>
-            <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("summary")}>
+            <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer">
               SUMMARY
             </h2>
             <p className="text-sm mb-4 text-gray-700 break-words">{data?.summary || "A dedicated professional with extensive experience in the field."}</p>
@@ -223,7 +223,7 @@ export default function Template35({ data, onClickSection }) {
         {/* Experience */}
         {data?.visibleSections?.experience !== false && (
           <>
-            <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("experience")}>
+            <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" >
               EXPERIENCE
             </h2>
             {experiences.map((exp, i) => (
@@ -306,7 +306,7 @@ export default function Template35({ data, onClickSection }) {
         {/* Projects */}
         {data?.visibleSections?.projects !== false && (
           <>
-            <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("projects")}>
+            <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" >
               PROJECTS
             </h2>
             {projects.map((project, i) => (
@@ -355,7 +355,7 @@ export default function Template35({ data, onClickSection }) {
         {/* Education */}
          {data?.visibleSections?.education !== false && (
           <div className="">
-            <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("education")}>
+            <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" >
               EDUCATION
             </h2>
             {education.map((edu, i) => (
