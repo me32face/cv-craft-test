@@ -35,12 +35,12 @@ export default function Template35({ data, onClickSection }) {
         {/* PROFILE IMAGE */}
         <div className="mb-10 relative">
           {/* Profile Image */}
-            <div
-          className={`overflow-hidden mb-6 ${data?.imageShape === "circle" ? "rounded-full" : data?.imageShape === "rounded" ? "rounded-xl" : ""}`}
-          style={{ width: 120, height: 120, margin: "0 auto" }}
-        >
-          <img src={data?.profileImage || "/templateprofile/template33profile.jpeg"} className="w-full h-full object-cover" alt="profile" />
-        </div>
+          <div
+            className={`overflow-hidden mb-6 ${data?.imageShape === "circle" ? "rounded-full" : data?.imageShape === "rounded" ? "rounded-xl" : ""}`}
+            style={{ width: 120, height: 120, margin: "0 auto" }}
+          >
+            <img src={data?.profileImage || "/templateprofile/template33profile.jpeg"} className="w-full h-full object-cover" alt="profile" />
+          </div>
         </div>
         {/* Contact */}
         <div>
@@ -116,7 +116,7 @@ export default function Template35({ data, onClickSection }) {
           <div className="mb-4">
             <h2 className="font-semibold text-md mb-2">LANGUAGE</h2>
             {(data?.languages?.length ? data.languages : ["Spanish", "Arabic", "English"]).map((l, i) =>
-              renderLanguage(l, i, { 
+              renderLanguage(l, i, {
                 barContainer: "w-full bg-gray-200 rounded-full h-1 mt-2",
                 bar: "bg-gray-600 h-1 rounded-full transition-all"
               })
@@ -224,6 +224,49 @@ export default function Template35({ data, onClickSection }) {
         {data?.visibleSections?.experience !== false && (
           <>
             <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" >
+              EXPERIENCE
+            </h2>
+            {experiences.map((exp, i) => (
+              <div key={i} className=" mb-3">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="font-semibold text-gray-800 !text-sm break-words">{exp.role}</p>
+                    <p className="text-sm opacity-90 break-words ">{exp.company}</p>
+                    {exp.location && <p className="text-xs opacity-70 break-words">{exp.location}</p>}
+                  </div>
+                  <p className="text-xs opacity-60">
+                    {exp.start}
+                    {exp.start && (exp.end || exp.current) && " - "}
+                    {exp.current ? "Present" : exp.end}
+                  </p>
+                </div>
+                {exp.desc && (
+                  exp.descFormat === "bullet" ? (
+                    exp.desc.split('\n').map((line, idx) => {
+                      const trimmed = line.trim();
+                      if (!trimmed) return null;
+                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                      return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `• ${trimmed}`}</p>;
+                    })
+                  ) : exp.descFormat === "number" ? (
+                    exp.desc.split('\n').map((line, idx) => {
+                      const trimmed = line.trim();
+                      if (!trimmed) return null;
+                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                      return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `${idx + 1}. ${trimmed}`}</p>;
+                    })
+                  ) : (
+                    <p className="text-sm mt-1 text-justify text-gray-700 break-words">{exp.desc}</p>
+                  )
+                )}
+
+              </div>
+            ))}
+          </>
+        )}
+        {/* {data?.visibleSections?.experience !== false && (
+          <>
+            <h2 className="text-md font-semibold mb-3 border-b pb-1 cursor-pointer" onClick={() => onClickSection && onClickSection("experience")}>
               EXPERIENCE
             </h2>
             {experiences.map((exp, i) => (
@@ -353,7 +396,7 @@ export default function Template35({ data, onClickSection }) {
           </>
         )}
         {/* Education */}
-         {data?.visibleSections?.education !== false && (
+        {data?.visibleSections?.education !== false && (
           <div className="">
             <h2 className="text-md font-semibold mt-2 mb-3 border-b pb-1 cursor-pointer" >
               EDUCATION
@@ -372,7 +415,7 @@ export default function Template35({ data, onClickSection }) {
                     {edu.current ? "Present" : edu.end && formatDate(edu.end)}
                   </p>
                 </div>
-                  {edu.description && (
+                {edu.description && (
                   edu.descFormat === "bullet" ? (
                     edu.description.split('\n').map((line, idx) => {
                       const trimmed = line.trim();
