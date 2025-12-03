@@ -34,6 +34,13 @@ export const metadata: Metadata = {
     "Build stunning professional CVs using AI-powered templates. Fast, simple, modern resume builder with export options.",
 
   keywords: [
+    "cv builder online",
+    "resume maker",
+    "ats resume builder",
+    "free cv builder",
+    "professional cv templates",
+    "cv generator",
+    "modern resume templates",
     "resume builder",
     "cvmaker",
     "cvcraft",
@@ -52,7 +59,7 @@ export const metadata: Metadata = {
     siteName: "CVCraft",
     images: [
       {
-        url: "/mainlogo.png",
+        url: "https://cvcraft.in/og-image.png",
         width: 1200,
         height: 630,
         alt: "CV Craft Preview",
@@ -67,7 +74,7 @@ export const metadata: Metadata = {
     title: "CV Craft – Build a Professional CV",
     description:
       "Design beautiful CVs instantly using ready-made templates.",
-    images: ["/mainlogo.png"],
+    images: ["https://cvcraft.in/og-image.png"],
   },
 
   alternates: {
@@ -109,6 +116,79 @@ export default function RootLayout({
             }),
           }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              name: "CV Craft",
+              url: "https://cvcraft.in",
+              applicationCategory: "ResumeBuilderApplication",
+              operatingSystem: "All",
+              description: "AI-powered CV & Resume builder.",
+              offers: {
+                "@type": "Offer",
+                price: "0",
+                priceCurrency: "INR",
+              },
+            }),
+          }}
+        />
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              url: "https://cvcraft.in",
+              logo: "https://cvcraft.in/mainlogo.png",
+              name: "CV Craft",
+              sameAs: [
+                "https://www.instagram.com/",
+                "https://www.linkedin.com/",
+              ],
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: [
+                {
+                  "@type": "Question",
+                  name: "Is CV Craft free?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Yes, CV Craft allows you to build professional CVs for free.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "Does CV Craft support ATS-friendly resumes?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Yes, all CV Craft templates are optimized to pass ATS scans.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "Can I download my CV as PDF?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Yes, CV Craft allows instant PDF download.",
+                  },
+                },
+              ],
+            }),
+          }}
+        />
+
+
       </head>
 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
