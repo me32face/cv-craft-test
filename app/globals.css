@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -329,3 +330,23 @@ h6 {
   @apply font-semibold text-[#1E1635];
 }
 
+/* Remove blue border from MUI DatePicker editable sections */
+.MuiPickersSectionList-sectionContent:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove hover blue highlight */
+.MuiPickersSectionList-sectionContent:hover {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove MUI text field blue border */
+.MuiOutlinedInput-notchedOutline {
+  border-color: transparent !important;
+}
+
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: transparent !important;
+}

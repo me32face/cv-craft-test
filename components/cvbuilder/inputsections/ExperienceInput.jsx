@@ -9,6 +9,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 
+
 export default function ExperienceInput({ experiences = [], setExperiences, onClose, onNext }) {
   const [openIndex, setOpenIndex] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -306,6 +307,7 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                               format="MMM YYYY"
                               value={exp.start ? dayjs(exp.start) : null}
                               maxDate={dayjs()}
+                              Contenteditable={false}
                               onChange={(date) => {
                                 if (!date) return;
 
@@ -331,6 +333,7 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                                 textField: { className: "w-full p-1 rounded-xl border" },
                               }}
                             />
+
                           </div>
 
                           {/* END DATE */}
