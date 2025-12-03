@@ -162,25 +162,28 @@ export default function Template40({ data, onClickSection }) {
           className="flex items-center justify-center"
         >
 
-         <div
-  className={`profile-img-box overflow-hidden border border-gray-300 `}
+      <div
+  className={`
+    overflow-hidden border border-gray-300 
+    ${finalData.imageShape === "circle"
+      ? "rounded-full"
+      : finalData.imageShape === "rounded"
+        ? "rounded-xl"
+        : "rounded-none"
+    }
+  `}
   style={{
     width: finalData.imageSize || "110px",
     height: finalData.imageSize || "110px",
-    aspectRatio: "1 / 1",
-    borderRadius:
-      finalData.imageShape === "circle"
-        ? "50%"
-        : finalData.imageShape === "rounded"
-          ? "14px"
-          : "0",
   }}
 >
 
-            <img
-              src={finalData.profileImage || "/templateprofile/template40profile.jpg"}
-              className="object-cover w-full h-full"
-            />
+        <img
+ src={finalData.profileImage || "/templateprofile/template40profile.jpg"}
+  className="object-cover w-full h-full"
+/>
+
+
           </div>
         </div>
 
@@ -245,7 +248,7 @@ export default function Template40({ data, onClickSection }) {
 
   <div className="space-y-1">
     {skills.map((s, i) => {
-      // 🔹 BULLET FORMAT → plain string
+    
       if (typeof s === "string") {
         return (
           <div
@@ -260,7 +263,7 @@ export default function Template40({ data, onClickSection }) {
 
       const skillObj = safeObj(s);
 
-      // 🔹 CATEGORY FORMAT → category + nested skills[]
+      
       if (skillObj.category && Array.isArray(skillObj.skills)) {
         return (
           <div key={i} className="cv-item text-sm">
@@ -299,7 +302,7 @@ export default function Template40({ data, onClickSection }) {
         );
       }
 
-      // 🔹 FALLBACK → treat anything else as bullet text
+      
       return (
         <div
           key={i}
@@ -402,7 +405,7 @@ export default function Template40({ data, onClickSection }) {
             <section
               className="mb-6 "
               
-              
+        
             >
               <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
                 References
