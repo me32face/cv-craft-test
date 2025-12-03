@@ -7,6 +7,7 @@ import { Plus } from "lucide-react"; // or wherever your icon comes from
 export default function ImageUploader({ image, setImage, setShape, setAlign, onClose, onNext }) {
   const [tempImage, setTempImage] = useState(null);
   const [cropping, setCropping] = useState(false);
+  const [sizeError, setSizeError] = useState(false);
 
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -20,6 +21,16 @@ export default function ImageUploader({ image, setImage, setShape, setAlign, onC
     const file = e.target.files[0];
     if (!file) return;
 
+    // Check file size (1MB = 1048576 bytes)
+    const maxSize = 1 * 1024 * 1024; // 1MB in bytes
+    if (file.size > maxSize) {
+      setSizeError(true);
+      e.target.value = ''; // Reset input
+      setTimeout(() => setSizeError(false), 5000); // Hide error after 5 seconds
+      return;
+    }
+
+    setSizeError(false);
     const reader = new FileReader();
     reader.onload = () => {
       setTempImage(reader.result);
@@ -149,6 +160,13 @@ export default function ImageUploader({ image, setImage, setShape, setAlign, onC
             </button>
           )}
         </div>
+
+        {/* Error Message */}
+        {sizeError && (
+          <div className="mt-3 p-3 bg-red-50 border-l-4 border-red-500 rounded">
+            <p className="text-sm text-red-600 font-medium">Image size must be less than 1MB</p>
+          </div>
+        )}
 
         {/* Image Preview */}
         <div className="flex justify-center py-4">

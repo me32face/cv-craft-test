@@ -16,7 +16,7 @@ export const createShareLink = async (req, res) => {
 
     // Size limit check (500KB)
     const dataSize = JSON.stringify(templateData).length;
-    if (dataSize > 500000) {
+    if (dataSize > 5000000) {
       return res.status(413).json({ 
         success: false, 
         message: "CV data too large" 
