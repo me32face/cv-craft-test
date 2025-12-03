@@ -3,8 +3,7 @@ import React from "react";
 import { User, Briefcase, GraduationCap } from "lucide-react";
 import SocialLinkDisplay from "../SocialLinkDisplay";
 
-export default function Template37({ data, onClickSection }) {
-
+export default function Template37({ data }) {
   const toArray = (v) =>
     !v ? [] : Array.isArray(v) ? v : typeof v === "string" ? [v] : [];
 
@@ -33,50 +32,50 @@ export default function Template37({ data, onClickSection }) {
 
   const rawExperiences = toArray(data?.experiences);
   const formatDate = (value) => {
-  if (!value) return "";
-  const d = new Date(value);
-  return d.toLocaleString("en-US", {
-    month: "short",
-    year: "numeric",
-  });
-};
+    if (!value) return "";
+    const d = new Date(value);
+    return d.toLocaleString("en-US", {
+      month: "short",
+      year: "numeric",
+    });
+  };
   const experiences = rawExperiences.length
     ? rawExperiences
     : [
-      {
-        company: "Borcelle Studio",
-        role: "Marketing Manager",
-        year: "2030 - PRESENT",
-        desc: "Develop and execute marketing strategies...\nLead the marketing team...",
-        descFormat: "bullet",
-      },
-      {
-        company: "Fauget Studio",
-        role: "Marketing Specialist",
-        year: "2025 - 2029",
-        desc: "Create and manage campaign budgets...\nConduct market research...",
-        descFormat: "bullet",
-      },
-    ];
+        {
+          company: "Borcelle Studio",
+          role: "Marketing Manager",
+          year: "2030 - PRESENT",
+          desc: "Develop and execute marketing strategies...\nLead the marketing team...",
+          descFormat: "bullet",
+        },
+        {
+          company: "Fauget Studio",
+          role: "Marketing Specialist",
+          year: "2025 - 2029",
+          desc: "Create and manage campaign budgets...\nConduct market research...",
+          descFormat: "bullet",
+        },
+      ];
 
   // Education
   const educationArray = toArray(data?.education);
   const education = educationArray.length
     ? educationArray
     : [
-      {
-        course: "Executive MBA (EMBA)",
-        school: "Wardiere University",
-        gpa: "GPA: 3.8 / 4.0",
-        year: "2029 - 2031",
-      },
-      {
-        course: "Bachelor of Business Management",
-        school: "Wardiere University",
-        gpa: "GPA: 3.9 / 4.0",
-        year: "2025 - 2029",
-      },
-    ];
+        {
+          course: "Executive MBA (EMBA)",
+          school: "Wardiere University",
+          gpa: "GPA: 3.8 / 4.0",
+          year: "2029 - 2031",
+        },
+        {
+          course: "Bachelor of Business Management",
+          school: "Wardiere University",
+          gpa: "GPA: 3.9 / 4.0",
+          year: "2025 - 2029",
+        },
+      ];
   // Skills
   const skills = toArray(data?.skills);
 
@@ -92,27 +91,25 @@ export default function Template37({ data, onClickSection }) {
   const awards = toArray(data?.awards);
   const references = toArray(data?.references);
 
-
-
   // Projects
   const projects = toArray(data?.projects).length
     ? toArray(data?.projects)
     : [
-      {
-        name: "Portfolio Website",
-        year: "2023",
-        link: "https://yourwebsite.com",
-        desc: "Built a full responsive portfolio...\nUsed React + Tailwind.",
-        descFormat: "bullet",
-      },
-      {
-        name: "Marketing Dashboard",
-        year: "2022",
-        link: "https://github.com/yourrepo",
-        desc: "Created an analytics dashboard...\nIntegrated charts and KPIs.",
-        descFormat: "number",
-      },
-    ];
+        {
+          name: "Portfolio Website",
+          year: "2023",
+          link: "https://yourwebsite.com",
+          desc: "Built a full responsive portfolio...\nUsed React + Tailwind.",
+          descFormat: "bullet",
+        },
+        {
+          name: "Marketing Dashboard",
+          year: "2022",
+          link: "https://github.com/yourrepo",
+          desc: "Created an analytics dashboard...\nIntegrated charts and KPIs.",
+          descFormat: "number",
+        },
+      ];
 
   const profileImage = data?.profileImage;
 
@@ -130,24 +127,25 @@ export default function Template37({ data, onClickSection }) {
       <div className="w-[35%] bg-gray-100 p-6 pl-8 ">
         {/* Profile Image */}
         <div
-          className={`mb-6 ${data?.imageAlign === "left"
-            ? "flex justify-start"
-            : data?.imageAlign === "right"
+          className={`mb-6 ${
+            data?.imageAlign === "left"
+              ? "flex justify-start"
+              : data?.imageAlign === "right"
               ? "flex justify-end"
               : "flex justify-center"
-            }`}
+          }`}
         >
           <div
             className={`
-              w-36 h-36 overflow-hidden border-4 border-white shadow-lg cursor-pointer 
-              ${data?.imageShape === "circle"
-                ? "rounded-full"
-                : data?.imageShape === "rounded"
+              w-36 h-36 overflow-hidden border-4 border-white shadow-lg  
+              ${
+                data?.imageShape === "circle"
+                  ? "rounded-full"
+                  : data?.imageShape === "rounded"
                   ? "rounded-xl"
                   : "rounded-none"
               }
             `}
-            onClick={() => onClickSection("image")}
           >
             <img
               src={profileImage || "/templateprofile/template37profile.jpg"}
@@ -158,10 +156,7 @@ export default function Template37({ data, onClickSection }) {
 
         {/* Contact */}
         {visible.personal !== false && (
-          <div
-            className="mb-6 cursor-pointer"
-            onClick={() => onClickSection("personal")}
-          >
+          <div className="mb-6 ">
             <h3 className="text-sm font-bold mb-3 uppercase tracking-wide">
               Contact
             </h3>
@@ -174,10 +169,7 @@ export default function Template37({ data, onClickSection }) {
               {visible.socialLinks !== false &&
                 Array.isArray(data?.socialLinks) &&
                 data.socialLinks.length > 0 && (
-                  <div
-                    className="mb-6 cursor-pointer"
-                    onClick={() => onClickSection("socialLinks  ")}
-                  >
+                  <div className="mb-6 ">
                     <div className="space-y-2 text-xs break-all">
                       {data.socialLinks.map((link, i) => (
                         <SocialLinkDisplay key={i} link={link} />
@@ -191,10 +183,7 @@ export default function Template37({ data, onClickSection }) {
 
         {/* Skills */}
         {visible.skills !== false && (
-          <div
-            className="mb-6 cursor-pointer"
-            onClick={() => onClickSection("skills")}
-          >
+          <div className="mb-6 ">
             <h3 className="text-sm font-bold mb-3 uppercase tracking-wide">
               Skills
             </h3>
@@ -255,7 +244,6 @@ export default function Template37({ data, onClickSection }) {
                   );
                 }
 
-              
                 return <p key={i}>• {safeText(sk.name, "Skill")}</p>;
               })}
             </div>
@@ -264,10 +252,7 @@ export default function Template37({ data, onClickSection }) {
 
         {/* Languages */}
         {visible.languages !== false && (
-          <div
-            className="mb-6 cursor-pointer"
-            onClick={() => onClickSection("languages")}
-          >
+          <div className="mb-6 ">
             <h3 className="text-sm font-bold mb-3 uppercase tracking-wide">
               Languages
             </h3>
@@ -284,7 +269,7 @@ export default function Template37({ data, onClickSection }) {
 
                 const lang = safeObj(l);
                 return (
-                  <div key={i} className="cv-item" >
+                  <div key={i} className="cv-item">
                     <div className="flex justify-between">
                       <span>{safeText(lang.name)}</span>
 
@@ -319,10 +304,7 @@ export default function Template37({ data, onClickSection }) {
 
         {/* Certificates */}
         {visible.certificates !== false && (
-          <div
-            className="mt-5 cursor-pointer"
-            onClick={() => onClickSection("certificates")}
-          >
+          <div className="mt-5 ">
             <h3 className="text-sm font-bold mb-3 uppercase tracking-wide">
               Certificates
             </h3>
@@ -331,16 +313,16 @@ export default function Template37({ data, onClickSection }) {
               {(certificates.length
                 ? certificates
                 : [
-                  {
-                    name: "Project Management",
-                    issuer: "Project Institute",
-                    year: "2023",
-                  },
-                ]
+                    {
+                      name: "Project Management",
+                      issuer: "Project Institute",
+                      year: "2023",
+                    },
+                  ]
               ).map((c, i) => {
                 const cert = safeObj(c);
                 return (
-                  <div key={i} className="cv-item" >
+                  <div key={i} className="cv-item">
                     <p className="font-semibold">{safeText(cert.name)}</p>
                     <p className="text-gray-600">
                       {safeText(cert.issuer)} {cert.year && `| ${cert.year}`}
@@ -354,58 +336,50 @@ export default function Template37({ data, onClickSection }) {
 
         {/* Awards */}
         {visible.awards !== false && awards.length > 0 && (
-  <div
-    className="mt-5 cursor-pointer"
-    onClick={() => onClickSection("awards")}
-  >
-    <h3 className="text-sm font-bold mb-3 uppercase tracking-wide">
-      Awards
-    </h3>
-    <div className="text-xs space-y-2">
-      {awards.map((a, i) => {
-        const award = safeObj(a);
-        return (
-          <div key={i} className="cv-item">
-            {/* Title */}
-            <p className="font-semibold break-words">
-              {safeText(award.title, safeText(a))}
-            </p>
+          <div className="mt-5 ">
+            <h3 className="text-sm font-bold mb-3 uppercase tracking-wide">
+              Awards
+            </h3>
+            <div className="text-xs space-y-2">
+              {awards.map((a, i) => {
+                const award = safeObj(a);
+                return (
+                  <div key={i} className="cv-item">
+                    {/* Title */}
+                    <p className="font-semibold break-words">
+                      {safeText(award.title, safeText(a))}
+                    </p>
 
-            {/* Issuer */}
-            {award.issuer && (
-              <p className="text-gray-600 break-words">
-                Issued by: {award.issuer}
-              </p>
-            )}
+                    {/* Issuer */}
+                    {award.issuer && (
+                      <p className="text-gray-600 break-words">
+                        Issued by: {award.issuer}
+                      </p>
+                    )}
 
-            {/* Date */}
-            {award.date && (
-              <p className="text-gray-600 break-words">
-                Date: {award.date}
-              </p>
-            )}
+                    {/* Date */}
+                    {award.date && (
+                      <p className="text-gray-600 break-words">
+                        Date: {award.date}
+                      </p>
+                    )}
 
-            {/* Description with multiline support */}
-            {award.description && (
-              <p className="text-gray-600 break-words whitespace-pre-line mt-1">
-                {award.description}
-              </p>
-            )}
+                    {/* Description with multiline support */}
+                    {award.description && (
+                      <p className="text-gray-600 break-words whitespace-pre-line mt-1">
+                        {award.description}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        );
-      })}
-    </div>
-  </div>
-)}
-
-
+        )}
 
         {/* REFERENCES */}
         {visible.references !== false && references.length > 0 && (
-          <div
-            className="mt-5 cursor-pointer"
-            onClick={() => onClickSection("references")}
-          >
+          <div className="mt-5 ">
             <h3 className="text-sm font-bold mb-3 uppercase tracking-wide">
               References
             </h3>
@@ -429,20 +403,13 @@ export default function Template37({ data, onClickSection }) {
             </div>
           </div>
         )}
-
-
-
-
       </div>
 
       {/* RIGHT SIDE */}
       <div className="w-2/3 bg-white cv-sidebar ">
         {/* HEADER */}
         {visible.personal !== false && (
-          <div
-            className="bg-slate-700 text-white px-6 py-8 cursor-pointer"
-            onClick={() => onClickSection("personal")}
-          >
+          <div className="bg-slate-700 text-white px-6 py-8 ">
             <h1 className="text-3xl font-bold mb-1">
               {safeText(data?.name, "RICHARD SANCHEZ")}
             </h1>
@@ -455,10 +422,7 @@ export default function Template37({ data, onClickSection }) {
         <div className="px-6 py-5 pt-8">
           {/* PROFILE */}
           {visible.summary !== false && (
-            <div
-              className="mb-5 cursor-pointer"
-              onClick={() => onClickSection("summary")}
-            >
+            <div className="mb-5 ">
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center">
                   <User className="w-3 h-3 text-white" />
@@ -483,151 +447,74 @@ export default function Template37({ data, onClickSection }) {
           )}
 
           {/* EXPERIENCE */}
-         {visible.experience !== false && (
-  <div
-    className="pt-4 cursor-pointer"
-    onClick={() => onClickSection("experience")}
-  >
-    <div className="flex items-center gap-2 mb-2">
-      <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center">
-        <Briefcase className="w-3 h-3 text-white" />
-      </div>
-      <h2 className="text-sm font-bold uppercase tracking-wide">
-        Work Experience
-      </h2>
-    </div>
-
-    <div className="pl-8 border-l-2 border-gray-300 ml-3 space-y-4 text-xs">
-      {experiences.map((exp, i) => {
-        const e = safeObj(exp);
-        const lines = e.desc ? e.desc.split("\n") : [];
-
-        const dateText =
-          e.start || e.end || e.current
-            ? (e.current
-                ? `${formatDate(e.start)} – Present`
-                : `${formatDate(e.start)} – ${formatDate(e.end)}`)
-            : e.year || "";
-
-        return (
-          <div key={i} className="cv-item">
-            <div className="flex justify-between items-start mb-1">
-              <div>
-                <h3 className="text-sm font-bold break-words">
-                  {safeText(e.company)}
-                </h3>
-                <p className="text-xs text-gray-600 break-words">
-                  {safeText(e.role)}
-                </p>
-              </div>
-              <span className="text-xs text-gray-500 whitespace-nowrap">
-                {dateText}
-              </span>
-            </div>
-
-            {e.desc &&
-              (e.descFormat === "bullet" ? (
-                <ul className="ml-4 space-y-1">
-                  {lines.map(
-                    (line, idx) =>
-                      line && (
-                       <li key={idx} className="flex items-start">
-  <span className="mr-2">•</span>
-  <span className="break-words">
-    {line.replace(/^[•\-*]\s*/, "")}
-  </span>
-</li>
-                      )
-                  )}
-                </ul>
-              ) : e.descFormat === "number" ? (
-                <ol className="ml-4 list-decimal space-y-1">
-                  {lines.map(
-                    (line, idx) =>
-                      line && (
-                        <li key={idx} className="break-words">
-                          {line}
-                        </li>
-                      )
-                  )}
-                </ol>
-              ) : (
-                <p className="text-xs mt-1 break-words">{e.desc}</p>
-              ))}
-          </div>
-        );
-      })}
-    </div>
-  </div>
-)}
-
-
-          {/* EDUCATION */}
-          {visible.education !== false && (
-            <div
-              className="mt-8 cursor-pointer"
-              onClick={() => onClickSection("education")}
-            >
+          {visible.experience !== false && (
+            <div className="pt-4 ">
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center">
-                  <GraduationCap className="w-3 h-3 text-white" />
+                  <Briefcase className="w-3 h-3 text-white" />
                 </div>
                 <h2 className="text-sm font-bold uppercase tracking-wide">
-                  Education
+                  Work Experience
                 </h2>
               </div>
 
-              <div className="pl-8 border-l-2 border-gray-300 ml-3 space-y-3 text-xs">
-                {education.map((edu, i) => {
-                  const ed = safeObj(edu);
+              <div className="pl-8 border-l-2 border-gray-300 ml-3 space-y-4 text-xs">
+                {experiences.map((exp, i) => {
+                  const e = safeObj(exp);
+                  const lines = e.desc ? e.desc.split("\n") : [];
 
-                  const formatDate = (date) => {
-                    if (!date) return "";
-                    return new Date(date).toLocaleString("en-US", {
-                      month: "short",
-                      year: "numeric",
-                    });
-                  };
-
-                  // Fix duration display
-                  const duration = ed.current
-                    ? `${ed.start || ""} - Present`
-                    : `${ed.start || ""} - ${ed.end || ""}`;
+                  const dateText =
+                    e.start || e.end || e.current
+                      ? e.current
+                        ? `${formatDate(e.start)} – Present`
+                        : `${formatDate(e.start)} – ${formatDate(e.end)}`
+                      : e.year || "";
 
                   return (
                     <div key={i} className="cv-item">
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1 min-w-0 pr-2">
-                          {/* DEGREE / COURSE */}
+                      <div className="flex justify-between items-start mb-1">
+                        <div>
                           <h3 className="text-sm font-bold break-words">
-                            {safeText(ed.degree) || safeText(ed.course) || "Course Name"}
+                            {safeText(e.company)}
                           </h3>
-
-                          {/* SCHOOL */}
                           <p className="text-xs text-gray-600 break-words">
-                            {safeText(ed.school, "School / University")}
+                            {safeText(e.role)}
                           </p>
-
-                          {/* FIELD OF STUDY */}
-                          {ed.field && (
-                            <p className="text-xs text-gray-600 break-words">
-                              Field: {safeText(ed.field)}
-                            </p>
-                          )}
-
-                          {/* DESCRIPTION */}
-                          {ed.description && (
-  <p className="text-xs text-gray-500 mt-1 break-words whitespace-pre-line">
-    {safeText(ed.description)}
-  </p>
-)}
                         </div>
-
-                        {/* DURATION */}
                         <span className="text-xs text-gray-500 whitespace-nowrap">
-                          {duration}
+                          {dateText}
                         </span>
                       </div>
+
+                      {e.desc &&
+                        (e.descFormat === "bullet" ? (
+                          <ul className="ml-4 space-y-1">
+                            {lines.map(
+                              (line, idx) =>
+                                line && (
+                                  <li key={idx} className="flex items-start">
+                                    <span className="mr-2">•</span>
+                                    <span className="break-words">
+                                      {line.replace(/^[•\-*]\s*/, "")}
+                                    </span>
+                                  </li>
+                                )
+                            )}
+                          </ul>
+                        ) : e.descFormat === "number" ? (
+                          <ol className="ml-4 list-decimal space-y-1">
+                            {lines.map(
+                              (line, idx) =>
+                                line && (
+                                  <li key={idx} className="break-words">
+                                    {line}
+                                  </li>
+                                )
+                            )}
+                          </ol>
+                        ) : (
+                          <p className="text-xs mt-1 break-words">{e.desc}</p>
+                        ))}
                     </div>
                   );
                 })}
@@ -635,12 +522,115 @@ export default function Template37({ data, onClickSection }) {
             </div>
           )}
 
+          {/* EDUCATION */}
+        {visible.education !== false && (
+  <div className="mt-8 ">
+    <div className="flex items-center gap-2 mb-2">
+      <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center">
+        <GraduationCap className="w-3 h-3 text-white" />
+      </div>
+      <h2 className="text-sm font-bold uppercase tracking-wide">
+        Education
+      </h2>
+    </div>
+
+    <div className="pl-8 border-l-2 border-gray-300 ml-3 space-y-3 text-xs">
+      {education.map((edu, i) => {
+        const ed = safeObj(edu);
+
+        const formatDate = (date) => {
+          if (!date) return "";
+          return new Date(date).toLocaleString("en-US", {
+            month: "short",
+            year: "numeric",
+          });
+        };
+
+        const start = ed.start ? formatDate(ed.start) : "";
+        const end = ed.current
+          ? "Present"
+          : ed.end
+          ? formatDate(ed.end)
+          : "";
+
+        const duration =
+          start && end ? `${start} - ${end}` : start || end || "";
+
+        // ✅ define lines (for bullet / number formats)
+      const lines = ed.description ? ed.description.split("\n") : [];
+
+
+        return (
+          <div key={i} className="cv-item">
+            <div className="flex justify-between items-start">
+              <div className="flex-1 min-w-0 pr-2">
+                {/* DEGREE / COURSE */}
+                <h3 className="text-sm font-bold break-words">
+                  {safeText(ed.degree) ||
+                    safeText(ed.course) ||
+                    "Course Name"}
+                </h3>
+
+                {/* SCHOOL */}
+                <p className="text-xs text-gray-600 break-words">
+                  {safeText(ed.school, "School / University")}
+                </p>
+
+                {/* FIELD OF STUDY */}
+                {ed.field && (
+                  <p className="text-xs text-gray-600 break-words">
+                    Field: {safeText(ed.field)}
+                  </p>
+                )}
+
+                {/* DESCRIPTION */}
+                {ed.description &&
+  (ed.descFormat === "bullet" ? (
+                    <ul className="ml-4 space-y-1 mt-1">
+                      {lines.map(
+                        (line, idx) =>
+                          line && (
+                            <li key={idx} className="flex items-start">
+                              <span className="mr-2">•</span>
+                              <span className="break-words">
+                                {line.replace(/^[•\-*]\s*/, "")}
+                              </span>
+                            </li>
+                          )
+                      )}
+                    </ul>
+                  ) : ed.descFormat === "number" ? (
+                    <ol className="ml-4 list-decimal space-y-1 mt-1">
+                      {lines.map(
+                        (line, idx) =>
+                          line && (
+                            <li key={idx} className="break-words">
+  {line.replace(/^\d+\.\s*/, "")}
+</li>
+
+                          )
+                      )}
+                    </ol>
+                  ) : (
+                    <p className="text-xs mt-1 break-words">{ed.description}</p>
+                  ))}
+              </div>
+
+              {/* DURATION */}
+              <span className="text-xs text-gray-500 whitespace-nowrap">
+                {duration}
+              </span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+)}
+
           {/* PROJECTS */}
           {visible.projects !== false && (
-            <div
-              className="mt-8 cursor-pointer"
-              onClick={() => onClickSection("projects")}
-            >
+            <div className="mt-8 cursor-pointer">
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center">
                   <Briefcase className="w-3 h-3 text-white" />
@@ -656,7 +646,7 @@ export default function Template37({ data, onClickSection }) {
                   const lines = pr.desc ? pr.desc.split("\n") : [];
 
                   return (
-                    <div key={i} className="cv-item" >
+                    <div key={i} className="cv-item">
                       <div className="flex justify-between items-start mb-1">
                         <div>
                           <h3 className="text-sm font-bold break-words">
@@ -670,9 +660,10 @@ export default function Template37({ data, onClickSection }) {
                             rel="noopener noreferrer"
                             className="text-xs text-blue-600 underline project-link break-all"
                           >
-                            {p.useCustomLabel && p.linkLabel ? p.linkLabel : p.link}
+                            {p.useCustomLabel && p.linkLabel
+                              ? p.linkLabel
+                              : p.link}
                           </a>
-
                         </div>
 
                         <span className="text-xs text-gray-500 whitespace-nowrap">
@@ -680,38 +671,45 @@ export default function Template37({ data, onClickSection }) {
                         </span>
                       </div>
 
-                     {pr.descFormat === "bullet" ? (
-  <div className="ml-4 space-y-1">
-    {lines.map(
-      (line, idx) =>
-        line && (
-          <p key={idx} className="flex items-start text-xs">
-            <span className="mr-2">•</span>
-            <span className="break-words">
-              {line.replace(/^[•\-*]+\s*/, "")}
-            </span>
-          </p>
-        )
-    )}
-  </div>
-) : pr.descFormat === "number" ? (
-  <div className="ml-4 space-y-1">
-    {lines.map(
-      (line, idx) =>
-        line && (
-          <p key={idx} className="flex items-start text-xs">
-            <span className="mr-2">{idx + 1}.</span>
-            <span className="break-words">
-              {line.replace(/^\d+\.\s*/, "")}
-            </span>
-          </p>
-        )
-    )}
-  </div>
-) : (
-  <p className="text-xs mt-1 break-words whitespace-pre-line">{pr.desc}</p>
-)}
-
+                      {pr.descFormat === "bullet" ? (
+                        <div className="ml-4 space-y-1">
+                          {lines.map(
+                            (line, idx) =>
+                              line && (
+                                <p
+                                  key={idx}
+                                  className="flex items-start text-xs"
+                                >
+                                  <span className="mr-2">•</span>
+                                  <span className="break-words">
+                                    {line.replace(/^[•\-*]+\s*/, "")}
+                                  </span>
+                                </p>
+                              )
+                          )}
+                        </div>
+                      ) : pr.descFormat === "number" ? (
+                        <div className="ml-4 space-y-1">
+                          {lines.map(
+                            (line, idx) =>
+                              line && (
+                                <p
+                                  key={idx}
+                                  className="flex items-start text-xs"
+                                >
+                                  <span className="mr-2">{idx + 1}.</span>
+                                  <span className="break-words">
+                                    {line.replace(/^\d+\.\s*/, "")}
+                                  </span>
+                                </p>
+                              )
+                          )}
+                        </div>
+                      ) : (
+                        <p className="text-xs mt-1 break-words whitespace-pre-line">
+                          {pr.desc}
+                        </p>
+                      )}
                     </div>
                   );
                 })}

@@ -66,11 +66,11 @@ export default function Template34({ data, onClickSection }) {
                   : "justify-center"
               }
             `}
-            onClick={() => onClickSection && onClickSection("image")}
+         
           >
             <div
               className={`
-                w-32 h-32 overflow-hidden bg-white border-4 border-white shadow-md cursor-pointer
+                w-32 h-32 overflow-hidden bg-white border-4 border-white shadow-md 
                 ${data?.imageShape === "circle"
                   ? "rounded-full"
                   : data?.imageShape === "rounded"
@@ -90,15 +90,15 @@ export default function Template34({ data, onClickSection }) {
 
           <div className="ml-8">
             <h1
-              className="text-4xl font-bold text-gray-800 tracking-wide cursor-pointer break-words"
-              onClick={() => onClickSection && onClickSection("personal")}
+              className="text-4xl font-bold text-gray-800 tracking-wide break-words"
+         
             >
               {data?.name || "DONNA STROUPE"}
             </h1>
 
             <p
-              className="text-lg text-gray-600 font-medium mt-1 cursor-pointer break-words"
-              onClick={() => onClickSection && onClickSection("personal")}
+              className="text-lg text-gray-600 font-medium mt-1  break-words"
+             
             >
               {data?.title || "Professional Sales Executive"}
             </p>
@@ -112,8 +112,8 @@ export default function Template34({ data, onClickSection }) {
         <div className="cv-sidebar bg-[#f3f6fa] rounded-2xl p-5 min-w-0">
           {/* CONTACT */}
           <section
-            className="mb-1 cursor-pointer"
-            onClick={() => onClickSection && onClickSection("personal")}
+            className="mb-1 "
+            
           >
             <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
               Contact
@@ -134,8 +134,8 @@ export default function Template34({ data, onClickSection }) {
           {/* SOCIAL LINKS (Works with checkbox toggle) */}
 {data?.visibleSections?.socialLinks !== false && (
   <section
-    className="mb-4 cursor-pointer"
-    onClick={() => onClickSection && onClickSection("socialLinks")}
+    className="mb-4 "
+    
   >
    
 
@@ -155,8 +155,8 @@ export default function Template34({ data, onClickSection }) {
           {/* SKILLS */}
           {data?.visibleSections?.skills !== false && (
             <section
-              className="mb-6 cursor-pointer"
-              onClick={() => onClickSection && onClickSection("skills")}
+              className="mb-6 "
+         
             >
               <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1">
                 Skills
@@ -243,8 +243,8 @@ export default function Template34({ data, onClickSection }) {
           {/* LANGUAGES */}
           {data?.visibleSections?.languages !== false && (
             <section
-              className="mb-6 cursor-pointer"
-              onClick={() => onClickSection && onClickSection("languages")}
+              className="mb-6 "
+              
             >
               <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
                 Language
@@ -299,8 +299,8 @@ export default function Template34({ data, onClickSection }) {
           {/* CERTIFICATIONS */}
           {data?.visibleSections?.certificates !== false && (
             <section
-              className="cursor-pointer mb-6"
-              onClick={() => onClickSection && onClickSection("certificates")}
+              className=" mb-6"
+            
             >
               <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-2 mb-3">
                 Certifications
@@ -325,8 +325,7 @@ export default function Template34({ data, onClickSection }) {
 
           {data?.visibleSections?.references !== false && (
             <section
-              className="mb-8 cursor-pointer"
-              onClick={() => onClickSection && onClickSection("references")}
+              className="mb-8 "
             >
               <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
                 References
@@ -349,8 +348,8 @@ export default function Template34({ data, onClickSection }) {
           {/* AWARDS – only if data.awards exists */}
           {awards.length > 0 && (
             <section
-              className="cursor-pointer mb-2"
-              onClick={() => onClickSection && onClickSection("awards")}
+              className=" mb-2"
+             
             >
               <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-2 mb-3">
                 Awards
@@ -376,8 +375,8 @@ export default function Template34({ data, onClickSection }) {
           {/* PROFILE SUMMARY */}
           {data?.visibleSections?.summary !== false && (
             <section
-              className="mb-8 cursor-pointer"
-              onClick={() => onClickSection && onClickSection("summary")}
+              className="mb-8 "
+             
             >
               <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1">
                 Profile Summary
