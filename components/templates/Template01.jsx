@@ -296,16 +296,16 @@ export default function Template01({ data, onClickSection }) {
                     AWARDS
                   </h2>
                   {(Awards.length ? Awards : [
-                    { name: "Employee of the Year", issuer: "Tech Company", year: "2023" },
-                    { name: "Best Innovation Award", issuer: "Industry Association", year: "2022" }
+                    { title: "Employee of the Year", issuer: "Tech Company", date: "2023" },
+                    { title: "Best Innovation Award", issuer: "Industry Association", date: "2022" }
                   ]).map((award, i) => (
                     <div key={i} className="mb-3">
                       <div className="flex justify-between items-start">
                         <div>
-                          <p className="font-bold text-sm break-words">{award.name}</p>
+                          <p className="font-bold text-sm break-words">{award.title}</p>
                           <p className="text-sm opacity-80 break-words">{award.issuer}</p>
                         </div>
-                        <p className="text-xs opacity-60">{award.year}</p>
+                        <p className="text-xs opacity-60">{award.date}</p>
                       </div>
                       {award.description && (
                         <p className="text-sm mt-1 break-words">{award.description}</p>

@@ -56,12 +56,12 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
   const handleDescriptionChange = (index, value) => {
     const format = projects[index].descFormat || 'default';
     const prevValue = projects[index].desc || '';
-    
+
     // Auto-format when Enter is pressed in bullet/number mode
     if (format === 'bullet' || format === 'number') {
       const prevLines = prevValue.split('\n').length;
       const newLines = value.split('\n').length;
-      
+
       // If new line was added (Enter pressed)
       if (newLines > prevLines) {
         const formatted = formatText(value, format);
@@ -69,7 +69,7 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
         return;
       }
     }
-    
+
     updateProject(index, 'desc', value);
   };
 
@@ -281,16 +281,22 @@ export default function ProjectInput({ projects = [], setProjects, onClose }) {
       </button>
 
       {/* Footer */}
-      <div className="flex justify-start pt-4">
+      <div className="w-full flex items-center justify-between pt-4 text-sm ">
+
+        {/* Left Button */}
+        <div className="flex justify-start">
+          <button
+            className="px-3 py-2 rounded-xl border border-gray-300 hover:bg-gray-100 transition"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+        </div>
+
+        {/* Right Button */}
         <button
+          className="px-3 py-2 rounded-xl bg-[#634BC9] text-white hover:bg-[#553fb2] transition justify-end"
           onClick={onClose}
-          className="px-4 py-1 rounded-xl border border-gray-300 hover:bg-gray-100 transition"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={onClose}
-          className="px-2 py-2 rounded-xl bg-[#634BC9] text-white hover:bg-[#553fb2] transition"
         >
           Finish
         </button>

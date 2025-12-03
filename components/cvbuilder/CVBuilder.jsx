@@ -163,28 +163,38 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
     }
   };
 
-  const buildShareUrlWithData = (data) => {
-    if (typeof window === "undefined") return "";
+  const buildShareUrlWithData = async (data) => {
+    try {
+      const response = await fetch(`${API_URL}/api/share/create`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          templateId: template,
+          templateData: data
+        })
+      });
 
-    const url = new URL(window.location.origin + "/resume-view");
-    const shareId =
-      Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-    const payload = {
-      shareId,
-      template, // from state: const [template, setTemplate] = useState(...)
-      data,
-    };
+      if (!response.ok) {
+        throw new Error('Failed to create share link');
+      }
 
-    const encoded = encodeDataForUrl(payload);
-    if (!encoded) return url.toString();
+      const result = await response.json();
+      return result.url;
 
-    url.searchParams.set("cv", encoded);
-    return url.toString();
+    } catch (error) {
+      console.error('Error creating share URL:', error);
+      return null;
+    }
   };
 
   const handleShareUrl = async () => {
     try {
-      const shareUrl = buildShareUrlWithData(data);
+      setToast("Generating share link...");
+
+      const shareUrl = await buildShareUrlWithData(data);
+
       if (!shareUrl) {
         setToast("Could not build share URL.");
         return;
@@ -197,7 +207,6 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
           url: shareUrl,
         });
       } else {
-        // fallback: copy link
         if (navigator.clipboard && window.isSecureContext) {
           await navigator.clipboard.writeText(shareUrl);
           setToast("Link copied to clipboard!");
@@ -213,7 +222,10 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
 
   const handleCopyLink = async () => {
     try {
-      const shareUrl = buildShareUrlWithData(data);
+      setToast("Generating link...");
+
+      const shareUrl = await buildShareUrlWithData(data);
+
       if (!shareUrl) {
         setToast("Could not build share URL.");
         return;
@@ -221,7 +233,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
 
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(shareUrl);
-        setToast("Link copied to clipboard! You can paste it into WhatsApp, Email, etc.");
+        setToast("Link copied! You can paste it into WhatsApp, Email, etc.");
       } else {
         setToast("Copy to clipboard is not supported in this browser.");
       }

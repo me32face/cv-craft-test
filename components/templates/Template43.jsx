@@ -113,9 +113,9 @@ export default function Template43({ data, onClickSection }) {
               <div className="space-y-1">
                 {(data?.languages?.length ? data.languages : ["Spanish", "Arabic", "English"]).map((l, i) =>
                   renderLanguage(l, i, {
-                barContainer: "w-full bg-gray-200 rounded-full h-1 mt-2",
-                bar: "bg-gray-500 h-1 rounded-full transition-all"
-              })
+                    barContainer: "w-full bg-gray-200 rounded-full h-1 mt-2",
+                    bar: "bg-gray-500 h-1 rounded-full transition-all"
+                  })
                 )}
               </div>
             </section>
