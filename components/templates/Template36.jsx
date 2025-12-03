@@ -508,7 +508,7 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
                           {expLocation}
                         </div>
                         <span
-                          className="absolute right-[-10px] top-1/2 -translate-y-[190%] w-2 h-2 bg-blue-900 rounded-full inline-block"
+                          className="absolute right-[-10px] top-[3px] w-2 h-2 bg-blue-900 rounded-full inline-block"
                         />
                       </div>
 
