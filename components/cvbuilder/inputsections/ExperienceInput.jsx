@@ -1,14 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { ChevronDown, Sparkles, List, ListOrdered, AlignLeft } from "lucide-react";
 import { geminiService } from "./gemini";
 import Toast from "../../Toast";
+import { CalendarDays } from "lucide-react";
 // MUI
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-
 
 export default function ExperienceInput({ experiences = [], setExperiences, onClose, onNext }) {
   const [openIndex, setOpenIndex] = useState(null);
@@ -16,6 +16,10 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
   const [toast, setToast] = useState(null);
   const currentYear = dayjs().year();
   const currentMonth = dayjs().month();
+  const [open, setOpen] = useState(false);
+  const [openEnd, setOpenEnd] = useState(false);
+  const anchorRef = useRef(null);
+  const anchorEndRef = useRef(null);
 
   const emptyExp = {
     role: "",
@@ -299,15 +303,35 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
 
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
 
-                          {/* START DATE */}
+                          {/* ========================= START DATE ========================= */}
                           <div>
-                            <label className="font-medium block">Start Date</label>
+                            <label className="font-medium block mb-1">Start Date</label>
+
+                            {/* Fake input */}
+                            <div
+                              ref={anchorRef}
+                              className="w-full p-3 rounded-xl border flex items-center justify-between cursor-pointer"
+                              onClick={() => setOpen(true)}
+                            >
+                              <span>
+                                {exp.start ? dayjs(exp.start).format("MMM YYYY") : "Select Month & Year"}
+                              </span>
+
+                              <CalendarDays
+                                size={20}
+                                className="text-gray-500 hover:text-black"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setOpen(true);
+                                }}
+                              />
+                            </div>
                             <DatePicker
-                              views={["year", "month"]}
-                              format="MMM YYYY"
+                              open={open}
+                              onClose={() => setOpen(false)}
+                              views={["month","year"]}
                               value={exp.start ? dayjs(exp.start) : null}
                               maxDate={dayjs()}
-                              Contenteditable={false}
                               onChange={(date) => {
                                 if (!date) return;
 
@@ -315,65 +339,82 @@ export default function ExperienceInput({ experiences = [], setExperiences, onCl
                                 const selectedMonth = date.month();
                                 const formatted = date.format("YYYY-MM");
 
-                                // Prevent selecting future year
                                 if (selectedYear > currentYear) {
                                   setToast("You cannot select a future year");
                                   return;
                                 }
 
-                                // Prevent selecting future month in the current year
                                 if (selectedYear === currentYear && selectedMonth > currentMonth) {
                                   setToast("You cannot select a future month");
                                   return;
                                 }
 
                                 updateField(i, "start", formatted);
+                                setOpen(false);
                               }}
                               slotProps={{
-                                textField: { className: "w-full p-1 rounded-xl border" },
+                                textField: { style: { display: "none" } },
+                                popper: { anchorEl: anchorRef.current },
                               }}
                             />
-
                           </div>
 
-                          {/* END DATE */}
+                          {/* ========================= END DATE ========================= */}
                           {!exp.current && (
                             <div className="mt-4">
-                              <label className="font-medium block">End Date</label>
+                              <label className="font-medium block mb-1">End Date</label>
+                              <div
+                                ref={anchorEndRef}
+                                className="w-full p-3 rounded-xl border flex items-center justify-between cursor-pointer"
+                                onClick={() => setOpenEnd(true)}
+                              >
+                                <span>
+                                  {exp.end ? dayjs(exp.end).format("MMM YYYY") : "Select End Month & Year"}
+                                </span>
+
+                                <CalendarDays
+                                  size={20}
+                                  className="text-gray-500 hover:text-black"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setOpenEnd(true);
+                                  }}
+                                />
+                              </div>
+
                               <DatePicker
-                                views={["year", "month"]}
-                                format="MMM YYYY"
+                                open={openEnd}
+                                onClose={() => setOpenEnd(false)}
+                                views={["month","year"]}
                                 value={exp.end ? dayjs(exp.end) : null}
-                                maxDate={dayjs()}  // ⬅ Prevent future dates
+                                maxDate={dayjs()}
                                 onChange={(date) => {
                                   if (!date) return;
 
                                   const formatted = date.format("YYYY-MM");
-                                  const selectedYear = Number(date.format("YYYY"));
-                                  const currentYear = new Date().getFullYear();
+                                  const selectedYear = date.year();
 
-                                  // Prevent future year
-                                  if (selectedYear > currentYear) {
+                                  if (selectedYear > new Date().getFullYear()) {
                                     setToast("You cannot select a future year");
                                     return;
                                   }
 
-                                  // End >= Start validation
                                   if (exp.start && formatted < exp.start) {
                                     setToast("End date must be greater than start date");
                                     return;
                                   }
-
                                   updateField(i, "end", formatted);
+                                  setOpenEnd(false);
                                 }}
                                 slotProps={{
-                                  textField: { className: "mt-1 w-full p-3 rounded-xl border" },
+                                  textField: { style: { display: "none" } },
+                                  popper: { anchorEl: anchorEndRef.current },
                                 }}
                               />
                             </div>
                           )}
-                        </LocalizationProvider>
 
+                        </LocalizationProvider>
                       </div>
 
                       <div className="flex items-center gap-3 mt-3">
