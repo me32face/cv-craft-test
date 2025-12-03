@@ -1,4 +1,4 @@
-import Resume from "../models/Resume.js";
+import {Resume} from "../models/Resume.js";
 import jwt from "jsonwebtoken";
 
 export const saveResume = async (req, res) => {

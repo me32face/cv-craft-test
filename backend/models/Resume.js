@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
+
 const resumeSchema = new mongoose.Schema({
   userId: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'User', 
-    required: true,
+    required: false,
     index: true  // for faster queries
   },
   
@@ -139,4 +140,32 @@ const resumeSchema = new mongoose.Schema({
 // Index for faster user-specific queries
 resumeSchema.index({ userId: 1, lastModified: -1 });
 
-export default mongoose.model('Resume', resumeSchema);
+
+// Share URL Schema
+const sharedSchema = new mongoose.Schema({
+  resumeId: {type: mongoose.Schema.Types.ObjectId},
+
+  shareId: { 
+  type: String, 
+  unique: true,
+  sparse: true,  // allows null values, only enforces uniqueness when present
+  index: true    // for fast lookups
+},
+isShared: {
+  type: Boolean,
+  default: false
+},
+shareViewCount: {
+  type: Number,
+  default: 0
+},
+shareCreatedAt: {
+  type: Date
+}
+
+})
+
+
+
+export const Resume = mongoose.model('Resume', resumeSchema);
+export const ShareUrl = mongoose.model('ShareUrl', sharedSchema); 

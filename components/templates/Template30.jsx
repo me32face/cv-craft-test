@@ -136,9 +136,9 @@ export default function Template30({ data, onClickSection }) {
               }
               return (
                 <div key={i} className="mb-2">
-                  <p className="text-sm font-medium break-words">{a.name}</p>
+                  <p className="text-sm font-medium break-words">{a.title}</p>
                   {a.issuer && <p className="text-xs opacity-80 break-words">{a.issuer}</p>}
-                  {a.year && <p className="text-xs opacity-80 break-words">{a.year}</p>}
+                  {a.date && <p className="text-xs opacity-80 break-words">{a.date}</p>}
                   {a.description && <p className="text-xs opacity-80 break-words">{a.description}</p>}
                 </div>
               );

@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
 import resumeRoutes from "./routes/resumeRoutes.js";
+import shareRoutes from "./routes/shareRoutes.js";
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ mongoose
 //  Routes
 app.use("/api", authRoutes);
 app.use("/api/resumes", resumeRoutes);
+app.use("/api/share", shareRoutes);
 
 //  Test route
 app.get("/", (req, res) => {
