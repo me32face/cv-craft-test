@@ -28,8 +28,8 @@ export default function Template35({ data, onClickSection }) {
       {/* HEADER */}
       {visible.personal !== false && (
         <header
-          className="border-b pb-4 mb-6 cursor-pointer"
-          onClick={() => onClickSection("personal")}
+          className="border-b pb-4 mb-6 "
+          
         >
           <h1 className="text-4xl font-bold break-words">
             {data.name || "ALEXANDER REED"}
@@ -57,29 +57,29 @@ export default function Template35({ data, onClickSection }) {
                 <MapPin size={14} /> {data.address}
               </p>
             )}
-
-            {/* SOCIAL LINKS (dynamic from SocialLinks.jsx) */}
+           
+          </div>
+           {/* SOCIAL LINKS (dynamic from SocialLinks.jsx) */}
             {visible.socialLinks !== false &&
               Array.isArray(data?.socialLinks) &&
               data.socialLinks.length > 0 && (
                 <div
-                  className="flex flex-col gap-1 mt-2 text-sm cursor-pointer"
-                  onClick={() => onClickSection("social")}
+                  className="flex  gap-5 mt-2 text-sm "
+                  
                 >
                   {data.socialLinks.map((link, i) => (
                     <SocialLinkDisplay key={i} link={link} />
                   ))}
                 </div>
               )}
-          </div>
         </header>
       )}
 
       {/* SUMMARY */}
       {visible.summary !== false && (
         <section
-          className="mb-8 cursor-pointer"
-          onClick={() => onClickSection("summary")}
+          className="mb-8 "
+         
         >
           <h2 className="text-xl font-semibold border-b pb-1 mb-2">
             Professional Summary
@@ -97,8 +97,8 @@ export default function Template35({ data, onClickSection }) {
           {/* EXPERIENCE */}
           {visible.experience !== false && (
             <section
-              className="mb-8 cursor-pointer"
-              onClick={() => onClickSection("experience")}
+              className="mb-8 "
+              
             >
               <h2 className="text-xl font-semibold border-b pb-1 mb-4">
                 Work Experience
@@ -145,7 +145,7 @@ export default function Template35({ data, onClickSection }) {
                 const isMulti = lines.length > 1;
 
                 return (
-                  <div key={i} className="mb-5 text-sm cv-item">
+                  <div key={i} className="mb-5 text-sm -">
                     {/* Job title & date */}
                     <div className="flex justify-between gap-2">
                       <p className="font-bold break-words flex-1 min-w-0">
@@ -212,8 +212,8 @@ export default function Template35({ data, onClickSection }) {
           {/* {projects} */}
           {visible.projects !== false && (
             <section
-              className="mb-8 cursor-pointer"
-              onClick={() => onClickSection("projects")}
+              className="mb-8 "
+           
             >
               <h2 className="text-xl font-semibold border-b pb-1 mb-3">
                 Projects
@@ -245,7 +245,7 @@ export default function Template35({ data, onClickSection }) {
                 const format = p.descFormat || "default";
 
                 return (
-                  <div key={i} className="mb-5 text-sm cv-item">
+                  <div key={i} className="mb-5 text-sm ">
                     <div className="flex justify-between mb-1 gap-2">
                       <p className="font-bold break-words flex-1 min-w-0">
                         {p.name}
@@ -312,8 +312,8 @@ export default function Template35({ data, onClickSection }) {
           {/* EDUCATION */}
           {visible.education !== false && (
             <section
-              className="mb-8 cursor-pointer cv-item"
-              onClick={() => onClickSection("education")}
+              className="mb-8 "
+           
             >
               <h2 className="text-xl font-semibold border-b pb-1 mb-4">
                 Education
@@ -356,7 +356,7 @@ export default function Template35({ data, onClickSection }) {
                 const isMultiLine = lines.length > 1;
 
                 return (
-                  <div key={i} className="mb-4 text-sm cv-item">
+                  <div key={i} className="mb-4 text-sm ">
                     {/* Degree */}
                     <p className="font-bold break-words">
                       {ed.degree || "Course / Degree"}
@@ -414,8 +414,8 @@ export default function Template35({ data, onClickSection }) {
           {/* CERTIFICATES */}
           {visible.certificates !== false && (
             <section
-              className="mb-8 cursor-pointer"
-              onClick={() => onClickSection("certificates")}
+              className="mb-8 "
+         
             >
               <h2 className="text-xl font-semibold border-b pb-1 mb-4">
                 Certifications
@@ -446,8 +446,8 @@ export default function Template35({ data, onClickSection }) {
           {/* AWARDS */}
           {visible.awards !== false && awards.length > 0 && (
             <section
-              className="mb-8 cursor-pointer cv-item"
-              onClick={() => onClickSection("awards")}
+              className="mb-8 "
+              
             >
               <h2 className="text-xl font-semibold border-b pb-1 mb-4">
                 Awards
@@ -484,8 +484,8 @@ export default function Template35({ data, onClickSection }) {
           {/* SKILLS */}
           {visible.skills !== false && (
             <section
-              className="mb-8 cursor-pointer"
-              onClick={() => onClickSection("skills")}
+              className="mb-8 "
+             
             >
               <h2 className="text-xl font-semibold border-b pb-1 mb-3">
                 Skills
@@ -507,7 +507,7 @@ export default function Template35({ data, onClickSection }) {
 
                   if (sk.proficiency !== undefined) {
                     return (
-                      <div key={i} className="cv-item">
+                      <div key={i} className="">
                         <div className="flex justify-between text-sm gap-2">
                           <span className="break-words flex-1 min-w-0">
                             {sk.name}
@@ -550,8 +550,8 @@ export default function Template35({ data, onClickSection }) {
           {/* LANGUAGES */}
           {visible.languages !== false && (
             <section
-              className="mb-8 cursor-pointer"
-              onClick={() => onClickSection("languages")}
+              className="mb-8 "
+             
             >
               <h2 className="text-xl font-semibold border-b pb-1 mb-3">
                 Languages
@@ -570,7 +570,7 @@ export default function Template35({ data, onClickSection }) {
                     const lang = safeObj(l);
 
                     return (
-                      <div key={i} cv-item>
+                      <div key={i}>
                         <div className="flex justify-between gap-2">
                           <span className="break-words flex-1 min-w-0">
                             {lang.name}
@@ -608,8 +608,8 @@ export default function Template35({ data, onClickSection }) {
           {/* REFERENCES */}
           {visible.references !== false && (
             <section
-              className="cursor-pointer"
-              onClick={() => onClickSection("references")}
+              className=""
+          
             >
               <h2 className="text-xl font-semibold border-b pb-1 mb-3">
                 References
@@ -627,7 +627,7 @@ export default function Template35({ data, onClickSection }) {
                       },
                     ]
                 ).map((ref, i) => (
-                  <div key={i} className="cv-item">
+                  <div key={i} className="">
                     <div className="font-semibold break-words">{ref.name}</div>
                     <div className="opacity-80 break-words">{ref.title}</div>
                     <div className="break-words">{ref.phone}</div>

@@ -139,15 +139,17 @@ export default function Template40({ data, onClickSection }) {
       <div className="bg-gray-900 text-white px-8 py-4 border-b border-gray-700 flex justify-between items-center">
         <div className="flex-1">
           <h1
-            className="text-4xl font-bold tracking-tight cursor-pointer mb-1"
-            onClick={() => onClickSection("personal")}
+            className="text-4xl font-bold tracking-tight  mb-1"
+          
+            
           >
             {finalData.name}
           </h1>
 
           <p
-            className="text-xl text-indigo-100 font-light tracking-wide cursor-pointer"
-            onClick={() => onClickSection("personal")}
+            className="text-xl text-indigo-100 font-light tracking-wide "
+         
+            
           >
             {finalData.title}
           </p>
@@ -155,12 +157,13 @@ export default function Template40({ data, onClickSection }) {
 
         {/* Profile Image */}
         <div
-          onClick={() => onClickSection("image")}
+        
+        
           className="flex items-center justify-center"
         >
 
          <div
-  className={`profile-img-box overflow-hidden border border-gray-300 cursor-pointer`}
+  className={`profile-img-box overflow-hidden border border-gray-300 `}
   style={{
     width: finalData.imageSize || "110px",
     height: finalData.imageSize || "110px",
@@ -189,8 +192,8 @@ export default function Template40({ data, onClickSection }) {
         <div className="cv-sidebar w-1/3 bg-gray-50 px-6 py-6 min-h-[1123px] border-r border-gray-300">
           {/* CONTACT */}
           <section
-            className="mb-6 cursor-pointer cv-item"
-            onClick={() => onClickSection("personal")}
+            className="mb-6  cv-item"
+            
           >
             <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
               Contact
@@ -215,10 +218,11 @@ export default function Template40({ data, onClickSection }) {
 
               {socialLinks.length > 0 && (
                 <div
-                  className="mt-3 cursor-pointer"
-                  onClick={() => onClickSection("socialLinks")}
+                  className="mt-3 "
+                 
+                  
                 >
-                  <h4 className="text-sm font-semibold">Social Links</h4>
+                 
                   <div className="space-y-1 text-sm">
                     {socialLinks.map((link, i) => (
                       <SocialLinkDisplay key={i} link={link} />
@@ -231,14 +235,15 @@ export default function Template40({ data, onClickSection }) {
 
           {/* SKILLS */}
           <section
-  className="mb-6 cursor-pointer"
-  onClick={() => onClickSection("skills")}
+  className="mb-6"
+
+
 >
   <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
     Skills
   </h3>
 
-  <div className="space-y-3">
+  <div className="space-y-1">
     {skills.map((s, i) => {
       // 🔹 BULLET FORMAT → plain string
       if (typeof s === "string") {
@@ -309,8 +314,9 @@ export default function Template40({ data, onClickSection }) {
 </section>
           {/* LANGUAGES */}
           <section
-            className="mb-6 cursor-pointer"
-            onClick={() => onClickSection("languages")}
+            className="mb-6 "
+          
+            
           >
             <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
               Languages
@@ -333,8 +339,9 @@ export default function Template40({ data, onClickSection }) {
           {/* CERTIFICATIONS */}
           {visible.certificates !== false && certificates.length > 0 && (
             <section
-              className="mb-6 cursor-pointer"
-              onClick={() => onClickSection("certificates")}
+              className="mb-6 "
+              
+              
             >
               <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
                 Certifications
@@ -360,8 +367,9 @@ export default function Template40({ data, onClickSection }) {
           {/* AWARDS */}
           {visible.awards !== false && awards.length > 0 && (
             <section
-              className="mb-6 cursor-pointer"
-              onClick={() => onClickSection("awards")}
+              className="mb-6 "
+           
+              
             >
               <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
                 Awards
@@ -392,8 +400,9 @@ export default function Template40({ data, onClickSection }) {
           {/* REFERENCES */}
           {visible.references !== false && references.length > 0 && (
             <section
-              className="mb-6 cursor-pointer"
-              onClick={() => onClickSection("references")}
+              className="mb-6 "
+              
+              
             >
               <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 mb-3 pb-2 border-b-2 border-indigo-200">
                 References
@@ -427,8 +436,9 @@ export default function Template40({ data, onClickSection }) {
         <div className="w-2/3 px-8 py-6">
           {/* ABOUT */}
           <section
-            className="mb-6 cursor-pointer cv-item"
-            onClick={() => onClickSection("summary")}
+            className="mb-6  cv-item"
+          
+            
           >
             <h3 className="text-lg font-bold uppercase tracking-wide text-gray-800 mb-3 pb-2 border-b-2 border-indigo-600">
               About Me
@@ -440,8 +450,9 @@ export default function Template40({ data, onClickSection }) {
         {/* EXPERIENCE */}
 {visible.experience !== false && (
   <section
-    className="mb-6 cursor-pointer"
-    onClick={() => onClickSection("experience")}
+    className="mb-6 "
+
+    
   >
     <h3 className="text-lg font-bold uppercase tracking-wide text-gray-800 mb-3 pb-2 border-b-2 border-indigo-600">
       Work Experience
@@ -510,26 +521,20 @@ export default function Template40({ data, onClickSection }) {
           )}
 
           {/* Description */}
-          {desc && (
-            <>
-              {isMulti ? (
-                <ul className="list-disc pl-5 mt-1 space-y-1">
-                  {lines.map(
-                    (line, idx) =>
-                      line && (
-                        <li key={idx} className="break-words">
-                          {line}
-                        </li>
-                      )
-                  )}
-                </ul>
-              ) : (
-                <p className="mt-1 leading-relaxed break-words">
-                  {desc}
-                </p>
-              )}
-            </>
-          )}
+   {desc && (
+  <>
+    {e.descFormat === "bullet" || e.descFormat === "number" ? (
+      <div className="mt-1 break-words whitespace-pre-line">
+        {desc}
+      </div>
+    ) : (
+      <p className="mt-1 leading-relaxed break-words whitespace-pre-line">
+        {desc}
+      </p>
+    )}
+  </>
+)}
+
 
           {/* Reference */}
           {e.reference && (
@@ -546,8 +551,9 @@ export default function Template40({ data, onClickSection }) {
 
           {/* EDUCATION */}
           <section
-            className="mb-6 cursor-pointer"
-            onClick={() => onClickSection("education")}
+            className="mb-6 "
+        
+            
           >
             <h3 className="text-lg font-bold uppercase tracking-wide text-gray-800 mb-3 pb-2 border-b-2 border-indigo-600">
               Education
@@ -589,8 +595,8 @@ export default function Template40({ data, onClickSection }) {
 
           {/* PROJECTS */}
           <section
-            className="cursor-pointer"
-            onClick={() => onClickSection("projects")}
+            className=""
+          
           >
             <h3 className="text-lg font-bold uppercase tracking-wide text-gray-800 mb-3 pb-2 border-b-2 border-indigo-600">
               Projects
