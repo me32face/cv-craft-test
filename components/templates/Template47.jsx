@@ -548,7 +548,7 @@ const Template47 = ({ data = {}, onClickSection }) => {
                     </h5>
                     <p className="text-xs text-gray-500 break-words">{jobLocation}</p>
                   </div>
-                  <ul className="list-disc list-outside ml-5 space-y-0.5 text-xs text-gray-700 leading-snug break-words">
+                  <ul className="list-outside ml-5 space-y-0.5 text-xs text-gray-700 leading-snug break-words">
                     {renderExperienceItems(job)}
                   </ul>
                 </div>
