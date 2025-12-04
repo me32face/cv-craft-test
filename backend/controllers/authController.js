@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-import { OAuth2Client} from "google-auth-library";
+import { OAuth2Client } from "google-auth-library";
 
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -97,7 +97,7 @@ export const getProfile = async (req, res) => {
         const token = authHeader.split(" ")[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        const user = await User.findById(decoded.id).select("-password");
+        const user = await User.findById(decoded.id).select("password");
         if (!user)
             return res.status(404).json({ success: false, message: "User not found" });
 
@@ -118,46 +118,46 @@ export const getProfile = async (req, res) => {
 };
 
 export const googleAuth = async (req, res) => {
-  const { token } = req.body;
+    const { token } = req.body;
 
-  try {
-    // Verify Google ID token
-    const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
+    try {
+        // Verify Google ID token
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
 
-    const payload = ticket.getPayload();
+        const payload = ticket.getPayload();
 
-    // Check if user exists
-    let user = await User.findOne({ email: payload.email });
+        // Check if user exists
+        let user = await User.findOne({ email: payload.email });
 
-    if (!user) {
-      // Register new user
-      user = await User.create({
-        name: payload.name,
-        email: payload.email,
-        googleId: payload.sub,
-      });
+        if (!user) {
+            // Register new user
+            user = await User.create({
+                name: payload.name,
+                email: payload.email,
+                googleId: payload.sub,
+            });
+        }
+
+        // Generate JWT token
+        const jwtToken = jwt.sign(
+            { id: user._id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
+        );
+
+        // Return token and user info
+        res.json({
+            success: true,
+            message: user ? "Logged in successfully" : "User registered and logged in",
+            token: jwtToken,
+            user: { id: user._id, name: user.name, email: user.email },
+        });
+    } catch (err) {
+        console.error("Google auth error:", err);
+        res.status(400).json({ success: false, message: "Google authentication failed" });
     }
-
-    // Generate JWT token
-    const jwtToken = jwt.sign(
-      { id: user._id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
-
-    // Return token and user info
-    res.json({
-      success: true,
-      message: user ? "Logged in successfully" : "User registered and logged in",
-      token: jwtToken,
-      user: { id: user._id, name: user.name, email: user.email },
-    });
-  } catch (err) {
-    console.error("Google auth error:", err);
-    res.status(400).json({ success: false, message: "Google authentication failed" });
-  }
 };
 
