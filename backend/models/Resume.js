@@ -26,6 +26,7 @@ const resumeSchema = new mongoose.Schema({
     phone: String,
     email: String,
     address: String,
+    dob: String,
     summary: String,
     profileImage: String,
     imageShape: String,
@@ -120,7 +121,9 @@ const resumeSchema = new mongoose.Schema({
       issuer: String,
       year: String,
       description: String
-    }]
+    }],
+    
+    maritalStatus: String,
   },
   
   isDefault: { 

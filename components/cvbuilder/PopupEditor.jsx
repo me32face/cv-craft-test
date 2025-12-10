@@ -12,7 +12,7 @@ import SocialLinks from "./inputsections/SocialLinks";
 import SkillsInput from "./inputsections/SkillsInput";
 import ReferenceInput from "./inputsections/ReferenceInput";
 import AwardInput from "./inputsections/AwardInput";
-
+import MaritalStatusInput from "./inputsections/MaritalStatusInput";
 export default function PopupEditor({ visible, section, onClose, data, update, onNext, selectedTemplate }) {
   if (!visible) return null;
 
@@ -30,7 +30,8 @@ export default function PopupEditor({ visible, section, onClose, data, update, o
   const additionalSections = [
     "certificates",
     "references",
-    "awards"
+    "awards",
+    "maritalStatus"
   ];
 
 
@@ -46,6 +47,7 @@ export default function PopupEditor({ visible, section, onClose, data, update, o
     projects: "project",
     references: "references",
     awards: "awards",
+    maritalStatus: "maritalStatus"
   };
 
   const templateKey = selectedTemplate;
@@ -228,6 +230,18 @@ export default function PopupEditor({ visible, section, onClose, data, update, o
           "awards",
           "Show Awards"
         );
+
+     case "maritalstatus":
+  return renderSectionWithToggle(
+    <MaritalStatusInput
+      maritalStatus={data.maritalStatus}
+      setMaritalStatus={(v) => update("maritalStatus", v)}
+      onClose={onClose}
+      onNext={() => onNext(getNextAvailableSection("maritalstatus"))}
+    />,
+    "maritalStatus",
+    "Show Marital Status"
+  );
 
       default:
         return <div className="text-gray-500">No sections available to edit</div>;

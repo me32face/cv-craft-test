@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Phone, Mail, Globe, MapPin } from 'lucide-react';
+import { Phone, Mail, Globe, MapPin,Calendar } from 'lucide-react';
 import SocialLinkDisplay from "../SocialLinkDisplay";
 
 // --- Static Resume Data (kept as sample defaults) ---
@@ -422,6 +422,13 @@ const Template47 = ({ data = {}, onClickSection }) => {
           <ContactItem icon={Globe} text={merged.website} />
           <ContactItem icon={MapPin} text={headerLocation} />
 
+         {merged.dob && (
+         <div className="flex items-center text-xs mx-3 text-gray-700">
+           <Calendar className="w-3 h-3 mr-1 flex-shrink-0" style={{ color: navyAccent }} />
+          <span className="truncate">{merged.dob}</span>
+         </div>
+       )}
+          
           {/* SOCIAL LINKS – inline with others, wrap when needed */}
           {normalizedSocialLinks.length > 0 &&
             normalizedSocialLinks.map((link, idx) => (

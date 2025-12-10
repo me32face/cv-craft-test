@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { templates, templateInputs } from "../templates";
-import { User, Camera, Link2, Code, GraduationCap, Briefcase, Globe, Award, Printer, Share2, Download, ZoomIn, ZoomOut, Expand, Sparkles, ChevronLeft, Menu, FolderCode, X, Home, FileText, Users, BookPlus, ChevronUp } from "lucide-react";
+import { User, Camera, Link2, Code, GraduationCap, Briefcase, Globe, Award, Printer, Share2, Download, ZoomIn, ZoomOut, Expand, Sparkles, ChevronLeft, Menu, FolderCode, X, Home, FileText, Users, BookPlus, ChevronUp ,Gem,Ring  } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import PopupEditor from "./PopupEditor"; // reusable popup
@@ -342,6 +342,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
     phone: "+91 987654321",
     email: "john@example.com",
     address: "New Delhi, India",
+    dob: "",
     socialLinks: [],
     profileImage: "",
     imageShape: "circle",
@@ -355,6 +356,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
       education: true,
       certificates: true,
       socialLinks: true,
+      maritalStatus: true
     },
 
     languages: [
@@ -388,6 +390,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
     ],
     references: [],
     awards: [],
+    maritalStatus: "",
   });
 
   useEffect(() => {
@@ -509,6 +512,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
       { name: "Certificates", key: "certificates", icon: Award, inputKey: "certificates" },
       { name: "References", key: "references", icon: Users, inputKey: "references" },
       { name: "Awards", key: "awards", icon: FileText, inputKey: "awards" },
+      {name: "Marital Status", key: "maritalstatus", icon: Gem, inputKey: "maritalStatus" },
     ];
     return items.filter(item => !item.inputKey || config[item.inputKey] !== false);
   }, [template]);

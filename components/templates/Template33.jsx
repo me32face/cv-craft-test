@@ -2,7 +2,7 @@
 
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
-import { Phone, Mail, MapPin, Link } from "lucide-react";
+import { Phone, Mail, MapPin, Link, Calendar } from "lucide-react";
 import SocialLinkDisplay from "../SocialLinkDisplay";
 
 export default function Template35({ data, onClickSection }) {
@@ -45,7 +45,7 @@ export default function Template35({ data, onClickSection }) {
         {/* Contact */}
         <div>
           <div className="mb-4">
-            <h2 className="font-semibold text-md mb-2">CONTACT</h2>
+            <h2 className="font-semibold text-md mb-2 uppercase">perosonal Details</h2>
             <div className="flex items-center gap-2 leading-[1.4] text-sm break-words">
               <Phone size={14} className="shrink-0 translate-y-[-1px]" />
               <span>{data?.phone || "123-456-7890"}</span>
@@ -58,6 +58,22 @@ export default function Template35({ data, onClickSection }) {
               <MapPin size={14} className="shrink-0 translate-y-[-1px]" />
               <span>{data?.address || "123 Anywhere St., Any City"}</span>
             </div>
+
+           {data.dob?(
+             <div className="flex items-center gap-2 leading-[1.4] text-sm break-words">
+              <Calendar size={14} className="shrink-0 translate-y-[-1px]" />
+              <span>{data?.dob }</span>
+            </div>
+           ) : null}
+
+           {data.visibleSections?.maritalStatus && data.maritalStatus && (
+            <div className="flex items-center gap-2 leading-[1.4] text-sm break-words">
+              <span className="font-medium">Marital Status:</span>
+              <span>{data.maritalStatus}</span>
+            </div>
+           )}
+            
+               
             {data?.visibleSections?.socialLinks !== false && (
               <>
                 {socialLinks.length > 0 && (

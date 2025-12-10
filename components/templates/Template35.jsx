@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Phone, Mail, MapPin } from "lucide-react";
+import { Phone, Mail, MapPin, Calendar } from "lucide-react";
 import SocialLinkDisplay from "../SocialLinkDisplay";
 export default function Template35({ data, onClickSection }) {
   const toArray = (v) =>
@@ -58,6 +58,18 @@ export default function Template35({ data, onClickSection }) {
               </p>
             )}
            
+      {data?.dob && (
+       <p className="flex items-center gap-1 break-words">
+                <Calendar size={14} /> {data.dob}
+              </p>
+              )}
+{data?.visibleSections?.maritalStatus !== false && data?.maritalStatus && (
+  <div className="flex items-center gap-1 break-words">
+    <span className="font-semibold">Marital Status:</span>
+    {data.maritalStatus}
+  </div>
+)}
+             
           </div>
            {/* SOCIAL LINKS (dynamic from SocialLinks.jsx) */}
             {visible.socialLinks !== false &&

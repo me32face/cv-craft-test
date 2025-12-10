@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Phone, Mail } from 'lucide-react';
+import { Phone, Mail, Calendar } from 'lucide-react';
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput'; // kept as-is (we shadow it below)
 import SocialLinkDisplay from "../SocialLinkDisplay";
 
@@ -390,54 +390,68 @@ export default function TemplateGracePerfect({ data = {}, onClickSection }) {
             </div>
 
             {/* header location line */}
-            <div className="mt-1 text-[12px] text-gray-700 break-words">
-              {displayLocation}
-            </div>
-
-            <div className="flex flex-wrap items-center gap-3 text-[11px] text-gray-600 mt-2.5 cv-header-contacts">
-              {merged.phone && (
-                <div className="flex items-center gap-1 break-words">
-                  <Phone className="w-3 h-3" />
-                  <span className='pt-1'>{merged.phone}</span>
-                </div>
-              )}
-              {merged.email && (
-                <div className="flex items-center gap-1 break-words">
-                  <Mail className="w-3 h-3" />
-                  <span className='pt-1'>{merged.email}</span>
-                </div>
-              )}
-
-              {isSectionVisible('socialLinks') &&
-                normalizedSocialLinks.length > 0 &&
-                normalizedSocialLinks.map((link, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-1 text-[11px] text-gray-600 break-words pt-1"
-                  >
-                    <SocialLinkDisplay link={link} />
+                  <div className="mt-1 text-[12px] text-gray-700 break-words">
+                    {displayLocation}
                   </div>
-                ))}
-            </div>
-          </div>
 
-          <div className="flex-shrink-0 text-right">
-            {profileImage && (
-              <div
-                className={`overflow-hidden ${imageShapeClass}`}
-                style={{ width: 120, height: 120, margin: '0 auto' }}
-              >
-                <img
-                  src={profileImage}
-                  alt="profile"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            )}
-          </div>
-        </div>
+                  <div className="flex flex-wrap items-center gap-3 text-[11px] text-gray-600 mt-2.5 cv-header-contacts">
+                    {merged.phone && (
+                    <div className="flex items-center gap-1 break-words">
+                      <Phone className="w-3 h-3" />
+                      <span className='pt-1'>{merged.phone}</span>
+                    </div>
+                    )}
+                    {merged.email && (
+                    <div className="flex items-center gap-1 break-words">
+                      <Mail className="w-3 h-3" />
+                      <span className='pt-1'>{merged.email}</span>
+                    </div>
+                    )}
+                    {merged.dob && (
+                     <div className="flex items-center gap-1 break-words">
+                      <Calendar className="w-3 h-3" />
+                      <span className='pt-1'>{merged.dob}</span>
+                    </div>
+                    )}
 
-        {/* SUMMARY */}
+                     {isSectionVisible('maritalStatus') && merged.maritalStatus && (
+                    <div className="flex items-center gap-1 break-words">
+                      <span className='pt-1'>Marital Status:{merged.maritalStatus}</span>
+                    </div>
+                    )}
+
+                   
+
+                    {isSectionVisible('socialLinks') &&
+                    normalizedSocialLinks.length > 0 &&
+                    normalizedSocialLinks.map((link, i) => (
+                      <div
+                      key={i}
+                      className="flex items-center gap-1 text-[11px] text-gray-600 break-words pt-1"
+                      >
+                      <SocialLinkDisplay link={link} />
+                      </div>
+                    ))}
+                  </div>
+                  </div>
+
+                  <div className="flex-shrink-0 text-right">
+                  {profileImage && (
+                    <div
+                    className={`overflow-hidden ${imageShapeClass}`}
+                    style={{ width: 120, height: 120, margin: '0 auto' }}
+                    >
+                    <img
+                      src={profileImage}
+                      alt="profile"
+                      className="w-full h-full object-cover"
+                    />
+                    </div>
+                  )}
+                  </div>
+                </div>
+
+                {/* SUMMARY */}
         {isSectionVisible('summary') && (
           <div className="mt-3 cv-section">
             <h2

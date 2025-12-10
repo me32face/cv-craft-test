@@ -5,6 +5,7 @@ import { GiLaurelsTrophy } from 'react-icons/gi';
 import { BsFillBriefcaseFill } from 'react-icons/bs';
 import { AiFillTool } from 'react-icons/ai';
 import { MdOutlineLanguage } from 'react-icons/md';
+import { GiBigDiamondRing } from "react-icons/gi";
 import { FaGithub } from 'react-icons/fa';
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
 import SocialLinkDisplay from "../SocialLinkDisplay";
@@ -174,7 +175,7 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
               <Icon>
                 <FiMail className="w-4 h-4" />
               </Icon>
-              <span>CONTACTS</span>
+              <span>PERSONAL DETAILS</span>
             </div>
             <div className="text-gray-700 text-[12px] space-y-2 pl-2">
               <div className="flex items-center gap-2">
@@ -240,6 +241,14 @@ export default function TemplateFromRefs({ data = {}, onClickSection }) {
                   </IconSmall>
                   <span className="pl-1.5">{data?.address || 'Location'}</span>
                 </div>
+              )}
+
+              {data.visibleSections?.maritalStatus !== false && data?.maritalStatus && (  
+                  <div className="flex items-center gap-2 ">
+                   
+                              <GiBigDiamondRing className='w-4 h-4' /> <span className="flex items-center gap-2 ml-2">{data?.maritalStatus}</span>
+                  </div>
+
               )}
 
               {data?.visibleSections?.socialLinks !== false &&
