@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Phone, Mail, MapPin, Link } from "lucide-react";
+import { Phone, Mail, MapPin, Link, Calendar } from "lucide-react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
 import SocialLinkDisplay from "../SocialLinkDisplay";
 
@@ -57,6 +57,12 @@ export default function Template41({ data, onClickSection }) {
               <MapPin size={14} className="shrink-0 translate-y-[-1px] text-[#c5a0e7]" />
               <span>{data?.address || "123 Anywhere St., Any City"}</span>
             </div>
+            {data?.dob && (
+               <div className="flex items-center gap-2 leading-[1.4] text-sm">
+              <Calendar size={14} className="shrink-0 translate-y-[-1px] text-[#c5a0e7]" />
+              <span>{data?.dob}</span>
+            </div>
+              )}
             {data?.visibleSections?.socialLinks !== false && (
               <>
                 {socialLinks.length > 0 && (

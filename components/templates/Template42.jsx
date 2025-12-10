@@ -2,7 +2,7 @@
 
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
-import { Phone, Mail, MapPin, Link } from "lucide-react";
+import { Phone, Mail, MapPin, Link, Calendar } from "lucide-react";
 import SocialLinkDisplay from "../SocialLinkDisplay";
 
 export default function Template42({ data, onClickSection }) {
@@ -62,6 +62,12 @@ export default function Template42({ data, onClickSection }) {
                 <MapPin size={14} className="shrink-0 translate-y-[-1px]" />
                 <span>{data?.address || "123 Anywhere St., Any City"}</span>
               </div>
+              {data?.dob && (
+                 <div className="flex items-center gap-1.5 leading-[1.4] text-sm">
+                <Calendar size={14} className="shrink-0 translate-y-[-1px]" />
+                <span>{data?.dob }</span>
+              </div>
+                )}
               {/* SOCIAL LINKS */}
               <div className="flex items-center gap-1.5">
                 {data?.visibleSections?.socialLinks !== false && socialLinks.length > 0 && (
@@ -79,7 +85,13 @@ export default function Template42({ data, onClickSection }) {
             </div>
           </div>
         </div>
+       {data?.visibleSections?.maritalStatus !== false && data?.maritalStatus && (
+                <div className="flex items-center gap-1.5 leading-[1.4] text-sm ml-40 text-white">
+                  <span>Marital Status: {data.maritalStatus}</span>
+                </div>
+              )}
       </div>
+      
       <div className="  flex">
         {/* Left Column */}
         <div className="cv-sidebar w-1/3 bg-slate-50 px-6 py-8  min-h-[1123px] flex-shrink-0">

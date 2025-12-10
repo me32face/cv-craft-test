@@ -1,13 +1,21 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import { Sparkles } from "lucide-react";
 import { geminiService } from "./gemini";
 import Toast from "../../Toast";
+
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { CalendarDays } from "lucide-react";
+import dayjs from "dayjs";
 
 export default function PersonalInfo({ data, update, onClose, onNext, onSave }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [toast, setToast] = useState(null);
   const [errors, setErrors] = useState({});
+const [openDOB, setOpenDOB] = useState(false);
+const dobRef = useRef(null);
 
   const handleGenerateAI = async () => {
     const title = data.title;
@@ -127,6 +135,20 @@ export default function PersonalInfo({ data, update, onClose, onNext, onSave }) 
           />
           {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
         </div>
+
+        {data?.dob && (
+  <div className="flex items-start gap-2">
+    <span
+      className="text-xs text-gray-700"
+      contentEditable
+      suppressContentEditableWarning
+    >
+      {data.dob}
+    </span>
+  </div>
+)}
+
+
       </div>
 
       {/* Location */}
@@ -141,6 +163,58 @@ export default function PersonalInfo({ data, update, onClose, onNext, onSave }) 
           placeholder={data.address || "Kadaventhra Kochi"}
         />
       </div>
+
+       {/* DOB */}
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+  <div>
+    <label className="block text-sm font-semibold mb-1">
+      Date of Birth
+    </label>
+
+    <div
+      ref={dobRef}  
+      className="w-full p-3 rounded-xl border flex items-center justify-between cursor-pointer"
+      onClick={() => setOpenDOB(true)}
+    >
+      <span>
+        {data?.dob
+          ? dayjs(data.dob, "DD-MM-YYYY").format("DD-MM-YYYY")
+
+          : "Select your date of birth"}
+      </span>
+
+      <CalendarDays
+        size={20}
+        className="text-gray-500 hover:text-black"
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpenDOB(true);
+        }}
+      />
+    </div>
+
+    <DatePicker
+  open={openDOB}
+  onClose={() => setOpenDOB(false)}
+  views={["year", "month", "day"]}
+  value={data?.dob ? dayjs(data.dob, "DD-MM-YYYY") : null}
+  maxDate={dayjs()}
+  onChange={(date) => {
+  if (!date) return;
+
+  // Close only after full day selected
+  if (date.date() !== null) {
+    update("dob", date.format("DD-MM-YYYY"));
+    setOpenDOB(false);
+  }
+}}
+  slotProps={{
+    textField: { style: { display: "none" } },
+    popper: { anchorEl: dobRef.current },
+  }}
+/>
+  </div>
+</LocalizationProvider>
 
       {/* Summary */}
       <div>

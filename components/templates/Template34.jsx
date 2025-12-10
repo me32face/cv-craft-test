@@ -111,27 +111,36 @@ export default function Template34({ data, onClickSection }) {
         {/* LEFT SIDEBAR */}
         <div className="cv-sidebar bg-[#f3f6fa] rounded-2xl p-5 min-w-0">
           {/* CONTACT */}
-          <section
-            className="mb-1 "
-            
-          >
-            <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
-              Contact
-            </h3>
+                <section
+                className="mb-1 "
+                
+                >
+                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-600 border-b pb-1 mb-2">
+                  Personal info
+                </h3>
 
+                <p className="text-sm break-words">
+                 {safeText(data?.phone) || "+1 234 567 890"}
+                </p>
+                <p className="text-sm break-all">
+                  {safeText(data?.email) || "example@mail.com"}
+                </p>
+                <p className="text-sm break-words">
+                  {safeText(data?.address) || "Your City, Country"}
+                </p>
+                 <p className="text-sm break-words">
+                  {safeText(data?.dob) }
+                </p>
+
+             {data?.visibleSections?.maritalStatus && data?.maritalStatus && (
             <p className="text-sm break-words">
-              {safeText(data?.phone) || "+1 234 567 890"}
+            Marital Status: {safeText(data?.maritalStatus)}
             </p>
-            <p className="text-sm break-all">
-              {safeText(data?.email) || "example@mail.com"}
-            </p>
-            <p className="text-sm break-words">
-              {safeText(data?.address) || "Your City, Country"}
-            </p>
+          )}
 
-          </section>
+                </section>
 
-          {/* SOCIAL LINKS (Works with checkbox toggle) */}
+                {/* SOCIAL LINKS (Works with checkbox toggle) */}
 {data?.visibleSections?.socialLinks !== false && (
   <section
     className="mb-4 "

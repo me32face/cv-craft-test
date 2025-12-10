@@ -166,6 +166,16 @@ export default function Template37({ data }) {
                 {safeText(data?.email, "hello@reallygreatsite.com")}
               </p>
               <p>{safeText(data?.address, "123 Anywhere St., Any City")}</p>
+              {data?.dob && (
+  <div className="flex items-center gap-2 leading-[1.4] text-xs mt-1">
+    <span className="">Date of Birth:</span>
+    <span>{safeText(data.dob)}</span>
+  </div>
+)}
+               {visible.maritalStatus !== false && data?.maritalStatus && ( 
+                  <p>Marital Status: {safeText(data?.maritalStatus)}</p>  
+                )}
+
               {visible.socialLinks !== false &&
                 Array.isArray(data?.socialLinks) &&
                 data.socialLinks.length > 0 && (

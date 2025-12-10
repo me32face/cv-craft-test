@@ -2,7 +2,7 @@
 
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
-import { Phone, Mail, MapPin, Link } from "lucide-react";
+import { Phone, Mail, MapPin, Link, Calendar } from "lucide-react";
 import SocialLinkDisplay from "../SocialLinkDisplay";
 
 export default function template39({ data, onClickSection }) {
@@ -73,6 +73,12 @@ export default function template39({ data, onClickSection }) {
               <MapPin size={14} className="shrink-0 translate-y-[-1px]" />
               <span>{data?.address || "123 Anywhere St., Any City"}</span>
             </div>
+          {data?.dob && (
+            <div className="flex items-center gap-1.5 leading-[1.4] text-sm">
+              <Calendar size={14} className="shrink-0 translate-y-[-1px]" />
+              <span>{data?.dob}</span>
+            </div>
+          )}
             {/* Social Links */}
             <div className="flex items-center gap-2">
               {data?.visibleSections?.socialLinks !== false && socialLinks.length > 0 && (
@@ -87,9 +93,16 @@ export default function template39({ data, onClickSection }) {
                 </div>
               )}
             </div>
+               {data?.maritalStatus && (
+  <div className="flex   text-sm text-gray-600  mr-20">
+    <span>Marital Status: {data.maritalStatus}</span>
+  </div>
+)}
           </div>
         </div>
+    
       </div>
+      
 
       {/* TWO COLUMN LAYOUT */}
       <div className=" flex">

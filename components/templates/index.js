@@ -65,7 +65,8 @@ export const templateInputs = {
     project: true,
     socialLinks: true,
     references: true,
-    awards:true,    
+    awards:true,
+    
   },
  
 
@@ -81,6 +82,7 @@ export const templateInputs = {
     skills: true,
     socialLinks: true, 
     certificates: true, 
+    maritalStatus: true, 
   },
 
   template35: {
@@ -114,6 +116,7 @@ export const templateInputs = {
     certificates: true,
     project: true,
     socialLinks:true
+    
 
   },
 
