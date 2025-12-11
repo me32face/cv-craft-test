@@ -230,6 +230,8 @@ const Template47 = ({ data = {}, onClickSection }) => {
     socialLinks: [],
     references: [],
     visibleSections: {},
+    maritalStatus: '',
+   
   };
 
   const mergedRaw = { ...defaults, ...data };
@@ -426,6 +428,13 @@ const Template47 = ({ data = {}, onClickSection }) => {
          <div className="flex items-center text-xs mx-3 text-gray-700">
            <Calendar className="w-3 h-3 mr-1 flex-shrink-0" style={{ color: navyAccent }} />
           <span className="truncate">{merged.dob}</span>
+         </div>
+       )}
+
+       {merged.maritalStatus && (
+         <div className="flex items-center text-xs mx-3 text-gray-700">
+           <span className="font-medium mr-1">Marital Status:</span>
+           <span className="truncate">{merged.maritalStatus}</span>
          </div>
        )}
           

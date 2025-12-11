@@ -103,6 +103,12 @@ export default function Template45({ data = {}, onClickSection }) {
                 <span>{data?.dob}</span>
               </div>
               )}
+
+              {data?.visibleSections?.maritalStatus !== false && data?.maritalStatus &&(
+              <div className="flex items-center gap-1 leading-[1.4]">
+                <span className="font-medium">Marital Status:</span>  <span>{data?.maritalStatus}</span>
+              </div>
+              )}
              
               {/* Social Links (always next line) */}
               {data?.visibleSections?.socialLinks !== false && socialLinks.length > 0 && (

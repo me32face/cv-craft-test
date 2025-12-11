@@ -224,6 +224,13 @@ export default function Template40({ data, onClickSection }) {
                 </p>
               )}
 
+              {data?.visibleSections?.maritalStatus !== false && data?.maritalStatus &&(
+                
+                <p className="flex items-center gap-1">
+                  <span className="font-medium">Marital Status:</span> {data.maritalStatus}
+                </p>
+              )}
+
               {socialLinks.length > 0 && (
                 <div
                   className="mt-3 "
