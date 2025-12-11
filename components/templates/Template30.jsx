@@ -1,7 +1,7 @@
 'use client';
 import React from "react";
 import { renderLanguage } from '../cvbuilder/inputsections/LanguagesInput';
-import { Phone, Mail, MapPin ,Calendar} from "lucide-react";
+import { Phone, Mail, MapPin, Calendar } from "lucide-react";
 import SocialLinkDisplay from "../SocialLinkDisplay";
 
 export default function Template30({ data, onClickSection }) {
@@ -61,19 +61,19 @@ export default function Template30({ data, onClickSection }) {
             <span>{data?.address || "123 Anywhere St., Any City"}</span>
           </div>
 
-         {data?.dob && (
-  <div className="flex items-center gap-2 leading-[1.4] text-sm mt-1">
-    <Calendar size={15} className="shrink-0 translate-y-[-1px]" />
-    <span>{data.dob}</span>
-  </div>
-)}
+          {data?.dob && (
+            <div className="flex items-center gap-2 leading-[1.4] text-sm mt-1">
+              <Calendar size={15} className="shrink-0 translate-y-[-1px]" />
+              <span>{data.dob}</span>
+            </div>
+          )}
 
-{data?.visibleSections?.maritalStatus && data?.maritalStatus && (
-  <div className="flex items-center gap-2 leading-[1.4] text-sm mt-1">
-    <span className="font-semibold">Marital Status:</span>
-    <span>{data.maritalStatus}</span>
-  </div>
-)}
+          {data?.visibleSections?.maritalstatus !== false && data?.maritalStatus && (
+            <div className="flex items-center gap-2 leading-[1.4] text-sm mt-1">
+            <span className="font-semibold">Marital Status:</span>
+            <span>{data.maritalStatus}</span>
+          </div>
+          )}
 
 
 
