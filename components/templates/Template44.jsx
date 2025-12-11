@@ -106,6 +106,13 @@ export default function Template44({ data, onClickSection }) {
                 <span>{data?.dob }</span>
               </div>
                 )}
+
+                {data?.visibleSections?.maritalStatus !== false && data?.maritalStatus && (
+                <div className="flex items-center gap-2 leading-[1.4] text-sm">
+                <span className="font-medium">Marital Status:</span>
+                <span>{data?.maritalStatus }</span>
+              </div>
+                )}
               
               {data?.visibleSections?.socialLinks !== false && socialLinks.length > 0 && (
                 <div className="flex flex-col gap-2 leading-[1.4] w-full mt-1">

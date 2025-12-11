@@ -41,10 +41,10 @@ export default function Template01({ data, onClickSection }) {
             <p className="break-words">{data?.address || "123 Anywhere St, Any City"}</p>
             <p className="break-words">{data?.email || "hello@reallygreatsite.com"}</p>
 
-            {data?.visibleSections?.maritalStatus !== false && (
+            {data?.visibleSections?.maritalStatus !== false && data?.maritalStatus &&(
             <p className="break-words">Marital Staus:{data?.maritalStatus }</p>
             )}
-          <p className="break-words">{data?.dob }</p>
+          <p className="break-words">Date Of Birth: {data?.dob }</p>
             {data?.visibleSections?.socialLinks !== false && (
               <>
                 {socialLinks.length > 0 && (

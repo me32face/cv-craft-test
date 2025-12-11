@@ -193,26 +193,41 @@ const dobRef = useRef(null);
       />
     </div>
 
-    <DatePicker
+ <div className="flex items-center gap-2 mt-2">
+  <input
+    type="checkbox"
+    checked={!!data?.dob}
+    onChange={(e) => {
+      if (!e.target.checked) {
+        update("dob", ""); // remove DOB
+      }
+    }}
+    className="w-4 h-4 cursor-pointer accent-[#634BC9]"
+  />
+  <label className="text-sm font-semibold cursor-pointer">Show Date of Birth</label>
+</div>
+   <DatePicker
   open={openDOB}
   onClose={() => setOpenDOB(false)}
   views={["year", "month", "day"]}
   value={data?.dob ? dayjs(data.dob, "DD-MM-YYYY") : null}
   maxDate={dayjs()}
   onChange={(date) => {
-  if (!date) return;
+    if (!date) return;
 
-  // Close only after full day selected
-  if (date.date() !== null) {
-    update("dob", date.format("DD-MM-YYYY"));
-    setOpenDOB(false);
-  }
-}}
+    if (date.date() !== null) {
+      update("dob", date.format("DD-MM-YYYY"));
+      setOpenDOB(false);
+    }
+  }}
   slotProps={{
     textField: { style: { display: "none" } },
     popper: { anchorEl: dobRef.current },
   }}
 />
+
+
+
   </div>
 </LocalizationProvider>
 
