@@ -131,8 +131,7 @@ export default function Template34({ data, onClickSection }) {
                  <p className="text-sm break-words">
                   {safeText(data?.dob) }
                 </p>
-
-             {data?.visibleSections?.maritalStatus && data?.maritalStatus && (
+{data?.visibleSections?.maritalstatus !== false && data?.maritalStatus && (
             <p className="text-sm break-words">
             Marital Status: {safeText(data?.maritalStatus)}
             </p>
