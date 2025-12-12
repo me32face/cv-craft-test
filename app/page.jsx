@@ -340,11 +340,22 @@ export default function Home() {
                 style={{ scrollSnapType: "x mandatory" }}
               >
                 {filteredTemplates.map((template, index) => (
-                  <div
-                    key={`${template.id}-${index}`}
-                    className="group relative bg-gradient-to-b from-[#f6f9fc] to-[#e8edf5] rounded-2xl shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden block flex-shrink-0 w-80 hover:bg-gradient-to-r hover:from-blue-100 hover:to-purple-100"
-                    style={{ scrollSnapAlign: "start" }}
-                  >
+                 <div
+  key={`${template.id}-${index}`}
+  onClick={() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setShowToast(true);
+      setTimeout(() => router.push("/login"), 1500);
+    } else {
+      setLoadingTemplate(template.id);
+      router.push(`/templates/${template.id.toLowerCase()}`);
+    }
+  }}
+  className="cursor-pointer group relative bg-gradient-to-b from-[#f6f9fc] to-[#e8edf5] rounded-2xl shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden block flex-shrink-0 w-80 hover:bg-gradient-to-r hover:from-blue-100 hover:to-purple-100"
+  style={{ scrollSnapAlign: "start" }}
+>
+
                     <div className="p-4">
                       {template.image ? (
                         <Image
