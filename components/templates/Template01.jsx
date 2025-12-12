@@ -44,7 +44,12 @@ export default function Template01({ data, onClickSection }) {
             {data?.visibleSections?.maritalStatus !== false && data?.maritalStatus &&(
             <p className="break-words">Marital Staus:{data?.maritalStatus }</p>
             )}
+            
+    
+       {data?.dob &&(
           <p className="break-words">Date Of Birth: {data?.dob }</p>
+       ) }
+
             {data?.visibleSections?.socialLinks !== false && (
               <>
                 {socialLinks.length > 0 && (
