@@ -66,7 +66,7 @@ export default function Template35({ data, onClickSection }) {
             </div>
            ) : null}
 
-           {data.visibleSections?.maritalStatus && data.maritalStatus && (
+         {data?.visibleSections?.maritalstatus !== false && data?.maritalStatus && (
             <div className="flex items-center gap-2 leading-[1.4] text-sm break-words">
               <span className="font-medium">Marital Status:</span>
               <span>{data.maritalStatus}</span>
