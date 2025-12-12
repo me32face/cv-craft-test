@@ -42,9 +42,6 @@ export const templates = {
   template45: Template45,
   template46: Template46,
   template47: Template47,
-
-
-
 };
 
 export const templateInputs = {
@@ -65,11 +62,8 @@ export const templateInputs = {
     project: true,
     socialLinks: true,
     references: true,
-    awards:true,
-    
+    awards: true,
   },
- 
-
 
   template34: {
     name: true,
@@ -80,9 +74,9 @@ export const templateInputs = {
     about: true,
     profileImage: true,
     skills: true,
-    socialLinks: true, 
-    certificates: true, 
-    maritalStatus: true, 
+    socialLinks: true,
+    certificates: true,
+    maritalStatus: true,
   },
 
   template35: {
@@ -115,19 +109,23 @@ export const templateInputs = {
     education: true,
     certificates: true,
     project: true,
-    socialLinks:true
-    
-
+    socialLinks: true,
   },
 
   template31: {
     name: true,
     title: true,
+    Summary: true,
     about: true,
     profileImage: true,
-    experience: true,
+    experiences: true,
     education: true,
     skills: true,
+    languages: true,
+    socialLinks: true,
+    certificates: true,
+    awards: true,
+    project: true,
   },
 
   template32: {
@@ -156,7 +154,7 @@ export const templateInputs = {
     education: true,
     certificates: true,
     references: true,
-    awards:true, 
+    awards: true,
   },
 
   template36: {
@@ -172,7 +170,6 @@ export const templateInputs = {
     education: true,
     certificates: true,
   },
-
 
   template36: {
     name: true,
@@ -188,7 +185,6 @@ export const templateInputs = {
     education: true,
     certificates: true,
   },
-
 
   template37: {
     name: true,
@@ -219,7 +215,7 @@ export const templateInputs = {
     languages: true,
     certificates: true,
     references: true,
-    awards:true, 
+    awards: true,
   },
   template39: {
     name: true,
@@ -235,7 +231,7 @@ export const templateInputs = {
     languages: true,
     certificates: true,
     references: true,
-    awards:true, 
+    awards: true,
   },
   template40: {
     name: true,
@@ -266,8 +262,8 @@ export const templateInputs = {
     skills: true,
     languages: true,
     certificates: true,
-   references: true,
-    awards:true, 
+    references: true,
+    awards: true,
   },
   template42: {
     name: true,
@@ -283,7 +279,7 @@ export const templateInputs = {
     languages: true,
     certificates: true,
     references: true,
-    awards:true, 
+    awards: true,
   },
   template43: {
     name: true,
@@ -298,8 +294,8 @@ export const templateInputs = {
     skills: true,
     languages: true,
     certificates: true,
-   references: true,
-    awards:true, 
+    references: true,
+    awards: true,
   },
 
   template44: {
@@ -316,7 +312,7 @@ export const templateInputs = {
     languages: true,
     certificates: true,
     references: true,
-    awards:true, 
+    awards: true,
   },
   template45: {
     name: true,
@@ -332,7 +328,7 @@ export const templateInputs = {
     languages: true,
     certificates: true,
     references: true,
-    awards:true, 
+    awards: true,
   },
   template46: {
     name: true,
@@ -348,7 +344,7 @@ export const templateInputs = {
     languages: true,
     certificates: true,
     references: true,
-    awards:true, 
+    awards: true,
   },
   template47: {
     name: true,
