@@ -68,12 +68,13 @@ export default function Template30({ data, onClickSection }) {
             </div>
           )}
 
-          {data?.visibleSections?.maritalstatus !== false && data?.maritalStatus && (
-            <div className="flex items-center gap-2 leading-[1.4] text-sm mt-1">
-            <span className="font-semibold">Marital Status:</span>
-            <span>{data.maritalStatus}</span>
-          </div>
-          )}
+{data?.visibleSections?.maritalstatus !== false && data?.maritalStatus && (
+
+  <div className="flex items-center gap-2 leading-[1.4] text-sm mt-1">
+    <span className="font-semibold">Marital Status:</span>
+    <span>{data.maritalStatus}</span>
+  </div>
+)}
 
 
 
