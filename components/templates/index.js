@@ -20,12 +20,8 @@ import Template44 from "./Template44";
 import Template45 from "./Template45";
 import Template46 from "./Template46";
 import Template47 from "./Template47";
-<<<<<<< Updated upstream
-import Template48 from "./Template48";
-=======
 import Template49 from "./Template49";
 
->>>>>>> Stashed changes
 export const templates = {
   template01: Template01,
   template30: Template30,
