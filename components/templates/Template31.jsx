@@ -1,21 +1,7 @@
 "use client";
-import React from "react";
-import {
-  FiPhone,
-  FiMail,
-  FiMapPin,
-  FiLink,
-  FiLinkedin,
-  FiGithub,
-} from "react-icons/fi";
-import { GiLaurelsTrophy, GiBigDiamondRing } from "react-icons/gi";
-import { BsFillBriefcaseFill } from "react-icons/bs";
-import { AiFillTool } from "react-icons/ai";
-import { MdOutlineLanguage, MdSchool } from "react-icons/md";
-import { FaUserCircle } from "react-icons/fa";
+import React, { useRef, useState, useEffect } from "react";
 import { renderLanguage } from "../cvbuilder/inputsections/LanguagesInput";
 import SocialLinkDisplay from "../SocialLinkDisplay";
-import { Calendar } from "lucide-react";
 
 export default function Template31({ data = {}, onClickSection, activeTheme }) {
   const toArray = (value) =>
@@ -33,19 +19,34 @@ export default function Template31({ data = {}, onClickSection, activeTheme }) {
 
   const experiences = toArray(data?.experiences);
   const education = toArray(data?.education);
-  const certificates = toArray(data?.certificates);
   const languages = toArray(data?.languages);
-  const awards = toArray(data?.awards);
-  const references = toArray(data?.references);
   const projects = toArray(data?.projects);
   const socialLinks = toArray(data?.socialLinks);
 
-  // Compact Theme Settings
-  const themeColor = activeTheme?.color || "#3b82f6";
-  const sidebarBg = "#f8fafc";
+  // Modern ATS: Clean Sans-Serif, Open Layout
+  const fontFamily = "'Inter', 'Roboto', 'Arial', sans-serif";
+  const themeColor = activeTheme?.color || "#374151"; // Default to dark gray
 
-  // Dense Description Renderer
-  const renderDescription = (text, format) => {
+  // Dynamic Page Height
+  const contentRef = useRef(null);
+  const [pageHeight, setPageHeight] = useState(1123); // Start with 1 page
+
+  useEffect(() => {
+    if (!contentRef.current) return;
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const contentHeight = entry.contentRect.height;
+        const pageCount = Math.ceil((contentHeight + 80) / 1123); // +80 for padding
+        setPageHeight(Math.max(1123, pageCount * 1123));
+      }
+    });
+
+    resizeObserver.observe(contentRef.current);
+    return () => resizeObserver.disconnect();
+  }, [data]);
+
+  // Helper for Description (Moved down/up as needed, just context)
+  const renderDescription = (text) => {
     if (!text) return null;
     const lines = text
       .split("\n")
@@ -53,38 +54,17 @@ export default function Template31({ data = {}, onClickSection, activeTheme }) {
       .filter(Boolean);
     if (!lines.length) return null;
 
-    if (format === "bullet") {
-      return (
-        <ul className="list-none m-0 p-0 mt-1">
-          {lines.map((line, idx) => (
-            <li
-              key={idx}
-              className="flex items-start text-[10px] text-gray-700 mb-0.5 leading-snug"
-            >
-              <span className="mr-1.5 mt-1 w-0.5 h-0.5 rounded-full bg-gray-500 flex-shrink-0" />
-              <span>{line.replace(/^[•\-\*]\s*/, "")}</span>
-            </li>
-          ))}
-        </ul>
-      );
-    }
-
-    if (format === "number") {
-      return (
-        <ol className="list-decimal list-inside m-0 p-0 mt-1 text-[10px] text-gray-700 leading-snug">
-          {lines.map((line, idx) => (
-            <li key={idx} className="mb-0.5">
-              {line.replace(/^\d+\.\s*/, "")}
-            </li>
-          ))}
-        </ol>
-      );
-    }
-
     return (
-      <p className="text-[10px] mt-1 text-gray-700 leading-snug whitespace-pre-line">
-        {text}
-      </p>
+      <ul className="list-disc ml-4 mt-2 space-y-1">
+        {lines.map((line, idx) => (
+          <li
+            key={idx}
+            className="text-[12px] leading-relaxed text-gray-700 pl-1 marker:text-gray-400"
+          >
+            {line.replace(/^[•\-\*]\s*/, "")}
+          </li>
+        ))}
+      </ul>
     );
   };
 
@@ -92,349 +72,364 @@ export default function Template31({ data = {}, onClickSection, activeTheme }) {
     if (typeof onClickSection === "function") onClickSection(key);
   };
 
+  const SectionTitle = ({ title, onClick }) => (
+    <div
+      className="mb-3 mt-4 pb-1 border-b border-gray-200 cursor-pointer hover:bg-gray-50 flex items-center"
+      onClick={onClick}
+    >
+      <h2
+        className="text-[14px] font-bold uppercase tracking-wider"
+        style={{ color: themeColor }}
+      >
+        {title}
+      </h2>
+    </div>
+  );
+
   return (
     <div
-      className="mx-auto bg-white shadow-lg flex flex-row min-h-[1123px]"
+      className="mx-auto bg-white shadow-xl transition-all duration-300 ease-in-out p-6"
       style={{
         width: "794px",
-        fontFamily: "'Inter', sans-serif",
+        minHeight: `${pageHeight}px`,
+        fontFamily: fontFamily,
+        color: "#1F2937", // Gray-800
       }}
     >
-      {/* --- LEFT SIDEBAR (Compact) --- */}
-      <aside
-        className="w-[28%] p-5 flex flex-col gap-6 border-r border-gray-200"
-        style={{ backgroundColor: sidebarBg }}
-      >
-        {/* Profile Image */}
-        <div className="flex justify-start">
-          <div
-            className={`relative w-24 h-24 bg-white shadow-sm border border-gray-200 ${
-              data?.imageShape === "circle" ? "rounded-full" : "rounded-lg"
-            }`}
-          >
-            {data?.profileImage ? (
-              <img
-                src={data.profileImage}
-                alt="Profile"
-                className={`w-full h-full object-cover ${
-                  data?.imageShape === "circle" ? "rounded-full" : "rounded-lg"
-                }`}
-              />
-            ) : (
-              <div
-                className={`w-full h-full bg-gray-100 flex items-center justify-center text-gray-300 ${
-                  data?.imageShape === "circle" ? "rounded-full" : "rounded-lg"
-                }`}
-              >
-                <FaUserCircle size={40} />
-              </div>
-            )}
-          </div>
-        </div>
+      <div ref={contentRef} className="p-10">
+        {/* --- HEADER --- */}
+        <header className="mb-8 flex justify-between items-start">
+          <div className="flex-1">
+            <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 mb-2 uppercase">
+              {data?.name || "YOUR NAME"}
+            </h1>
+            <p className="text-lg font-medium text-gray-600 mb-4">
+              {data?.title || "Professional Role / Title"}
+            </p>
 
-        {/* Contact Info - Compact List */}
-        <div className="flex flex-col gap-2">
-          <h3 className="text-[11px] font-bold uppercase tracking-wider text-gray-900 border-b border-gray-300 pb-1 mb-1">
-            Contact
-          </h3>
-
-          <div className="flex flex-col gap-1.5 text-[10px] text-gray-600">
-            {data?.email && (
-              <div className="flex items-center gap-2">
-                <FiMail
-                  size={12}
-                  style={{ color: themeColor }}
-                  className="flex-shrink-0"
-                />
-                <span className="break-all">{data.email}</span>
-              </div>
-            )}
-            {data?.phone && (
-              <div className="flex items-center gap-2">
-                <FiPhone
-                  size={12}
-                  style={{ color: themeColor }}
-                  className="flex-shrink-0"
-                />
-                <span>{data.phone}</span>
-              </div>
-            )}
-            {data?.address && (
-              <div className="flex items-center gap-2">
-                <FiMapPin
-                  size={12}
-                  style={{ color: themeColor }}
-                  className="flex-shrink-0"
-                />
-                <span className="leading-tight">{data.address}</span>
-              </div>
-            )}
-            {data?.dob && data?.visibleSections?.dob !== false && (
-              <div className="flex items-center gap-2">
-                <Calendar
-                  size={12}
-                  style={{ color: themeColor }}
-                  className="flex-shrink-0"
-                />
-                <span>{data.dob}</span>
-              </div>
-            )}
-            {data?.maritalStatus &&
-              data?.visibleSections?.maritalStatus !== false && (
-                <div className="flex items-center gap-2">
-                  <GiBigDiamondRing
-                    size={12}
-                    style={{ color: themeColor }}
-                    className="flex-shrink-0"
-                  />
-                  <span>{data.maritalStatus}</span>
+            <div className="flex flex-wrap gap-x-4 gap-y-2 text-[12px] text-gray-600">
+              {data?.phone && (
+                <div className="flex items-center gap-1">
+                  <span className="font-semibold text-gray-900">Phone:</span>{" "}
+                  {data.phone}
                 </div>
               )}
-          </div>
-
-          {/* Compact Socials */}
-          {(data?.linkedin ||
-            data?.github ||
-            data?.portfolio ||
-            (socialLinks.length > 0 &&
-              data?.visibleSections?.socialLinks !== false)) && (
-            <div className="flex flex-col gap-1.5 mt-1 text-[10px] text-gray-600">
-              {data?.linkedin && (
-                <a
-                  href={data.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-2 hover:text-blue-600 transition"
-                >
-                  <FiLinkedin size={12} className="flex-shrink-0" />
-                  <span className="truncate">LinkedIn</span>
-                </a>
+              {data?.email && (
+                <div className="flex items-center gap-1">
+                  <span className="font-semibold text-gray-900">Email:</span>{" "}
+                  {data.email}
+                </div>
               )}
-              {data?.github && (
-                <a
-                  href={data.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-2 hover:text-black transition"
-                >
-                  <FiGithub size={12} className="flex-shrink-0" />
-                  <span className="truncate">GitHub</span>
-                </a>
+              {data?.dob && (
+                <div className="flex items-center gap-1">
+                  <span className="font-semibold text-gray-900">DOB:</span>{" "}
+                  {data.dob}
+                </div>
               )}
-              {data?.portfolio && (
-                <a
-                  href={data.portfolio}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-2 hover:text-blue-500 transition"
-                >
-                  <FiLink size={12} className="flex-shrink-0" />
-                  <span className="truncate">Portfolio</span>
-                </a>
-              )}
-              {data?.visibleSections?.socialLinks !== false &&
-                socialLinks.map((link, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-2 transform scale-90 origin-left"
-                  >
-                    <SocialLinkDisplay link={link} />
+              {data?.maritalStatus &&
+                data?.visibleSections?.maritalStatus !== false && (
+                  <div className="flex items-center gap-1">
+                    <span className="font-semibold text-gray-900">
+                      Marital Status:
+                    </span>{" "}
+                    {data.maritalStatus}
                   </div>
-                ))}
-            </div>
-          )}
-        </div>
-
-        {/* Skills - Simple List */}
-        {data?.visibleSections?.skills !== false && (
-          <div onClick={() => handleClick("skills")} className="cursor-pointer">
-            <h3 className="text-[11px] font-bold uppercase tracking-wider text-gray-900 border-b border-gray-300 pb-1 mb-2">
-              Skills
-            </h3>
-            <div className="flex flex-wrap gap-1.5">
-              {(
-                data?.skills || ["Leadership", "Communication", "Strategy"]
-              ).map((skill, index) => {
-                const skillName =
-                  typeof skill === "string" ? skill : skill.name;
-                return (
-                  <span
-                    key={index}
-                    className="px-2 py-0.5 bg-white border border-gray-300 rounded text-[10px] font-medium text-gray-700"
-                  >
-                    {skillName}
-                  </span>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* Languages - Compact */}
-        {data?.visibleSections?.languages !== false && (
-          <div>
-            <h3 className="text-[11px] font-bold uppercase tracking-wider text-gray-900 border-b border-gray-300 pb-1 mb-2">
-              Languages
-            </h3>
-            <div className="flex flex-col gap-1 transform scale-95 origin-top-left">
-              {(languages.length ? languages : ["English", "Spanish"]).map(
-                (lang, i) => renderLanguage(lang, i)
+                )}
+              {data?.address && (
+                <div className="flex items-center gap-1">
+                  <span className="font-semibold text-gray-900">Location:</span>{" "}
+                  {data.address}
+                </div>
               )}
             </div>
-          </div>
-        )}
-
-        {/* Awards - Minimal */}
-        {data?.visibleSections?.awards !== false && awards.length > 0 && (
-          <div onClick={() => handleClick("awards")} className="cursor-pointer">
-            <h3 className="text-[11px] font-bold uppercase tracking-wider text-gray-900 border-b border-gray-300 pb-1 mb-2">
-              Awards
-            </h3>
-            <div className="flex flex-col gap-2">
-              {awards.map((award, i) => (
-                <div key={i} className="text-[10px] leading-tight">
-                  <p className="font-semibold text-gray-800">
-                    {typeof award === "string" ? award : award.title}
-                  </p>
-                  {typeof award !== "string" &&
-                    (award.issuer || award.date) && (
-                      <p className="text-[9px] text-gray-500 mt-0.5">
-                        {award.issuer} {award.date && `• ${award.date}`}
-                      </p>
-                    )}
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-[12px] text-gray-600 mt-2">
+              {socialLinks.map((link, i) => (
+                <div key={i} className="" style={{ color: themeColor }}>
+                  <SocialLinkDisplay link={link} />
                 </div>
               ))}
             </div>
           </div>
-        )}
-      </aside>
-
-      {/* --- RIGHT CONTENT (Dense) --- */}
-      <main className="flex-1 p-8 flex flex-col gap-5">
-        {/* Header - Left Aligned */}
-        <header className="border-b border-gray-200 pb-4">
-          <h1
-            className="text-2xl font-bold text-gray-900 uppercase tracking-tight mb-1"
-            style={{ color: themeColor }}
-          >
-            {data?.name || "Your Name"}
-          </h1>
-          <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
-            {data?.title || "Professional Role"}
-          </p>
         </header>
 
-        {/* Summary */}
+        {/* --- SUMMARY --- */}
         {data?.visibleSections?.summary !== false && (
-          <section
-            onClick={() => handleClick("summary")}
-            className="cursor-pointer"
-          >
-            <h2 className="text-[11px] font-bold uppercase tracking-wider text-gray-900 mb-1 flex items-center gap-2">
-              <span
-                className="w-1 h-4 rounded-sm"
-                style={{ backgroundColor: themeColor }}
-              ></span>
-              Professional Profile
-            </h2>
-            <p className="text-[10px] text-gray-700 leading-relaxed text-justify">
+          <section onClick={() => handleClick("summary")}>
+            <SectionTitle title="Summary" />
+            <p className="text-[12px] text-gray-700 leading-relaxed">
               {data?.summary ||
-                "A concise professional summary highlighting key achievements and skills. Keep it brief and focused."}
+                "Highly motivated professional with X years of experience in [Industry]. Proven track record of delivering results in fast-paced environments. Expert in [Key Skill 1] and [Key Skill 2]. Committed to driving business success through innovative strategies."}
             </p>
           </section>
         )}
 
-        {/* Experience - Minimal List */}
-        {data?.visibleSections?.experience !== false && (
-          <section
-            onClick={() => handleClick("experience")}
-            className="cursor-pointer"
-          >
-            <h2 className="text-[11px] font-bold uppercase tracking-wider text-gray-900 mb-3 flex items-center gap-2">
-              <span
-                className="w-1 h-4 rounded-sm"
-                style={{ backgroundColor: themeColor }}
-              ></span>
-              Experience
-            </h2>
+        {/* --- SKILLS --- */}
+        {data?.visibleSections?.skills !== false && (
+          <section onClick={() => handleClick("skills")}>
+            <SectionTitle title="Core Competencies" />
+            <div className="flex flex-wrap gap-2">
+              {(
+                data?.skills || [
+                  "Strategic Planning",
+                  "Project Management",
+                  "Team Leadership",
+                  "Data Analysis",
+                ]
+              ).map((skill, i) => {
+                if (typeof skill === "string") {
+                  return (
+                    <span
+                      key={i}
+                      className="bg-gray-100 text-gray-700 text-[11px] px-2 py-1 rounded font-medium"
+                    >
+                      {skill}
+                    </span>
+                  );
+                }
 
-            <div className="flex flex-col gap-4">
+                if (skill.category && skill.skills) {
+                  return (
+                    <div
+                      key={i}
+                      className="w-full mb-1 text-[11px] text-gray-700"
+                    >
+                      <span className="font-bold">{skill.category}: </span>
+                      {Array.isArray(skill.skills)
+                        ? skill.skills.join(", ")
+                        : skill.skills}
+                    </div>
+                  );
+                }
+
+                if (skill.proficiency) {
+                  return (
+                    <div key={i} className="w-full sm:w-[48%] mb-2">
+                      <div className="flex justify-between items-center mb-0.5">
+                        <span className="text-[11px] font-medium text-gray-700">
+                          {skill.name}
+                        </span>
+                        <span className="text-[10px] text-gray-500">
+                          {skill.proficiency}%
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-1.5 ">
+                        <div
+                          className="h-1.5 rounded-full transition-all"
+                          style={{
+                            width: `${skill.proficiency}%`,
+                            backgroundColor: themeColor,
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  );
+                }
+
+                return (
+                  <span
+                    key={i}
+                    className="bg-gray-100 text-gray-700 text-[11px] px-2 py-1 rounded font-medium"
+                  >
+                    {skill.name}
+                  </span>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* --- EXPERIENCE --- */}
+        {data?.visibleSections?.experience !== false && (
+          <section onClick={() => handleClick("experience")}>
+            <SectionTitle title="Experience" />
+            <div className="flex flex-col gap-6">
               {experiences.map((exp, i) => (
-                <div key={i} className="group">
-                  <div className="flex justify-between items-baseline mb-0.5">
-                    <h4 className="text-[12px] font-bold text-gray-800">
+                <div key={i}>
+                  <div className="flex justify-between items-baseline mb-1">
+                    <h3 className="text-[14px] font-bold text-gray-900">
                       {exp.role}
-                    </h4>
-                    <span className="text-[10px] font-medium text-gray-500">
-                      {exp.start ? formatDate(exp.start) : ""} –{" "}
+                    </h3>
+                    <span className="text-[12px] font-medium text-gray-500">
+                      {exp.start ? formatDate(exp.start) : "Start"} –{" "}
                       {exp.current
                         ? "Present"
                         : exp.end
                         ? formatDate(exp.end)
-                        : ""}
+                        : "End"}
                     </span>
                   </div>
 
-                  <div className="text-[11px] font-semibold text-gray-600 mb-1">
-                    {exp.company}{" "}
-                    {exp.location && (
-                      <span className="font-normal text-gray-400">
-                        | {exp.location}
-                      </span>
-                    )}
+                  <div
+                    className="text-[12px] font-semibold mb-2"
+                    style={{ color: themeColor }}
+                  >
+                    {exp.company} | {exp.location || "City, State"}
                   </div>
 
-                  {exp.desc && (
-                    <div className="text-[10px] text-gray-700">
-                      {renderDescription(exp.desc, exp.descFormat)}
-                    </div>
-                  )}
+                  <div className="text-[12px] text-gray-700">
+                    {exp.desc &&
+                      (exp.descFormat === "bullet" ? (
+                        <ul className="list-disc ml-4">
+                          {exp.desc.split("\n").map((line, idx) => {
+                            const trimmed = line.trim();
+                            if (!trimmed) return null;
+                            return (
+                              <li key={idx} className="pl-1">
+                                {trimmed.replace(/^[•\-\*]\s*/, "")}
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      ) : exp.descFormat === "number" ? (
+                        <ol className="list-decimal ml-4">
+                          {exp.desc.split("\n").map((line, idx) => {
+                            const trimmed = line.trim();
+                            if (!trimmed) return null;
+                            return (
+                              <li key={idx} className="pl-1">
+                                {trimmed.replace(/^\d+\.\s*/, "")}
+                              </li>
+                            );
+                          })}
+                        </ol>
+                      ) : (
+                        <p className="whitespace-pre-line text-justify">
+                          {exp.desc}
+                        </p>
+                      ))}
+                  </div>
                 </div>
               ))}
             </div>
           </section>
         )}
 
-        {/* Projects */}
+        {/* --- PROJECTS --- */}
         {data?.visibleSections?.projects !== false && projects.length > 0 && (
-          <section
-            onClick={() => handleClick("projects")}
-            className="cursor-pointer"
-          >
-            <h2 className="text-[11px] font-bold uppercase tracking-wider text-gray-900 mb-3 flex items-center gap-2">
-              <span
-                className="w-1 h-4 rounded-sm"
-                style={{ backgroundColor: themeColor }}
-              ></span>
-              Projects
-            </h2>
-
-            <div className="flex flex-col gap-3">
-              {projects.map((project, i) => (
-                <div key={i} className="">
-                  <div className="flex justify-between items-baseline mb-0.5">
-                    <h4 className="text-[11px] font-bold text-gray-800">
-                      {project.name}
-                    </h4>
-                    <span className="text-[9px] font-medium text-gray-500">
-                      {project.year}
+          <section onClick={() => handleClick("projects")}>
+            <SectionTitle title="Key Projects" />
+            <div className="flex flex-col gap-4">
+              {projects.map((proj, i) => (
+                <div key={i}>
+                  <div className="flex justify-between items-baseline mb-1">
+                    <h3 className="text-[13px] font-bold text-gray-800">
+                      {proj.name}
+                    </h3>
+                    <span className="text-[11px] text-gray-500">
+                      {proj.year}
                     </span>
                   </div>
-
-                  {project.link && (
+                  {proj.link && (
                     <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-[9px] text-blue-600 hover:underline mb-1 block"
+                      href={proj.link}
+                      className="text-[11px] underline block mb-1"
+                      style={{ color: themeColor }}
                     >
-                      {project.link}
+                      {proj.link}
                     </a>
                   )}
+                  <div className="text-[12px]">
+                    {proj.desc &&
+                      (proj.descFormat === "bullet" ? (
+                        <ul className="list-disc ml-4">
+                          {proj.desc.split("\n").map((line, idx) => {
+                            const trimmed = line.trim();
+                            if (!trimmed) return null;
+                            return (
+                              <li key={idx} className="pl-1 mb-0.5">
+                                {trimmed.replace(/^[•\-\*]\s*/, "")}
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      ) : proj.descFormat === "number" ? (
+                        <ol className="list-decimal ml-4">
+                          {proj.desc.split("\n").map((line, idx) => {
+                            const trimmed = line.trim();
+                            if (!trimmed) return null;
+                            return (
+                              <li key={idx} className="pl-1 mb-0.5">
+                                {trimmed.replace(/^\d+\.\s*/, "")}
+                              </li>
+                            );
+                          })}
+                        </ol>
+                      ) : (
+                        <p className="whitespace-pre-line text-justify leading-snug">
+                          {proj.desc}
+                        </p>
+                      ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
-                  {project.desc && (
-                    <div className="text-[10px] text-gray-700 leading-snug">
-                      {renderDescription(project.desc, project.descFormat)}
+        {/* --- EDUCATION --- */}
+        {data?.visibleSections?.education !== false && (
+          <section onClick={() => handleClick("education")}>
+            <SectionTitle title="Education" />
+            <div className="flex flex-col gap-4">
+              {education.map((edu, i) => (
+                <div key={i}>
+                  <div className="flex justify-between items-baseline">
+                    <div>
+                      <h3 className="text-[13px] font-bold text-gray-900">
+                        {edu.school}
+                      </h3>
+                      <div className="text-[12px] text-gray-700 mt-0.5">
+                        <span className="font-semibold">{edu.degree}</span>{" "}
+                        {edu.field ? `in ${edu.field}` : ""}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-[11px] text-gray-500 whitespace-nowrap">
+                        {edu.start ? formatDate(edu.start) : ""}
+                        {edu.start && (edu.end || edu.current) && " – "}
+                        {edu.current
+                          ? "Present"
+                          : edu.end
+                          ? formatDate(edu.end)
+                          : ""}
+                      </span>
+                      <div className="text-[11px] text-gray-500 mt-0.5">
+                        {edu.location || ""}
+                      </div>
+                    </div>
+                  </div>
+
+                  {edu.description && (
+                    <div className="text-[11px] mt-1 text-gray-600">
+                      {edu.descFormat === "bullet" ? (
+                        <ul className="list-disc ml-4">
+                          {edu.description.split("\n").map((line, idx) => {
+                            const trimmed = line.trim();
+                            if (!trimmed) return null;
+                            return (
+                              <li key={idx} className="pl-1">
+                                {trimmed.replace(/^[•\-\*]\s*/, "")}
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      ) : edu.descFormat === "number" ? (
+                        <ol className="list-decimal ml-4">
+                          {edu.description.split("\n").map((line, idx) => {
+                            const trimmed = line.trim();
+                            if (!trimmed) return null;
+                            return (
+                              <li key={idx} className="pl-1">
+                                {trimmed.replace(/^\d+\.\s*/, "")}
+                              </li>
+                            );
+                          })}
+                        </ol>
+                      ) : (
+                        <p className="whitespace-pre-line text-justify">
+                          {edu.description}
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>
@@ -443,82 +438,28 @@ export default function Template31({ data = {}, onClickSection, activeTheme }) {
           </section>
         )}
 
-        {/* Education */}
-        {data?.visibleSections?.education !== false && (
-          <section
-            onClick={() => handleClick("education")}
-            className="cursor-pointer"
-          >
-            <h2 className="text-[11px] font-bold uppercase tracking-wider text-gray-900 mb-3 flex items-center gap-2">
-              <span
-                className="w-1 h-4 rounded-sm"
-                style={{ backgroundColor: themeColor }}
-              ></span>
-              Education
-            </h2>
+        {/* --- CERTIFICATIONS & AWARDS --- */}
 
-            <div className="flex flex-col gap-3">
-              {education.map((edu, i) => (
-                <div key={i} className="flex justify-between items-start">
-                  <div>
-                    <h4 className="text-[12px] font-bold text-gray-800">
-                      {edu.degree}
-                    </h4>
-                    <p className="text-[11px] text-gray-600 font-medium">
-                      {edu.school}
-                    </p>
-                    {edu.field && (
-                      <p className="text-[10px] text-gray-500">{edu.field}</p>
-                    )}
-                    {edu.description && (
-                      <p className="text-[10px] text-gray-500 italic mt-0.5">
-                        {edu.description}
-                      </p>
-                    )}
-                  </div>
-                  <div className="text-[10px] font-medium text-gray-500 whitespace-nowrap text-right">
-                    {edu.start ? formatDate(edu.start) : ""} –{" "}
-                    {edu.current
-                      ? "Present"
-                      : edu.end
-                      ? formatDate(edu.end)
-                      : ""}
-                  </div>
-                </div>
-              ))}
+        {/* --- LANGUAGES --- */}
+        {data?.visibleSections?.languages !== false && languages.length > 0 && (
+          <section onClick={() => handleClick("languages")}>
+            <SectionTitle title="Languages" />
+            <div className="grid grid-cols-2 gap-4">
+              {languages.map((l, i) =>
+                renderLanguage(l, i, {
+                  container: "mb-1",
+                  header: "flex justify-between items-center",
+                  name: "text-[12px] font-bold text-gray-800",
+                  level: "text-[11px] text-gray-500",
+                  percentage: "text-[11px] text-gray-500",
+                  barContainer: "w-full bg-gray-200 rounded-full h-1.5 mt-1",
+                  bar: "bg-gray-800 h-1.5 rounded-full transition-all",
+                })
+              )}
             </div>
           </section>
         )}
-
-        {/* Certifications (Grid) */}
-        {data?.visibleSections?.certificates !== false &&
-          certificates.length > 0 && (
-            <section
-              onClick={() => handleClick("certificates")}
-              className="cursor-pointer"
-            >
-              <h2 className="text-[11px] font-bold uppercase tracking-wider text-gray-900 mb-2 flex items-center gap-2">
-                <span
-                  className="w-1 h-4 rounded-sm"
-                  style={{ backgroundColor: themeColor }}
-                ></span>
-                Certifications
-              </h2>
-              <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-                {certificates.map((cert, i) => (
-                  <div key={i} className="text-[10px]">
-                    <p className="font-bold text-gray-800 leading-tight">
-                      {cert.name}
-                    </p>
-                    <p className="text-[9px] text-gray-500">
-                      {cert.issuer} {cert.year ? `| ${cert.year}` : ""}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-      </main>
+      </div>
     </div>
   );
 }

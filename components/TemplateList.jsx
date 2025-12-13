@@ -24,7 +24,7 @@ export const templatesList = [
     id: "Template31",
     name: "Modern Professional",
     key: "Your Name",
-    image: "/template/template30.png", // Placeholder image
+    image: "/template/template31.png",
     category: "modern",
   },
   {
