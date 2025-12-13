@@ -169,7 +169,14 @@ export default function Home() {
       key: "Mac mer",
       image: "/template/template48.jpg",
       category: "simple",
-    }
+    },
+    {
+      id: "Template49",
+      name: "Creative Classic",
+      key: "Emily Davis",
+      image: "/template/Template49.jpg",
+      category: "creative",
+    },
   ];
 
 

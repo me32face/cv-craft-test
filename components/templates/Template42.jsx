@@ -26,19 +26,19 @@ export default function Template42({ data, onClickSection }) {
 
   return (
     <div
-      id="cv-preview"
-      // id="pdf-template"
+      // id="cv-preview"
+      id="pdf-template"
       className="cv-sidebar w-[794px] min-h-[1123px] bg-white mx-auto font-sans"
     >
       {/* Header Section */}
       <div className="bg-gradient-to-r from-slate-500 to-slate-700 px-10 py-10">
         <div className="flex items-center justify-between">
-         <div
-          className={`overflow-hidden mb-6 ${data?.imageShape === "circle" ? "rounded-full" : data?.imageShape === "rounded" ? "rounded-xl" : ""}`}
-          style={{ width: 120, height: 120, margin: "0 auto" }}
-        >
-          <img src={data?.profileImage || "/templateprofile/template42profile.jpeg"} className="w-full h-full object-cover" alt="profile" />
-        </div>
+          <div
+            className={`overflow-hidden mb-6 ${data?.imageShape === "circle" ? "rounded-full" : data?.imageShape === "rounded" ? "rounded-xl" : ""}`}
+            style={{ width: 120, height: 120, margin: "0 auto" }}
+          >
+            <img src={data?.profileImage || "/templateprofile/template42profile.jpeg"} className="w-full h-full object-cover" alt="profile" />
+          </div>
           <div className="flex-1 ml-11 cursor-pointer" onClick={() => onClickSection && onClickSection("personal")}>
             <h1 className="text-4xl font-bold text-white mb-2">
               {data?.name || "Your Name"}
@@ -92,9 +92,9 @@ export default function Template42({ data, onClickSection }) {
               )}
       </div>
       
-      <div className="  flex">
+      <div className="flex">
         {/* Left Column */}
-        <div className="cv-sidebar w-1/3 bg-slate-50 px-6 py-8  min-h-[1123px] flex-shrink-0">
+        <div className="cv-sidebar w-1/3 b50 px-6 py-8   flex-shrink-0">
           {/* Skills */}
           {data?.visibleSections?.skills !== false && (
             <div className="mb-4">
@@ -155,24 +155,24 @@ export default function Template42({ data, onClickSection }) {
                     </p>
                   </div>
                   {edu.description && (
-                  edu.descFormat === "bullet" ? (
-                    edu.description.split('\n').map((line, idx) => {
-                      const trimmed = line.trim();
-                      if (!trimmed) return null;
-                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
-                      return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `• ${trimmed}`}</p>;
-                    })
-                  ) : edu.descFormat === "number" ? (
-                    edu.description.split('\n').map((line, idx) => {
-                      const trimmed = line.trim();
-                      if (!trimmed) return null;
-                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
-                      return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `${idx + 1}. ${trimmed}`}</p>;
-                    })
-                  ) : (
-                    <p className="text-sm mt-1 text-gray-700 text-justify break-words">{edu.description}</p>
-                  )
-                )}
+                    edu.descFormat === "bullet" ? (
+                      edu.description.split('\n').map((line, idx) => {
+                        const trimmed = line.trim();
+                        if (!trimmed) return null;
+                        const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                        return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `• ${trimmed}`}</p>;
+                      })
+                    ) : edu.descFormat === "number" ? (
+                      edu.description.split('\n').map((line, idx) => {
+                        const trimmed = line.trim();
+                        if (!trimmed) return null;
+                        const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                        return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `${idx + 1}. ${trimmed}`}</p>;
+                      })
+                    ) : (
+                      <p className="text-sm mt-1 text-gray-700 text-justify break-words">{edu.description}</p>
+                    )
+                  )}
                 </div>
               ))}
             </div>
@@ -214,9 +214,9 @@ export default function Template42({ data, onClickSection }) {
               <div className="ml-4  gap-x-4 gap-y-1">
                 {(data?.languages?.length ? data.languages : ["Spanish", "Arabic", "English"]).map((l, i) =>
                   renderLanguage(l, i, {
-                barContainer: "w-full bg-gray-200 rounded-full h-1 mt-2",
-                bar: "bg-gray-500 h-1 rounded-full transition-all"
-              })
+                    barContainer: "w-full bg-gray-200 rounded-full h-1 mt-2",
+                    bar: "bg-gray-500 h-1 rounded-full transition-all"
+                  })
                 )}
               </div>
             </section>
@@ -322,25 +322,25 @@ export default function Template42({ data, onClickSection }) {
                         {exp.start && (exp.end || exp.current) && " - "}
                         {exp.current ? "Present" : exp.end}
                       </p>                    </div>
-                      {exp.desc && (
-                  exp.descFormat === "bullet" ? (
-                    exp.desc.split('\n').map((line, idx) => {
-                      const trimmed = line.trim();
-                      if (!trimmed) return null;
-                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
-                      return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `• ${trimmed}`}</p>;
-                    })
-                  ) : exp.descFormat === "number" ? (
-                    exp.desc.split('\n').map((line, idx) => {
-                      const trimmed = line.trim();
-                      if (!trimmed) return null;
-                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
-                      return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `${idx + 1}. ${trimmed}`}</p>;
-                    })
-                  ) : (
-                    <p className="text-sm mt-1 text-justify text-gray-700 break-words">{exp.desc}</p>
-                  )
-                )}
+                    {exp.desc && (
+                      exp.descFormat === "bullet" ? (
+                        exp.desc.split('\n').map((line, idx) => {
+                          const trimmed = line.trim();
+                          if (!trimmed) return null;
+                          const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                          return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `• ${trimmed}`}</p>;
+                        })
+                      ) : exp.descFormat === "number" ? (
+                        exp.desc.split('\n').map((line, idx) => {
+                          const trimmed = line.trim();
+                          if (!trimmed) return null;
+                          const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                          return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `${idx + 1}. ${trimmed}`}</p>;
+                        })
+                      ) : (
+                        <p className="text-sm mt-1 text-justify text-gray-700 break-words">{exp.desc}</p>
+                      )
+                    )}
                   </div>
                 ))}
               </div>
@@ -356,45 +356,49 @@ export default function Template42({ data, onClickSection }) {
               </h2>
               <div className="space-y-4 ">
                 {projects.map((project, i) => (
-                  <div key={i}>
-                    <p className="text-[16px] font-bold text-gray-800">{project.name}</p>
-                    {project.link && (
-                      <a
-                        href={project.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-blue-600 underline project-link"
-                      >
-                        {project.useCustomLabel
-                          ? project.linkLabel
-                          : project.link}
-                      </a>
-                    )}
-                    {project.year && (
-                      <p className="text-[12px] text-gray-500 mt-0.5">{project.year}</p>
-                    )}
-                    {project.desc && (
-                  project.descFormat === "bullet" ? (
-                    project.desc.split('\n').map((line, idx) => {
-                      const trimmed = line.trim();
-                      if (!trimmed) return null;
-                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
-                      return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `• ${trimmed}`}</p>;
-                    })
-                  ) : project.descFormat === "number" ? (
-                    project.desc.split('\n').map((line, idx) => {
-                      const trimmed = line.trim();
-                      if (!trimmed) return null;
-                      const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
-                      return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `${idx + 1}. ${trimmed}`}</p>;
-                    })
-                  ) : (
-                    <p className="text-sm mt-1 text-gray-700 text-justify break-words">{project.desc}</p>
-                  )
-                )}
-                  </div>
+                  <div key={i} className="relative pl-6 border-l-2 border-slate-300">
+                    <div className="absolute -left-1.5 top-0 w-2.5 h-2.5  rounded-full bg-slate-700"></div>
+                    <div className=" justify-between items-start mb-1">
+                      <div>
+                        <p className="text-sm font-bold text-slate-800">{project.name}</p>
+                      </div>  {project.link && (
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-600 underline project-link"
+                        >
+                          {project.useCustomLabel
+                            ? project.linkLabel
+                            : project.link}
+                        </a>
+                      )}
+                      {project.year && (
+                        <p className="text-[12px] text-gray-500 mt-0.5">{project.year}</p>
+                      )}
+                      {project.desc && (
+                        project.descFormat === "bullet" ? (
+                          project.desc.split('\n').map((line, idx) => {
+                            const trimmed = line.trim();
+                            if (!trimmed) return null;
+                            const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                            return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `• ${trimmed}`}</p>;
+                          })
+                        ) : project.descFormat === "number" ? (
+                          project.desc.split('\n').map((line, idx) => {
+                            const trimmed = line.trim();
+                            if (!trimmed) return null;
+                            const hasPrefix = trimmed.startsWith('•') || /^\d+\./.test(trimmed);
+                            return <p key={idx} className="text-sm mt-1 text-justify text-gray-700 break-words">{hasPrefix ? trimmed : `${idx + 1}. ${trimmed}`}</p>;
+                          })
+                        ) : (
+                          <p className="text-sm mt-1 text-gray-700 text-justify break-words">{project.desc}</p>
+                        )
+                      )}
+                    </div>
+                    </div>
                 ))}
-              </div>
+                  </div>
             </section>
           )}
         </div>
