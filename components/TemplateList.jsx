@@ -132,4 +132,11 @@ export const templatesList = [
     image: "/template/AUGUSTUS AXEL.png",
     category: "modern",
   },
+  {
+    id: "Template48",
+    name: "Minimalist Resume",
+    key: "Mac mer",
+    image: "/template/template48.jpg",
+    category: "simple",
+  }
 ];

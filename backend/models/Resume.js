@@ -16,7 +16,7 @@ const resumeSchema = new mongoose.Schema({
   templateId: { 
     type: String, 
     required: true,
-    enum: [ 'template01', 'template30', 'template31', 'template32', 'template33', 'template34', 'template35', 'template36', 'template37', 'template38', 'template39', 'template40', 'template41', 'template42', 'template43', 'template44', 'template45', 'template46', 'template47']
+    enum: [ 'template01', 'template30', 'template31', 'template32', 'template33', 'template34', 'template35', 'template36', 'template37', 'template38', 'template39', 'template40', 'template41', 'template42', 'template43', 'template44', 'template45', 'template46', 'template47',"template48"]
   },
   
   templateData: {
