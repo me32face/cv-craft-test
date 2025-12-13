@@ -1,8 +1,8 @@
-'use client';
-import Link from 'next/link';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import TemplatePreview from '@/components/TemplatePreview';
+"use client";
+import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import TemplatePreview from "@/components/TemplatePreview";
 import { useEffect, useRef, useState } from "react";
 import Navbar from "../components/navbar/page";
 import BuildSection from "../components/builder-page/page";
@@ -37,14 +37,14 @@ export default function Home() {
       image: "/template/template01n.png",
       category: "simple",
     },
-       {
+    {
       id: "Template30",
       name: "Professional Resume",
       key: "John Doe",
       image: "/template/template30.png",
       category: "proffessional",
     },
-      {
+    {
       id: "Template43",
       name: "Stylish Layout",
       key: "Emily Davis",
@@ -93,7 +93,7 @@ export default function Home() {
       image: "/template/template33.png",
       category: "proffessional",
     },
-      {
+    {
       id: "Template42",
       name: "Creative Classic",
       key: "Emily Davis",
@@ -177,16 +177,23 @@ export default function Home() {
       image: "/template/Template49.jpg",
       category: "creative",
     },
+    
+      {
+      id: "Template31",
+      name: "Modern Professional",
+      key: "Your Name",
+      image: "/template/template31.png",
+      category: "modern",
+    },
   ];
-
 
   const filteredTemplates =
     activeFilter === "All"
       ? templates
       : templates.filter(
-        (template) =>
-          template.category.toLowerCase() === activeFilter.toLowerCase()
-      );
+          (template) =>
+            template.category.toLowerCase() === activeFilter.toLowerCase()
+        );
 
   const scrollPrev = () => {
     scrollRef.current?.scrollBy({ left: -344, behavior: "smooth" });
@@ -240,15 +247,15 @@ export default function Home() {
       try {
         const response = await fetch(`${API_URL}/api/resumes/count`, {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
         const result = await response.json();
         if (result.success) {
           setHasResumes(result.count > 0);
         }
       } catch (error) {
-        console.error('Failed to check resume count:', error);
+        console.error("Failed to check resume count:", error);
       }
     };
 
@@ -354,22 +361,21 @@ export default function Home() {
                 style={{ scrollSnapType: "x mandatory" }}
               >
                 {filteredTemplates.map((template, index) => (
-                 <div
-  key={`${template.id}-${index}`}
-  onClick={() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setShowToast(true);
-      setTimeout(() => router.push("/login"), 1500);
-    } else {
-      setLoadingTemplate(template.id);
-      router.push(`/templates/${template.id.toLowerCase()}`);
-    }
-  }}
-  className="cursor-pointer group relative bg-gradient-to-b from-[#f6f9fc] to-[#e8edf5] rounded-2xl shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden block flex-shrink-0 w-80 hover:bg-gradient-to-r hover:from-blue-100 hover:to-purple-100"
-  style={{ scrollSnapAlign: "start" }}
->
-
+                  <div
+                    key={`${template.id}-${index}`}
+                    onClick={() => {
+                      const token = localStorage.getItem("token");
+                      if (!token) {
+                        setShowToast(true);
+                        setTimeout(() => router.push("/login"), 1500);
+                      } else {
+                        setLoadingTemplate(template.id);
+                        router.push(`/templates/${template.id.toLowerCase()}`);
+                      }
+                    }}
+                    className="cursor-pointer group relative bg-gradient-to-b from-[#f6f9fc] to-[#e8edf5] rounded-2xl shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden block flex-shrink-0 w-80 hover:bg-gradient-to-r hover:from-blue-100 hover:to-purple-100"
+                    style={{ scrollSnapAlign: "start" }}
+                  >
                     <div className="p-4">
                       {template.image ? (
                         <Image
@@ -403,15 +409,33 @@ export default function Home() {
                               setTimeout(() => router.push("/login"), 1500);
                             } else {
                               setLoadingTemplate(template.id);
-                              router.push(`/templates/${template.id.toLowerCase()}`);
+                              router.push(
+                                `/templates/${template.id.toLowerCase()}`
+                              );
                             }
                           }}
                         >
                           {loadingTemplate === template.id ? (
                             <>
-                              <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              <svg
+                                className="animate-spin h-4 w-4"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                ></circle>
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                ></path>
                               </svg>
                               Loading...
                             </>
@@ -429,10 +453,11 @@ export default function Home() {
               {filteredTemplates.map((_, index) => (
                 <button
                   key={index}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${activeIndex === index
-                    ? "bg-indigo-600 scale-125"
-                    : "bg-gray-300 hover:bg-gray-400"
-                    }`}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    activeIndex === index
+                      ? "bg-indigo-600 scale-125"
+                      : "bg-gray-300 hover:bg-gray-400"
+                  }`}
                   onClick={() => {
                     const cardWidth = 344;
                     scrollRef.current?.scrollTo({

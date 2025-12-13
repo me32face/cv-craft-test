@@ -173,6 +173,7 @@ const mergedData = {
         {mergedData.address && <span><strong>Address:</strong> {mergedData.address}</span>}
       </div>
 
+
       <div className="mt-1 text-sm space-y-1">
         {mergedData.dob && <p><strong>DOB:</strong> {mergedData.dob}</p>}
 
