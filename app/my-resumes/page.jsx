@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { FileText, Edit, Trash2, Home, Calendar } from 'lucide-react';
 import Toast from '@/components/Toast';
 
+
 export default function MyResumes() {
   const router = useRouter();
   const [resumes, setResumes] = useState([]);
@@ -33,6 +34,7 @@ export default function MyResumes() {
     template45: "/template/RAVENOR.png",
     template46: "/template/AUGUSTUS AXEL.png",
     template47: "/template/template47.png",
+    template48 : "/template/template48.jpg",
   };
 
   useEffect(() => {

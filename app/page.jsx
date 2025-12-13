@@ -163,6 +163,13 @@ export default function Home() {
       image: "/template/TITANUS ZORIN.png",
       category: "creative",
     },
+    {
+      id: "Template48",
+      name: "Minimalist Resume",
+      key: "Mac mer",
+      image: "/template/template48.jpg",
+      category: "simple",
+    }
   ];
 
 
