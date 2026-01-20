@@ -2,8 +2,18 @@
 
 import React, { useState } from 'react';
 import { Sparkles, Check } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function AIContent() {
+  const router = useRouter();
+
+  const handleApplyThis = () => {
+    router.push('/templates/template01');
+  };
+
+  const handleGenerateMore = () => {
+    router.push('/templates/template01');
+  };
 
   return (
     <div id='about' className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 py-10 sm:py-12 md:py-16 lg:py-16 xl:py-20 px-4 sm:px-6 lg:px-8">
@@ -62,18 +72,17 @@ export default function AIContent() {
                   Marketing Manager
                 </h3>
                 <p className="text-[#606060] text-sm sm:text-base leading-relaxed">
-                  Led a high-performing team of 5 marketing specialists, implementing
-                  data-driven strategies that increased quarterly sales by 35% and
-                  enhanced brand visibility across key demographics. Orchestrated
-                  multi-channel campaigns resulting in a 50% boost in customer
-                  engagement.
+                 A Full Stack Developer is a professional who works on both the front-end
+                  and back-end of a web application. They are responsible for designing user
+                   interfaces, developing server-side logic, managing databases, and integrating 
+                   all parts of an application into a complete system.
                 </p>
               </div>
               <div className="flex items-center justify-center gap-4 pt-4">
-                <button className="bg-gradient-to-r from-[#4B74F4] to-[#7642EE] text-white w-72 px-4 py-2 rounded-3xl hover:from-blue-600 hover:to-purple-600 transition cursor-pointer">
+                <button onClick={handleApplyThis} className="bg-gradient-to-r from-[#4B74F4] to-[#7642EE] text-white w-72 px-4 py-2 rounded-3xl hover:from-blue-600 hover:to-purple-600 transition cursor-pointer">
                   Apply This
                 </button>
-                <button className="bg-white text-black border border-gray-300 w-72 px-4 py-2 rounded-3xl hover:bg-gray-100 transition cursor-pointer">
+                <button onClick={handleGenerateMore} className="bg-white text-black border border-gray-300 w-72 px-4 py-2 rounded-3xl hover:bg-gray-100 transition cursor-pointer">
                   Genetrate More
                 </button>
               </div>

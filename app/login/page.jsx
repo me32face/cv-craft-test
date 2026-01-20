@@ -6,6 +6,7 @@ import axios from "axios";
 import Toast from '@/components/Toast.jsx';
 import ClipLoader from "react-spinners/ClipLoader";
 import { GoogleLogin } from '@react-oauth/google';
+import { Eye, EyeOff } from 'lucide-react';
 
 
 export default function Login() {
@@ -18,6 +19,7 @@ export default function Login() {
     email: '',
     password: '',
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -246,15 +248,24 @@ export default function Login() {
                 </div>
 
                 <div>
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder="Password*"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition ${errors.password ? 'border-red-500' : 'border-gray-300'
-                      }`}
-                  />
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      placeholder="Password*"
+                      value={formData.password}
+                      onChange={handleChange}
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition ${errors.password ? 'border-red-500' : 'border-gray-300'
+                        }`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    >
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                  </div>
                   {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                 </div>
                 <button

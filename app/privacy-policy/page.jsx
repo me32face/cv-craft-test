@@ -20,7 +20,7 @@ function PrivacyPolicy() {
                     <h1 className="text-4xl font-semibold text-gray-900 mb-2"> Privacy Policy</h1>
                     <p className="text-gray-600"> Last Updated: May 10, 2023</p>
                     <div className="mt-6 pt-5 text-md">
-                        <p className="text-gray-700"> At <strong>E ERA Enterprises Pvt. Ltd.</strong>, we value the privacy of every client, partner, and visitor who interacts with our website, products, and services. This Privacy  Policy outlines how we collect, use, and protect your personal information. </p>
+                        <p className="text-gray-700"> At <strong>Esta Enterprises Pvt. Ltd.</strong>, we value the privacy of every client, partner, and visitor who interacts with our website, products, and services. This Privacy  Policy outlines how we collect, use, and protect your personal information. </p>
                         <p className="text-gray-700 mt-8">  By using our website or availing our IT services, you agree to the practices described in this policy. </p>
                     </div>
                 </header>
@@ -98,7 +98,7 @@ function PrivacyPolicy() {
                         <li>Request deletion of your data (subject to legal obligations)</li>
                         <li>Withdraw consent for marketing at any time</li>
                     </ul>
-                    <p className="text-gray-700 mt-4">To exercise these rights, contact us at{' '}<a href="mailto:privacy@eenterprises.in" className="text-red-600 underline" >  privacy@eenterprises.in </a></p>
+                    <p className="text-gray-700 mt-4">To exercise these rights, contact us at{' '}<a href="mailto:privacy@estenterprises.in" className="text-red-600 underline" >  privacy@estenterprises.in </a></p>
                 </section>
 
                 {/* Section 8 */}
@@ -118,8 +118,8 @@ function PrivacyPolicy() {
                     <h2 className="text-2xl font-semibold text-gray-900 mb-4"> 10. Contact Us </h2>
                     <p className="text-gray-700 mb-4"> For questions or concerns regarding this Privacy Policy, please contact:</p>
                     <div className="space-y-2 text-gray-700">
-                        <p> <strong>📧 </strong>{' '} <a href="mailto:privacy@eenterprises.in" className="text-md" > privacy@eenterprises.in </a> </p>
-                        <p>  <strong>🌐</strong>{' '} <a href="https://www.eenterprises.in" target="_blank" rel="noopener noreferrer" className="text-md" > www.eenterprises.in </a> </p>
+                        <p> <strong>📧 </strong>{' '} <a href="mailto:privacy@estenterprises.in" className="text-md" > privacy@estenterprises.in </a> </p>
+                        <p>  <strong>🌐</strong>{' '} <a href="https://www.estenterprises.com" target="_blank" rel="noopener noreferrer" className="text-md" > www.estenterprises.com </a> </p>
                         <p><strong>📞</strong>{' '}<a href="tel:+918547885711" className="text-md" > +91 85478 85711 </a></p>
                     </div>
                 </section>
