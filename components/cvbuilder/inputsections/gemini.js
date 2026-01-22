@@ -3,7 +3,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 class GeminiService {
   constructor() {
     // Try environment variable first, then fallback to your provided key
-    const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || 'AIzaSyALLq6Zu5KUiPEM8r4TnnhYqpgAa2zofxg';
+    const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || 'AIzaSyAwqIApkmxj5whkvHoCDPs53eSy_35L46s';
     if (apiKey) {
       this.genAI = new GoogleGenerativeAI(apiKey);
       // Don't initialize model in constructor, do it when needed
