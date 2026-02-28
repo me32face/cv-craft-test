@@ -8,18 +8,18 @@ export const createShareLink = async (req, res) => {
 
     // Validation
     if (!templateId || !templateData) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "Template ID and data are required" 
+      return res.status(400).json({
+        success: false,
+        message: "Template ID and data are required"
       });
     }
 
     // Size limit check (500KB)
     const dataSize = JSON.stringify(templateData).length;
-    if (dataSize > 5000000) {
-      return res.status(413).json({ 
-        success: false, 
-        message: "CV data too large" 
+    if (dataSize > 500000) {
+      return res.status(413).json({
+        success: false,
+        message: "CV data too large"
       });
     }
 
@@ -55,9 +55,9 @@ export const createShareLink = async (req, res) => {
 
   } catch (error) {
     console.error("Create share link error:", error);
-    return res.status(500).json({ 
-      success: false, 
-      message: "Failed to create share link" 
+    return res.status(500).json({
+      success: false,
+      message: "Failed to create share link"
     });
   }
 };
@@ -68,9 +68,9 @@ export const getSharedResume = async (req, res) => {
     const { id } = req.params;
 
     if (!id) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "Share ID is required" 
+      return res.status(400).json({
+        success: false,
+        message: "Share ID is required"
       });
     }
 
@@ -78,9 +78,9 @@ export const getSharedResume = async (req, res) => {
     const shareRecord = await ShareUrl.findOne({ shareId: id });
 
     if (!shareRecord) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "Shared CV not found or link expired" 
+      return res.status(404).json({
+        success: false,
+        message: "Shared CV not found or link expired"
       });
     }
 
@@ -88,9 +88,9 @@ export const getSharedResume = async (req, res) => {
     const resume = await Resume.findById(shareRecord.resumeId);
 
     if (!resume) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "Resume data not found" 
+      return res.status(404).json({
+        success: false,
+        message: "Resume data not found"
       });
     }
 
@@ -108,9 +108,9 @@ export const getSharedResume = async (req, res) => {
 
   } catch (error) {
     console.error("Get shared resume error:", error);
-    return res.status(500).json({ 
-      success: false, 
-      message: "Failed to fetch shared resume" 
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch shared resume"
     });
   }
 };

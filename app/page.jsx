@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import TemplatePreview from "@/components/TemplatePreview";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Navbar from "../components/navbar/page";
 import BuildSection from "../components/builder-page/page";
 import HowItWorks from "../components/how-works/page";
@@ -156,13 +156,7 @@ export default function Home() {
       image: "/template/ARTHAVION.png",
       category: "modern",
     },
-    {
-      id: "Template42",
-      name: "Creative Classic",
-      key: "Emily Davis",
-      image: "/template/TITANUS ZORIN.png",
-      category: "creative",
-    },
+
     {
       id: "Template48",
       name: "Minimalist Resume",
@@ -177,8 +171,8 @@ export default function Home() {
       image: "/template/Template49.jpg",
       category: "creative",
     },
-    
-      {
+
+    {
       id: "Template31",
       name: "Modern Professional",
       key: "Your Name",
@@ -191,9 +185,9 @@ export default function Home() {
     activeFilter === "All"
       ? templates
       : templates.filter(
-          (template) =>
-            template.category.toLowerCase() === activeFilter.toLowerCase()
-        );
+        (template) =>
+          template.category.toLowerCase() === activeFilter.toLowerCase()
+      );
 
   const scrollPrev = () => {
     scrollRef.current?.scrollBy({ left: -344, behavior: "smooth" });
@@ -203,7 +197,7 @@ export default function Home() {
     scrollRef.current?.scrollBy({ left: 344, behavior: "smooth" });
   };
 
-  const updateActiveIndex = () => {
+  const updateActiveIndex = useCallback(() => {
     const scrollContainer = scrollRef.current;
     if (!scrollContainer) return;
 
@@ -211,7 +205,7 @@ export default function Home() {
     const cardWidth = 344; // 320px width + 24px gap
     const index = Math.round(scrollLeft / cardWidth) % templates.length;
     setActiveIndex(index);
-  };
+  }, [templates.length]);
 
   useEffect(() => {
     const scrollContainer = scrollRef.current;
@@ -221,22 +215,15 @@ export default function Home() {
 
     const scroll = () => {
       const cardWidth = 344;
-      const nextIndex = (currentIndex + 1) % templates.length;
-
-      // scrollContainer.scrollTo({
-      //   left: nextIndex * cardWidth,
-      //   behavior: 'smooth'
-      // });
-
-      setCurrentIndex(nextIndex);
+      setCurrentIndex(prevIndex => (prevIndex + 1) % templates.length);
     };
 
     const interval = setInterval(scroll, 3000);
     return () => {
       clearInterval(interval);
-      // scrollContainer.removeEventListener('scroll', updateActiveIndex);
+      scrollContainer.removeEventListener('scroll', updateActiveIndex);
     };
-  }, [currentIndex, templates.length]);
+  }, [templates.length]);
 
   // Check if user has resumes
   useEffect(() => {
@@ -453,11 +440,10 @@ export default function Home() {
               {filteredTemplates.map((_, index) => (
                 <button
                   key={index}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    activeIndex === index
-                      ? "bg-indigo-600 scale-125"
-                      : "bg-gray-300 hover:bg-gray-400"
-                  }`}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${activeIndex === index
+                    ? "bg-indigo-600 scale-125"
+                    : "bg-gray-300 hover:bg-gray-400"
+                    }`}
                   onClick={() => {
                     const cardWidth = 344;
                     scrollRef.current?.scrollTo({

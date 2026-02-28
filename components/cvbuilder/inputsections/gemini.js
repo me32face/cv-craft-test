@@ -2,13 +2,14 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 class GeminiService {
   constructor() {
-    // Try environment variable first, then fallback to your provided key
-    const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || 'AIzaSyAwqIApkmxj5whkvHoCDPs53eSy_35L46s';
+    // Remove fallback to prevent exposing the API key in the client bundle
+    const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
     if (apiKey) {
       this.genAI = new GoogleGenerativeAI(apiKey);
       // Don't initialize model in constructor, do it when needed
       this.model = null;
     } else {
+      console.warn("Gemini API key not configured");
       this.genAI = null;
       this.model = null;
     }

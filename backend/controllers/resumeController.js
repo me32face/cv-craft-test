@@ -1,16 +1,9 @@
-import {Resume} from "../models/Resume.js";
+import { Resume } from "../models/Resume.js";
 import jwt from "jsonwebtoken";
 
 export const saveResume = async (req, res) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      return res.status(401).json({ success: false, message: "Authorization required" });
-    }
-
-    const token = authHeader.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.id;
+    const userId = req.user.id;
 
     const { resumeId, resumeName, templateId, templateData } = req.body;
 
@@ -24,7 +17,7 @@ export const saveResume = async (req, res) => {
       // Update existing resume
       resume = await Resume.findOneAndUpdate(
         { _id: resumeId, userId },
-        { 
+        {
           resumeName: resumeName || "Untitled Resume",
           templateId,
           templateData,
@@ -66,15 +59,7 @@ export const saveResume = async (req, res) => {
 
 export const getResumes = async (req, res) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      return res.status(401).json({ success: false, message: "Authorization required" });
-    }
-
-    const token = authHeader.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    const resumes = await Resume.find({ userId: decoded.id })
+    const resumes = await Resume.find({ userId: req.user.id })
       .select("-templateData")
       .sort({ lastModified: -1 });
 
@@ -91,17 +76,9 @@ export const getResumes = async (req, res) => {
 
 export const getResumeById = async (req, res) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      return res.status(401).json({ success: false, message: "Authorization required" });
-    }
-
-    const token = authHeader.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    const resume = await Resume.findOne({ 
-      _id: req.params.id, 
-      userId: decoded.id 
+    const resume = await Resume.findOne({
+      _id: req.params.id,
+      userId: req.user.id
     });
 
     if (!resume) {
@@ -121,16 +98,8 @@ export const getResumeById = async (req, res) => {
 
 export const getLatestResumeByTemplate = async (req, res) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      return res.status(401).json({ success: false, message: "Authorization required" });
-    }
-
-    const token = authHeader.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    const resume = await Resume.findOne({ 
-      userId: decoded.id,
+    const resume = await Resume.findOne({
+      userId: req.user.id,
       templateId: req.params.templateId
     }).sort({ lastModified: -1 });
 
@@ -151,17 +120,9 @@ export const getLatestResumeByTemplate = async (req, res) => {
 
 export const deleteResume = async (req, res) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      return res.status(401).json({ success: false, message: "Authorization required" });
-    }
-
-    const token = authHeader.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    const resume = await Resume.findOneAndDelete({ 
-      _id: req.params.id, 
-      userId: decoded.id 
+    const resume = await Resume.findOneAndDelete({
+      _id: req.params.id,
+      userId: req.user.id
     });
 
     if (!resume) {
@@ -181,15 +142,7 @@ export const deleteResume = async (req, res) => {
 
 export const getResumeCount = async (req, res) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      return res.status(401).json({ success: false, message: "Authorization required" });
-    }
-
-    const token = authHeader.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    const count = await Resume.countDocuments({ userId: decoded.id });
+    const count = await Resume.countDocuments({ userId: req.user.id });
 
     res.json({
       success: true,

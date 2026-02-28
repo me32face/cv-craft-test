@@ -5,11 +5,12 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
 import resumeRoutes from "./routes/resumeRoutes.js";
 import shareRoutes from "./routes/shareRoutes.js";
+import rateLimit from "express-rate-limit";
 
 dotenv.config();
 
 const app = express();
-app.use(express.urlencoded({ limit: '10mb', extended: true }));
+app.use(express.urlencoded({ limit: '2mb', extended: true }));
 app.use(cors({
   origin: [
     "https://cvcraft.in",
@@ -21,7 +22,13 @@ app.use(cors({
 })
 );
 
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '2mb' }));
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20, // max 20 requests per IP per window
+  message: { success: false, message: 'Too many requests, try again later' }
+});
 
 //  Connect to MongoDB Atlas
 mongoose
@@ -30,6 +37,10 @@ mongoose
   .catch((err) => console.error("❌ MongoDB connection failed:", err));
 
 //  Routes
+app.use("/api/login", authLimiter);
+app.use("/api/register", authLimiter);
+app.use("/api/share/create", authLimiter);
+
 app.use("/api", authRoutes);
 app.use("/api/resumes", resumeRoutes);
 app.use("/api/share", shareRoutes);
