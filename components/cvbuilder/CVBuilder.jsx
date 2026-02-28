@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { templates, templateInputs } from "../templates";
-import { User, Camera, Link2, Code, GraduationCap, Briefcase, Globe, Award, Printer, Share2, Download, ZoomIn, ZoomOut, Expand, Sparkles, ChevronLeft, Menu, FolderCode, X, Home, FileText, Users, BookPlus, ChevronUp ,Gem,Ring  } from "lucide-react";
+import { User, Camera, Link2, Code, GraduationCap, Briefcase, Globe, Award, Printer, Share2, Download, ZoomIn, ZoomOut, Expand, Sparkles, ChevronLeft, Menu, FolderCode, X, Home, FileText, Users, BookPlus, ChevronUp, Gem, Ring } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import PopupEditor from "./PopupEditor"; // reusable popup
@@ -165,10 +165,16 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
 
   const buildShareUrlWithData = async (data) => {
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setToast('Please login to create a share link');
+        return null;
+      }
       const response = await fetch(`${API_URL}/api/share/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
           templateId: template,
@@ -512,7 +518,7 @@ export default function CVBuilder({ initialTemplate = "template31", onBack }) {
       { name: "Certificates", key: "certificates", icon: Award, inputKey: "certificates" },
       { name: "References", key: "references", icon: Users, inputKey: "references" },
       { name: "Awards", key: "awards", icon: FileText, inputKey: "awards" },
-      {name: "Marital Status", key: "maritalstatus", icon: Gem, inputKey: "maritalStatus" },
+      { name: "Marital Status", key: "maritalstatus", icon: Gem, inputKey: "maritalStatus" },
     ];
     return items.filter(item => !item.inputKey || config[item.inputKey] !== false);
   }, [template]);
