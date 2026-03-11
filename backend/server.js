@@ -13,6 +13,8 @@ const app = express();
 app.use(express.urlencoded({ limit: '2mb', extended: true }));
 app.use(cors({
   origin: [
+    process.env.FRONTEND_URL,
+    "https://cv-craft-test.vercel.app",
     "https://cvcraft.in",
     "http://localhost:3000",
     "http://localhost:3001"
